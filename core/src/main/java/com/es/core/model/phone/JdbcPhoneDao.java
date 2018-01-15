@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class JdbcPhoneDao implements PhoneDao{
@@ -34,16 +35,15 @@ public class JdbcPhoneDao implements PhoneDao{
     public Optional<Phone> get(final Long key) {
         List<Phone> phonesWithSameId = jdbcTemplate.query(SELECT_ALL_INFO_BY_ID, new Object[]{key}, new PhoneRowMapper());
 
-        if (phonesWithSameId.size() == 0) {
+        if (phonesWithSameId.isEmpty()) {
             return Optional.empty();
         }
 
         Phone phone = phonesWithSameId.get(0);
-        Set<Color> colors = new HashSet<>();
 
-        for (Phone p : phonesWithSameId) {
-            colors.add((Color) p.getColors().toArray()[0]);
-        }
+        Set<Color> colors = phonesWithSameId.stream()
+                .map(onePhone -> (Color) onePhone.getColors().toArray()[0])
+                .collect(Collectors.toSet());
 
         phone.setColors(colors);
 
