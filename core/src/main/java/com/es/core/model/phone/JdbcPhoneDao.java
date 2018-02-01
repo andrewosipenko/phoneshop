@@ -32,6 +32,28 @@ public class JdbcPhoneDao implements PhoneDao{
                                                         "JOIN colors ON colors.id = phone2color.colorId " +
                                                         "WHERE phones.id = ?";
 
+    private static final String SELECT_ALL_IN_ORDER = "SELECT phones.id AS phoneId, brand, model, price, " +
+                                                      "displaySizeInches, weightGr, lengthMm, widthMm, " +
+                                                      "heightMm, announced, deviceType, os, " +
+                                                      "displayResolution, pixelDensity, displayTechnology, " +
+                                                      "backCameraMegapixels, frontCameraMegapixels, ramGb, " +
+                                                      "internalStorageGb, batteryCapacityMah, talkTimeHours, " +
+                                                      "standByTimeHours, bluetooth, positioning, imageUrl, " +
+                                                      "description, colors.id AS colorId, code " +
+                                                      "FROM phones " +
+                                                      "JOIN phone2color ON phones.id = phone2color.phoneId " +
+                                                      "JOIN colors ON colors.id = phone2color.colorId " +
+                                                      "JOIN stocks ON phones.id = stocks.phoneId " +
+                                                      "WHERE stock > 0 AND reserved > 0 " +
+                                                      "ORDER BY ";
+
+    private static final String SELECT_RECORDS_COUNT = "SELECT COUNT(*) FROM phones " +
+                                                       "JOIN phone2color ON phones.id = phone2color.phoneId " +
+                                                       "JOIN colors ON colors.id = phone2color.colorId " +
+                                                       "JOIN stocks ON phones.id = stocks.phoneId " +
+                                                       "WHERE stock > 0 AND reserved > 0 ";
+
+    @Override
     public Optional<Phone> get(final Long key) {
         List<Phone> phonesWithSameId = jdbcTemplate.query(SELECT_ALL_INFO_BY_ID, new Object[]{key}, new PhoneRowMapper());
 
@@ -50,12 +72,25 @@ public class JdbcPhoneDao implements PhoneDao{
         return Optional.of(phone);
     }
 
+    @Override
     public void save(final Phone phone) {
         throw new UnsupportedOperationException("TODO");
     }
 
+    @Override
     public List<Phone> findAll(int offset, int limit) {
         return jdbcTemplate.query("select * from phones offset " + offset + " limit " + limit, new BeanPropertyRowMapper(Phone.class));
+    }
+
+    @Override
+    public List<Phone> findAllInOrder(String orderBy, int limit, int offset) {
+        String sql = SELECT_ALL_IN_ORDER + orderBy + " OFFSET ? LIMIT ?";
+        return jdbcTemplate.query(sql, new Object[]{offset, limit}, new PhoneRowMapper());
+    }
+
+    @Override
+    public long productsCount() {
+        return jdbcTemplate.queryForObject(SELECT_RECORDS_COUNT, Integer.class);
     }
 
     private static class PhoneRowMapper implements RowMapper<Phone> {
