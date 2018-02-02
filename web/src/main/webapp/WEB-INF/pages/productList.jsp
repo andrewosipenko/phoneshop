@@ -22,7 +22,7 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <img src="<c:url value="/resources/img/logo.jpg"/>">
+                    <a href="${pageContext.request.contextPath}/productList"><img src="<c:url value="/resources/img/logo.jpg"/>"></a>
                 </div>
                 <div class="col">
                     <button class="float-right">My cart: 0 items 0$</button>
@@ -30,9 +30,9 @@
             </div>
             <div class="row">
                 <div class="col">
-                     <form class="navbar-form navbar-right" action="">
+                     <form class="navbar-form navbar-right" method="GET" action="${pageContext.request.contextPath}/productList">
                          <div class="input-group">
-                             <input type="text" class="form-control" placeholder="Search">
+                             <input type="text" class="form-control" placeholder="Search" name="model">
                              <div class="input-group-btn">
                                  <button class="btn btn-default" type="submit">
                                      <i class="glyphicon glyphicon-search"></i>
@@ -82,7 +82,7 @@
                                 var quantity = $("#quantity${phone.id}").val();
 
                                 $.ajax({
-                                    url: 'ajaxCart',
+                                    url: '${pageContext.request.contextPath}/ajaxCart',
                                     type: 'POST',
                                     mimeType: 'application/json',
                                     data: ({
@@ -99,7 +99,7 @@
                 <div class="col">
                     <ul class="pagination float-right">
                         <c:forEach var = "i" begin = "1" end = "${pageCount}">
-                            <li><a href="${requestScope['javax.servlet.forward.request_uri']}?page=${i}">${i}</a></li>
+                            <li><a href="${requestScope['javax.servlet.forward.request_uri']}?order=${param.order}&model=${param.model}&page=${i}">${i}</a></li>
                         </c:forEach>
                     </ul>
                 </div>

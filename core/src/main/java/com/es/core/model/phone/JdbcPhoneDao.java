@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-public class JdbcPhoneDao implements PhoneDao{
+public class JdbcPhoneDao implements PhoneDao {
 
     @Resource
     private JdbcTemplate jdbcTemplate;
@@ -51,7 +51,28 @@ public class JdbcPhoneDao implements PhoneDao{
                                                        "JOIN phone2color ON phones.id = phone2color.phoneId " +
                                                        "JOIN colors ON colors.id = phone2color.colorId " +
                                                        "JOIN stocks ON phones.id = stocks.phoneId " +
-                                                       "WHERE stock > 0 AND reserved > 0 ";
+                                                       "WHERE stock > 0 AND reserved > 0";
+
+    private static final String SELECT_RECORDS_COUNT_BY_MODEL = "SELECT COUNT(*) FROM phones " +
+                                                                "JOIN phone2color ON phones.id = phone2color.phoneId " +
+                                                                "JOIN colors ON colors.id = phone2color.colorId " +
+                                                                "JOIN stocks ON phones.id = stocks.phoneId " +
+                                                                "WHERE stock > 0 AND reserved > 0 AND model = ?";
+
+    private static final String SELECT_BY_MODEL_IN_ORDER = "SELECT phones.id AS phoneId, brand, model, price, " +
+                                                           "displaySizeInches, weightGr, lengthMm, widthMm, " +
+                                                           "heightMm, announced, deviceType, os, " +
+                                                           "displayResolution, pixelDensity, displayTechnology, " +
+                                                           "backCameraMegapixels, frontCameraMegapixels, ramGb, " +
+                                                           "internalStorageGb, batteryCapacityMah, talkTimeHours, " +
+                                                           "standByTimeHours, bluetooth, positioning, imageUrl, " +
+                                                           "description, colors.id AS colorId, code " +
+                                                           "FROM phones " +
+                                                           "JOIN phone2color ON phones.id = phone2color.phoneId " +
+                                                           "JOIN colors ON colors.id = phone2color.colorId " +
+                                                           "JOIN stocks ON phones.id = stocks.phoneId " +
+                                                           "WHERE stock > 0 AND reserved > 0 AND model = ? " +
+                                                           "ORDER BY ";
 
     @Override
     public Optional<Phone> get(final Long key) {
@@ -89,8 +110,19 @@ public class JdbcPhoneDao implements PhoneDao{
     }
 
     @Override
+    public List<Phone> findByModelInOrder(String model, String orderBy, int limit, int offset) {
+        String sql = SELECT_BY_MODEL_IN_ORDER + orderBy + " OFFSET ? LIMIT ?";
+        return jdbcTemplate.query(sql, new Object[]{model, offset, limit}, new PhoneRowMapper());
+    }
+
+    @Override
     public long productsCount() {
-        return jdbcTemplate.queryForObject(SELECT_RECORDS_COUNT, Integer.class);
+        return jdbcTemplate.queryForObject(SELECT_RECORDS_COUNT, Long.class);
+    }
+
+    @Override
+    public long productsCountWithModel(String model) {
+        return jdbcTemplate.queryForObject(SELECT_RECORDS_COUNT_BY_MODEL, Long.class, model);
     }
 
     private static class PhoneRowMapper implements RowMapper<Phone> {

@@ -8,5 +8,7 @@ public interface PhoneDao {
     void save(Phone phone);
     List<Phone> findAll(int offset, int limit);
     List<Phone> findAllInOrder(String orderBy, int limit, int offset);
+    List<Phone> findByModelInOrder(String model, String orderBy, int limit, int offset);
     long productsCount();
+    long productsCountWithModel(String model);
 }

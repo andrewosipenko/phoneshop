@@ -26,12 +26,22 @@ public class ProductListPageController {
     @RequestMapping(method = RequestMethod.GET)
     public String showProductList(Model model,
                                   @RequestParam(value = "page", defaultValue = "1") int page,
-                                  @RequestParam(value = "order", defaultValue = "brand, model asc") String orderBy) {
+                                  @RequestParam(value = "order", defaultValue = "brand, model asc") String orderBy,
+                                  @RequestParam(value = "model", required = false) String phoneModel) {
 
-        model.addAttribute(ATTRIBUTE_PHONES_LIST, phoneDao.findAllInOrder(orderBy,
-                                                                          AMOUNT_PRODUCTS_ON_PAGE,
-                                                                          AMOUNT_PRODUCTS_ON_PAGE * (page - 1)));
-        model.addAttribute(ATTRIBUTE_PAGE_COUNT, (int) Math.ceil(phoneDao.productsCount() / (double) AMOUNT_PRODUCTS_ON_PAGE));
+        if (phoneModel != null && !phoneModel.isEmpty()) {
+            model.addAttribute(ATTRIBUTE_PHONES_LIST, phoneDao.findByModelInOrder(phoneModel,
+                                                                                  orderBy,
+                                                                                  AMOUNT_PRODUCTS_ON_PAGE,
+                                                                                  AMOUNT_PRODUCTS_ON_PAGE * (page - 1)));
+            model.addAttribute(ATTRIBUTE_PAGE_COUNT, (int) Math.ceil(phoneDao.productsCountWithModel(phoneModel) / (double) AMOUNT_PRODUCTS_ON_PAGE));
+        } else {
+            model.addAttribute(ATTRIBUTE_PHONES_LIST, phoneDao.findAllInOrder(orderBy,
+                                                                              AMOUNT_PRODUCTS_ON_PAGE,
+                                                                              AMOUNT_PRODUCTS_ON_PAGE * (page - 1)));
+            model.addAttribute(ATTRIBUTE_PAGE_COUNT, (int) Math.ceil(phoneDao.productsCount() / (double) AMOUNT_PRODUCTS_ON_PAGE));
+        }
+
         return "productList";
     }
 
