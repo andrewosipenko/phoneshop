@@ -57,28 +57,41 @@
                         </tr>
                     </thead>
                     <c:forEach var="phone" items="${phones}">
-                      <tr>
-                        <td>
-                          <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
-                        </td>
-                        <td>${phone.brand}</td>
-                        <td>${phone.model}</td>
-                        <td>
-                            <c:forEach var="color" items="${phone.colors}">
-                                ${color.code}
-                            </c:forEach>
-                        </td>
-                        <td>${phone.displaySizeInches}</td>
-                        <td>$ ${phone.price}</td>
-                        <td>
-                            <input type="text" value="1">
-                        </td>
-                        <td>
-                            <form action="">
-                                <button type="submit" class="btn btn-default add-cart">Add to cart</button>
-                            </form>
-                        </td>
-                      </tr>
+                        <tr>
+                            <td>
+                                <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
+                            </td>
+                            <td>${phone.brand}</td>
+                            <td>${phone.model}</td>
+                            <td>
+                                <c:forEach var="color" items="${phone.colors}">
+                                    ${color.code}
+                                </c:forEach>
+                            </td>
+                            <td>${phone.displaySizeInches}</td>
+                            <td>$ ${phone.price}</td>
+                            <td>
+                                <input id="quantity${phone.id}" type="text" value="1">
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-default add-cart" onclick="doAjax${phone.id}()">Add to cart</button>
+                            </td>
+                        </tr>
+                        <script type="text/javascript">
+                            function doAjax${phone.id}() {
+                                var quantity = $("#quantity${phone.id}").val();
+
+                                $.ajax({
+                                    url: 'ajaxCart',
+                                    type: 'POST',
+                                    mimeType: 'application/json',
+                                    data: ({
+                                        phoneId : ${phone.id},
+                                        quantity : quantity
+                                    })
+                                });
+                            }
+                        </script>
                     </c:forEach>
                 </table>
             </div>
