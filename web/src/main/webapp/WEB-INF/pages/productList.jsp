@@ -47,11 +47,11 @@
                     <thead>
                         <tr>
                             <td>Image</td>
-                            <td>Brand</td>
-                            <td>Model</td>
-                            <td>Color</td>
-                            <td>Display size</td>
-                            <td>Price</td>
+                            <td><a class="sort-link" href="${pageContext.request.contextPath}/productList?model=${param.model}&order=brand ${brandOrder}, phoneId ${brandOrder}">Brand <i class="glyphicon glyphicon-sort"></i></a></td>
+                            <td><a class="sort-link" href="${pageContext.request.contextPath}/productList?model=${param.model}&order=model ${modelOrder}, phoneId ${modelOrder}">Model <i class="glyphicon glyphicon-sort"></i></a></td>
+                            <td><%--<a class="sort-link" href="${pageContext.request.contextPath}/productList?model=${param.model}&order=color ${colorOrder}, phoneId ${colorOrder}">--%>Color <i class="glyphicon glyphicon-sort"></i><%--</a>--%></td>
+                            <td><a class="sort-link" href="${pageContext.request.contextPath}/productList?model=${param.model}&order=displaySizeInches ${displaySizeInchesOrder}, phoneId ${displaySizeInchesOrder}">Display size <i class="glyphicon glyphicon-sort"></i></a></td>
+                            <td><a class="sort-link" href="${pageContext.request.contextPath}/productList?model=${param.model}&order=price ${priceOrder}, phoneId ${priceOrder}">Price <i class="glyphicon glyphicon-sort"></i></a></td>
                             <td>Quantity</td>
                             <td>Action</td>
                         </tr>
@@ -68,7 +68,7 @@
                                     ${color.code}
                                 </c:forEach>
                             </td>
-                            <td>${phone.displaySizeInches}</td>
+                            <td>${phone.displaySizeInches}''</td>
                             <td>$ ${phone.price}</td>
                             <td>
                                 <input id="quantity${phone.id}" type="text" value="1">
@@ -99,7 +99,7 @@
                 <div class="col">
                     <ul class="pagination float-right">
                         <c:forEach var = "i" begin = "1" end = "${pageCount}">
-                            <li><a href="${requestScope['javax.servlet.forward.request_uri']}?order=${param.order}&model=${param.model}&page=${i}">${i}</a></li>
+                            <li><a href="${requestScope['javax.servlet.forward.request_uri']}?model=${param.model}&order=${param.order}&page=${i}">${i}</a></li>
                         </c:forEach>
                     </ul>
                 </div>

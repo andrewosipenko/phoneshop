@@ -8,3 +8,15 @@ table {
 th, td {
     text-align: center;
 }
+
+.sort-link {
+    color: #000;
+}
+
+.sort-link:hover {
+    text-decoration-line: none;
+}
+
+.glyphicon-sort {
+    font-size: 10px;
+}
