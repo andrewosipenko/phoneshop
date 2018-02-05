@@ -25,7 +25,7 @@
                     <a href="${pageContext.request.contextPath}/productList"><img src="<c:url value="/resources/img/logo.jpg"/>"></a>
                 </div>
                 <div class="col">
-                    <button class="float-right">My cart: 0 items 0$</button>
+                    <button class="float-right cart">My cart: ${sessionScope.countItems} items ${sessionScope.price}$</button>
                 </div>
             </div>
             <div class="row">
@@ -84,11 +84,13 @@
                                 $.ajax({
                                     url: '${pageContext.request.contextPath}/ajaxCart',
                                     type: 'POST',
-                                    mimeType: 'application/json',
                                     data: ({
                                         phoneId : ${phone.id},
                                         quantity : quantity
-                                    })
+                                    }),
+                                    success: function (data) {
+                                        $(".cart").html(data);
+                                    }
                                 });
                             }
                         </script>
