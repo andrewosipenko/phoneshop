@@ -20,3 +20,7 @@ th, td {
 .glyphicon-sort {
     font-size: 10px;
 }
+
+.error {
+    color: red;
+}

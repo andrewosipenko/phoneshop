@@ -49,14 +49,14 @@
                             <td>Image</td>
                             <td><a class="sort-link" href="${pageContext.request.contextPath}/productList?model=${param.model}&order=brand ${brandOrder}, phoneId ${brandOrder}">Brand <i class="glyphicon glyphicon-sort"></i></a></td>
                             <td><a class="sort-link" href="${pageContext.request.contextPath}/productList?model=${param.model}&order=model ${modelOrder}, phoneId ${modelOrder}">Model <i class="glyphicon glyphicon-sort"></i></a></td>
-                            <td><%--<a class="sort-link" href="${pageContext.request.contextPath}/productList?model=${param.model}&order=color ${colorOrder}, phoneId ${colorOrder}">--%>Color <i class="glyphicon glyphicon-sort"></i><%--</a>--%></td>
+                            <td><%--<a class="sort-link" href="${pageContext.request.contextPath}/productList?model=${param.model}&order=color ${colorOrder}, phoneId ${colorOrder}">--%>Color<%--<i class="glyphicon glyphicon-sort"></i></a>--%></td>
                             <td><a class="sort-link" href="${pageContext.request.contextPath}/productList?model=${param.model}&order=displaySizeInches ${displaySizeInchesOrder}, phoneId ${displaySizeInchesOrder}">Display size <i class="glyphicon glyphicon-sort"></i></a></td>
                             <td><a class="sort-link" href="${pageContext.request.contextPath}/productList?model=${param.model}&order=price ${priceOrder}, phoneId ${priceOrder}">Price <i class="glyphicon glyphicon-sort"></i></a></td>
                             <td>Quantity</td>
                             <td>Action</td>
                         </tr>
                     </thead>
-                    <c:forEach var="phone" items="${phones}">
+                    <c:forEach var="phone" items="${phones}" varStatus="loop">
                         <tr>
                             <td>
                                 <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
@@ -71,15 +71,17 @@
                             <td>${phone.displaySizeInches}''</td>
                             <td>$ ${phone.price}</td>
                             <td>
-                                <input id="quantity${phone.id}" type="text" value="1">
+                                <input id="quantity${loop.index}" type="text" value="1">
+                                <br>
+                                <span id="quantity${loop.index}-wrong-format" class="error"></span>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-default add-cart" onclick="doAjax${phone.id}()">Add to cart</button>
+                                <button type="button" class="btn btn-default add-cart" onclick="doAjax${loop.index}()">Add to cart</button>
                             </td>
                         </tr>
                         <script type="text/javascript">
-                            function doAjax${phone.id}() {
-                                var quantity = $("#quantity${phone.id}").val();
+                            function doAjax${loop.index}() {
+                                var quantity = $("#quantity${loop.index}").val();
 
                                 $.ajax({
                                     url: '${pageContext.request.contextPath}/ajaxCart',
@@ -89,7 +91,12 @@
                                         quantity : quantity
                                     }),
                                     success: function (data) {
-                                        $(".cart").html(data);
+                                        if (data === "Wrong format") {
+                                            $("#quantity${loop.index}-wrong-format").html(data);
+                                        } else {
+                                            $("#quantity${loop.index}-wrong-format").html("");
+                                            $(".cart").html(data);
+                                        }
                                     }
                                 });
                             }
