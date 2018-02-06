@@ -47,14 +47,14 @@ public class ProductListPageController {
 
         if (phoneModel.equals(DEFAULT_VALUE_PHONE_MODEL)) {
             model.addAttribute(ATTRIBUTE_PHONES_LIST, phoneDao.findAllInOrder(orderBy,
-                                                                              AMOUNT_PRODUCTS_ON_PAGE,
-                                                                              AMOUNT_PRODUCTS_ON_PAGE * (page - 1)));
+                                                                              AMOUNT_PRODUCTS_ON_PAGE * (page - 1),
+                                                                              AMOUNT_PRODUCTS_ON_PAGE));
             model.addAttribute(ATTRIBUTE_PAGE_COUNT, (int) Math.ceil(phoneDao.productsCount() / (double) AMOUNT_PRODUCTS_ON_PAGE));
         } else {
             model.addAttribute(ATTRIBUTE_PHONES_LIST, phoneDao.findByModelInOrder(phoneModel,
                                                                                   orderBy,
-                                                                                  AMOUNT_PRODUCTS_ON_PAGE,
-                                                                                  AMOUNT_PRODUCTS_ON_PAGE * (page - 1)));
+                                                                                  AMOUNT_PRODUCTS_ON_PAGE * (page - 1),
+                                                                                  AMOUNT_PRODUCTS_ON_PAGE));
             model.addAttribute(ATTRIBUTE_PAGE_COUNT, (int) Math.ceil(phoneDao.productsCountWithModel(phoneModel) / (double) AMOUNT_PRODUCTS_ON_PAGE));
         }
 

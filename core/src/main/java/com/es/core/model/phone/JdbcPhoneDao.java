@@ -104,13 +104,13 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     @Override
-    public List<Phone> findAllInOrder(String orderBy, int limit, int offset) {
+    public List<Phone> findAllInOrder(String orderBy, int offset, int limit) {
         String sql = SELECT_ALL_IN_ORDER + orderBy + " OFFSET ? LIMIT ?";
         return jdbcTemplate.query(sql, new Object[]{offset, limit}, new PhoneRowMapper());
     }
 
     @Override
-    public List<Phone> findByModelInOrder(String model, String orderBy, int limit, int offset) {
+    public List<Phone> findByModelInOrder(String model, String orderBy, int offset, int limit) {
         String sql = SELECT_BY_MODEL_IN_ORDER + orderBy + " OFFSET ? LIMIT ?";
         return jdbcTemplate.query(sql, new Object[]{model, offset, limit}, new PhoneRowMapper());
     }
