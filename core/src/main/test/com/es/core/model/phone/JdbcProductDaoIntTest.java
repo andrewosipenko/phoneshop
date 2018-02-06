@@ -1,20 +1,22 @@
 package com.es.core.model.phone;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration("classpath:resources/context/testContext.xml")
+@Transactional
+@ContextConfiguration("classpath:context/testContext.xml")
 public class JdbcProductDaoIntTest {
 
     @Resource
@@ -27,6 +29,8 @@ public class JdbcProductDaoIntTest {
 
     private static final Long EXIST_PHONE_ID = 1000L;
 
+    private Long phoneForUpdate;
+
     private static final String PHONE_TABLE_NAME = "phones";
 
     private static final String PHONE_COLORS_TABLE_NAME = "phone2color";
@@ -34,7 +38,7 @@ public class JdbcProductDaoIntTest {
     private static List<Color> colorList = new ArrayList<>();
 
     @BeforeClass
-    public static void getListColors(){
+    public static void getListColors() {
         colorList.add(new Color(1000L, "Black"));
         colorList.add(new Color(1001L, "White"));
         colorList.add(new Color(1002L, "Yellow"));
@@ -51,64 +55,69 @@ public class JdbcProductDaoIntTest {
         colorList.add(new Color(1013L, "256"));
     }
 
+    @Before
+    public void addPhoneForUpdate() {
+        Phone phone = createPhone("init", "init", null, 4);
+
+        phoneDao.save(phone);
+
+        phoneForUpdate = phone.getId();
+    }
+
     @Test
-    public void getNotExistPhone(){
+    public void getNotExistPhone() {
         Optional<Phone> phoneOptional = phoneDao.get(NOT_EXIST_PHONE_ID);
         Assert.assertFalse(phoneOptional.isPresent());
     }
 
     @Test
-    public void getExistPhone(){
+    public void getExistPhone() {
         Optional<Phone> phoneOptional = phoneDao.get(EXIST_PHONE_ID);
         Assert.assertEquals(EXIST_PHONE_ID, phoneOptional.get().getId());
     }
 
     @Test
-    public void checkFindAll(){
+    public void checkFindAll() {
         final int OFFSET = 0;
-        final int COUNT = 10;
+        final int COUNT = 5;
 
-        List<Phone> phoneList = phoneDao.findAll(OFFSET,COUNT);
+        List<Phone> phoneList = phoneDao.findAll(OFFSET, COUNT);
 
-        Assert.assertEquals(COUNT,phoneList.size());
+        Assert.assertEquals(COUNT, phoneList.size());
     }
 
-    @DirtiesContext
     @Test
-    public void insertNewPhoneWithOneColors(){
+    public void insertNewPhoneWithOneColors() {
         insertPhone(1);
     }
 
-    @DirtiesContext
     @Test
-    public void insertNewPhoneWithSeveralColors(){
+    public void insertNewPhoneWithSeveralColors() {
         insertPhone(3);
     }
 
-    @DirtiesContext
     @Test
-    public void updatePhone(){
+    public void updatePhone() {
         final String newValue = "test";
 
-        Phone phone = phoneDao.get(EXIST_PHONE_ID).get();
+        Phone phone = phoneDao.get(phoneForUpdate).get();
         phone.setBrand(newValue);
         phoneDao.save(phone);
-        Phone updatedPhone = phoneDao.get(EXIST_PHONE_ID).get();
-        Assert.assertEquals(newValue,updatedPhone.getBrand());
+        Phone updatedPhone = phoneDao.get(phoneForUpdate).get();
+        Assert.assertEquals(newValue, updatedPhone.getBrand());
     }
 
-    @DirtiesContext
     @Test
-    public void updatePhoneChangeColorsCount(){
-        Phone phone = phoneDao.get(EXIST_PHONE_ID).get();
+    public void updatePhoneChangeColorsCount() {
+        Phone phone = phoneDao.get(phoneForUpdate).get();
         phone.setColors(new HashSet<>(colorList));
         phoneDao.save(phone);
-        Phone updatedPhone = phoneDao.get(EXIST_PHONE_ID).get();
-        Assert.assertEquals(colorList.size(),updatedPhone.getColors().size());
+        Phone updatedPhone = phoneDao.get(phoneForUpdate).get();
+        Assert.assertEquals(colorList.size(), updatedPhone.getColors().size());
     }
 
-    private void insertPhone(int countColors){
-        Phone phone = createPhone(null,countColors);
+    private void insertPhone(int countColors) {
+        Phone phone = createPhone(null, countColors);
 
         int startPhonesCount = countRowsInTable(PHONE_TABLE_NAME);
 
@@ -116,16 +125,20 @@ public class JdbcProductDaoIntTest {
 
         phoneDao.save(phone);
 
-        Assert.assertEquals(startPhonesCount+1,countRowsInTable(PHONE_TABLE_NAME));
-        Assert.assertEquals(startPhoneColorsCount+countColors,countRowsInTable(PHONE_COLORS_TABLE_NAME));
+        Assert.assertEquals(startPhonesCount + 1, countRowsInTable(PHONE_TABLE_NAME));
+        Assert.assertEquals(startPhoneColorsCount + countColors, countRowsInTable(PHONE_COLORS_TABLE_NAME));
     }
 
-    private Phone createPhone(Long id, int countColors){
-        Phone phone = new Phone();
-        phone.setBrand("testBrand");
-        phone.setModel("testBrand");
+    private Phone createPhone(Long id, int countColors) {
+        return createPhone("testBrand", "testBrand", id, countColors);
+    }
 
-        Set<Color> colors = new HashSet<>(colorList.subList(0,countColors));
+    private Phone createPhone(String brand, String model, Long id, int countColors) {
+        Phone phone = new Phone();
+        phone.setBrand(brand);
+        phone.setModel(model);
+
+        Set<Color> colors = new HashSet<>(colorList.subList(0, countColors));
 
         phone.setColors(colors);
         phone.setId(id);
