@@ -10,7 +10,7 @@ import javax.annotation.Resource;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:testDB/test-config.xml")
+@ContextConfiguration(locations = "classpath:test-config.xml")
 public class JdbcPhoneDaoIntTest {
 
     @Resource
@@ -22,6 +22,8 @@ public class JdbcPhoneDaoIntTest {
 
     private static final long ID_WITH_TEN_COLOR = 1002;
 
+    private static final String PRODUCT_MODEL = "AT&T Avail";
+
     @Test
     public void checkProductWhichIsNotInDatabase() {
         String errorMessage = String.format("Product with id = %d exist in database", NON_EXISTENT_ID);
@@ -30,16 +32,37 @@ public class JdbcPhoneDaoIntTest {
 
     @Test
     public void checkProductWithOneColor() {
-        int colorsAmount = phoneDao.get(ID_WITH_ONE_COLOR).get().getColors().size();
-        String errorMessage = String.format("Product with id = %d is not have 1 color (have %d)", ID_WITH_ONE_COLOR, colorsAmount);
-        assertTrue(errorMessage, colorsAmount == 1);
+        assertEquals(1, phoneDao.get(ID_WITH_ONE_COLOR).get().getColors().size());
     }
 
     @Test
     public void checkProductWithMoreThenOneColor() {
-        int colorsAmount = phoneDao.get(ID_WITH_TEN_COLOR).get().getColors().size();
-        String errorMessage = String.format("Product with id = %d is not have 10 color (have %d)", ID_WITH_TEN_COLOR, colorsAmount);
-        assertTrue(errorMessage, colorsAmount == 10);
+        assertEquals(10, phoneDao.get(ID_WITH_TEN_COLOR).get().getColors().size());
+    }
+
+    @Test
+    public void findAllProductWithLimit10() {
+        assertEquals(10, phoneDao.findAll(0, 10).size());
+    }
+
+    @Test
+    public void findAllInOrderWithLimit10() {
+        assertEquals(10, phoneDao.findAllInOrder("brand", 0, 10).size());
+    }
+
+    @Test
+    public void findByModelOneProduct() {
+        assertEquals(1, phoneDao.findByModelInOrder(PRODUCT_MODEL, "brand", 0, 10).size());
+    }
+
+    @Test
+    public void productCountTest() {
+        assertEquals(20, phoneDao.productsCount());
+    }
+
+    @Test
+    public void productWithModelCountTest() {
+        assertEquals(1, phoneDao.productsCountWithModel(PRODUCT_MODEL));
     }
 
 }
