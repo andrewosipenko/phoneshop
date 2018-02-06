@@ -8,10 +8,12 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="<c:url value="/resources/css/style.css"/>" rel="stylesheet">
+        <link href="<c:url value="/resources/css/jquery.mxpage.css"/>" rel="stylesheet">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="<c:url value="/resources/js/jquery.mxpage.js"/>"></script>
     </head>
     <body>
         <div class="container-fluid">
@@ -106,13 +108,29 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <ul class="pagination float-right">
-                        <c:forEach var = "i" begin = "1" end = "${pageCount}">
-                            <li><a href="${requestScope['javax.servlet.forward.request_uri']}?model=${param.model}&order=${param.order}&page=${i}">${i}</a></li>
-                        </c:forEach>
-                    </ul>
+                    <div class="pages"></div>
                 </div>
             </div>
         </div>
+
+        <script>
+            var p = "${param.page}";
+            if (p === "") {
+                p = 1;
+            }
+
+            $('.pages').mxpage({
+                perPage: 10,
+                currentPage: Number(p),
+                maxPage: ${pageCount},
+                previousText: 'Prev',
+                nextText: 'Next',
+                frontPageText: 'First',
+                lastPageText: 'Last',
+                click: function(index, $element){
+                    location.href="${requestScope['javax.servlet.forward.request_uri']}?model=${param.model}&order=${param.order}&page=" + index;
+                }
+            });
+        </script>
     </body>
 </html>

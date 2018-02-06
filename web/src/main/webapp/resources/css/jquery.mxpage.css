@@ -1,0 +1,39 @@
+.mxpage-container {
+    display: block;
+}
+
+.mxpage-container li {
+    display: inline-block;
+}
+
+.mxpage {
+    display: inline-block;
+    vertical-align: middle;
+    min-width: 15px;
+    padding: 0 5px 0 5px;
+    color: #222;
+    font-size: 16px;
+    text-align: center;
+    border-radius: 4px;
+    background-color: #fff;
+    border: solid 1px #ddd;
+    margin-left: 4px;
+    margin-right: 4px;
+    transition: .2s all;
+    text-decoration: none;
+}
+
+.mxpage:hover {
+    background: #dedede;
+    color: #666;
+    border: 1px solid #dedede;
+}
+
+.mxpage.active, .mxpage.active:hover {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.pages {
+    float: right;
+}
