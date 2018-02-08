@@ -87,6 +87,23 @@ public class JdbcProductDaoIntTest {
     }
 
     @Test
+    public void checkFindAllOrderBy() {
+        final int OFFSET = 0;
+        final int COUNT = 5;
+        final String ORDER_BY = "price";
+
+        List<Phone> phoneList = phoneDao.findAll(OFFSET, COUNT);
+        phoneList.sort((o1, o2) -> o1.getPrice().compareTo(o2.getPrice()));
+        List<Phone> sortedPhoneList = phoneDao.findAllInOrder(ORDER_BY, OFFSET, COUNT);
+
+        Assert.assertEquals(sortedPhoneList.size(), phoneList.size());
+
+        for (int i = 0; i < sortedPhoneList.size(); i++) {
+            Assert.assertEquals(phoneList.get(i).getPrice(), sortedPhoneList.get(i).getPrice());
+        }
+    }
+
+    @Test
     public void insertNewPhoneWithOneColors() {
         insertPhone(1);
     }

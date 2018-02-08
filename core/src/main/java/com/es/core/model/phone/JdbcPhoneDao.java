@@ -1,7 +1,6 @@
 package com.es.core.model.phone;
 
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -19,18 +18,7 @@ import java.util.*;
 @Component
 public class JdbcPhoneDao implements PhoneDao {
 
-    @Resource
-    private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert insertPhone;
-
-    @PostConstruct
-    private void initSimpleJdbcInsert() {
-        this.insertPhone = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("phones")
-                .usingGeneratedKeyColumns("id");
-    }
-
-    private final static String GET_PHONE_QUERY = "select phones.id AS phoneId, brand, model, " +
+    private final static String SELECT_PHONE_QUERY = "select phones.id AS phoneId, brand, model, " +
             "price, displaySizeInches, weightGr, lengthMm, widthMm, " +
             "heightMm, announced, deviceType, os, displayResolution, " +
             "pixelDensity, displayTechnology, backCameraMegapixels, " +
@@ -53,8 +41,36 @@ public class JdbcPhoneDao implements PhoneDao {
 
     private final static String INSERT_COLORS_QUERY = "insert into phone2color (phoneId,colorId) values (?,?)";
 
+    private final static String FIRST_PART_OF_SELECT_ORDERED_PHONE_QUERY = "select limitedPhones.id AS phoneId, brand, model, " +
+            "price, displaySizeInches, weightGr, lengthMm, widthMm, " +
+            "heightMm, announced, deviceType, os, displayResolution, " +
+            "pixelDensity, displayTechnology, backCameraMegapixels, " +
+            "frontCameraMegapixels, ramGb, internalStorageGb, batteryCapacityMah, " +
+            "talkTimeHours, standByTimeHours, bluetooth, positioning, imageUrl, " +
+            "description, colors.id AS colorId, colors.code AS colorCode from " +
+            "(select * from phones where price > 0 order by ";
+
+    private final static String SECOND_PART_OF_SELECT_ORDERED_PHONE_QUERY = " offset ? limit ? ) as limitedPhones " +
+            "left join phone2color on limitedPhones.id = phone2color.phoneId " +
+            "left join colors on colors.id = phone2color.colorId";
+
+    @Resource
+    private JdbcTemplate jdbcTemplate;
+    private SimpleJdbcInsert insertPhone;
+
+    @PostConstruct
+    private void initSimpleJdbcInsert() {
+        this.insertPhone = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("phones")
+                .usingGeneratedKeyColumns("id");
+    }
+
     public Optional<Phone> get(final Long key) {
-        return jdbcTemplate.query(GET_PHONE_QUERY, new OptionalPhoneResultSetExtractor(), key);
+        List<Phone> phones = jdbcTemplate.query(SELECT_PHONE_QUERY, new PhoneListResultSetExtractor(), key);
+        if (phones.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(phones.get(0));
     }
 
     public void save(final Phone phone) {
@@ -108,16 +124,39 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     public List<Phone> findAll(int offset, int limit) {
-        return jdbcTemplate.query("select * from phones offset " + offset + " limit " + limit, new BeanPropertyRowMapper(Phone.class));
+        return findAllInOrder("brand", offset, limit);
     }
 
-    private class OptionalPhoneResultSetExtractor implements ResultSetExtractor<Optional<Phone>> {
+    @Override
+    public List<Phone> findAllInOrder(String orderBy, int offset, int limit) {
+        return jdbcTemplate.query(FIRST_PART_OF_SELECT_ORDERED_PHONE_QUERY + orderBy + SECOND_PART_OF_SELECT_ORDERED_PHONE_QUERY, new PhoneListResultSetExtractor(),
+                offset, limit);
+    }
+
+    private class PhoneListResultSetExtractor implements ResultSetExtractor<List<Phone>> {
         @Override
-        public Optional<Phone> extractData(ResultSet rs) throws SQLException {
-            if (!rs.next()) {
-                return Optional.empty();
+        public List<Phone> extractData(ResultSet rs) throws SQLException {
+
+            Map<Long, Phone> phoneMap = new HashMap<>();
+            List<Phone> phoneList = new ArrayList<>();
+
+            while (rs.next()) {
+                Phone changePhone;
+                Long phoneId = rs.getLong("phoneId");
+                if (!phoneMap.containsKey(phoneId)) {
+                    changePhone = readPropertiesToPhone(rs);
+                    phoneMap.put(phoneId, changePhone);
+                    phoneList.add(changePhone);
+                } else {
+                    changePhone = phoneMap.get(phoneId);
+                }
+                addColor(changePhone, rs);
             }
 
+            return phoneList;
+        }
+
+        private Phone readPropertiesToPhone(ResultSet rs) throws SQLException {
             Phone phone = new Phone();
 
             phone.setId(rs.getLong("phoneId"));
@@ -145,21 +184,15 @@ public class JdbcPhoneDao implements PhoneDao {
             phone.setBluetooth(rs.getString("bluetooth"));
             phone.setImageUrl(rs.getString("imageUrl"));
             phone.setDescription(rs.getString("description"));
-            phone.setColors(getColorSet(rs));
-            return Optional.of(phone);
+            phone.setColors(new HashSet<>());
+            return phone;
         }
 
-        private Set<Color> getColorSet(ResultSet rs) throws SQLException {
-            Set<Color> colors = new HashSet<>();
-
-            do {
-                Color newColor = new Color();
-                newColor.setCode(rs.getString("colorCode"));
-                newColor.setId(rs.getLong("colorId"));
-                colors.add(newColor);
-            } while (rs.next());
-
-            return colors;
+        private void addColor(Phone phone, ResultSet rs) throws SQLException {
+            Color newColor = new Color();
+            newColor.setCode(rs.getString("colorCode"));
+            newColor.setId(rs.getLong("colorId"));
+            phone.getColors().add(newColor);
         }
     }
 }
