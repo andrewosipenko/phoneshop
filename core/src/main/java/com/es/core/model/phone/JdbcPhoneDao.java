@@ -54,6 +54,22 @@ public class JdbcPhoneDao implements PhoneDao {
             "left join phone2color on limitedPhones.id = phone2color.phoneId " +
             "left join colors on colors.id = phone2color.colorId";
 
+    private final static String PHONES_COUNT_QUERY = "select COUNT(1) from phones where price > 0";
+
+    private final static String FIRST_PART_OF_SEARCH_PHONES_QUERY = "select limitedPhones.id AS phoneId, brand, model, " +
+            "price, displaySizeInches, weightGr, lengthMm, widthMm, " +
+            "heightMm, announced, deviceType, os, displayResolution, " +
+            "pixelDensity, displayTechnology, backCameraMegapixels, " +
+            "frontCameraMegapixels, ramGb, internalStorageGb, batteryCapacityMah, " +
+            "talkTimeHours, standByTimeHours, bluetooth, positioning, imageUrl, " +
+            "description, colors.id AS colorId, colors.code AS colorCode from " +
+            "(select * from phones where price > 0 and (brand like ? or model like ?) order by ";
+
+    private final static String SECOND_PART_OF_SEARCH_PHONES_QUERY = SECOND_PART_OF_SELECT_ORDERED_PHONE_QUERY;
+
+    private final static String QUERY_OF_PHONE_COUNT_BY_QUERY = "select COUNT(1) from phones where price > 0 and " +
+            "(brand like ? or model like ?)";
+
     @Resource
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert insertPhone;
@@ -124,13 +140,31 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     public List<Phone> findAll(int offset, int limit) {
-        return findAllInOrder("brand", offset, limit);
+        return findAllInOrder(OrderBy.BRAND, offset, limit);
     }
 
     @Override
-    public List<Phone> findAllInOrder(String orderBy, int offset, int limit) {
-        return jdbcTemplate.query(FIRST_PART_OF_SELECT_ORDERED_PHONE_QUERY + orderBy + SECOND_PART_OF_SELECT_ORDERED_PHONE_QUERY, new PhoneListResultSetExtractor(),
+    public List<Phone> findAllInOrder(OrderBy orderBy, int offset, int limit) {
+        return jdbcTemplate.query(FIRST_PART_OF_SELECT_ORDERED_PHONE_QUERY + orderBy.getSqlCommand() + SECOND_PART_OF_SELECT_ORDERED_PHONE_QUERY, new PhoneListResultSetExtractor(),
                 offset, limit);
+    }
+
+    @Override
+    public int phonesCount() {
+        return jdbcTemplate.queryForObject(PHONES_COUNT_QUERY,Integer.class);
+    }
+
+    @Override
+    public List<Phone> getPhonesByQuery(String query, OrderBy orderBy, int offset, int limit) {
+        query = "%"+query+"%";
+        return jdbcTemplate.query(FIRST_PART_OF_SEARCH_PHONES_QUERY + orderBy.getSqlCommand() + SECOND_PART_OF_SEARCH_PHONES_QUERY, new PhoneListResultSetExtractor(),
+                query, query, offset, limit);
+    }
+
+    @Override
+    public int phonesCountByQuery(String query) {
+        query = "%"+query+"%";
+        return jdbcTemplate.queryForObject(QUERY_OF_PHONE_COUNT_BY_QUERY,Integer.class,query,query);
     }
 
     private class PhoneListResultSetExtractor implements ResultSetExtractor<List<Phone>> {

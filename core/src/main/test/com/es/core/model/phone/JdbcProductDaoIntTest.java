@@ -12,6 +12,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.*;
 
 @RunWith(SpringRunner.class)
@@ -57,7 +58,7 @@ public class JdbcProductDaoIntTest {
 
     @Before
     public void addPhoneForUpdate() {
-        Phone phone = createPhone("init", "init", null, 4);
+        Phone phone = createPhone("initBrand", "initModel", null, 4);
 
         phoneDao.save(phone);
 
@@ -90,7 +91,7 @@ public class JdbcProductDaoIntTest {
     public void checkFindAllOrderBy() {
         final int OFFSET = 0;
         final int COUNT = 5;
-        final String ORDER_BY = "price";
+        final PhoneDao.OrderBy ORDER_BY = PhoneDao.OrderBy.PRICE;
 
         List<Phone> phoneList = phoneDao.findAll(OFFSET, COUNT);
         phoneList.sort((o1, o2) -> o1.getPrice().compareTo(o2.getPrice()));
@@ -133,6 +134,66 @@ public class JdbcProductDaoIntTest {
         Assert.assertEquals(colorList.size(), updatedPhone.getColors().size());
     }
 
+    @Test
+    public void checkPhonesCount() {
+        List<Phone> phoneList = phoneDao.findAll(0, Integer.MAX_VALUE);
+
+        long phonesCount = phoneDao.phonesCount();
+
+        Assert.assertEquals(phonesCount, phoneList.size());
+    }
+
+    @Test
+    public void findPhoneByBrand() {
+        findInitPhone("initBrand");
+    }
+
+    @Test
+    public void findPhoneByModel() {
+        findInitPhone("initModel");
+    }
+
+    @Test
+    public void findPhoneByPartOfName() {
+        findInitPhone("nitBr");
+    }
+
+    @Test
+    public void findNonexistentPhone() {
+        final String QUERY = "hgfjhcfhjchfxcdgxyt";
+        List<Phone> phoneList = phoneDao.getPhonesByQuery(QUERY, PhoneDao.OrderBy.BRAND,0,10);
+        Assert.assertTrue(phoneList.isEmpty());
+    }
+
+    @Test
+    public void findSeveralPhones(){
+        final int COUNT = 2;
+        final String QUERY = "test";
+
+        phoneDao.save(createPhone("test1", "test1", null, 1));
+        phoneDao.save(createPhone("test2", "test2", null, 2));
+
+        List<Phone> phoneList = phoneDao.getPhonesByQuery(QUERY, PhoneDao.OrderBy.BRAND,0,10);
+        Assert.assertEquals(COUNT, phoneList.size());
+    }
+
+    @Test
+    public void checkPhonesCountByQuery(){
+        final String QUERY = "test";
+
+        phoneDao.save(createPhone("test1", "test1", null, 1));
+        phoneDao.save(createPhone("test2", "test2", null, 2));
+
+        List<Phone> phoneList = phoneDao.getPhonesByQuery(QUERY, PhoneDao.OrderBy.BRAND,0,10);
+        int count = phoneDao.phonesCountByQuery(QUERY);
+        Assert.assertEquals(count, phoneList.size());
+    }
+
+    private void findInitPhone(String query) {
+        List<Phone> phoneList = phoneDao.getPhonesByQuery(query, PhoneDao.OrderBy.BRAND,0,10);
+        Assert.assertEquals(phoneForUpdate, phoneList.get(0).getId());
+    }
+
     private void insertPhone(int countColors) {
         Phone phone = createPhone(null, countColors);
 
@@ -154,6 +215,7 @@ public class JdbcProductDaoIntTest {
         Phone phone = new Phone();
         phone.setBrand(brand);
         phone.setModel(model);
+        phone.setPrice(new BigDecimal(600));
 
         Set<Color> colors = new HashSet<>(colorList.subList(0, countColors));
 
