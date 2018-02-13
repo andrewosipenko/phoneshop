@@ -1,5 +1,6 @@
 package com.es.core.cart;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 public interface CartService {
@@ -16,4 +17,8 @@ public interface CartService {
     void update(Map<Long, Long> items);
 
     void remove(Long phoneId);
+
+    long getCountItems();
+
+    BigDecimal getPrice();
 }

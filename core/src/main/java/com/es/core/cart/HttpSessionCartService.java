@@ -1,7 +1,6 @@
 package com.es.core.cart;
 
-import com.es.core.model.phone.PhoneDao;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.es.core.model.phone.PhoneService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -12,16 +11,14 @@ import java.util.Map;
 @Service
 public class HttpSessionCartService implements CartService {
 
-    @Autowired
+    @Resource
     private HttpSession httpSession;
 
     @Resource
-    private PhoneDao phoneDao;
+    private PhoneService phoneService;
 
     private static final String ATTRIBUTE_CART = "cart";
-
     private static final String ATTRIBUTE_COUNT_ITEMS = "countItems";
-
     private static final String ATTRIBUTE_PRICE = "price";
 
     @Override
@@ -44,7 +41,7 @@ public class HttpSessionCartService implements CartService {
         cart.addItem(phoneId, quantity);
 
         BigDecimal price = (BigDecimal) httpSession.getAttribute(ATTRIBUTE_PRICE);
-        price = price.add(phoneDao.get(phoneId).get().getPrice()).multiply(BigDecimal.valueOf(quantity));
+        price = price.add(phoneService.get(phoneId).get().getPrice()).multiply(BigDecimal.valueOf(quantity));
 
         httpSession.setAttribute(ATTRIBUTE_COUNT_ITEMS, cart.countItems());
         httpSession.setAttribute(ATTRIBUTE_PRICE, price);
@@ -60,4 +57,13 @@ public class HttpSessionCartService implements CartService {
         throw new UnsupportedOperationException("TODO");
     }
 
+    @Override
+    public long getCountItems() {
+        return (long) httpSession.getAttribute(ATTRIBUTE_COUNT_ITEMS);
+    }
+
+    @Override
+    public BigDecimal getPrice() {
+        return (BigDecimal) httpSession.getAttribute(ATTRIBUTE_PRICE);
+    }
 }
