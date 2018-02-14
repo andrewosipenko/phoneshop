@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class JdbcPhoneDao implements PhoneDao {
@@ -28,6 +29,17 @@ public class JdbcPhoneDao implements PhoneDao {
             "join phone2color on phones.id = phone2color.phoneId " +
             "join colors on colors.id = phone2color.colorId " +
             "where phones.id = ?";
+
+    private final static String SELECT_PHONE_LIST_QUERY = "select phones.id AS phoneId, brand, model, " +
+            "price, displaySizeInches, weightGr, lengthMm, widthMm, " +
+            "heightMm, announced, deviceType, os, displayResolution, " +
+            "pixelDensity, displayTechnology, backCameraMegapixels, " +
+            "frontCameraMegapixels, ramGb, internalStorageGb, batteryCapacityMah, " +
+            "talkTimeHours, standByTimeHours, bluetooth, positioning, imageUrl, " +
+            "description, colors.id AS colorId, colors.code AS colorCode from phones " +
+            "join phone2color on phones.id = phone2color.phoneId " +
+            "join colors on colors.id = phone2color.colorId " +
+            "where phones.id IN ";
 
     private final static String UPDATE_PHONE_QUERY = "update phones set brand = ? ,model = ? ," +
             "price = ? ,displaySizeInches = ? ,weightGr = ? ,lengthMm = ? ,widthMm = ? ," +
@@ -87,6 +99,12 @@ public class JdbcPhoneDao implements PhoneDao {
             return Optional.empty();
         }
         return Optional.of(phones.get(0));
+    }
+
+    @Override
+    public List<Phone> getPhonesByIdList(List<Long> idList) {
+        String delimetedList = idList.stream().map(Object::toString).collect(Collectors.joining(", ", "(", ")"));
+        return jdbcTemplate.query(SELECT_PHONE_LIST_QUERY + delimetedList, new PhoneListResultSetExtractor());
     }
 
     public void save(final Phone phone) {

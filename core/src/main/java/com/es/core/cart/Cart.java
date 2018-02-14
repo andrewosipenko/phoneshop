@@ -9,9 +9,9 @@ public class Cart {
      * key: {@link com.es.core.model.phone.Phone#id}
      * value: quantity
      */
-    private Map<Long,Long> items;
+    private Map<Long, Long> items;
 
-    public Cart(){
+    public Cart() {
         items = new HashMap<>();
     }
 
@@ -23,7 +23,11 @@ public class Cart {
         this.items = items;
     }
 
-    public void addPhone(Long phoneId, Long quantity){
-        items.merge(phoneId,quantity,(oldQuantity, newQuantity) -> oldQuantity + newQuantity);
+    public void addPhone(Long phoneId, Long quantity) {
+        items.merge(phoneId, quantity, (oldQuantity, newQuantity) -> oldQuantity + newQuantity);
+    }
+
+    public Long getCountItems() {
+        return items.values().stream().mapToLong(v -> v).sum();
     }
 }

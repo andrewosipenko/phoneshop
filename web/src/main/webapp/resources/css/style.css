@@ -27,6 +27,12 @@
     float: right;
 }
 
+.topnav .cart-container {
+    margin-left:5px;
+    margin-right:10px;
+    float: right;
+}
+
 .topnav input[type=text] {
     padding: 6px;
     margin-top: 8px;
