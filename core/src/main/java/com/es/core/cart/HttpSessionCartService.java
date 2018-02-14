@@ -59,11 +59,21 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public long getCountItems() {
-        return (long) httpSession.getAttribute(ATTRIBUTE_COUNT_ITEMS);
+        Object count = httpSession.getAttribute(ATTRIBUTE_COUNT_ITEMS);
+        if (count == null) {
+            return 0;
+        } else {
+            return (long) count;
+        }
     }
 
     @Override
     public BigDecimal getPrice() {
-        return (BigDecimal) httpSession.getAttribute(ATTRIBUTE_PRICE);
+        Object price = httpSession.getAttribute(ATTRIBUTE_PRICE);
+        if (price == null) {
+            return BigDecimal.ZERO;
+        } else {
+            return (BigDecimal) price;
+        }
     }
 }

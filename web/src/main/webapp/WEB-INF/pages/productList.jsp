@@ -30,7 +30,7 @@
                     <a href="${pageContext.request.contextPath}/productList"><img src="<c:url value="/resources/img/logo.jpg"/>"></a>
                 </div>
                 <div class="col">
-                    <button class="float-right cart">My cart: <span id="count-items"></span> items <span id="price"></span>$</button>
+                    <button class="float-right cart">My cart: <span id="count-items">${cartStatus.countItems}</span> items <span id="price">${cartStatus.price}</span>$</button>
                 </div>
             </div>
             <div class="row">
@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="row">
-                <table border="1px">
+                <table>
                     <thead>
                         <tr>
                             <td>Image</td>
