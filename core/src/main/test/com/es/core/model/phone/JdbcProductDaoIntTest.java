@@ -190,6 +190,16 @@ public class JdbcProductDaoIntTest extends AbstractTest {
         Assert.assertTrue(receivedPhones.isEmpty());
     }
 
+    @Test
+    public void getPhonesWithoutColors() {
+        Phone phoneWithoutColors = createPhone("noColors","noColors",null,0);
+
+        phoneDao.save(phoneWithoutColors);
+        Optional<Phone> phoneOptional = phoneDao.get(phoneWithoutColors.getId());
+        Assert.assertTrue(phoneOptional.isPresent());
+        Assert.assertEquals(0,phoneOptional.get().getColors().size());
+    }
+
     private void assertList(List<Phone> list1, List<Phone> list2) {
         Assert.assertEquals(list1.size(), list2.size());
         for (Phone phone : list1) {

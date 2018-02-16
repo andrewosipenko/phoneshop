@@ -26,8 +26,8 @@ public class JdbcPhoneDao implements PhoneDao {
             "frontCameraMegapixels, ramGb, internalStorageGb, batteryCapacityMah, " +
             "talkTimeHours, standByTimeHours, bluetooth, positioning, imageUrl, " +
             "description, colors.id AS colorId, colors.code AS colorCode from phones " +
-            "join phone2color on phones.id = phone2color.phoneId " +
-            "join colors on colors.id = phone2color.colorId " +
+            "left join phone2color on phones.id = phone2color.phoneId " +
+            "left join colors on colors.id = phone2color.colorId " +
             "where phones.id = ?";
 
     private final static String SELECT_PHONE_LIST_QUERY = "select phones.id AS phoneId, brand, model, " +
@@ -37,8 +37,8 @@ public class JdbcPhoneDao implements PhoneDao {
             "frontCameraMegapixels, ramGb, internalStorageGb, batteryCapacityMah, " +
             "talkTimeHours, standByTimeHours, bluetooth, positioning, imageUrl, " +
             "description, colors.id AS colorId, colors.code AS colorCode from phones " +
-            "join phone2color on phones.id = phone2color.phoneId " +
-            "join colors on colors.id = phone2color.colorId " +
+            "left join phone2color on phones.id = phone2color.phoneId " +
+            "left join colors on colors.id = phone2color.colorId " +
             "where phones.id IN ";
 
     private final static String UPDATE_PHONE_QUERY = "update phones set brand = ? ,model = ? ," +
@@ -169,20 +169,20 @@ public class JdbcPhoneDao implements PhoneDao {
 
     @Override
     public int phonesCount() {
-        return jdbcTemplate.queryForObject(PHONES_COUNT_QUERY,Integer.class);
+        return jdbcTemplate.queryForObject(PHONES_COUNT_QUERY, Integer.class);
     }
 
     @Override
     public List<Phone> getPhonesByQuery(String query, OrderBy orderBy, int offset, int limit) {
-        query = "%"+query+"%";
+        query = "%" + query + "%";
         return jdbcTemplate.query(FIRST_PART_OF_SEARCH_PHONES_QUERY + orderBy.getSqlCommand() + SECOND_PART_OF_SEARCH_PHONES_QUERY, new PhoneListResultSetExtractor(),
                 query, query, offset, limit);
     }
 
     @Override
     public int phonesCountByQuery(String query) {
-        query = "%"+query+"%";
-        return jdbcTemplate.queryForObject(QUERY_OF_PHONE_COUNT_BY_QUERY,Integer.class,query,query);
+        query = "%" + query + "%";
+        return jdbcTemplate.queryForObject(QUERY_OF_PHONE_COUNT_BY_QUERY, Integer.class, query, query);
     }
 
     private class PhoneListResultSetExtractor implements ResultSetExtractor<List<Phone>> {
@@ -241,10 +241,13 @@ public class JdbcPhoneDao implements PhoneDao {
         }
 
         private void addColor(Phone phone, ResultSet rs) throws SQLException {
-            Color newColor = new Color();
-            newColor.setCode(rs.getString("colorCode"));
-            newColor.setId(rs.getLong("colorId"));
-            phone.getColors().add(newColor);
+            Long colorId = rs.getLong("colorId");
+            if(colorId > 0) {
+                Color newColor = new Color();
+                newColor.setCode(rs.getString("colorCode"));
+                newColor.setId(colorId);
+                phone.getColors().add(newColor);
+            }
         }
     }
 }

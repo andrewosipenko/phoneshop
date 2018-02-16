@@ -16,7 +16,7 @@
         <div class="topnav">
             <div class="cart-container">
                 <a href="#" class="btn btn-outline-dark">
-                    My Cart: <span id="cart-count">0</span> Items (<span id="cart-cost">0</span>$)
+                    My Cart: <span id="cart-count">${not empty cart ? cart.countItems : 0}</span> Items ($ <span id="cart-cost">${not empty cartCost ? cartCost : 0}</span>)
                 </a>
             </div>
             <div class="search-container">

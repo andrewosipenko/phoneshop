@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/templates" %>
 <template:page>
+    <script src="${pageContext.request.contextPath}/resources/js/phoneList.js"></script>
     <p>
         Found <c:out value="${phonesCount}"/> phones.
     </p>
@@ -37,7 +38,9 @@
                   <input type="text" id="quantity-${phone.id}" value="1" size="10"/>
                   <div class="error-message" id="error-message-${phone.id}"></div>
               </td>
-              <td>Action</td>
+              <td>
+                  <button type="button" class="btn btn-secondary" onclick="addToCart(${phone.id})">Add to cart</button>
+              </td>
             </tr>
           </c:forEach>
         </table>

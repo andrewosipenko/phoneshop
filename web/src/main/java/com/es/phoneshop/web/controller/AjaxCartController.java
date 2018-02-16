@@ -4,12 +4,12 @@ import com.es.core.cart.CartService;
 import com.es.core.cart.PhoneNotFoundException;
 import com.es.phoneshop.web.bean.CartAddPhoneInfo;
 import com.es.phoneshop.web.bean.CartStatus;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,12 +26,10 @@ public class AjaxCartController {
 
     private final static String ERROR_MESSAGE_WRONG_FORMAT = "Wrong format";
 
-    @Validated
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<CartStatus> addPhone(@RequestBody @Valid CartAddPhoneInfo cartInfo, BindingResult bindingResult) {
 
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        CartStatus cartStatus = new CartStatus();
 
         if (!bindingResult.hasErrors()) {
             try {
@@ -41,6 +39,18 @@ public class AjaxCartController {
                 status = HttpStatus.BAD_REQUEST;
             }
         }
+
+        return createResponse(status);
+    }
+
+    @ExceptionHandler(InvalidFormatException.class)
+    public ResponseEntity<CartStatus> handleNumberFormatException(InvalidFormatException e) {
+        return createResponse(HttpStatus.BAD_REQUEST);
+    }
+
+    private ResponseEntity<CartStatus> createResponse(HttpStatus status) {
+
+        CartStatus cartStatus = new CartStatus();
 
         if (status == HttpStatus.OK) {
             cartStatus.setCartCost(cartService.getCartCost());

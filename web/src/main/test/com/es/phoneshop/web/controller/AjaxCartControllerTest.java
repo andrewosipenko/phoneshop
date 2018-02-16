@@ -135,6 +135,20 @@ public class AjaxCartControllerTest {
         sendRequestAndCheckErrorMessage(JSONContent);
     }
 
+    @Test
+    public void addPhoneWithQuantityIsString() throws Exception {
+        final Long ADD_PHONE_ID = 0L;
+
+        final String JSONContent = "{" +
+                "\"phoneId\":" + ADD_PHONE_ID.toString() + "," +
+                "\"quantity\":\"test\"" +
+                "}";
+
+        context.checking(new Expectations());
+
+        sendRequestAndCheckErrorMessage(JSONContent);
+    }
+
     private void sendRequestAndCheckErrorMessage(String JSONContent) throws Exception {
         mockMvc.perform(post("/ajaxCart").contentType(MediaType.APPLICATION_JSON_UTF8).content(JSONContent))
                 .andDo(print())
