@@ -27,10 +27,12 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <a href="${pageContext.request.contextPath}/productList"><img src="<c:url value="/resources/img/logo.jpg"/>"></a>
+                    <a href="${pageContext.request.contextPath}"><img src="<c:url value="/resources/img/logo.jpg"/>"></a>
                 </div>
                 <div class="col">
-                    <button class="float-right cart">My cart: <span id="count-items">${cartStatus.countItems}</span> items <span id="price">${cartStatus.price}</span>$</button>
+                    <form method="GET" action="${pageContext.request.contextPath}/cart">
+                        <button class="float-right cart" type="submit">My cart: <span id="count-items">${cartStatus.countItems}</span> items <span id="price">${cartStatus.price}</span>$</button>
+                    </form>
                 </div>
             </div>
             <div class="row">
@@ -64,14 +66,14 @@
                     <c:forEach var="phone" items="${phones}">
                         <tr>
                             <td>
-                                <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
+                                <a href="${pageContext.request.contextPath}/productDetails/${phone.id}?color=${phone.colors.toArray()[0].code}">
+                                    <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
+                                </a>
                             </td>
                             <td>${phone.brand}</td>
                             <td>${phone.model}</td>
                             <td>
-                                <c:forEach var="color" items="${phone.colors}">
-                                    ${color.code}
-                                </c:forEach>
+                                ${phone.colors.toArray()[0].code}
                             </td>
                             <td>${phone.displaySizeInches}''</td>
                             <td>$ ${phone.price}</td>
@@ -82,7 +84,7 @@
                                 <span id="quantity-${phone.id}-wrong-format" class="error"></span>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-default add-cart" onclick="addToCart(${phone.id})">Add to cart</button>
+                                <button type="button" class="btn btn-default add-cart" onclick="addToCart(${phone.id}, '${phone.colors.toArray()[0].code}')">Add to cart</button>
                             </td>
                         </tr>
                     </c:forEach>

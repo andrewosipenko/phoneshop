@@ -1,8 +1,15 @@
 .login {
     text-align: right;
 }
+
 table {
     width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+
+table, td, th {
+    border: 1px solid black;
 }
 
 th, td {
@@ -23,4 +30,58 @@ th, td {
 
 .error {
     color: red;
+}
+
+#product_name {
+    display: block;
+    margin: 25px 0;
+}
+
+.bold {
+    font-weight: bold;
+    font-size: 17px;
+}
+
+table.param td {
+    text-align: left;
+    padding: 10px;
+    min-width: 20px;
+}
+
+table.param {
+    width: 60%;
+    height: auto;
+}
+
+div.param {
+    margin-left: 40%;
+}
+
+#product-img {
+    margin: 25px 0;
+}
+
+#description {
+    display: block;
+    margin: 25px 0;
+}
+
+.little-input {
+    min-width: 10px;
+}
+
+table.add-to-cart {
+    width: auto;
+}
+
+table.add-to-cart td {
+    padding: 0 10px;
+}
+
+.col {
+    margin: 10px 0;
+}
+
+#cart-table tr {
+    height: 60px;
 }

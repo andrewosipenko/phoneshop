@@ -1,4 +1,8 @@
-function addToCart(id) {
+$(function () {
+    $("#price").number(true, 2);
+});
+
+function addToCart(id, color) {
     var quantity = $("#quantity-" + id).val();
     var contextPath = $("#contextPath").val();
     var url = contextPath + "/ajaxCart";
@@ -9,6 +13,7 @@ function addToCart(id) {
         dataType: "json",
         data: ({
             phoneId : id,
+            color: color,
             quantity : quantity
         }),
         success: function (cartStatus) {
