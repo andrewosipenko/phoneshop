@@ -35,7 +35,7 @@ public class JdbcPhoneDao implements PhoneDao {
                                                                 "JOIN phone2color ON phones.id = phone2color.phoneId " +
                                                                 "JOIN colors ON colors.id = phone2color.colorId " +
                                                                 "JOIN stocks ON phones.id = stocks.phoneId " +
-                                                                "WHERE stock > 0 AND price > 0 AND model LIKE ?";
+                                                                "WHERE stock > 0 AND price > 0 AND LOWER(model) LIKE LOWER(?)";
 
     private static final String SELECT_BY_MODEL_IN_ORDER = "SELECT phones.id AS phoneId, brand, model, price, " +
                                                            "displaySizeInches, weightGr, lengthMm, widthMm, " +
@@ -48,7 +48,7 @@ public class JdbcPhoneDao implements PhoneDao {
                                                            "JOIN phone2color ON phones.id = phone2color.phoneId " +
                                                            "JOIN colors ON colors.id = phone2color.colorId " +
                                                            "JOIN stocks ON phones.id = stocks.phoneId " +
-                                                           "WHERE stock > 0 AND price > 0 AND model LIKE ? " +
+                                                           "WHERE stock > 0 AND price > 0 AND LOWER(model) LIKE LOWER(?) " +
                                                            "ORDER BY %s %s, brand %s, model %s, code %s LIMIT ? OFFSET ?";
     @Override
     public Optional<Phone> get(final Long key) {
