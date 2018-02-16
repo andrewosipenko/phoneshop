@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @Transactional
-@ContextConfiguration("classpath:context/testContext.xml")
+@ContextConfiguration("classpath:context/testContext-core.xml")
 public class JdbcProductDaoIntTest extends AbstractTest {
 
     @Resource

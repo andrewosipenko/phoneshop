@@ -54,7 +54,11 @@ public class HttpSessionCartService implements CartService {
         Phone addedPhone = phoneDao.get(phoneId).orElseThrow(PhoneNotFoundException::new);
         cart.addPhone(phoneId, quantity);
         BigDecimal cartCost = getCartCost();
-        cartCost = cartCost.add(addedPhone.getPrice().multiply(new BigDecimal(quantity)));
+        BigDecimal phonePrice = addedPhone.getPrice();
+        if (phonePrice == null) {
+            throw new PhoneNotFoundException();
+        }
+        cartCost = cartCost.add(phonePrice.multiply(new BigDecimal(quantity)));
         setCartCost(cartCost);
     }
 
@@ -84,4 +88,8 @@ public class HttpSessionCartService implements CartService {
         }
     }
 
+    @Override
+    public Long getPhonesCountInCart() {
+        return getCart().getCountItems();
+    }
 }

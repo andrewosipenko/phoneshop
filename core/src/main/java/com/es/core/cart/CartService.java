@@ -18,4 +18,6 @@ public interface CartService {
     void remove(Long phoneId) throws PhoneNotFoundException;
 
     BigDecimal getCartCost();
+
+    Long getPhonesCountInCart();
 }

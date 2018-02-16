@@ -13,13 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @Transactional
-@ContextConfiguration("classpath:context/testContext.xml")
+@ContextConfiguration("classpath:context/testContext-core.xml")
 public class HttpSessionCartServiceTest extends AbstractTest {
 
     @Resource
@@ -33,6 +34,7 @@ public class HttpSessionCartServiceTest extends AbstractTest {
     @Before
     public void init() {
         phoneList = addNewPhones(5);
+
         httpSession.removeAttribute("cart");
         httpSession.removeAttribute("cartCost");
     }
@@ -165,6 +167,38 @@ public class HttpSessionCartServiceTest extends AbstractTest {
         Map<Long, Long> items = new HashMap<>();
         items.put(phone1.getId(), QUANTITY_1);
         checkCost(items);
+    }
+
+    @Test
+    public void checkPhonesCountInCart() throws PhoneNotFoundException{
+        final Long QUANTITY_1 = 1L;
+        final Long QUANTITY_2 = 2L;
+        final Long QUANTITY_3 = 3L;
+
+        Phone phone1 = phoneList.get(0);
+        Phone phone2 = phoneList.get(1);
+        Phone phone3 = phoneList.get(2);
+
+        cartService.addPhone(phone1.getId(), QUANTITY_1);
+        cartService.addPhone(phone2.getId(), QUANTITY_2);
+        cartService.addPhone(phone3.getId(), QUANTITY_3);
+        cartService.addPhone(phone1.getId(), QUANTITY_3);
+        cartService.remove(phone2.getId());
+
+        final Long TOTAL_COUNT = QUANTITY_1 + QUANTITY_3 + QUANTITY_3;
+
+        Assert.assertEquals(TOTAL_COUNT, cartService.getPhonesCountInCart());
+    }
+
+    @Test(expected = PhoneNotFoundException.class)
+    public void addPhoneWithoutPrice() throws PhoneNotFoundException{
+        final Long QUANTITY = 1L;
+
+        Phone newPhone = createPhone("noPrice", "noPrice", null, 1);
+        newPhone.setPrice(null);
+        phoneDao.save(newPhone);
+
+        cartService.addPhone(newPhone.getId(), QUANTITY);
     }
 
 

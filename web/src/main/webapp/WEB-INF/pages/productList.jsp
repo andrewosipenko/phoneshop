@@ -33,7 +33,10 @@
               </td>
               <td>${phone.displaySizeInches}</td>
               <td>$ ${phone.price}</td>
-              <td>Quantity</td>
+              <td>
+                  <input type="text" id="quantity-${phone.id}" value="1" size="10"/>
+                  <div class="error-message" id="error-message-${phone.id}"></div>
+              </td>
               <td>Action</td>
             </tr>
           </c:forEach>

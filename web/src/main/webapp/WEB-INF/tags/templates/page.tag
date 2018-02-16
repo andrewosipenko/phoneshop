@@ -29,5 +29,6 @@
         <div class="container">
             <jsp:doBody/>
         </div>
+        <input type="hidden" id="context-path" value="${pageContext.request.contextPath}">
     </body>
 </html>
