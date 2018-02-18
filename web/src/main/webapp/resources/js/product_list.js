@@ -3,7 +3,7 @@ $(function () {
 });
 
 function addToCart(id, color) {
-    var quantity = $("#quantity-" + id).val();
+    var quantity = $("#quantity-" + id + "-" + color).val();
     var contextPath = $("#contextPath").val();
     var url = contextPath + "/ajaxCart";
 
@@ -19,12 +19,12 @@ function addToCart(id, color) {
         success: function (cartStatus) {
             $("#count-items").text(cartStatus.countItems);
             $("#price").number(cartStatus.price, 2);
-            $("#quantity-" + id + "-wrong-format").text("");
+            $("#quantity-" + id + "-" + color + "-wrong-format").text("");
         },
         statusCode: {
             400: function (data) {
                 var error = JSON.parse(data.responseText);
-                $("#quantity-" + id + "-wrong-format").text(error.errorMessage);
+                $("#quantity-" + id + "-" + color + "-wrong-format").text(error.errorMessage);
             }
         }
     });

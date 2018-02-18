@@ -79,9 +79,9 @@
                             <td>$ ${phone.price}</td>
                             <td>
                                 <input type="hidden" id="contextPath" value="${pageContext.request.contextPath}">
-                                <input id="quantity-${phone.id}" type="text" value="1">
+                                <input id="quantity-${phone.id}-${phone.colors.toArray()[0].code}" type="text" value="1">
                                 <br>
-                                <span id="quantity-${phone.id}-wrong-format" class="error"></span>
+                                <span id="quantity-${phone.id}-${phone.colors.toArray()[0].code}-wrong-format" class="error"></span>
                             </td>
                             <td>
                                 <button type="button" class="btn btn-default add-cart" onclick="addToCart(${phone.id}, '${phone.colors.toArray()[0].code}')">Add to cart</button>
