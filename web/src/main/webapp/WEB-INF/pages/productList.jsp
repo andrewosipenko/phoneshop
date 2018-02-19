@@ -1,8 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/templates" %>
-<template:page>
-    <script src="${pageContext.request.contextPath}/resources/js/phoneList.js"></script>
+<template:page catalogTabIsActive="${true}">
     <p>
         Found <c:out value="${phonesCount}"/> phones.
     </p>
@@ -23,10 +22,16 @@
           <c:forEach var="phone" items="${phones}">
             <tr>
               <td>
-                <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
+                <a href="${pageContext.request.contextPath}/productDetails/${phone.id}">
+                  <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
+                </a>
               </td>
               <td>${phone.brand}</td>
-              <td>${phone.model}</td>
+              <td>
+                <a href="${pageContext.request.contextPath}/productDetails/${phone.id}">
+                    ${phone.model}
+                </a>
+              </td>
               <td>
                 <c:forEach var="color" items="${phone.colors}">
                   <p>${color.code}</p>

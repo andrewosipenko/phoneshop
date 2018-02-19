@@ -10,13 +10,22 @@
     <context:property-placeholder location="classpath:conf/application.properties"/>
     <import resource="classpath:context/applicationContext-core.xml"/>
 
-    <jdbc:initialize-database data-source="dataSource">
-        <jdbc:script location="classpath:db/demodata-for-test.sql"/>
-    </jdbc:initialize-database>
-
-    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-
     <bean id="httpSession" class="org.springframework.mock.web.MockHttpSession"/>
+
+    <beans profile="!phoneDaoMock">
+        <jdbc:initialize-database data-source="dataSource">
+            <jdbc:script location="classpath:db/demodata-for-test.sql"/>
+        </jdbc:initialize-database>
+
+        <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+            <property name="dataSource" ref="dataSource"/>
+        </bean>
+    </beans>
+
+    <beans profile="phoneDaoMock">
+        <bean id="phoneDao" class="org.mockito.Mockito" factory-method="mock" primary="true">
+            <constructor-arg value="com.es.core.model.phone.PhoneDao"/>
+        </bean>
+    </beans>
+
 </beans>

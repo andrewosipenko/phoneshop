@@ -2,24 +2,27 @@ package com.es.core.cart;
 
 import com.es.core.AbstractTest;
 import com.es.core.model.phone.Phone;
+import com.es.core.model.phone.PhoneDao;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InOrder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
-@Transactional
+@ActiveProfiles("phoneDaoMock")
 @ContextConfiguration("classpath:context/testContext-core.xml")
 public class HttpSessionCartServiceTest extends AbstractTest {
 
@@ -29,14 +32,48 @@ public class HttpSessionCartServiceTest extends AbstractTest {
     @Resource
     private HttpSession httpSession;
 
+    @Resource
+    private PhoneDao mockPhoneDao;
+
     private List<Phone> phoneList;
 
-    @Before
-    public void init() {
-        phoneList = addNewPhones(5);
+    private static final int COUNT_PHONE = 5;
 
+    private Phone phoneWithoutPrice;
+
+    @Before
+    public void initPhoneList() {
+        phoneList = new ArrayList<>();
+        for (int i = 0; i < COUNT_PHONE - 1; i++) {
+            Phone newPhone = createPhone("test" + Integer.toString(i), "test" + Integer.toString(i), new Long(i), i);
+            phoneList.add(newPhone);
+        }
+        phoneWithoutPrice = createPhone("noPrice", "noPrice", new Long(COUNT_PHONE - 1), 1);
+        phoneWithoutPrice.setPrice(null);
+        phoneList.add(phoneWithoutPrice);
+    }
+
+    @Before
+    public void initMockPhoneDao() {
+        when(mockPhoneDao.get(isA(Long.class))).thenReturn(Optional.empty());
+        for (Phone phone : phoneList) {
+            when(mockPhoneDao.get(phone.getId())).thenReturn(Optional.of(phone));
+        }
+    }
+
+    @Before
+    public void initSession() {
         httpSession.removeAttribute("cart");
         httpSession.removeAttribute("cartCost");
+    }
+
+    @After
+    public void resetPhoneMockDao() {
+        try {
+            verifyNoMoreInteractions(mockPhoneDao);
+        } finally {
+            reset(mockPhoneDao);
+        }
     }
 
 
@@ -52,6 +89,8 @@ public class HttpSessionCartServiceTest extends AbstractTest {
 
         Assert.assertEquals(1, cart.getItems().size());
         Assert.assertEquals(QUANTITY, cart.getItems().get(phone.getId()));
+
+        verify(mockPhoneDao).get(ArgumentMatchers.eq(phone.getId()));
 
         Map<Long, Long> items = new HashMap<>();
         items.put(phone.getId(), QUANTITY);
@@ -72,6 +111,8 @@ public class HttpSessionCartServiceTest extends AbstractTest {
 
         Assert.assertEquals(1, cart.getItems().size());
         Assert.assertEquals(new Long(QUANTITY_1 + QUANTITY_2), cart.getItems().get(phone.getId()));
+
+        verify(mockPhoneDao, times(2)).get(ArgumentMatchers.eq(phone.getId()));
 
         Map<Long, Long> items = new HashMap<>();
         items.put(phone.getId(), QUANTITY_1 + QUANTITY_2);
@@ -95,6 +136,9 @@ public class HttpSessionCartServiceTest extends AbstractTest {
         Assert.assertEquals(QUANTITY_1, cart.getItems().get(phone1.getId()));
         Assert.assertEquals(QUANTITY_2, cart.getItems().get(phone2.getId()));
 
+        verify(mockPhoneDao).get(ArgumentMatchers.eq(phone1.getId()));
+        verify(mockPhoneDao).get(ArgumentMatchers.eq(phone2.getId()));
+
         Map<Long, Long> items = new HashMap<>();
         items.put(phone1.getId(), QUANTITY_1);
         items.put(phone2.getId(), QUANTITY_2);
@@ -106,7 +150,11 @@ public class HttpSessionCartServiceTest extends AbstractTest {
         final Long NONEXISTENT_PHONE = -1L;
         final Long QUANTITY = 1L;
 
-        cartService.addPhone(NONEXISTENT_PHONE, QUANTITY);
+        try {
+            cartService.addPhone(NONEXISTENT_PHONE, QUANTITY);
+        } finally {
+            verify(mockPhoneDao).get(ArgumentMatchers.eq(NONEXISTENT_PHONE));
+        }
     }
 
     @Test
@@ -121,7 +169,14 @@ public class HttpSessionCartServiceTest extends AbstractTest {
         Map<Long, Long> items = new HashMap<>();
         items.put(phone1.getId(), QUANTITY_1);
         items.put(phone2.getId(), QUANTITY_2);
+
+        List<Long> updatedPhones = new ArrayList<>(items.keySet());
+
+        when(mockPhoneDao.getPhonesByIdList(updatedPhones)).thenReturn(Arrays.asList(phone1, phone2));
+
         cartService.update(items);
+
+        verify(mockPhoneDao).getPhonesByIdList(ArgumentMatchers.eq(updatedPhones));
         checkCost(items);
     }
 
@@ -142,6 +197,12 @@ public class HttpSessionCartServiceTest extends AbstractTest {
 
         Assert.assertEquals(1, cart.getItems().size());
         Assert.assertEquals(QUANTITY_2, cart.getItems().get(phone2.getId()));
+
+        InOrder inOrder = inOrder(mockPhoneDao);
+
+        inOrder.verify(mockPhoneDao).get(ArgumentMatchers.eq(phone1.getId()));
+        inOrder.verify(mockPhoneDao).get(ArgumentMatchers.eq(phone2.getId()));
+        inOrder.verify(mockPhoneDao).get(ArgumentMatchers.eq(phone1.getId()));
 
         Map<Long, Long> items = new HashMap<>();
         items.put(phone2.getId(), QUANTITY_2);
@@ -164,13 +225,15 @@ public class HttpSessionCartServiceTest extends AbstractTest {
         Assert.assertEquals(1, cart.getItems().size());
         Assert.assertEquals(QUANTITY_1, cart.getItems().get(phone1.getId()));
 
+        verify(mockPhoneDao).get(ArgumentMatchers.eq(phone1.getId()));
+
         Map<Long, Long> items = new HashMap<>();
         items.put(phone1.getId(), QUANTITY_1);
         checkCost(items);
     }
 
     @Test
-    public void checkPhonesCountInCart() throws PhoneNotFoundException{
+    public void checkPhonesCountInCart() throws PhoneNotFoundException {
         final Long QUANTITY_1 = 1L;
         final Long QUANTITY_2 = 2L;
         final Long QUANTITY_3 = 3L;
@@ -188,17 +251,24 @@ public class HttpSessionCartServiceTest extends AbstractTest {
         final Long TOTAL_COUNT = QUANTITY_1 + QUANTITY_3 + QUANTITY_3;
 
         Assert.assertEquals(TOTAL_COUNT, cartService.getPhonesCountInCart());
+
+        InOrder inOrder = inOrder(mockPhoneDao);
+        inOrder.verify(mockPhoneDao).get(ArgumentMatchers.eq(phone1.getId()));
+        inOrder.verify(mockPhoneDao).get(ArgumentMatchers.eq(phone2.getId()));
+        inOrder.verify(mockPhoneDao).get(ArgumentMatchers.eq(phone3.getId()));
+        inOrder.verify(mockPhoneDao).get(ArgumentMatchers.eq(phone1.getId()));
+        inOrder.verify(mockPhoneDao).get(ArgumentMatchers.eq(phone2.getId()));
     }
 
     @Test(expected = PhoneNotFoundException.class)
-    public void addPhoneWithoutPrice() throws PhoneNotFoundException{
+    public void addPhoneWithoutPrice() throws PhoneNotFoundException {
         final Long QUANTITY = 1L;
 
-        Phone newPhone = createPhone("noPrice", "noPrice", null, 1);
-        newPhone.setPrice(null);
-        phoneDao.save(newPhone);
-
-        cartService.addPhone(newPhone.getId(), QUANTITY);
+        try {
+            cartService.addPhone(phoneWithoutPrice.getId(), QUANTITY);
+        } finally {
+            verify(mockPhoneDao).get(ArgumentMatchers.eq(phoneWithoutPrice.getId()));
+        }
     }
 
 

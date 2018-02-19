@@ -52,12 +52,12 @@ public class HttpSessionCartService implements CartService {
     public void addPhone(Long phoneId, Long quantity) throws PhoneNotFoundException {
         Cart cart = getCart();
         Phone addedPhone = phoneDao.get(phoneId).orElseThrow(PhoneNotFoundException::new);
-        cart.addPhone(phoneId, quantity);
-        BigDecimal cartCost = getCartCost();
         BigDecimal phonePrice = addedPhone.getPrice();
         if (phonePrice == null) {
             throw new PhoneNotFoundException();
         }
+        cart.addPhone(phoneId, quantity);
+        BigDecimal cartCost = getCartCost();
         cartCost = cartCost.add(phonePrice.multiply(new BigDecimal(quantity)));
         setCartCost(cartCost);
     }

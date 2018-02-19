@@ -76,3 +76,9 @@
 .error-message{
     color: red;
 }
+
+.add-to-cart td{
+    padding-right:5px;
+    padding-left:5px;
+    vertical-align: top;
+}
