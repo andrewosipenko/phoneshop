@@ -18,7 +18,7 @@
         <div class="topnav">
             <a ${catalogTabIsActive ? 'class="active"' : ''} href="${pageContext.request.contextPath}/productList">Catalog</a>
             <div class="cart-container">
-                <a href="#" class="btn btn-outline-dark">
+                <a href="${pageContext.request.contextPath}/cart" class="btn btn-outline-dark">
                     My Cart: <span id="cart-count">${not empty cart ? cart.countItems : 0}</span> Items ($ <span id="cart-cost">${not empty cartCost ? cartCost : 0}</span>)
                 </a>
             </div>

@@ -1,6 +1,7 @@
 package com.es.core.cart;
 
 import com.es.core.AbstractTest;
+import com.es.core.exception.PhoneNotFoundException;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.PhoneDao;
 import org.junit.After;

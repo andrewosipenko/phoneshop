@@ -1,8 +1,8 @@
 package com.es.core.cart;
 
+import com.es.core.exception.PhoneNotFoundException;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.PhoneDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -15,7 +15,7 @@ import java.util.Map;
 @Service
 public class HttpSessionCartService implements CartService {
 
-    @Autowired
+    @Resource
     private HttpSession httpSession;
 
     @Resource

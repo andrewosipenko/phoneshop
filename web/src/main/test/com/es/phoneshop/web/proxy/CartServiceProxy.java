@@ -2,7 +2,7 @@ package com.es.phoneshop.web.proxy;
 
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartService;
-import com.es.core.cart.PhoneNotFoundException;
+import com.es.core.exception.PhoneNotFoundException;
 
 import java.math.BigDecimal;
 import java.util.Map;

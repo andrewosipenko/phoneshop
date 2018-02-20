@@ -1,7 +1,7 @@
 package com.es.phoneshop.web.controller;
 
 import com.es.core.cart.CartService;
-import com.es.core.cart.PhoneNotFoundException;
+import com.es.core.exception.PhoneNotFoundException;
 import com.es.phoneshop.web.proxy.CartServiceProxy;
 import org.jmock.Expectations;
 import org.jmock.Mockery;

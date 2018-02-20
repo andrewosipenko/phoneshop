@@ -28,4 +28,8 @@ public interface ControllerConstants {
 
     String PRODUCT_DETAILS_PAGE_NAME = "productDetails";
 
+    String CART_PAGE_NAME = "cart";
+
+    String CART_ITEM_LIST_ATTRIBUTE = "cartItemList";
+
 }
