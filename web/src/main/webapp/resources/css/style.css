@@ -85,3 +85,7 @@ table.add-to-cart td {
 #cart-table tr {
     height: 60px;
 }
+
+.padding-button {
+    padding-bottom: 40px;
+}
