@@ -78,7 +78,7 @@ public class AjaxCartControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(jsonPath("$.phonesCount").value(COUNT))
+                .andExpect(jsonPath("$.phoneCount").value(COUNT))
                 .andExpect(jsonPath("$.cartCost").value(COST.doubleValue()));
     }
 

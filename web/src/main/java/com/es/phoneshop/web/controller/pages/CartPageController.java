@@ -5,13 +5,11 @@ import com.es.core.cart.CartService;
 import com.es.core.exception.PhoneNotFoundException;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.PhoneDao;
-import com.es.phoneshop.web.bean.CartItem;
+import com.es.phoneshop.web.bean.cart.CartItem;
 import com.es.phoneshop.web.controller.ControllerConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -23,13 +21,15 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/cart")
 public class CartPageController {
 
+    private final static String CART_ITEM_LIST_ATTRIBUTE = "cartItemList";
+
     @Resource
     private CartService cartService;
 
     @Resource
     private PhoneDao phoneDao;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String getCart(Model model) {
         Cart cart = cartService.getCart();
         Map<Long,Long> items = cart.getItems();
@@ -38,16 +38,16 @@ public class CartPageController {
         List<CartItem> cartItems = phonesList.stream()
                 .map(phone -> new CartItem(phone,items.get(phone.getId())))
                 .collect(Collectors.toList());
-        model.addAttribute(ControllerConstants.CART_ITEM_LIST_ATTRIBUTE,cartItems);
+        model.addAttribute(CART_ITEM_LIST_ATTRIBUTE,cartItems);
         return ControllerConstants.CART_PAGE_NAME;
     }
 
-    @RequestMapping(method = RequestMethod.PUT, params = "update")
+    @PutMapping(params = "update")
     public String updateCart() throws PhoneNotFoundException{
         return "redirect:cart";
     }
 
-    @RequestMapping(method = RequestMethod.POST, params = "remove")
+    @PostMapping(params = "remove")
     public String deleteProductFormCart(@RequestParam Long phoneId) throws PhoneNotFoundException{
         cartService.remove(phoneId);
         return "redirect:cart";

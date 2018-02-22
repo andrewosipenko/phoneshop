@@ -72,7 +72,7 @@ public class JdbcProductDaoIntTest extends AbstractTest {
     public void checkFindAllOrderBy() {
         final int OFFSET = 0;
         final int COUNT = 5;
-        final PhoneDao.OrderBy ORDER_BY = PhoneDao.OrderBy.PRICE;
+        final OrderBy ORDER_BY = OrderBy.PRICE;
 
         List<Phone> phoneList = phoneDao.findAll(OFFSET, COUNT);
         phoneList.sort((o1, o2) -> o1.getPrice().compareTo(o2.getPrice()));
@@ -119,7 +119,7 @@ public class JdbcProductDaoIntTest extends AbstractTest {
     public void checkPhonesCount() {
         List<Phone> phoneList = phoneDao.findAll(0, Integer.MAX_VALUE);
 
-        long phonesCount = phoneDao.phonesCount();
+        long phonesCount = phoneDao.phoneCount();
 
         Assert.assertEquals(phonesCount, phoneList.size());
     }
@@ -140,9 +140,14 @@ public class JdbcProductDaoIntTest extends AbstractTest {
     }
 
     @Test
+    public void findPhoneWithNameInDifferentRegister() {
+        findInitPhone("INITMODEL");
+    }
+
+    @Test
     public void findNonexistentPhone() {
         final String QUERY = "hgfjhcfhjchfxcdgxyt";
-        List<Phone> phoneList = phoneDao.getPhonesByQuery(QUERY, PhoneDao.OrderBy.BRAND, 0, 10);
+        List<Phone> phoneList = phoneDao.getPhonesByQuery(QUERY, OrderBy.BRAND, 0, 10);
         Assert.assertTrue(phoneList.isEmpty());
     }
 
@@ -154,7 +159,7 @@ public class JdbcProductDaoIntTest extends AbstractTest {
         phoneDao.save(createPhone("test1", "test1", null, 1));
         phoneDao.save(createPhone("test2", "test2", null, 2));
 
-        List<Phone> phoneList = phoneDao.getPhonesByQuery(QUERY, PhoneDao.OrderBy.BRAND, 0, 10);
+        List<Phone> phoneList = phoneDao.getPhonesByQuery(QUERY, OrderBy.BRAND, 0, 10);
         Assert.assertEquals(COUNT, phoneList.size());
     }
 
@@ -165,8 +170,8 @@ public class JdbcProductDaoIntTest extends AbstractTest {
         phoneDao.save(createPhone("test1", "test1", null, 1));
         phoneDao.save(createPhone("test2", "test2", null, 2));
 
-        List<Phone> phoneList = phoneDao.getPhonesByQuery(QUERY, PhoneDao.OrderBy.BRAND, 0, 10);
-        int count = phoneDao.phonesCountByQuery(QUERY);
+        List<Phone> phoneList = phoneDao.getPhonesByQuery(QUERY, OrderBy.BRAND, 0, 10);
+        int count = phoneDao.phoneCountByQuery(QUERY);
         Assert.assertEquals(count, phoneList.size());
     }
 
@@ -208,7 +213,7 @@ public class JdbcProductDaoIntTest extends AbstractTest {
     }
 
     private void findInitPhone(String query) {
-        List<Phone> phoneList = phoneDao.getPhonesByQuery(query, PhoneDao.OrderBy.BRAND, 0, 10);
+        List<Phone> phoneList = phoneDao.getPhonesByQuery(query, OrderBy.BRAND, 0, 10);
         Assert.assertEquals(phoneForUpdate, phoneList.get(0).getId());
     }
 

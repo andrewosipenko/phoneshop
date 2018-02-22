@@ -1,4 +1,4 @@
-package com.es.phoneshop.web.bean;
+package com.es.phoneshop.web.bean.cart;
 
 
 import com.es.core.model.phone.Phone;

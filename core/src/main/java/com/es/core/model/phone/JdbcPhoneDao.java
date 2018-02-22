@@ -75,12 +75,12 @@ public class JdbcPhoneDao implements PhoneDao {
             "frontCameraMegapixels, ramGb, internalStorageGb, batteryCapacityMah, " +
             "talkTimeHours, standByTimeHours, bluetooth, positioning, imageUrl, " +
             "description, colors.id AS colorId, colors.code AS colorCode from " +
-            "(select * from phones where price > 0 and (brand like ? or model like ?) order by ";
+            "(select * from phones where price > 0 and (lower(brand) like ? or lower(model) like ?) order by ";
 
     private final static String SECOND_PART_OF_SEARCH_PHONES_QUERY = SECOND_PART_OF_SELECT_ORDERED_PHONE_QUERY;
 
     private final static String QUERY_OF_PHONE_COUNT_BY_QUERY = "select COUNT(1) from phones where price > 0 and " +
-            "(brand like ? or model like ?)";
+            "(lower(brand) like ? or lower(model) like ?)";
 
     @Resource
     private JdbcTemplate jdbcTemplate;
@@ -168,20 +168,20 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     @Override
-    public int phonesCount() {
+    public int phoneCount() {
         return jdbcTemplate.queryForObject(PHONES_COUNT_QUERY, Integer.class);
     }
 
     @Override
     public List<Phone> getPhonesByQuery(String query, OrderBy orderBy, int offset, int limit) {
-        query = "%" + query + "%";
+        query = "%" + query.toLowerCase() + "%";
         return jdbcTemplate.query(FIRST_PART_OF_SEARCH_PHONES_QUERY + orderBy.getSqlCommand() + SECOND_PART_OF_SEARCH_PHONES_QUERY, new PhoneListResultSetExtractor(),
                 query, query, offset, limit);
     }
 
     @Override
-    public int phonesCountByQuery(String query) {
-        query = "%" + query + "%";
+    public int phoneCountByQuery(String query) {
+        query = "%" + query.toLowerCase() + "%";
         return jdbcTemplate.queryForObject(QUERY_OF_PHONE_COUNT_BY_QUERY, Integer.class, query, query);
     }
 

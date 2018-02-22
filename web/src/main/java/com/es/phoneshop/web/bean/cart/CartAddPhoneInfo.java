@@ -1,4 +1,4 @@
-package com.es.phoneshop.web.bean;
+package com.es.phoneshop.web.bean.cart;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;

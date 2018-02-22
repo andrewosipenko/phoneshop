@@ -2,23 +2,19 @@ package com.es.phoneshop.web.controller;
 
 import com.es.core.cart.CartService;
 import com.es.core.exception.PhoneNotFoundException;
-import com.es.phoneshop.web.bean.CartAddPhoneInfo;
-import com.es.phoneshop.web.bean.CartStatus;
+import com.es.phoneshop.web.bean.cart.CartAddPhoneInfo;
+import com.es.phoneshop.web.bean.cart.CartStatus;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
-@Controller
-@RequestMapping(value = "/ajaxCart")
+@RestController
+@RequestMapping("/ajaxCart")
 public class AjaxCartController {
 
     @Resource
@@ -26,25 +22,27 @@ public class AjaxCartController {
 
     private final static String ERROR_MESSAGE_WRONG_FORMAT = "Wrong format";
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<CartStatus> addPhone(@RequestBody @Valid CartAddPhoneInfo cartInfo, BindingResult bindingResult) {
+    @PostMapping
+    public ResponseEntity<CartStatus> addPhone(@RequestBody @Valid CartAddPhoneInfo cartInfo,
+                                               BindingResult bindingResult) throws PhoneNotFoundException {
 
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
         if (!bindingResult.hasErrors()) {
-            try {
-                cartService.addPhone(cartInfo.getPhoneId(), cartInfo.getQuantity());
-                status = HttpStatus.OK;
-            } catch (PhoneNotFoundException e) {
-                status = HttpStatus.BAD_REQUEST;
-            }
+            cartService.addPhone(cartInfo.getPhoneId(), cartInfo.getQuantity());
+            status = HttpStatus.OK;
         }
 
         return createResponse(status);
     }
 
-    @ExceptionHandler(InvalidFormatException.class)
-    public ResponseEntity<CartStatus> handleNumberFormatException(InvalidFormatException e) {
+
+    /**
+     *  @throws InvalidFormatException - can't parse values from request;
+     *  @throws PhoneNotFoundException - addPhone throw, because phone not found.
+     */
+    @ExceptionHandler({InvalidFormatException.class, PhoneNotFoundException.class})
+    public ResponseEntity<CartStatus> handleNumberFormatException() {
         return createResponse(HttpStatus.BAD_REQUEST);
     }
 

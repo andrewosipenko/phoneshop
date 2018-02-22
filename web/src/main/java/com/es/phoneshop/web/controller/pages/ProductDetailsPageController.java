@@ -7,10 +7,7 @@ import com.es.phoneshop.web.exception.PageNotFoundException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -18,13 +15,15 @@ import javax.annotation.Resource;
 @RequestMapping(value = "/productDetails")
 public class ProductDetailsPageController {
 
+    private final static String PHONE_ATTRIBUTE = "phone";
+
     @Resource
     private PhoneDao phoneDao;
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
+    @GetMapping(path = "/{id}")
     public String showProductDetails(@PathVariable Long id, Model model) throws PageNotFoundException {
         Phone phone = phoneDao.get(id).orElseThrow(PageNotFoundException::new);
-        model.addAttribute(ControllerConstants.PHONE_ATTRIBUTE, phone);
+        model.addAttribute(PHONE_ATTRIBUTE, phone);
         return ControllerConstants.PRODUCT_DETAILS_PAGE_NAME;
     }
 
