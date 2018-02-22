@@ -1,12 +1,10 @@
 package com.es.core.cart;
 
-import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Cart {
 
@@ -28,14 +26,7 @@ public class Cart {
         items.merge(phone, quantity, (a, b) -> a + b);
     }
 
-    public void removeItem(Long phoneId, String color) {
-        Phone phone = items.keySet().stream()
-                .filter(phone1 -> phone1.getId().equals(phoneId))
-                .filter(phone1 -> phone1.getColors().toArray(new Color[]{})[0].getCode().equals(color))
-                .distinct()
-                .collect(Collectors.toList())
-                .get(0);
-
+    public void removeItem(Phone phone) {
         items.put(phone, items.get(phone) - 1);
     }
 

@@ -49,7 +49,7 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void remove(Long phoneId, String color) {
         Cart cart = getCart();
-        cart.removeItem(phoneId, color);
+        cart.removeItem(phoneService.getByIdAndColor(phoneId, color).get());
         httpSession.setAttribute(ATTRIBUTE_COUNT_ITEMS, cart.countItems());
         httpSession.setAttribute(ATTRIBUTE_PRICE, cart.getPrice());
     }
