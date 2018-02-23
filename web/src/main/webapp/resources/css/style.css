@@ -28,8 +28,8 @@
 }
 
 .topnav .cart-container {
-    margin-left:5px;
-    margin-right:10px;
+    margin-left: 5px;
+    margin-right: 10px;
     float: right;
 }
 
@@ -60,6 +60,7 @@
     .topnav .search-container {
         float: none;
     }
+
     .topnav a, .topnav input[type=text], .topnav .search-container button {
         float: none;
         display: block;
@@ -68,17 +69,18 @@
         margin: 0;
         padding: 14px;
     }
+
     .topnav input[type=text] {
         border: 1px solid #ccc;
     }
 }
 
-.error-message{
+.error-message {
     color: red;
 }
 
-.add-to-cart td{
-    padding-right:5px;
-    padding-left:5px;
+.add-to-cart-table td {
+    padding-right: 5px;
+    padding-left: 5px;
     vertical-align: top;
 }

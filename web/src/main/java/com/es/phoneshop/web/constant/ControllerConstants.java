@@ -1,4 +1,4 @@
-package com.es.phoneshop.web.controller;
+package com.es.phoneshop.web.constant;
 
 public interface ControllerConstants {
 

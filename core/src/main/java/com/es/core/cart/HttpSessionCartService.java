@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class HttpSessionCartService implements CartService {
@@ -22,7 +23,6 @@ public class HttpSessionCartService implements CartService {
     private PhoneDao phoneDao;
 
     private static final String CART_ATTRIBUTE_NAME = "cart";
-    private static final String PHONES_COST_IN_CART_ATTRIBUTE_NAME = "cartCost";
 
     @Override
     public Cart getCart() {
@@ -34,62 +34,47 @@ public class HttpSessionCartService implements CartService {
         return cart;
     }
 
-    @Override
-    public BigDecimal getCartCost() {
-        BigDecimal cartCost = (BigDecimal) httpSession.getAttribute(PHONES_COST_IN_CART_ATTRIBUTE_NAME);
-        if (cartCost == null) {
-            cartCost = BigDecimal.ZERO;
-            httpSession.setAttribute(PHONES_COST_IN_CART_ATTRIBUTE_NAME, BigDecimal.ZERO);
-        }
-        return cartCost;
-    }
-
-    private void setCartCost(BigDecimal cartCost) {
-        httpSession.setAttribute(PHONES_COST_IN_CART_ATTRIBUTE_NAME, cartCost);
-    }
-
+    /**
+     * @throws IllegalStateException - try to add a phone without price
+     */
     @Override
     public void addPhone(Long phoneId, Long quantity) throws PhoneNotFoundException {
         Cart cart = getCart();
         Phone addedPhone = phoneDao.get(phoneId).orElseThrow(PhoneNotFoundException::new);
         BigDecimal phonePrice = addedPhone.getPrice();
         if (phonePrice == null) {
-            throw new PhoneNotFoundException();
+            throw new IllegalStateException();
         }
-        cart.addPhone(phoneId, quantity);
-        BigDecimal cartCost = getCartCost();
-        cartCost = cartCost.add(phonePrice.multiply(new BigDecimal(quantity)));
-        setCartCost(cartCost);
+        cart.addPhone(addedPhone, quantity);
+
+        recalculateCartCost(cart);
     }
 
     @Override
     public void update(Map<Long, Long> items) {
         Cart cart = getCart();
+        List<Phone> settedPhones = phoneDao.getPhonesByIdList(new ArrayList<Long>(items.keySet()));
+        Map<Phone, Long> phones = settedPhones.stream()
+                .collect(Collectors.toMap(phone -> phone, phone -> items.get(phone.getId())));
+        cart.setItems(phones);
 
-        List<Phone> settedPhones = phoneDao.getPhonesByIdList(new ArrayList<>(items.keySet()));
-        cart.setItems(items);
-
-        BigDecimal cartCost = settedPhones.stream()
-                .map(phone -> phone.getPrice().multiply(new BigDecimal(items.get(phone.getId()))))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        setCartCost(cartCost);
+        recalculateCartCost(cart);
     }
 
     @Override
-    public void remove(Long phoneId) throws PhoneNotFoundException {
+    public void remove(Long phoneId) {
         Cart cart = getCart();
-        Long quantity = cart.getItems().remove(phoneId);
-        if (quantity != null) {
-            Phone removedPhone = phoneDao.get(phoneId).orElseThrow(PhoneNotFoundException::new);
-            BigDecimal cartCost = getCartCost();
-            cartCost = cartCost.subtract(removedPhone.getPrice().multiply(new BigDecimal(quantity)));
-            setCartCost(cartCost);
+        if (cart.getItems().entrySet().removeIf(e -> phoneId.equals(e.getKey().getId()))) {
+            recalculateCartCost(cart);
         }
     }
 
-    @Override
-    public Long getPhonesCountInCart() {
-        return getCart().getCountItems();
+    private void recalculateCartCost(Cart cart) {
+
+        BigDecimal cartCost = cart.getItems().keySet().stream()
+                .map(phone -> phone.getPrice().multiply(new BigDecimal(cart.getItems().get(phone))))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        cart.setCost(cartCost);
     }
 }

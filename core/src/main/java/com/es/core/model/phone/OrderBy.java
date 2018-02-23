@@ -17,7 +17,7 @@ public enum OrderBy {
         return sqlCommand;
     }
 
-    public String getName(){
+    public String getName() {
         return name().toLowerCase();
     }
 }

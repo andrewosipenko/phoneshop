@@ -38,7 +38,7 @@ public class PhonePageServiceImpl implements PhonePageService {
 
         Pagination pagination = new Pagination(pageNumber, startPaginationNumber, finishPaginationNumber);
 
-        ProductPage productPage = new ProductPage(phoneCount,phones,pagination);
+        ProductPage productPage = new ProductPage(phoneCount, phones, pagination);
 
         return productPage;
     }

@@ -65,7 +65,6 @@ public class HttpSessionCartServiceTest extends AbstractTest {
     @Before
     public void initSession() {
         httpSession.removeAttribute("cart");
-        httpSession.removeAttribute("cartCost");
     }
 
     @After
@@ -89,7 +88,7 @@ public class HttpSessionCartServiceTest extends AbstractTest {
         Cart cart = cartService.getCart();
 
         Assert.assertEquals(1, cart.getItems().size());
-        Assert.assertEquals(QUANTITY, cart.getItems().get(phone.getId()));
+        Assert.assertEquals(QUANTITY, cart.getItems().get(phone));
 
         verify(mockPhoneDao).get(ArgumentMatchers.eq(phone.getId()));
 
@@ -111,7 +110,7 @@ public class HttpSessionCartServiceTest extends AbstractTest {
         Cart cart = cartService.getCart();
 
         Assert.assertEquals(1, cart.getItems().size());
-        Assert.assertEquals(new Long(QUANTITY_1 + QUANTITY_2), cart.getItems().get(phone.getId()));
+        Assert.assertEquals(new Long(QUANTITY_1 + QUANTITY_2), cart.getItems().get(phone));
 
         verify(mockPhoneDao, times(2)).get(ArgumentMatchers.eq(phone.getId()));
 
@@ -134,8 +133,8 @@ public class HttpSessionCartServiceTest extends AbstractTest {
         Cart cart = cartService.getCart();
 
         Assert.assertEquals(2, cart.getItems().size());
-        Assert.assertEquals(QUANTITY_1, cart.getItems().get(phone1.getId()));
-        Assert.assertEquals(QUANTITY_2, cart.getItems().get(phone2.getId()));
+        Assert.assertEquals(QUANTITY_1, cart.getItems().get(phone1));
+        Assert.assertEquals(QUANTITY_2, cart.getItems().get(phone2));
 
         verify(mockPhoneDao).get(ArgumentMatchers.eq(phone1.getId()));
         verify(mockPhoneDao).get(ArgumentMatchers.eq(phone2.getId()));
@@ -197,13 +196,12 @@ public class HttpSessionCartServiceTest extends AbstractTest {
         Cart cart = cartService.getCart();
 
         Assert.assertEquals(1, cart.getItems().size());
-        Assert.assertEquals(QUANTITY_2, cart.getItems().get(phone2.getId()));
+        Assert.assertEquals(QUANTITY_2, cart.getItems().get(phone2));
 
         InOrder inOrder = inOrder(mockPhoneDao);
 
         inOrder.verify(mockPhoneDao).get(ArgumentMatchers.eq(phone1.getId()));
         inOrder.verify(mockPhoneDao).get(ArgumentMatchers.eq(phone2.getId()));
-        inOrder.verify(mockPhoneDao).get(ArgumentMatchers.eq(phone1.getId()));
 
         Map<Long, Long> items = new HashMap<>();
         items.put(phone2.getId(), QUANTITY_2);
@@ -224,7 +222,7 @@ public class HttpSessionCartServiceTest extends AbstractTest {
         Cart cart = cartService.getCart();
 
         Assert.assertEquals(1, cart.getItems().size());
-        Assert.assertEquals(QUANTITY_1, cart.getItems().get(phone1.getId()));
+        Assert.assertEquals(QUANTITY_1, cart.getItems().get(phone1));
 
         verify(mockPhoneDao).get(ArgumentMatchers.eq(phone1.getId()));
 
@@ -251,17 +249,16 @@ public class HttpSessionCartServiceTest extends AbstractTest {
 
         final Long TOTAL_COUNT = QUANTITY_1 + QUANTITY_3 + QUANTITY_3;
 
-        Assert.assertEquals(TOTAL_COUNT, cartService.getPhonesCountInCart());
+        Assert.assertEquals(TOTAL_COUNT, cartService.getCart().getCountItems());
 
         InOrder inOrder = inOrder(mockPhoneDao);
         inOrder.verify(mockPhoneDao).get(ArgumentMatchers.eq(phone1.getId()));
         inOrder.verify(mockPhoneDao).get(ArgumentMatchers.eq(phone2.getId()));
         inOrder.verify(mockPhoneDao).get(ArgumentMatchers.eq(phone3.getId()));
         inOrder.verify(mockPhoneDao).get(ArgumentMatchers.eq(phone1.getId()));
-        inOrder.verify(mockPhoneDao).get(ArgumentMatchers.eq(phone2.getId()));
     }
 
-    @Test(expected = PhoneNotFoundException.class)
+    @Test(expected = IllegalStateException.class)
     public void addPhoneWithoutPrice() throws PhoneNotFoundException {
         final Long QUANTITY = 1L;
 
@@ -280,6 +277,6 @@ public class HttpSessionCartServiceTest extends AbstractTest {
             cost = cost.add(phone.getPrice().multiply(new BigDecimal(items.get(phoneId))));
         }
 
-        Assert.assertEquals(0, cost.compareTo(cartService.getCartCost()));
+        Assert.assertEquals(0, cost.compareTo(cartService.getCart().getCost()));
     }
 }

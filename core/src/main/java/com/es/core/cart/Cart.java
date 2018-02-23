@@ -1,5 +1,8 @@
 package com.es.core.cart;
 
+import com.es.core.model.phone.Phone;
+
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,25 +12,36 @@ public class Cart {
      * key: {@link com.es.core.model.phone.Phone#id}
      * value: quantity
      */
-    private Map<Long, Long> items;
+    private Map<Phone, Long> items;
+
+    private BigDecimal cost;
 
     public Cart() {
         items = new HashMap<>();
+        cost = BigDecimal.ZERO;
     }
 
-    public Map<Long, Long> getItems() {
-        return items;
-    }
-
-    public void setItems(Map<Long, Long> items) {
-        this.items = items;
-    }
-
-    public void addPhone(Long phoneId, Long quantity) {
-        items.merge(phoneId, quantity, (oldQuantity, newQuantity) -> oldQuantity + newQuantity);
+    public void addPhone(Phone phone, Long quantity) {
+        items.merge(phone, quantity, (oldQuantity, newQuantity) -> oldQuantity + newQuantity);
     }
 
     public Long getCountItems() {
         return items.values().stream().mapToLong(v -> v).sum();
+    }
+
+    public Map<Phone, Long> getItems() {
+        return items;
+    }
+
+    public void setItems(Map<Phone, Long> items) {
+        this.items = items;
+    }
+
+    public BigDecimal getCost() {
+        return cost;
+    }
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
     }
 }
