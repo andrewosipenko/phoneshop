@@ -6,7 +6,6 @@ import com.es.core.model.phone.PhoneDao;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 public class HttpSessionCartService implements CartService {
 
     @Resource
-    private HttpSession httpSession;
+    private Cart cart;
 
     @Resource
     private PhoneDao phoneDao;
@@ -26,11 +25,6 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public Cart getCart() {
-        Cart cart = (Cart) httpSession.getAttribute(CART_ATTRIBUTE_NAME);
-        if (cart == null) {
-            cart = new Cart();
-            httpSession.setAttribute(CART_ATTRIBUTE_NAME, cart);
-        }
         return cart;
     }
 
@@ -39,7 +33,6 @@ public class HttpSessionCartService implements CartService {
      */
     @Override
     public void addPhone(Long phoneId, Long quantity) throws PhoneNotFoundException {
-        Cart cart = getCart();
         Phone addedPhone = phoneDao.get(phoneId).orElseThrow(PhoneNotFoundException::new);
         BigDecimal phonePrice = addedPhone.getPrice();
         if (phonePrice == null) {
@@ -52,7 +45,6 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void update(Map<Long, Long> items) {
-        Cart cart = getCart();
         List<Phone> settedPhones = phoneDao.getPhonesByIdList(new ArrayList<Long>(items.keySet()));
         Map<Phone, Long> phones = settedPhones.stream()
                 .collect(Collectors.toMap(phone -> phone, phone -> items.get(phone.getId())));
@@ -63,7 +55,6 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void remove(Long phoneId) {
-        Cart cart = getCart();
         if (cart.getItems().entrySet().removeIf(e -> phoneId.equals(e.getKey().getId()))) {
             recalculateCartCost(cart);
         }

@@ -4,7 +4,6 @@ import com.es.core.cart.Cart;
 import com.es.core.cart.CartService;
 import com.es.core.exception.PhoneNotFoundException;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.PhoneDao;
 import com.es.phoneshop.web.bean.cart.CartItem;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,17 +27,13 @@ public class CartPageController {
     @Resource
     private CartService cartService;
 
-    @Resource
-    private PhoneDao phoneDao;
-
     @GetMapping
     public String getCart(Model model) {
         Cart cart = cartService.getCart();
-        Map<Long, Long> items = cart.getItems();
-        List<Long> idList = new ArrayList<>(items.keySet());
-        List<Phone> phonesList = phoneDao.getPhonesByIdList(idList);
+        Map<Phone, Long> items = cart.getItems();
+        List<Phone> phonesList = new ArrayList<>(items.keySet());
         List<CartItem> cartItems = phonesList.stream()
-                .map(phone -> new CartItem(phone, items.get(phone.getId())))
+                .map(phone -> new CartItem(phone, items.get(phone)))
                 .collect(Collectors.toList());
         model.addAttribute(CART_ITEM_LIST_ATTRIBUTE, cartItems);
         return CART_PAGE_NAME;

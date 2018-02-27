@@ -69,8 +69,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jmock</groupId>
-            <artifactId>jmock-junit4</artifactId>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <!-- http://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->

@@ -6,7 +6,7 @@ public class CartStatus {
 
     private String errorMessage;
 
-    private Long phonesCount;
+    private Long phoneCount;
 
     private BigDecimal cartCost;
 
@@ -21,12 +21,12 @@ public class CartStatus {
         this.errorMessage = errorMessage;
     }
 
-    public Long getPhonesCount() {
-        return phonesCount;
+    public Long getPhoneCount() {
+        return phoneCount;
     }
 
-    public void setPhonesCount(Long phonesCount) {
-        this.phonesCount = phonesCount;
+    public void setPhoneCount(Long phonesCount) {
+        this.phoneCount = phonesCount;
     }
 
     public BigDecimal getCartCost() {

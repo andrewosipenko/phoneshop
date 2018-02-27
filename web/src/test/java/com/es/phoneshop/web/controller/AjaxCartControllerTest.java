@@ -1,11 +1,11 @@
 package com.es.phoneshop.web.controller;
 
+import com.es.core.cart.Cart;
 import com.es.core.cart.CartService;
 import com.es.core.exception.PhoneNotFoundException;
-import com.es.phoneshop.web.proxy.CartServiceProxy;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit4.JUnit4Mockery;
+import com.es.core.model.phone.Phone;
+import com.es.phoneshop.web.AbstractTest;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +20,7 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -27,29 +28,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebAppConfiguration
 @ContextConfiguration("classpath:context/testContext-web.xml")
-public class AjaxCartControllerTest {
-
-    private Mockery context;
-
-    private CartService mockCartService;
+public class AjaxCartControllerTest extends AbstractTest {
 
     @Resource
-    private CartServiceProxy proxyCartService;
+    private CartService mockCartService;
 
     @Resource
     private WebApplicationContext wac;
 
     private MockMvc mockMvc;
 
+    private Cart returnedCart;
+
     @Before
     public void init() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        returnedCart = new Cart();
+        when(mockCartService.getCart()).thenReturn(returnedCart);
+    }
 
-        context = new JUnit4Mockery();
-
-        mockCartService = context.mock(CartService.class);
-
-        proxyCartService.setCartService(mockCartService);
+    @After
+    public void resetPhoneMockDao() {
+        reset(mockCartService);
     }
 
     @Test
@@ -59,15 +59,10 @@ public class AjaxCartControllerTest {
         final BigDecimal COST = new BigDecimal(500);
         final Long COUNT = QUANTITY;
 
-        context.checking(new Expectations() {{
-            one(mockCartService).addPhone(ADD_PHONE_ID, QUANTITY);
+        Phone phone = createPhone(ADD_PHONE_ID, 1);
 
-            one(mockCartService).getCartCost();
-            will(returnValue(COST));
-
-            one(mockCartService).getPhonesCountInCart();
-            will(returnValue(COUNT));
-        }});
+        returnedCart.setCost(COST);
+        returnedCart.addPhone(phone, QUANTITY);
 
         final String JSONContent = "{" +
                 "\"phoneId\":" + ADD_PHONE_ID.toString() + "," +
@@ -87,10 +82,7 @@ public class AjaxCartControllerTest {
         final Long ADD_PHONE_ID = 1000L;
         final Long QUANTITY = 2L;
 
-        context.checking(new Expectations() {{
-            one(mockCartService).addPhone(ADD_PHONE_ID, QUANTITY);
-            will(throwException(new PhoneNotFoundException()));
-        }});
+        doThrow(PhoneNotFoundException.class).when(mockCartService).addPhone(ADD_PHONE_ID, QUANTITY);
 
         final String JSONContent = "{" +
                 "\"phoneId\":" + ADD_PHONE_ID.toString() + "," +
@@ -114,9 +106,6 @@ public class AjaxCartControllerTest {
                 "\"quantity\":" + QUANTITY.toString() + "" +
                 "}";
 
-        context.checking(new Expectations() {{
-        }});
-
         sendRequestAndCheckErrorMessage(JSONContent);
     }
 
@@ -130,8 +119,6 @@ public class AjaxCartControllerTest {
                 "\"quantity\":" + QUANTITY.toString() + "" +
                 "}";
 
-        context.checking(new Expectations());
-
         sendRequestAndCheckErrorMessage(JSONContent);
     }
 
@@ -143,8 +130,6 @@ public class AjaxCartControllerTest {
                 "\"phoneId\":" + ADD_PHONE_ID.toString() + "," +
                 "\"quantity\":\"test\"" +
                 "}";
-
-        context.checking(new Expectations());
 
         sendRequestAndCheckErrorMessage(JSONContent);
     }

@@ -57,7 +57,7 @@ public class AjaxCartController {
 
         if (status == HttpStatus.OK) {
             cartStatus.setCartCost(cartService.getCart().getCost());
-            cartStatus.setPhonesCount(cartService.getCart().getCountItems());
+            cartStatus.setPhoneCount(cartService.getCart().getCountItems());
         } else {
             cartStatus.setErrorMessage(ERROR_MESSAGE_WRONG_FORMAT);
         }

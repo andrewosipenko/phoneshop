@@ -21,7 +21,7 @@ function addToCart() {
         dataType: "json",
         data: JSON.stringify(requestData),
         success: function (cartStatus) {
-            $(".cart-count").text(cartStatus.phonesCount);
+            $(".cart-count").text(cartStatus.phoneCount);
             $(".cart-cost").text(cartStatus.cartCost);
             parentTr.find('.error-message').text("");
         },
