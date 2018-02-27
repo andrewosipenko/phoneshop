@@ -14,7 +14,6 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:testContext.xml")
 public class JdbcPhoneDaoIntTest {
-
     @Resource
     private PhoneDao phoneDao;
 
@@ -43,12 +42,14 @@ public class JdbcPhoneDaoIntTest {
 
     @Test
     public void checkFindByAllModels() {
-        assertEquals(11, phoneDao.findByModelInOrder("%", DEFAULT_ORDER, 0, 100).size());
+        assertEquals(10, phoneDao.findByModelInOrder("%", DEFAULT_ORDER, 0, 100).size());
     }
 
     @Test
     public void checkFindByModelOneProductWithTwoColor() {
-        assertEquals(2, phoneDao.findByModelInOrder(PRODUCT_MODEL, DEFAULT_ORDER, 0, 100).size());
+        List<Phone> phones = phoneDao.findByModelInOrder(PRODUCT_MODEL, DEFAULT_ORDER, 0, 100);
+        assertEquals(1, phones.size());
+        assertEquals(2, phones.get(0).getColors().size());
     }
 
     @Test
@@ -70,12 +71,12 @@ public class JdbcPhoneDaoIntTest {
 
     @Test
     public void checkProductCountWithoutModel() {
-        assertEquals(11, phoneDao.productsCountWithModel("%"));
+        assertEquals(10, phoneDao.productsCountWithModel("%"));
     }
 
     @Test
     public void checkProductCountWithModelAndTwoColor() {
-        assertEquals(2, phoneDao.productsCountWithModel(PRODUCT_MODEL));
+        assertEquals(1, phoneDao.productsCountWithModel(PRODUCT_MODEL));
     }
 
     @Test

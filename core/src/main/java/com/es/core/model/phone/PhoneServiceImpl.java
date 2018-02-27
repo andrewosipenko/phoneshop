@@ -3,12 +3,11 @@ package com.es.core.model.phone;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PhoneServiceImpl implements PhoneService {
-
     @Resource
     private PhoneDao phoneDao;
 
@@ -35,23 +34,5 @@ public class PhoneServiceImpl implements PhoneService {
     @Override
     public long productsCountByModel(String model) {
         return phoneDao.productsCountWithModel("%" + model + "%");
-    }
-
-    @Override
-    public Optional<Phone> getByIdAndColor(long id, String colorCode) {
-        Optional<Phone> phoneOptional = phoneDao.get(id);
-
-        if (phoneOptional.isPresent()) {
-            Phone phone = phoneOptional.get();
-            List<Color> colors = phone.getColors().stream()
-                    .filter(color1 -> color1.getCode().equals(colorCode))
-                    .collect(Collectors.toList());
-            if (!colors.isEmpty()) {
-                phone.setColors(new HashSet<>(colors));
-                return Optional.of(phone);
-            }
-        }
-
-        return Optional.empty();
     }
 }

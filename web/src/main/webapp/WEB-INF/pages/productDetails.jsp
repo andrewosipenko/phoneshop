@@ -50,12 +50,12 @@
                                 <div class="row">
                                     <div class="col">
                                         <input type="hidden" id="contextPath" value="${pageContext.request.contextPath}">
-                                        <input id="quantity-${phone.id}-${phone.colors.toArray()[0].code}" type="text" value="1">
+                                        <input id="quantity-${phone.id}" type="text" value="1">
                                         <br>
-                                        <span id="quantity-${phone.id}-${phone.colors.toArray()[0].code}-wrong-format" class="error"></span>
+                                        <span id="quantity-${phone.id}-wrong-format" class="error"></span>
                                     </div>
                                     <div class="col">
-                                        <button type="button" class="btn btn-default add-cart" onclick="addToCart(${phone.id}, '${phone.colors.toArray()[0].code}')">Add to cart</button>
+                                        <button type="button" class="btn btn-default add-cart" onclick="addToCart(${phone.id})">Add to cart</button>
                                     </div>
                                 </div>
                             </td>
@@ -93,10 +93,6 @@
                             <td>${phone.widthMm}mm</td>
                         </tr>
                         <tr>
-                            <td>Color</td>
-                            <td>${phone.colors.toArray()[0].code}</td>
-                        </tr>
-                        <tr>
                             <td>Weight</td>
                             <td>${phone.weightGr}</td>
                         </tr>
@@ -130,9 +126,9 @@
                     <span class="bold">Other</span>
                     <table class="param">
                         <tr>
-                            <td>Color</td>
+                            <td>Colors</td>
                             <td>
-                                <c:forEach var="color" items="${colors}">
+                                <c:forEach var="color" items="${phone.colors}">
                                     ${color.code}
                                 </c:forEach>
                             </td>

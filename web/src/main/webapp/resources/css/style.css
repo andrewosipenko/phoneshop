@@ -16,8 +16,14 @@ th, td {
     text-align: center;
 }
 
-.sort-link {
+.table-header {
     color: #000;
+    font-weight: normal;
+}
+
+.sort-link {
+    color: inherit;
+    font-weight: inherit;
 }
 
 .sort-link:hover {

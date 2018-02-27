@@ -13,7 +13,6 @@ import java.util.Map;
 
 @Service
 public class HttpSessionCartService implements CartService {
-
     @Resource
     private HttpSession httpSession;
 
@@ -39,17 +38,17 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void addPhone(Long phoneId, Long quantity, String color) {
+    public void addPhone(Long phoneId, Long quantity) {
         Cart cart = getCart();
-        cart.addItem(phoneService.getByIdAndColor(phoneId, color).get(), quantity);
+        cart.addItem(phoneService.get(phoneId).get(), quantity);
         httpSession.setAttribute(ATTRIBUTE_COUNT_ITEMS, cart.countItems());
         httpSession.setAttribute(ATTRIBUTE_PRICE, cart.getPrice());
     }
 
     @Override
-    public void remove(Long phoneId, String color) {
+    public void remove(Long phoneId) {
         Cart cart = getCart();
-        cart.removeItem(phoneService.getByIdAndColor(phoneId, color).get());
+        cart.removeItem(phoneService.get(phoneId).get());
         httpSession.setAttribute(ATTRIBUTE_COUNT_ITEMS, cart.countItems());
         httpSession.setAttribute(ATTRIBUTE_PRICE, cart.getPrice());
     }

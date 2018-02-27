@@ -18,7 +18,6 @@ import java.util.Locale;
 @Controller
 @RequestMapping(value = "/ajaxCart")
 public class AjaxCartController {
-
     @Resource
     private CartService cartService;
 
@@ -35,7 +34,7 @@ public class AjaxCartController {
             cartStatus.setErrorMessage(errorMessage);
             status = HttpStatus.BAD_REQUEST;
         } else {
-            cartService.addPhone(cartPhone.getPhoneId(), cartPhone.getQuantity(), cartPhone.getColor());
+            cartService.addPhone(cartPhone.getPhoneId(), cartPhone.getQuantity());
             cartStatus.setCountItems(cartService.getCountItems());
             cartStatus.setPrice(cartService.getPrice());
             status = HttpStatus.OK;

@@ -4,7 +4,6 @@ public enum Column {
     phoneId,
     brand,
     model,
-    code,
     displaySizeInches,
     price
 }

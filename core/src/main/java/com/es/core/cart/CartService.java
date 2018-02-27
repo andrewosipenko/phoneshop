@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface CartService {
     Cart getCart();
-    void addPhone(Long phoneId, Long quantity, String color);
-    void remove(Long phoneId, String color);
+    void addPhone(Long phoneId, Long quantity);
+    void remove(Long phoneId);
     long getCountItems();
     BigDecimal getPrice();
     List<Phone> getAllItems();

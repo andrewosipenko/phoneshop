@@ -3,7 +3,7 @@ $(function () {
 });
 
 function addToCart(id, color) {
-    var quantity = $("#quantity-" + id + "-" + color).val();
+    var quantity = $("#quantity-" + id).val();
     var contextPath = $("#contextPath").val();
     var url = contextPath + "/ajaxCart";
 
@@ -13,18 +13,17 @@ function addToCart(id, color) {
         dataType: "json",
         data: ({
             phoneId : id,
-            color: color,
             quantity : quantity
         }),
         success: function (cartStatus) {
             $("#count-items").text(cartStatus.countItems);
             $("#price").number(cartStatus.price, 2);
-            $("#quantity-" + id + "-" + color + "-wrong-format").text("");
+            $("#quantity-" + id + "-wrong-format").text("");
         },
         statusCode: {
             400: function (data) {
                 var error = JSON.parse(data.responseText);
-                $("#quantity-" + id + "-" + color + "-wrong-format").text(error.errorMessage);
+                $("#quantity-" + id + "-wrong-format").text(error.errorMessage);
             }
         }
     });

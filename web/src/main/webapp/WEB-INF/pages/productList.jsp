@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html>
@@ -52,11 +53,11 @@
             <div class="row">
                 <table>
                     <thead>
-                        <tr>
-                            <td>Image</td>
+                        <tr class="table-header">
+                            <td class="table-header">Image</td>
                             <td><a class="sort-link" href="javascript:redirectToOldUrlWithNewParam('order', changeOrder('brand'))">Brand <i class="glyphicon glyphicon-sort"></i></a></td>
                             <td><a class="sort-link" href="javascript:redirectToOldUrlWithNewParam('order', changeOrder('model'))">Model <i class="glyphicon glyphicon-sort"></i></a></td>
-                            <td><a class="sort-link" href="javascript:redirectToOldUrlWithNewParam('order', changeOrder('code'))">Color <i class="glyphicon glyphicon-sort"></i></a></td>
+                            <td>Colors</td>
                             <td><a class="sort-link" href="javascript:redirectToOldUrlWithNewParam('order', changeOrder('displaySizeInches'))">Display size <i class="glyphicon glyphicon-sort"></i></a></td>
                             <td><a class="sort-link" href="javascript:redirectToOldUrlWithNewParam('order', changeOrder('price'))">Price <i class="glyphicon glyphicon-sort"></i></a></td>
                             <td>Quantity</td>
@@ -66,25 +67,27 @@
                     <c:forEach var="phone" items="${phones}">
                         <tr>
                             <td>
-                                <a href="${pageContext.request.contextPath}/productDetails/${phone.id}?color=${phone.colors.toArray()[0].code}">
+                                <a href="${pageContext.request.contextPath}/productDetails/${phone.id}">
                                     <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
                                 </a>
                             </td>
                             <td>${phone.brand}</td>
                             <td>${phone.model}</td>
                             <td>
-                                ${phone.colors.toArray()[0].code}
+                                <c:forEach var="color" items="${phone.colors}">
+                                    ${color.code}
+                                </c:forEach>
                             </td>
                             <td>${phone.displaySizeInches}''</td>
                             <td>$ ${phone.price}</td>
                             <td>
                                 <input type="hidden" id="contextPath" value="${pageContext.request.contextPath}">
-                                <input id="quantity-${phone.id}-${phone.colors.toArray()[0].code}" type="text" value="1">
+                                <input id="quantity-${phone.id}" type="text" value="1">
                                 <br>
-                                <span id="quantity-${phone.id}-${phone.colors.toArray()[0].code}-wrong-format" class="error"></span>
+                                <span id="quantity-${phone.id}-wrong-format" class="error"></span>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-default add-cart" onclick="addToCart(${phone.id}, '${phone.colors.toArray()[0].code}')">Add to cart</button>
+                                <button type="button" class="btn btn-default add-cart" onclick="addToCart(${phone.id})">Add to cart</button>
                             </td>
                         </tr>
                     </c:forEach>

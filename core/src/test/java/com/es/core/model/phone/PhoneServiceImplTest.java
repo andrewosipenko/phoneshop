@@ -16,7 +16,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:testContext.xml")
 public class PhoneServiceImplTest {
-
     @Resource
     private PhoneService phoneService;
 
@@ -25,7 +24,6 @@ public class PhoneServiceImplTest {
     private static final long ID_WITH_TWO_COLOR = 1009;
     private static final String DEFAULT_ORDER = "brand_asc";
     private static final String PRODUCT_MODEL = "AT&T Avail 2";
-    private static final String COLOR_IN_PHONE_1001 = "White";
     private static final String PART_OF_MODEL = "Samsung";
 
     @Test
@@ -46,12 +44,14 @@ public class PhoneServiceImplTest {
 
     @Test
     public void checkFindByAllModels() {
-        assertEquals(11, phoneService.findInOrder(DEFAULT_ORDER, 0, 100).size());
+        assertEquals(10, phoneService.findInOrder(DEFAULT_ORDER, 0, 100).size());
     }
 
     @Test
     public void checkFindByModelOneProductWithTwoColor() {
-        assertEquals(2, phoneService.findByModelInOrder(PRODUCT_MODEL, DEFAULT_ORDER, 0, 100).size());
+        List<Phone> phones = phoneService.findByModelInOrder(PRODUCT_MODEL, DEFAULT_ORDER, 0, 100);
+        assertEquals(1, phones.size());
+        assertEquals(2, phones.get(0).getColors().size());
     }
 
     @Test
@@ -78,12 +78,12 @@ public class PhoneServiceImplTest {
 
     @Test
     public void checkProductCountWithoutModel() {
-        assertEquals(11, phoneService.productsCount());
+        assertEquals(10, phoneService.productsCount());
     }
 
     @Test
     public void checkProductCountWithModelAndTwoColor() {
-        assertEquals(2, phoneService.productsCountByModel(PRODUCT_MODEL));
+        assertEquals(1, phoneService.productsCountByModel(PRODUCT_MODEL));
     }
 
     @Test
@@ -94,20 +94,5 @@ public class PhoneServiceImplTest {
     @Test
     public void checkProductCountWithPartOfModel() {
         assertEquals(1, phoneService.productsCountByModel(PART_OF_MODEL));
-    }
-
-    @Test
-    public void checkGetPhoneByIdAndColor() {
-        assertTrue(phoneService.getByIdAndColor(ID_WITH_ONE_COLOR, COLOR_IN_PHONE_1001).isPresent());
-    }
-
-    @Test
-    public void checkGetPhoneByIdAndNoExistentColor() {
-        assertFalse(phoneService.getByIdAndColor(ID_WITH_ONE_COLOR, "no existent color").isPresent());
-    }
-
-    @Test
-    public void checkGetPhoneByNoExistentId() {
-        assertFalse(phoneService.getByIdAndColor(NON_EXISTENT_ID, "Black").isPresent());
     }
 }

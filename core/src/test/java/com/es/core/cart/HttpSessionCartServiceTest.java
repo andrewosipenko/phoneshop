@@ -1,6 +1,5 @@
 package com.es.core.cart;
 
-import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.PhoneService;
 import org.junit.Test;
@@ -23,7 +22,6 @@ import static org.mockito.Mockito.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:testContext.xml")
 public class HttpSessionCartServiceTest {
-
     @Resource
     private HttpSession httpSession;
 
@@ -64,7 +62,7 @@ public class HttpSessionCartServiceTest {
         Cart cart = mock(Cart.class);
         Phone phone = phoneService.get(1000L).get();
         httpSession.setAttribute(ATTRIBUTE_CART, cart);
-        cartService.addPhone(phone.getId(), 1L, phone.getColors().toArray(new Color[]{})[0].getCode());
+        cartService.addPhone(phone.getId(), 1L);
         verify(cart).addItem(phone, 1L);
     }
 
@@ -73,7 +71,7 @@ public class HttpSessionCartServiceTest {
         Cart cart = mock(Cart.class);
         Phone phone = phoneService.get(1000L).get();
         httpSession.setAttribute(ATTRIBUTE_CART, cart);
-        cartService.remove(phone.getId(), phone.getColors().toArray(new Color[]{})[0].getCode());
+        cartService.remove(phone.getId());
         verify(cart).removeItem(phone);
     }
 

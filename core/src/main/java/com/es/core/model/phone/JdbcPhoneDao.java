@@ -1,21 +1,17 @@
 package com.es.core.model.phone;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Component
 public class JdbcPhoneDao implements PhoneDao {
-
     @Resource
     private JdbcTemplate jdbcTemplate;
 
@@ -32,41 +28,32 @@ public class JdbcPhoneDao implements PhoneDao {
                                                         "WHERE phones.id = ?";
 
     private static final String SELECT_RECORDS_COUNT_BY_MODEL = "SELECT COUNT(*) FROM phones " +
-                                                                "JOIN phone2color ON phones.id = phone2color.phoneId " +
-                                                                "JOIN colors ON colors.id = phone2color.colorId " +
                                                                 "JOIN stocks ON phones.id = stocks.phoneId " +
-                                                                "WHERE stock > 0 AND price > 0 AND LOWER(model) LIKE LOWER(?)";
+                                                                "WHERE phones.id in (SELECT phoneId FROM phone2color) AND " +
+                                                                "stock > 0 AND price > 0 AND LOWER(model) LIKE LOWER(?)";
 
-    private static final String SELECT_BY_MODEL_IN_ORDER = "SELECT phones.id AS phoneId, brand, model, price, " +
+    private static final String SELECT_BY_MODEL_IN_ORDER = "SELECT p.id AS phoneId, brand, model, price, " +
                                                            "displaySizeInches, weightGr, lengthMm, widthMm, " +
                                                            "heightMm, announced, deviceType, os, " +
                                                            "displayResolution, pixelDensity, displayTechnology, " +
                                                            "backCameraMegapixels, frontCameraMegapixels, ramGb, " +
                                                            "internalStorageGb, batteryCapacityMah, talkTimeHours, " +
                                                            "standByTimeHours, bluetooth, positioning, imageUrl, " +
-                                                           "description, colors.id AS colorId, code FROM phones " +
-                                                           "JOIN phone2color ON phones.id = phone2color.phoneId " +
+                                                           "description, colors.id AS colorId, code FROM " +
+                                                           "(SELECT * FROM phones JOIN stocks ON phones.id = stocks.phoneId " +
+                                                           "WHERE phones.id in (SELECT phoneId FROM phone2color) AND " +
+                                                           "stock > 0 AND price > 0 AND LOWER(model) LIKE LOWER(?) " +
+                                                           "LIMIT ? OFFSET ?) AS p " +
+                                                           "JOIN phone2color ON p.id = phone2color.phoneId " +
                                                            "JOIN colors ON colors.id = phone2color.colorId " +
-                                                           "JOIN stocks ON phones.id = stocks.phoneId " +
-                                                           "WHERE stock > 0 AND price > 0 AND LOWER(model) LIKE LOWER(?) " +
-                                                           "ORDER BY %s %s, brand %s, model %s, code %s LIMIT ? OFFSET ?";
+                                                           "ORDER BY %s %s";
     @Override
     public Optional<Phone> get(final Long key) {
-        List<Phone> phonesWithSameId = jdbcTemplate.query(SELECT_ALL_INFO_BY_ID, new Object[]{key}, new PhoneRowMapper());
-
-        if (phonesWithSameId.isEmpty()) {
+        List<Phone> phones = jdbcTemplate.query(SELECT_ALL_INFO_BY_ID, new Object[]{key}, new PhoneExtractor());
+        if (phones.isEmpty()) {
             return Optional.empty();
         }
-
-        Phone phone = phonesWithSameId.get(0);
-
-        Set<Color> colors = phonesWithSameId.stream()
-                .map(onePhone -> (Color) onePhone.getColors().toArray()[0])
-                .collect(Collectors.toSet());
-
-        phone.setColors(colors);
-
-        return Optional.of(phone);
+        return Optional.of(phones.get(0));
     }
 
     @Override
@@ -78,8 +65,8 @@ public class JdbcPhoneDao implements PhoneDao {
     public List<Phone> findByModelInOrder(String model, String orderBy, int offset, int limit) {
         String column = orderBy.split("_")[0];
         String order = orderBy.split("_")[1];
-        String sql = String.format(SELECT_BY_MODEL_IN_ORDER, column, order, order, order, order);
-        return jdbcTemplate.query(sql, new Object[]{model, limit, offset}, new PhoneRowMapper());
+        String sql = String.format(SELECT_BY_MODEL_IN_ORDER, column, order);
+        return jdbcTemplate.query(sql, new Object[]{model, limit, offset}, new PhoneExtractor());
     }
 
     @Override
@@ -87,12 +74,28 @@ public class JdbcPhoneDao implements PhoneDao {
         return jdbcTemplate.queryForObject(SELECT_RECORDS_COUNT_BY_MODEL, new Object[]{model}, Long.class);
     }
 
-    private static class PhoneRowMapper implements RowMapper<Phone> {
-
+    private class PhoneExtractor implements ResultSetExtractor<List<Phone>> {
         @Override
-        public Phone mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Phone phone = new Phone();
+        public List<Phone> extractData(ResultSet rs) throws SQLException, DataAccessException {
+            Map<Long, Phone> phones = new HashMap<>();
+            List<Phone> phoneList = new LinkedList<>();
+            while (rs.next()) {
+                Phone phone;
+                long phoneId = rs.getLong("phoneId");
+                if (!phones.containsKey(phoneId)) {
+                    phone = getPhoneWithProperties(rs);
+                    phones.put(phoneId, phone);
+                    phoneList.add(phone);
+                } else {
+                    phone = phones.get(phoneId);
+                }
+                addColor(phone, rs);
+            }
+            return phoneList;
+        }
 
+        private Phone getPhoneWithProperties(ResultSet rs) throws SQLException {
+            Phone phone = new Phone();
             phone.setId(rs.getLong("phoneId"));
             phone.setBrand(rs.getString("brand"));
             phone.setModel(rs.getString("model"));
@@ -118,18 +121,17 @@ public class JdbcPhoneDao implements PhoneDao {
             phone.setPositioning(rs.getString("positioning"));
             phone.setImageUrl(rs.getString("imageUrl"));
             phone.setDescription(rs.getString("description"));
-
-            Set<Color> colors = new HashSet<>();
-            Color color = new Color();
-
-            color.setId(rs.getLong("colorId"));
-            color.setCode(rs.getString("code"));
-            colors.add(color);
-
-            phone.setColors(colors);
-
+            phone.setColors(new HashSet<>());
             return phone;
         }
 
+        private void addColor(Phone phone, ResultSet rs) throws SQLException {
+            Set<Color> colors = phone.getColors();
+            Color color = new Color();
+            color.setId(rs.getLong("colorId"));
+            color.setCode(rs.getString("code"));
+            colors.add(color);
+            phone.setColors(colors);
+        }
     }
 }
