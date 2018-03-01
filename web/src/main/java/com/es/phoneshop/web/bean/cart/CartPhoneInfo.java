@@ -4,7 +4,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-public class CartAddPhoneInfo implements Serializable {
+public class CartPhoneInfo implements Serializable {
 
     @NotNull
     @Min(1L)
@@ -14,7 +14,7 @@ public class CartAddPhoneInfo implements Serializable {
     @Min(1L)
     private Long quantity;
 
-    public CartAddPhoneInfo() {
+    public CartPhoneInfo() {
     }
 
     public Long getPhoneId() {

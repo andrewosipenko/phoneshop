@@ -2,7 +2,7 @@ package com.es.phoneshop.web.controller;
 
 import com.es.core.cart.CartService;
 import com.es.core.exception.PhoneNotFoundException;
-import com.es.phoneshop.web.bean.cart.CartAddPhoneInfo;
+import com.es.phoneshop.web.bean.cart.CartPhoneInfo;
 import com.es.phoneshop.web.bean.cart.CartStatus;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,7 @@ public class AjaxCartController {
      * @throws IllegalStateException  - try to add a phone without price
      */
     @PostMapping
-    public ResponseEntity<CartStatus> addPhone(@RequestBody @Valid CartAddPhoneInfo cartInfo,
+    public ResponseEntity<CartStatus> addPhone(@RequestBody @Valid CartPhoneInfo cartInfo,
                                                BindingResult bindingResult) throws PhoneNotFoundException {
 
         HttpStatus status = HttpStatus.BAD_REQUEST;
