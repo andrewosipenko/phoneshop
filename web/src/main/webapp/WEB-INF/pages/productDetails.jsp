@@ -5,23 +5,23 @@
     <div class="container">
         <div class="row">
             <div class="col left-phone-description">
-                <h2>${phone.model}</h2>
+                <h2><c:out value="${phone.model}"/></h2>
                 <div class="image">
-                    <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
+                    <img src="<c:url value="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}"/>"/>
                 </div>
                 <div class="description">
-                        ${phone.description}
+                    <c:out value="${phone.description}"/>
                 </div>
                 <c:choose>
                 <c:when test="${not empty phone.price}">
                     <div class="price">
-                        <h3>Price: $ ${phone.price}</h3>
+                        <h3>Price: $ <c:out value="${phone.price}"/></h3>
                         <div>
                             <table class="add-to-cart-table">
                                 <tr>
                                     <td>
                                         <input type="text" class="phone-quantity" value="1" size="10"/>
-                                        <input type="hidden" class="phone-id" value="${phone.id}"/>
+                                        <input type="hidden" class="phone-id" value="<c:out value="${phone.id}"/>"/>
                                         <div class="error-message"></div>
                                     </td>
                                     <td>
@@ -33,9 +33,9 @@
                     </div>
                 </c:when>
                 <c:otherwise>
-                <h3> Out of stock <h3>
-                    </c:otherwise>
-                    </c:choose>
+                    <h3> Out of stock <h3>
+                </c:otherwise>
+            </c:choose>
             </div>
             <div class="col right-phone-description">
                 <c:if test="${not empty phone.announced}">
@@ -43,7 +43,7 @@
                     <table class="table table-hover">
                         <tr>
                             <td>Announced</td>
-                            <td>${phone.announced}</td>
+                            <td><c:out value="${phone.announced}"/></td>
                         </tr>
                     </table>
                 </c:if>
@@ -56,13 +56,13 @@
                         <c:if test="${not empty phone.deviceType}">
                             <tr>
                                 <td>Device Type</td>
-                                <td>${phone.deviceType}</td>
+                                <td><c:out value="${phone.deviceType}"/></td>
                             </tr>
                         </c:if>
                         <c:if test="${not empty phone.os}">
                             <tr>
                                 <td>OS</td>
-                                <td>${phone.os}</td>
+                                <td><c:out value="${phone.os}"/></td>
                             </tr>
                         </c:if>
                         <c:if test="${not empty phone.colors}">
@@ -70,7 +70,7 @@
                                 <td>Colors</td>
                                 <td>
                                     <c:forEach var="color" items="${phone.colors}">
-                                        <p>${color.code}</p>
+                                        <p><c:out value="${color.code}"/></p>
                                     </c:forEach>
                                 </td>
                             </tr>
@@ -78,25 +78,25 @@
                         <c:if test="${not empty phone.ramGb}">
                             <tr>
                                 <td>RAM</td>
-                                <td>${phone.ramGb} GB</td>
+                                <td><c:out value="${phone.ramGb}"/> GB</td>
                             </tr>
                         </c:if>
                         <c:if test="${not empty phone.internalStorageGb}">
                             <tr>
                                 <td>Internal Storage</td>
-                                <td>${phone.internalStorageGb} GB</td>
+                                <td><c:out value="${phone.internalStorageGb}"/> GB</td>
                             </tr>
                         </c:if>
                         <c:if test="${not empty phone.bluetooth}">
                             <tr>
                                 <td>Bluetooth</td>
-                                <td>${phone.bluetooth}</td>
+                                <td><c:out value="${phone.bluetooth}"/></td>
                             </tr>
                         </c:if>
                         <c:if test="${not empty phone.positioning}">
                             <tr>
                                 <td>Positioning</td>
-                                <td>${phone.positioning} h</td>
+                                <td><c:out value="${phone.positioning}"/> h</td>
                             </tr>
                         </c:if>
                     </table>
@@ -108,25 +108,25 @@
                         <c:if test="${not empty phone.displaySizeInches}">
                             <tr>
                                 <td>Size</td>
-                                <td>${phone.displaySizeInches}"</td>
+                                <td><c:out value="${phone.displaySizeInches}"/></td>
                             </tr>
                         </c:if>
                         <c:if test="${not empty phone.displayResolution}">
                             <tr>
                                 <td>Resolution</td>
-                                <td>${phone.displayResolution}</td>
+                                <td><c:out value="${phone.displayResolution}"/></td>
                             </tr>
                         </c:if>
                         <c:if test="${not empty phone.displayTechnology}">
                             <tr>
                                 <td>Technology</td>
-                                <td>${phone.displayTechnology} px</td>
+                                <td><c:out value="${phone.displayTechnology}"/> px</td>
                             </tr>
                         </c:if>
                         <c:if test="${not empty phone.pixelDensity}">
                             <tr>
                                 <td>Pixel Density</td>
-                                <td>${phone.pixelDensity}</td>
+                                <td><c:out value="${phone.pixelDensity}"/></td>
                             </tr>
                         </c:if>
                     </table>
@@ -138,25 +138,25 @@
                         <c:if test="${not empty phone.lengthMm}">
                             <tr>
                                 <td>Length</td>
-                                <td>${phone.lengthMm} mm</td>
+                                <td><c:out value="${phone.lengthMm}"/> mm</td>
                             </tr>
                         </c:if>
                         <c:if test="${not empty phone.widthMm}">
                             <tr>
                                 <td>Width</td>
-                                <td>${phone.widthMm} mm</td>
+                                <td><c:out value="${phone.widthMm}"/> mm</td>
                             </tr>
                         </c:if>
                         <c:if test="${not empty phone.heightMm}">
                             <tr>
                                 <td>Height</td>
-                                <td>${phone.heightMm} mm</td>
+                                <td><c:out value="${phone.heightMm}"/> mm</td>
                             </tr>
                         </c:if>
                         <c:if test="${not empty phone.weightGr}">
                             <tr>
                                 <td>Weight</td>
-                                <td>${phone.weightGr} gr</td>
+                                <td><c:out value="${phone.weightGr}"/> gr</td>
                             </tr>
                         </c:if>
                     </table>
@@ -167,13 +167,13 @@
                         <c:if test="${not empty phone.backCameraMegapixels}">
                             <tr>
                                 <td>Back</td>
-                                <td>${phone.backCameraMegapixels} mp</td>
+                                <td><c:out value="${phone.backCameraMegapixels}"/> mp</td>
                             </tr>
                         </c:if>
                         <c:if test="${not empty phone.frontCameraMegapixels}">
                             <tr>
                                 <td>Front</td>
-                                <td>${phone.frontCameraMegapixels} mp</td>
+                                <td><c:out value="${phone.frontCameraMegapixels}"/> mp</td>
                             </tr>
                         </c:if>
                     </table>
@@ -185,19 +185,19 @@
                         <c:if test="${not empty phone.batteryCapacityMah}">
                             <tr>
                                 <td>Battery Capacity</td>
-                                <td>${phone.batteryCapacityMah} mah</td>
+                                <td><c:out value="${phone.batteryCapacityMah}"/> mah</td>
                             </tr>
                         </c:if>
                         <c:if test="${not empty phone.talkTimeHours}">
                             <tr>
                                 <td>Talk Time</td>
-                                <td>${phone.talkTimeHours} h</td>
+                                <td><c:out value="${phone.talkTimeHours}"/> h</td>
                             </tr>
                         </c:if>
                         <c:if test="${not empty phone.standByTimeHours}">
                             <tr>
                                 <td>Stand By Time</td>
-                                <td>${phone.standByTimeHours} h</td>
+                                <td><c:out value="${phone.standByTimeHours}"/> h</td>
                             </tr>
                         </c:if>
                     </table>

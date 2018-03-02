@@ -1,14 +1,8 @@
-$(init);
-
-function init() {
-    $(".add-to-cart").bind('click', addToCart);
-}
-
 function addToCart() {
     var parentTr = $(this).parent().parent();
     var url = context_path + "/ajaxCart";
-    var id = parentTr.find('.phone-id').val();
-    var quantity = parentTr.find('.phone-quantity').val();
+    var id = parentTr.find(".phone-id").val();
+    var quantity = parentTr.find(".phone-quantity").val();
     var requestData = {
         phoneId: id,
         quantity: quantity
@@ -23,11 +17,17 @@ function addToCart() {
         success: function (cartStatus) {
             $(".cart-count").text(cartStatus.phoneCount);
             $(".cart-cost").text(cartStatus.cartCost);
-            parentTr.find('.error-message').text("");
+            parentTr.find(".error-message").text("");
         },
         error: function (response) {
             var cartStatus = JSON.parse(response.responseText);
-            parentTr.find('.error-message').text(cartStatus.errorMessage);
+            parentTr.find(".error-message").text(cartStatus.errorMessage);
         }
     });
 }
+
+function init() {
+    $(".add-to-cart").bind("click", addToCart);
+}
+
+$(init);

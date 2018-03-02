@@ -5,7 +5,7 @@
     <p>
         Error 400. Bad request.
     </p>
-    <a href="${pageContext.request.contextPath}">
+    <a href="<c:url value="/"/>">
         <p>
             Go to main page.
         </p>

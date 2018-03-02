@@ -26,17 +26,17 @@ public class PhonePageServiceImpl implements PhonePageService {
     public ProductPage getPhonePage(OrderBy order, String query, int pageNumber) {
         int phoneCount = getPhoneCount(query);
         int pagesCount = getPagesCount(phoneCount);
-        pageNumber = normalizePageNumber(pageNumber, phoneCount);
+        int normalizedPageNumber = normalizePageNumber(pageNumber, phoneCount);
 
-        int offset = ((pageNumber - 1) * AMOUNT_PHONES_ON_PAGE);
+        int offset = ((normalizedPageNumber - 1) * AMOUNT_PHONES_ON_PAGE);
         int limit = AMOUNT_PHONES_ON_PAGE;
 
         List<Phone> phones = getPhoneList(query, order, offset, limit);
 
-        int startPaginationNumber = Math.max(pageNumber - AROUND_PAGES_COUNT, FIRST_PAGE_NUMBER);
-        int finishPaginationNumber = Math.min(pageNumber + AROUND_PAGES_COUNT, pagesCount);
+        int startPaginationNumber = Math.max(normalizedPageNumber - AROUND_PAGES_COUNT, FIRST_PAGE_NUMBER);
+        int finishPaginationNumber = Math.min(normalizedPageNumber + AROUND_PAGES_COUNT, pagesCount);
 
-        Pagination pagination = new Pagination(pageNumber, startPaginationNumber, finishPaginationNumber);
+        Pagination pagination = new Pagination(normalizedPageNumber, startPaginationNumber, finishPaginationNumber);
 
         ProductPage productPage = new ProductPage(phoneCount, phones, pagination);
 
@@ -58,10 +58,10 @@ public class PhonePageServiceImpl implements PhonePageService {
     }
 
     private int normalizePageNumber(int pageNumber, int phonesCount) {
-        pageNumber = Math.max(pageNumber, FIRST_PAGE_NUMBER);
+        int normalizedPageNumber = Math.max(pageNumber, FIRST_PAGE_NUMBER);
         int lastPageNumber = getPagesCount(phonesCount);
-        pageNumber = Math.min(pageNumber, lastPageNumber);
-        return pageNumber;
+        normalizedPageNumber = Math.min(normalizedPageNumber, lastPageNumber);
+        return normalizedPageNumber;
     }
 
     private int getPagesCount(int phonesCount) {

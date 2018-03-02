@@ -5,7 +5,7 @@
     <p>
         Error 404. Page not found.
     </p>
-    <a href="${pageContext.request.contextPath}">
+    <a href="<c:url value="/"/>">
         <p>
             Go to main page.
         </p>

@@ -22,23 +22,23 @@
             <c:forEach var="phone" items="${productPage.phoneList}">
                 <tr>
                     <td>
-                        <a href="${pageContext.request.contextPath}/productDetails/${phone.id}">
+                        <a href="<c:url value="/productDetails/${phone.id}"/>">
                             <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
                         </a>
                     </td>
-                    <td>${phone.brand}</td>
+                    <td><c:out value="${phone.brand}"/></td>
                     <td>
-                        <a href="${pageContext.request.contextPath}/productDetails/${phone.id}">
-                                ${phone.model}
+                        <a href="<c:url value="/productDetails/${phone.id}"/>">
+                            <c:out value="${phone.model}"/>
                         </a>
                     </td>
                     <td>
                         <c:forEach var="color" items="${phone.colors}">
-                            <p>${color.code}</p>
+                            <p><c:out value="${color.code}"/></p>
                         </c:forEach>
                     </td>
-                    <td>${phone.displaySizeInches}</td>
-                    <td>$${phone.price}</td>
+                    <td><c:out value="${phone.displaySizeInches}"/></td>
+                    <td>$<c:out value="${phone.price}"/></td>
                     <td>
                         <input type="text" class="phone-quantity" value="1" size="10"/>
                         <input type="hidden" class="phone-id" value="${phone.id}"/>

@@ -175,16 +175,16 @@ public class JdbcPhoneDao implements PhoneDao {
 
     @Override
     public List<Phone> getPhonesByQuery(String query, OrderBy orderBy, int offset, int limit) {
-        query = "%" + query.toLowerCase() + "%";
+        String formattedQuery = "%" + query.toLowerCase() + "%";
         return jdbcTemplate.query(
                 FIRST_PART_OF_SEARCH_PHONES_QUERY + orderBy.getSqlCommand() + SECOND_PART_OF_SEARCH_PHONES_QUERY,
-                PhoneListResultSetExtractor.getInstanse(), query, query, offset, limit);
+                PhoneListResultSetExtractor.getInstanse(), formattedQuery, formattedQuery, offset, limit);
     }
 
     @Override
     public int phoneCountByQuery(String query) {
-        query = "%" + query.toLowerCase() + "%";
-        return jdbcTemplate.queryForObject(QUERY_OF_PHONE_COUNT_BY_QUERY, Integer.class, query, query);
+        String formattedQuery = "%" + query.toLowerCase() + "%";
+        return jdbcTemplate.queryForObject(QUERY_OF_PHONE_COUNT_BY_QUERY, Integer.class, formattedQuery, formattedQuery);
     }
 
 }

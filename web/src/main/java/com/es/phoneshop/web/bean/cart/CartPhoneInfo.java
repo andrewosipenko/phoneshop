@@ -14,9 +14,6 @@ public class CartPhoneInfo implements Serializable {
     @Min(1L)
     private Long quantity;
 
-    public CartPhoneInfo() {
-    }
-
     public Long getPhoneId() {
         return phoneId;
     }

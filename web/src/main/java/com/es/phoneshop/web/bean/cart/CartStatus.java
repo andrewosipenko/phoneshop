@@ -10,9 +10,6 @@ public class CartStatus {
 
     private BigDecimal cartCost;
 
-    public CartStatus() {
-    }
-
     public String getErrorMessage() {
         return errorMessage;
     }

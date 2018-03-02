@@ -21,8 +21,6 @@ public class HttpSessionCartService implements CartService {
     @Resource
     private PhoneDao phoneDao;
 
-    private static final String CART_ATTRIBUTE_NAME = "cart";
-
     @Override
     public Cart getCart() {
         return cart;

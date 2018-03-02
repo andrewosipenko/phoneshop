@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ tag body-content="scriptless" trimDirectiveWhitespaces="true" pageEncoding="UTF-8" %>
 <%@ attribute name="catalogTabIsActive" type="java.lang.Boolean" %>
 <jsp:useBean id="cart" scope="session" class="com.es.core.cart.Cart"/>
@@ -11,19 +12,19 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css">
+    <link rel="stylesheet" href="<c:url value="/resources/css/style.css"/>"/>
 </head>
 <body>
 <div class="topnav">
     <a ${catalogTabIsActive ? 'class="active"' : ''} href="${pageContext.request.contextPath}/productList">Catalog</a>
     <div class="cart-container">
-        <a href="${pageContext.request.contextPath}/cart" class="btn btn-outline-dark">
-            My Cart: <span class="cart-count">${not empty cart ? cart.countItems : 0}</span> Items ($ <span
-                class="cart-cost">${not empty cart ? cart.cost : 0}</span>)
+        <a href="<c:url value="/cart"/>" class="btn btn-outline-dark">
+            My Cart: <span class="cart-count"><c:out value="${not empty cart ? cart.countItems : 0}"/></span> Items ($ <span
+                class="cart-cost"><c:out value="${not empty cart ? cart.cost : 0}"/></span>)
         </a>
     </div>
     <div class="search-container">
-        <form action="${pageContext.request.contextPath}/productList">
+        <form action="<c:url value="/productList"/>/">
             <input type="text" placeholder="Search.." name="query">
             <button type="submit"><i class="fa fa-search"></i></button>
         </form>
@@ -33,8 +34,8 @@
     <jsp:doBody/>
 </div>
 <script>
-    var context_path = "${pageContext.request.contextPath}";
+    var context_path = "<c:out value="${pageContext.request.contextPath}"/>";
 </script>
-<script src="${pageContext.request.contextPath}/resources/js/cart.js"></script>
+<script src="<c:url value="/resources/js/cart.js"/>"></script>
 </body>
 </html>
