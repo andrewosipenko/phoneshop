@@ -14,7 +14,7 @@
         <property name="exposeContextBeansAsAttributes" value="true"/>
     </bean>
 
-    <mvc:annotation-driven conversion-service="conversionService"/>
+    <mvc:annotation-driven conversion-service="conversionService" validator="validator"/>
 
     <bean id="conversionService"
           class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
@@ -23,6 +23,14 @@
                 <bean class="com.es.phoneshop.web.formatters.OrderByFormatter"/>
             </set>
         </property>
+    </bean>
+
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="validationMessageSource" ref="messageSource"/>
+    </bean>
+
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename" value="messages.cart"/>
     </bean>
 
     <mvc:resources mapping="/resources/**" location="/resources/"/>

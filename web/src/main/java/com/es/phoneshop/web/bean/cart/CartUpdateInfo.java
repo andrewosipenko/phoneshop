@@ -1,19 +1,28 @@
 package com.es.phoneshop.web.bean.cart;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
 public class CartUpdateInfo implements Serializable {
 
     @Valid
-    private List<CartPhoneInfo> cartPhoneInfos;
+    @NotNull
+    private List<CartItem> cartItems;
 
-    public List<CartPhoneInfo> getCartPhoneInfos() {
-        return cartPhoneInfos;
+    public CartUpdateInfo() {
     }
 
-    public void setCartPhoneInfos(List<CartPhoneInfo> cartPhoneInfos) {
-        this.cartPhoneInfos = cartPhoneInfos;
+    public CartUpdateInfo(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
+    }
+
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 }

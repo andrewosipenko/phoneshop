@@ -45,6 +45,7 @@ public class HttpSessionCartService implements CartService {
     public void update(Map<Long, Long> items) {
         List<Phone> settedPhones = phoneDao.getPhonesByIdList(new ArrayList<Long>(items.keySet()));
         Map<Phone, Long> phones = settedPhones.stream()
+
                 .collect(Collectors.toMap(phone -> phone, phone -> items.get(phone.getId())));
         cart.setItems(phones);
 

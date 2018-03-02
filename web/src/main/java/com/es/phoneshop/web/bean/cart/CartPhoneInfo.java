@@ -6,13 +6,21 @@ import java.io.Serializable;
 
 public class CartPhoneInfo implements Serializable {
 
-    @NotNull
-    @Min(1L)
+    @NotNull(message = "{quantity.wrongFormat}")
+    @Min(value = 1L, message = "{quantity.wrongFormat}")
     private Long phoneId;
 
-    @NotNull
-    @Min(1L)
+    @NotNull(message = "{quantity.wrongFormat}")
+    @Min(value = 1L, message = "{quantity.wrongFormat}")
     private Long quantity;
+
+    public CartPhoneInfo() {
+    }
+
+    public CartPhoneInfo(Long phoneId, Long quantity) {
+        this.phoneId = phoneId;
+        this.quantity = quantity;
+    }
 
     public Long getPhoneId() {
         return phoneId;

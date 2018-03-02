@@ -18,49 +18,38 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <form method="post">
+                    <form:form method="post" modelAttribute="cartUpdateInfo">
                         <input type="hidden" name="_method" value="PUT"/>
                         <input type="hidden" name="phoneId"/>
-                        <c:forEach var="cartItem" items="${cartItemList}" varStatus="i">
+                        <c:forEach var="cartItem" items="${cartUpdateInfo.cartItems}" varStatus="i">
                             <tr>
                                 <td class="col-sm-8 col-md-6">
                                     <div class="media">
                                         <a class="thumbnail pull-left"
-                                           href="<c:url value="/productDetails/${cartItem.phone.id}"/>">
+                                           href="<c:url value="/productDetails/${cartItem.phoneId}"/>">
                                             <img class="media-object"
-                                                 src="<c:url value="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${cartItem.phone.imageUrl}"/>"
+                                                 src="<c:url value="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${cartItem.imageUrl}"/>"
                                                  style="width: 72px; height: 72px;"> </a>
                                         <div class="media-body pl-2">
                                             <h5 class="media-heading"><a
-                                                    href="<c:url value="/productDetails/${cartItem.phone.id}"/>"><c:out value="${cartItem.phone.model}"/></a>
+                                                    href="<c:url value="/productDetails/${cartItem.phoneId}"/>"><c:out value="${cartItem.model}"/></a>
                                             </h5>
-                                            <h6 class="media-heading"> by <c:out value="${cartItem.phone.brand}"/></h6>
+                                            <h6 class="media-heading"> by <c:out value="${cartItem.brand}"/></h6>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="col-sm-1 col-md-1" style="text-align: center">
-                                    <input type="hidden" name="cartPhoneInfos[${i.index}].phoneId"
-                                           value="<c:out value="${cartItem.phone.id}"/>">
-                                    <c:choose>
-                                        <c:when test="${not empty cartFiledErrors['cartPhoneInfos['.concat(i.index).concat('].quantity')]}">
-                                            <input type="text" class="form-control"
-                                                   name="cartPhoneInfos[<c:out value="${i.index}"/>].quantity"
-                                                   value="<c:out value="${cartFiledErrors['cartPhoneInfos['.concat(i.index).concat('].quantity')].previousValue}"/>">
-                                        </c:when>
-                                        <c:otherwise>
-                                            <input type="text" class="form-control"
-                                                   name="cartPhoneInfos[<c:out value="${i.index}"/>].quantity"
-                                                   value="<c:out value="${cartItem.quantity}"/>">
-                                        </c:otherwise>
-                                    </c:choose>
-                                    <div class="error-message"
-                                         id="error-message"><c:out value="${cartFiledErrors['cartPhoneInfos['.concat(i.index).concat('].quantity')].errorMessage}"/></div>
+                                    <form:hidden path="cartItems[${i.index}].phoneId"/>
+                                    <form:input path="cartItems[${i.index}].quantity" class="form-control"/>
+                                    <div class="error-message" id="error-message">
+                                        <form:errors path="cartItems[${i.index}].quantity"/>
+                                    </div>
                                 </td>
-                                <td class="col-sm-1 col-md-1 text-center"><strong>$<c:out value="${cartItem.phone.price}"/></strong></td>
+                                <td class="col-sm-1 col-md-1 text-center"><strong>$<c:out value="${cartItem.price}"/></strong></td>
                                 <td class="col-sm-1 col-md-1 text-center"><strong>$<c:out value="${cartItem.total}"/></strong></td>
                                 <td class="col-sm-1 col-md-1">
                                     <button type="submit" name="remove" class="btn btn-danger"
-                                            onclick="return onDeletePhone(<c:out value="${cartItem.phone.id}"/>);">
+                                            onclick="return onDeletePhone(<c:out value="${cartItem.phoneId}"/>);">
                                         Remove
                                     </button>
                                 </td>
@@ -83,7 +72,7 @@
                                 </button>
                             </td>
                             <td>
-                                <c:if test="${not empty cartItemList}">
+                                <c:if test="${not empty cartUpdateInfo.cartItems}">
                                     <button type="submit" class="btn btn-success">
                                         Order
                                     </button>
@@ -97,11 +86,10 @@
                                 return true;
                             }
                         </script>
-                    </form>
+                    </form:form>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-
 </template:page>
