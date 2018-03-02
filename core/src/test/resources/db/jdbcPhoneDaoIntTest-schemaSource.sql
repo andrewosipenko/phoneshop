@@ -16,9 +16,17 @@ insert into colors (id, code) values (1013, '256');
 insert into phones (id, brand, model) values (1001, 'Brand1001', 'Model1001');
 insert into phones (id, brand, model) values (1, 'Brand1', 'Model1');
 insert into phones (id, brand, model) values (2, 'Brand2', 'Model2');
+insert into phones (id, brand, model) values (345, 'Brand345', 'Model345');
+
 
 insert into phone2color (phoneId, colorId) values (1, 1000);
 insert into phone2color (phoneId, colorId) values (1, 1009);
 insert into phone2color (phoneId, colorId) values (1, 1010);
 insert into phone2color (phoneId, colorId) values (1001, 1000);
 insert into phone2color (phoneId, colorId) values (1001, 1001);
+
+
+insert into stocks (phoneId, stock, reserved) values (1, 2, 0);
+insert into stocks (phoneId, stock, reserved) values (1001, 2, 0);
+insert into stocks (phoneId, stock, reserved) values (2, 2, 0);
+insert into stocks (phoneId, stock, reserved) values (345, 0, 0);
