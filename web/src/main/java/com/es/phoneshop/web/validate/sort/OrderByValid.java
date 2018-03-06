@@ -8,10 +8,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Target(ElementType.PARAMETER)
-@Constraint(validatedBy = OrderByValidateImpl.class)
+@Constraint(validatedBy = OrderByConstraintValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidateOrderBy {
-
+public @interface OrderByValid {
     Class<? extends Enum<?>> columnEnum();
 
     Class<? extends Enum<?>> orderEnum();
@@ -20,5 +19,5 @@ public @interface ValidateOrderBy {
 
     Class<? extends Payload>[] payload() default {};
 
-    String message() default "error";
+    String message() default "Incorrect order by";
 }
