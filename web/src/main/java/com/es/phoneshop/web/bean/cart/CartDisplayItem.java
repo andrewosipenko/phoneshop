@@ -7,7 +7,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class CartItem {
+public class CartDisplayItem {
 
     @NotNull(message = "{quantity.wrongFormat}")
     @Min(value = 1L, message = "{quantity.wrongFormat}")
@@ -20,22 +20,22 @@ public class CartItem {
     private String brand;
 
     @NotNull(message = "{quantity.wrongFormat}")
-    @Min(value = 1L, message = "{quantity.wrongFormat}")
+    @Min(value = 0L, message = "{quantity.wrongFormat}")
     private Long quantity = 0L;
 
     private BigDecimal price = BigDecimal.ZERO;
 
     private BigDecimal total = BigDecimal.ZERO;
 
-    public CartItem() {
+    public CartDisplayItem() {
     }
 
-    public CartItem(Phone phone, Long quantity) {
+    public CartDisplayItem(Phone phone, Long quantity) {
         this.phoneId = phone.getId();
         this.imageUrl = phone.getImageUrl();
         this.model = phone.getModel();
         this.brand = phone.getBrand();
-        if(phone.getPrice() != null) {
+        if (phone.getPrice() != null) {
             this.price = phone.getPrice();
         }
         this.quantity = quantity;

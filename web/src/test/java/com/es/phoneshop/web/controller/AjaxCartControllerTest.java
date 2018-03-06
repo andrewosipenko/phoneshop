@@ -1,6 +1,7 @@
 package com.es.phoneshop.web.controller;
 
 import com.es.core.cart.Cart;
+import com.es.core.cart.CartItem;
 import com.es.core.cart.CartService;
 import com.es.core.exception.PhoneNotFoundException;
 import com.es.core.model.phone.Phone;
@@ -62,7 +63,7 @@ public class AjaxCartControllerTest extends AbstractTest {
         Phone phone = createPhone(ADD_PHONE_ID, 1);
 
         returnedCart.setCost(COST);
-        returnedCart.addPhone(phone, QUANTITY);
+        returnedCart.getItems().add(new CartItem(phone, QUANTITY));
 
         final String JSONContent = "{" +
                 "\"phoneId\":" + ADD_PHONE_ID.toString() + "," +

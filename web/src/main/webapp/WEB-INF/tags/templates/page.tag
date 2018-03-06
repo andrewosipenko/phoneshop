@@ -19,8 +19,9 @@
     <a ${catalogTabIsActive ? 'class="active"' : ''} href="${pageContext.request.contextPath}/productList">Catalog</a>
     <div class="cart-container">
         <a href="<c:url value="/cart"/>" class="btn btn-outline-dark">
-            My Cart: <span class="cart-count"><c:out value="${not empty cart ? cart.countItems : 0}"/></span> Items ($ <span
-                class="cart-cost"><c:out value="${not empty cart ? cart.cost : 0}"/></span>)
+            My Cart: <span class="cart-count"><c:out value="${not empty cart ? cart.countItems : 0}"/></span> Items ($
+            <span
+                    class="cart-cost"><c:out value="${not empty cart ? cart.cost : 0}"/></span>)
         </a>
     </div>
     <div class="search-container">

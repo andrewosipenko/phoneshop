@@ -7,10 +7,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class HttpSessionCartService implements CartService {
@@ -36,33 +34,48 @@ public class HttpSessionCartService implements CartService {
         if (phonePrice == null) {
             throw new IllegalStateException();
         }
-        cart.addPhone(addedPhone, quantity);
 
-        recalculateCartCost(cart);
+        Optional<CartItem> cartItemOptional = findCartItemById(phoneId);
+        if (cartItemOptional.isPresent()) {
+            CartItem cartItem = cartItemOptional.get();
+            cartItem.setQuantity(cartItem.getQuantity() + quantity);
+        } else {
+            CartItem cartItem = new CartItem(addedPhone, quantity);
+            cart.getItems().add(cartItem);
+        }
+
+        recalculateCartCost();
     }
 
     @Override
     public void update(Map<Long, Long> items) {
-        List<Phone> settedPhones = phoneDao.getPhonesByIdList(new ArrayList<Long>(items.keySet()));
-        Map<Phone, Long> phones = settedPhones.stream()
-
-                .collect(Collectors.toMap(phone -> phone, phone -> items.get(phone.getId())));
-        cart.setItems(phones);
-
-        recalculateCartCost(cart);
-    }
-
-    @Override
-    public void remove(Long phoneId) {
-        if (cart.getItems().entrySet().removeIf(e -> phoneId.equals(e.getKey().getId()))) {
-            recalculateCartCost(cart);
+        for (Map.Entry<Long, Long> item : items.entrySet()) {
+            updateOrDelete(item.getKey(), item.getValue());
         }
     }
 
-    private void recalculateCartCost(Cart cart) {
+    @Override
+    public void updateOrDelete(Long phoneId, Long quantity) {
+        if (quantity.compareTo(0L) > 0) {
+            Optional<CartItem> cartItemOptional = findCartItemById(phoneId);
+            if (cartItemOptional.isPresent()) {
+                CartItem cartItem = cartItemOptional.get();
+                cartItem.setQuantity(quantity);
+            }
+        } else {
+            cart.getItems().removeIf(e -> phoneId.equals(e.getPhone().getId()));
+        }
+        recalculateCartCost();
+    }
 
-        BigDecimal cartCost = cart.getItems().keySet().stream()
-                .map(phone -> phone.getPrice().multiply(new BigDecimal(cart.getItems().get(phone))))
+    private Optional<CartItem> findCartItemById(Long phoneId) {
+        return cart.getItems().stream().filter(e -> phoneId.equals(e.getPhone().getId()))
+                .findFirst();
+    }
+
+    private void recalculateCartCost() {
+        BigDecimal cartCost = cart.getItems().stream()
+                .map(e -> e.getPhone().getPrice().multiply(new BigDecimal(e.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         cart.setCost(cartCost);

@@ -1,12 +1,12 @@
 package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.cart.Cart;
+import com.es.core.cart.CartItem;
 import com.es.core.cart.CartService;
 import com.es.core.exception.PhoneNotFoundException;
 import com.es.core.model.phone.Phone;
-import com.es.phoneshop.web.bean.cart.CartItem;
-import com.es.phoneshop.web.bean.cart.CartPhoneInfo;
-import com.es.phoneshop.web.bean.cart.CartUpdateInfo;
+import com.es.phoneshop.web.bean.cart.CartDisplayInfo;
+import com.es.phoneshop.web.bean.cart.CartDisplayItem;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,7 +26,7 @@ import static com.es.phoneshop.web.constant.ControllerMapping.CART_PAGE;
 @RequestMapping(CART_PAGE)
 public class CartPageController {
 
-    private final static String CART_UPDATE_INFO_ATTRIBUTE = "cartUpdateInfo";
+    private final static String CART_UPDATE_INFO_ATTRIBUTE = "cartDisplayInfo";
 
     @Resource
     private CartService cartService;
@@ -39,55 +38,56 @@ public class CartPageController {
     }
 
     @PutMapping(params = "update")
-    public String updateCart(@Valid CartUpdateInfo cartUpdateInfo, BindingResult bindingResult, Model model) throws PhoneNotFoundException {
-        if (!bindingResult.hasErrors()) {
-            Map<Long, Long> mapForUpdate = cartUpdateInfo.getCartItems().stream()
-                    .collect(Collectors.toMap(CartItem::getPhoneId, CartItem::getQuantity));
-            cartService.update(mapForUpdate);
-            return "redirect:/cart";
+    public String updateCart(@Valid CartDisplayInfo cartDisplayInfo, BindingResult bindingResult) throws PhoneNotFoundException {
+        if (bindingResult.hasErrors()) {
+            if (cartDisplayInfo.getCartDisplayItems() != null) {
+                setPropertiesCartUpdateInfo(cartDisplayInfo);
+            }
+            return CART_PAGE_NAME;
         }
-        setPropertiesCartUpdateInfo(cartUpdateInfo);
-        return CART_PAGE_NAME;
-    }
 
-    @PostMapping(params = "remove")
-    public String deleteProductFormCart(@RequestParam("phoneId") Long phoneId, Model model) {
-        cartService.remove(phoneId);
+        Map<Long, Long> mapForUpdate = cartDisplayInfo.getCartDisplayItems().stream()
+                .collect(Collectors.toMap(CartDisplayItem::getPhoneId, CartDisplayItem::getQuantity));
+        cartService.update(mapForUpdate);
         return "redirect:/cart";
     }
 
-    private void setCartItemsAttribute(Model model){
+    @PostMapping(params = "remove")
+    public String deleteProductFormCart(@RequestParam("phoneId") Long phoneId) {
+        cartService.updateOrDelete(phoneId, 0L);
+        return "redirect:/cart";
+    }
+
+    private void setCartItemsAttribute(Model model) {
         Cart cart = cartService.getCart();
-        Map<Phone, Long> items = cart.getItems();
-        List<Phone> phonesList = new ArrayList<>(items.keySet());
-        List<CartItem> cartItems = phonesList.stream()
-                .map(phone -> new CartItem(phone, items.get(phone)))
+        List<CartDisplayItem> cartDisplayItems = cart.getItems().stream()
+                .map(item -> new CartDisplayItem(item.getPhone(), item.getQuantity()))
                 .collect(Collectors.toList());
 
-        model.addAttribute(CART_UPDATE_INFO_ATTRIBUTE, new CartUpdateInfo(cartItems));
+        model.addAttribute(CART_UPDATE_INFO_ATTRIBUTE, new CartDisplayInfo(cartDisplayItems));
     }
 
-    private void setPropertiesCartUpdateInfo(CartUpdateInfo cartUpdateInfo){
+    private void setPropertiesCartUpdateInfo(CartDisplayInfo cartDisplayInfo) {
         Cart cart = cartService.getCart();
-        Map<Phone, Long> items = cart.getItems();
-        Map<Long, Phone> phoneMap = items.keySet().stream().
-                collect(Collectors.toMap(Phone::getId,o -> o));
+        Map<Long, CartItem> items = cart.getItems().stream()
+                .collect(Collectors.toMap(item -> item.getPhone().getId(), item -> item));
 
-        cartUpdateInfo.getCartItems()
-                .forEach(cartItem -> setPropertiesCartItem(cartItem, phoneMap.get(cartItem.getPhoneId()), items));
+        cartDisplayInfo.getCartDisplayItems()
+                .forEach(cartDisplayItem -> setPropertiesCartItem(cartDisplayItem, items.get(cartDisplayItem.getPhoneId())));
     }
 
-    private void setPropertiesCartItem(CartItem cartItem, Phone phone, Map<Phone, Long> items){
-        if(phone != null) {
-            cartItem.setBrand(phone.getBrand());
-            cartItem.setImageUrl(phone.getImageUrl());
-            cartItem.setModel(phone.getModel());
+    private void setPropertiesCartItem(CartDisplayItem cartDisplayItem, CartItem cartItem) {
+        Phone phone = cartItem.getPhone();
+        if (phone != null) {
+            cartDisplayItem.setBrand(phone.getBrand());
+            cartDisplayItem.setImageUrl(phone.getImageUrl());
+            cartDisplayItem.setModel(phone.getModel());
 
             BigDecimal price = phone.getPrice();
-            cartItem.setPrice(price);
+            cartDisplayItem.setPrice(price);
 
-            BigDecimal total = price.multiply(new BigDecimal(items.get(phone)));
-            cartItem.setTotal(total);
+            BigDecimal total = price.multiply(new BigDecimal(cartItem.getQuantity()));
+            cartDisplayItem.setTotal(total);
         }
     }
 }

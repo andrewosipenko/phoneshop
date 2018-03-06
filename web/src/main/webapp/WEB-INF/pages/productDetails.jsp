@@ -33,9 +33,9 @@
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <h3> Out of stock <h3>
-                </c:otherwise>
-            </c:choose>
+                <h3> Out of stock <h3>
+                    </c:otherwise>
+                    </c:choose>
             </div>
             <div class="col right-phone-description">
                 <c:if test="${not empty phone.announced}">
