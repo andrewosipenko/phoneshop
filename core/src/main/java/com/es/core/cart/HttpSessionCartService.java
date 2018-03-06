@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class HttpSessionCartService implements CartService {
@@ -20,8 +20,6 @@ public class HttpSessionCartService implements CartService {
     private PhoneService phoneService;
 
     private static final String ATTRIBUTE_CART = "cart";
-    private static final String ATTRIBUTE_COUNT_ITEMS = "countItems";
-    private static final String ATTRIBUTE_PRICE = "price";
 
     @Override
     public Cart getCart() {
@@ -30,52 +28,57 @@ public class HttpSessionCartService implements CartService {
         if (cart == null) {
             cart = new Cart();
             httpSession.setAttribute(ATTRIBUTE_CART, cart);
-            httpSession.setAttribute(ATTRIBUTE_COUNT_ITEMS, 0L);
-            httpSession.setAttribute(ATTRIBUTE_PRICE, new BigDecimal(0));
         }
 
         return cart;
     }
 
     @Override
-    public void addPhone(Long phoneId, Long quantity) {
+    public void addPhone(Long phoneId, Long quantity) throws NoSuchElementException {
+        Phone phone = getPhoneFromOptional(phoneService.get(phoneId));
         Cart cart = getCart();
-        cart.addItem(phoneService.get(phoneId).get(), quantity);
-        httpSession.setAttribute(ATTRIBUTE_COUNT_ITEMS, cart.countItems());
-        httpSession.setAttribute(ATTRIBUTE_PRICE, cart.getPrice());
+        cart.getItems().merge(phone, quantity, (a, b) -> a + b);
     }
 
     @Override
-    public void remove(Long phoneId) {
+    public void remove(Long phoneId) throws NoSuchElementException {
+        Phone phone = getPhoneFromOptional(phoneService.get(phoneId));
         Cart cart = getCart();
-        cart.removeItem(phoneService.get(phoneId).get());
-        httpSession.setAttribute(ATTRIBUTE_COUNT_ITEMS, cart.countItems());
-        httpSession.setAttribute(ATTRIBUTE_PRICE, cart.getPrice());
+        cart.getItems().remove(phone);
     }
 
     @Override
     public long getCountItems() {
-        return getCart().countItems();
+        Map<Phone, Long> items = getCart().getItems();
+        return items.values().stream().reduce(0L, (v1, v2) -> v1 + v2);
     }
 
     @Override
     public BigDecimal getPrice() {
-        return getCart().getPrice();
+        Map<Phone, Long> items = getCart().getItems();
+        return items.keySet().stream()
+                .map(phone -> phone.getPrice().multiply(BigDecimal.valueOf(items.get(phone))))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Override
-    public List<Phone> getAllItems() {
-        Cart cart = getCart();
-        Map<Phone, Long> items = cart.getItems();
-        List<Phone> phones = new LinkedList<>();
+    public Map<Phone, Long> getAllItems() {
+        return getCart().getItems();
+    }
 
-        for (Phone phone : items.keySet()) {
-            Long quantity = items.get(phone);
-            for (int i = 0; i < quantity; i++) {
-                phones.add(phone);
-            }
+    @Override
+    public void update(Map<Long, Long> phoneWithQuantity) throws NoSuchElementException {
+        Map<Phone, Long> items = getCart().getItems();
+        phoneWithQuantity.keySet().stream()
+                .map(key -> phoneService.get(key).get())
+                .forEach(phone -> items.put(phone, phoneWithQuantity.get(phone.getId())));
+    }
+
+    private Phone getPhoneFromOptional(Optional<Phone> phone) throws NoSuchElementException {
+        if (phone.isPresent()) {
+            return phone.get();
+        } else {
+            throw new NoSuchElementException();
         }
-
-        return phones;
     }
 }
