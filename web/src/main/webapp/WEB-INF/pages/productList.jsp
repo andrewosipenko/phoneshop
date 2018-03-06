@@ -32,7 +32,7 @@
                 </div>
                 <div class="col">
                     <form method="GET" action="${pageContext.request.contextPath}/cart">
-                        <button class="float-right cart" type="submit">My cart: <span id="count-items">${cartStatus.countItems}</span> items <span id="price">${cartStatus.price}</span>$</button>
+                        <button class="float-right cart btn" type="submit">My cart: <span id="count-items">${cartStatus.countItems}</span> items <span id="price">${cartStatus.price}</span>$</button>
                     </form>
                 </div>
             </div>
