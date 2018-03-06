@@ -2,7 +2,7 @@ $(function () {
     $("#price").number(true, 2);
 });
 
-function addToCart(id, color) {
+function addToCart(id) {
     var quantity = $("#quantity-" + id).val();
     var contextPath = $("#contextPath").val();
     var url = contextPath + "/ajaxCart";
