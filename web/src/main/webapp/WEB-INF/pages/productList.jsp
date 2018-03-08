@@ -21,7 +21,8 @@
       <nav class="navbar navbar-light bg-light justify-content-between">
         <h4>Phone</h4>
         <form class="form-inline mr-4 mt-3">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" name="keyWord" value="${pageContext.request.getParameter("keyWord")}">
+          <%--<input class="form-control" name="sortBy" value="${pageContext.request.getParameter("sortBy")}">--%>
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
       </nav>

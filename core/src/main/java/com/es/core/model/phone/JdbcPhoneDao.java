@@ -1,14 +1,11 @@
 package com.es.core.model.phone;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 @Component
@@ -57,30 +54,23 @@ public class JdbcPhoneDao implements PhoneDao{
             "description=? " +
             "WHERE id=?";
 
-    private final static String FIND_ALL_SQL_QUERY =
+    private final static String SQL_COUNT_SEARCH_QUERY =
+            "SELECT COUNT(*) " +
+            "FROM phones, stocks s " +
+            "WHERE phones.id=s.phoneId and s.stock>0 " +
+            "      and phones.model LIKE ? ";
+
+    private final static String SQL_PHONES_QUERY =
             "SELECT p.id, p.imageUrl, p.brand, p.model, c.code as colorCode, c.id as colorId, p.displaySizeInches, p.price " +
             "FROM (SELECT * " +
             "      FROM phones, stocks s " +
             "      WHERE phones.id=s.phoneId and s.stock>0 " +
+            "            and phones.model LIKE ? " +
+            "      ORDER BY %s " +
             "      LIMIT ? OFFSET ?) p " +
-            "LEFT JOIN phone2color p2c ON p2c.phoneid = p.id " +
-            "LEFT JOIN colors c ON c.id = p2c.colorId " +
-            "ORDER BY p.id";
+            "LEFT JOIN phone2color p2c ON p2c.phoneId = p.id " +
+            "LEFT JOIN colors c ON c.id = p2c.colorId ";
 
-    public Optional<Phone> get(final Long key) {
-        List<Phone> result = queryPhone(key);
-
-        Optional<Phone> phoneOptional;
-        if(result.size() == 0){
-            phoneOptional = Optional.empty();
-        } else {
-            Phone phone = result.get(0);
-            phone.setColors(queryColors(key));
-            phoneOptional = Optional.of(result.get(0));
-        }
-
-        return phoneOptional;
-    }
 
     private List<Phone> queryPhone(final Long key) {
         return jdbcTemplate.query(
@@ -93,7 +83,7 @@ public class JdbcPhoneDao implements PhoneDao{
     private Set<Color> queryColors(final Long key) {
         return new HashSet<>(jdbcTemplate.query(
                 SQL_GET_COLORS_QUERY,
-                (resultSet, i) -> {
+                (ResultSet resultSet, int i) -> {
                     Color color = new Color();
                     color.setCode(resultSet.getString("code"));
                     color.setId(resultSet.getLong("id"));
@@ -103,14 +93,27 @@ public class JdbcPhoneDao implements PhoneDao{
         ));
     }
 
-    public void save(final Phone phone) {
+    private List<Phone> queryPhones(String keyString, int limit, int offset, String sortBy){
+        keyString = String.format("%%%s%%", keyString);
+        return jdbcTemplate.query(
+                String.format(SQL_PHONES_QUERY, sortBy),
+                new FindAllPhonesResultSetExtractor(),
+                keyString,
+                limit,
+                offset
+        );
+    }
+
+    private void insertPhone(final Phone phone){
         jdbcTemplate.update(SQL_INSERT_PHONE_IF_NOT_EXIST_QUERY,
                 phone.getId(),
                 phone.getBrand(),
                 phone.getModel(),
                 phone.getId()
         );
+    }
 
+    private void updatePhone(final Phone phone){
         jdbcTemplate.update(SQL_UPDATE_PHONE_QUERY,
                 phone.getBrand(),
                 phone.getModel(),
@@ -141,69 +144,70 @@ public class JdbcPhoneDao implements PhoneDao{
         );
     }
 
-    @Override
-    public List<Phone> findAll(int offset, int limit){
-        return jdbcTemplate.query(
-                FIND_ALL_SQL_QUERY,
-                new FindAllResultSetExtractor(),
-                limit,
-                offset
+    private String getSortByParam(String sortBy) {
+        switch (sortBy) {
+            case "brand":
+                return "phones.brand";
+            case "model":
+                return "phones.model";
+            case "display":
+                return "phones.displaySizeInches";
+            case "price":
+                return "phones.price";
+            default:
+                return "phones.id";
+        }
+    }
+
+    private int countPhones(String keyString){
+        return jdbcTemplate.queryForObject(
+                SQL_COUNT_SEARCH_QUERY,
+                Integer.class,
+                String.format("'%%%s%%'", keyString)
         );
     }
 
-    private static class FindAllResultSetExtractor implements ResultSetExtractor<List<Phone>>{
+    @Override
+    public Optional<Phone> get(final Long key) {
+        List<Phone> result = queryPhone(key);
 
-        @Override
-        public List<Phone> extractData(ResultSet rs) throws SQLException, DataAccessException {
-            LinkedList<Phone> phones = new LinkedList<>();
-            if(rs.next()){
-                phones.add(getPhone(rs));
-            }
-
-            Long phoneId;
-            Phone lastPhone;
-            while(rs.next()){
-                lastPhone = phones.getLast();
-                phoneId = rs.getLong("id");
-                if (lastPhone.getId().equals(phoneId)) {
-                    lastPhone.getColors().add(getColor(rs));
-                } else {
-                    phones.add(getPhone(rs));
-                }
-            }
-            return phones;
+        Optional<Phone> phoneOptional;
+        if(result.size() == 0){
+            phoneOptional = Optional.empty();
+        } else {
+            Phone phone = result.get(0);
+            phone.setColors(queryColors(key));
+            phoneOptional = Optional.of(result.get(0));
         }
 
-        private Phone getPhone(ResultSet rs) throws SQLException, DataAccessException{
-            Phone phone = new Phone();
-            Long phoneId = rs.getLong("id");
-            phone.setId(phoneId);
-            phone.setImageUrl(rs.getString("imageUrl"));
-            phone.setBrand(rs.getString("brand"));
-            phone.setModel(rs.getString("model"));
-            phone.setDisplaySizeInches(rs.getBigDecimal("displaySizeInches"));
-            phone.setPrice(rs.getBigDecimal("price"));
-
-            Set<Color> colors = new HashSet<>();
-            colors.add(getColor(rs));
-            phone.setColors(colors);
-            return phone;
-        }
-
-        private Color getColor(ResultSet rs) throws SQLException, DataAccessException{
-            Color color = new Color();
-            color.setCode(rs.getString("colorCode"));
-            color.setId(rs.getLong("colorId"));
-            return color;
-        }
+        return phoneOptional;
     }
 
-//    public List<Phone> findAll(int offset, int limit) {
-//        return jdbcTemplate.query(
-//                FIND_ALL_SQL_QUERY,
-//                new BeanPropertyRowMapper(Phone.class),
-//                offset,
-//                limit
-//        );
-//    }
+    @Override
+    public void save(final Phone phone) {
+        insertPhone(phone);
+        updatePhone(phone);
+    }
+
+    @Override
+    public List<Phone> findAll(int offset, int limit, String sortBy){
+        sortBy = getSortByParam(sortBy);
+        return queryPhones("", limit, offset, sortBy);
+    }
+
+    @Override
+    public List<Phone> searchByModel(String keyString, int limit, int offset, String sortBy){
+        sortBy = getSortByParam(sortBy);
+        return queryPhones(keyString, limit, offset, sortBy);
+    }
+
+    @Override
+    public int countSearchResult(String keyString){
+        return countPhones(keyString);
+    }
+
+    @Override
+    public int countAll(){
+        return countPhones("");
+    }
 }
