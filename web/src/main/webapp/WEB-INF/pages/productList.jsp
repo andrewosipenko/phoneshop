@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/template" %>
+<%@ taglib prefix="specific" tagdir="/WEB-INF/tags/template/productList" %>
 <template:page>
   <jsp:body>
     <nav class="navbar navbar-dark bg-dark pr-5 pl-5 pd-5">
@@ -32,11 +33,11 @@
         <thead>
         <tr>
           <td scope="col">Image</td>
-          <td scope="col">Brand</td>
-          <td scope="col">Model</td>
+          <td scope="col">Brand <specific:sorter sortBy="brand"/></td>
+          <td scope="col">Model <specific:sorter sortBy="model"/></td>
           <td scope="col">Color</td>
-          <td scope="col">Display size</td>
-          <td scope="col">Price</td>
+          <td scope="col">Display size <specific:sorter sortBy="display"/></td>
+          <td scope="col">Price <specific:sorter sortBy="price"/></td>
           <td scope="col">Quantity</td>
           <td scope="col">Action</td>
         </tr>

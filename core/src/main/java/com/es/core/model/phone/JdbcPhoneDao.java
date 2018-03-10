@@ -71,6 +71,18 @@ public class JdbcPhoneDao implements PhoneDao{
             "LEFT JOIN phone2color p2c ON p2c.phoneId = p.id " +
             "LEFT JOIN colors c ON c.id = p2c.colorId ";
 
+    private static Map<String, String> orderBy = new HashMap<String, String>();
+    {
+        orderBy.put("display", "phones.displaySizeInches");
+        orderBy.put("display-desc", "phones.displaySizeInches DESC");
+        orderBy.put("brand", "phones.brand");
+        orderBy.put("brand-desc", "phones.brand DESC");
+        orderBy.put("model", "phones.model");
+        orderBy.put("model-desc", "phones.model DESC");
+        orderBy.put("price", "phones.price");
+        orderBy.put("price-desc", "phones.price DESC");
+        orderBy.put("default", "phones.id");
+    }
 
     private List<Phone> queryPhone(final Long key) {
         return jdbcTemplate.query(
@@ -144,21 +156,6 @@ public class JdbcPhoneDao implements PhoneDao{
         );
     }
 
-    private String getSortByParam(String sortBy) {
-        switch (sortBy) {
-            case "brand":
-                return "phones.brand";
-            case "model":
-                return "phones.model";
-            case "display":
-                return "phones.displaySizeInches";
-            case "price":
-                return "phones.price";
-            default:
-                return "phones.id";
-        }
-    }
-
     private int countPhones(String keyString){
         return jdbcTemplate.queryForObject(
                 SQL_COUNT_SEARCH_QUERY,
@@ -191,13 +188,13 @@ public class JdbcPhoneDao implements PhoneDao{
 
     @Override
     public List<Phone> findAll(int offset, int limit, String sortBy){
-        sortBy = getSortByParam(sortBy);
+        sortBy = orderBy.getOrDefault(sortBy, orderBy.get("default"));
         return queryPhones("", limit, offset, sortBy);
     }
 
     @Override
     public List<Phone> searchByModel(String keyString, int limit, int offset, String sortBy){
-        sortBy = getSortByParam(sortBy);
+        sortBy = orderBy.getOrDefault(sortBy, orderBy.get("default"));
         return queryPhones(keyString, limit, offset, sortBy);
     }
 
