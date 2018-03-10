@@ -19,4 +19,9 @@ public class Color {
     public void setCode(final String code) {
         this.code = code;
     }
+
+    public Color(Long id, String code) {
+        this.id = id;
+        this.code = code;
+    }
 }
