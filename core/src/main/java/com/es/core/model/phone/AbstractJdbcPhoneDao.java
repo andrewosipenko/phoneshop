@@ -58,6 +58,7 @@ public abstract class AbstractJdbcPhoneDao {
         parameters.put("ramGb", phone.getRamGb());
         parameters.put("internalStorageGb", phone.getInternalStorageGb());
         parameters.put("batteryCapacityMah", phone.getBatteryCapacityMah());
+        parameters.put("standByTimeHours", phone.getStandByTimeHours());
         parameters.put("talkTimeHours", phone.getTalkTimeHours());
         parameters.put("bluetooth", phone.getBluetooth());
         parameters.put("positioning", phone.getPositioning());

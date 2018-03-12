@@ -11,7 +11,7 @@ import java.util.Set;
 public class PhoneRowMapper implements RowMapper <Phone> {
     public Phone mapRow(ResultSet rs, int rowNum) throws SQLException {
         Phone phone = new Phone();
-        phone.setId(rs.getLong("id"));
+        phone.setId(rs.getLong("phoneId"));
         phone.setBrand(rs.getString("brand"));
         phone.setModel(rs.getString("model"));
         phone.setPrice(rs.getBigDecimal("price"));
@@ -32,13 +32,14 @@ public class PhoneRowMapper implements RowMapper <Phone> {
         phone.setInternalStorageGb(rs.getBigDecimal("internalStorageGb"));
         phone.setBatteryCapacityMah(rs.getInt("batteryCapacityMah"));
         phone.setTalkTimeHours(rs.getBigDecimal("talkTimeHours"));
+        phone.setStandByTimeHours(rs.getBigDecimal("standByTimeHours"));
         phone.setBluetooth(rs.getString("bluetooth"));
         phone.setPositioning(rs.getString("positioning"));
         phone.setImageUrl(rs.getString("imageUrl"));
         phone.setDescription(rs.getString("description"));
 
         Set<Color> colors = phone.getColors();
-        Color color = new Color(rs.getLong("colorId"), rs.getString("colorCode"));
+        Color color = new Color(rs.getLong("colorId"), rs.getString("code"));
         colors.add(color);
         phone.setColors(colors);
 
