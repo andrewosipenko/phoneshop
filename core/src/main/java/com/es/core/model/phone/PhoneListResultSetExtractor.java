@@ -28,14 +28,12 @@ class PhoneListResultSetExtractor extends AbstractPhoneResultSetExctractor imple
         List<Phone> phoneList = new ArrayList<>();
 
         while (rs.next()) {
-            Phone changePhone;
             Long phoneId = rs.getLong("phoneId");
-            if (!phoneMap.containsKey(phoneId)) {
+            Phone changePhone = phoneMap.get(phoneId);
+            if (changePhone == null) {
                 changePhone = readPropertiesToPhone(rs);
                 phoneMap.put(phoneId, changePhone);
                 phoneList.add(changePhone);
-            } else {
-                changePhone = phoneMap.get(phoneId);
             }
             addColor(changePhone, rs);
         }

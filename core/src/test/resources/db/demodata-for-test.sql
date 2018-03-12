@@ -30,3 +30,17 @@ insert into phone2color (phoneId, colorId) values (1003, 1004);
 insert into phone2color (phoneId, colorId) values (1003, 1005);
 insert into phone2color (phoneId, colorId) values (1004, 1001);
 insert into phone2color (phoneId, colorId) values (1005, 1000);
+
+insert into stocks (phoneId, stock, reserved) values (1000, 10, 0);
+insert into stocks (phoneId, stock, reserved) values (1001, 11, 1);
+insert into stocks (phoneId, stock, reserved) values (1002, 12, 1);
+insert into stocks (phoneId, stock, reserved) values (1003, 13, 2);
+insert into stocks (phoneId, stock, reserved) values (1004, 14, 3);
+insert into stocks (phoneId, stock, reserved) values (1005, 15, 4);
+
+insert into orders (id, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status) values (1001, 320, 10, 230, 'Dmitry', 'Koshelev', 'Minsk', '+375291112233', 'NEW');
+insert into orders (id, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status) values (1002, 249, 0, 249, 'Anton', 'Ivanov', 'Vitebsk', '+375441234567', 'DELIVERED');
+
+insert into orderItems (id, orderId, phoneId, quantity) values(1001, 1001, 1000, 2);
+insert into orderItems (id, orderId, phoneId, quantity) values(1002, 1001, 1002, 1);
+insert into orderItems (id, orderId, phoneId, quantity) values(1003, 1002, 1003, 1);

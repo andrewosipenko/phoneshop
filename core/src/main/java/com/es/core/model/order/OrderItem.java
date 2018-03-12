@@ -8,6 +8,14 @@ public class OrderItem {
     private Order order;
     private Long quantity;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Phone getPhone() {
         return phone;
     }
@@ -30,5 +38,21 @@ public class OrderItem {
 
     public void setQuantity(final Long quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrderItem orderItem = (OrderItem) o;
+
+        return id != null ? id.equals(orderItem.id) : orderItem.id == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }

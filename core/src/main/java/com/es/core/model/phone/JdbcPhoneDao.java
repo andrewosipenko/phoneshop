@@ -86,7 +86,7 @@ public class JdbcPhoneDao implements PhoneDao {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @PostConstruct
-    public void initSimpleJdbcInsert() {
+    public void init() {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.insertPhone = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("phones")
