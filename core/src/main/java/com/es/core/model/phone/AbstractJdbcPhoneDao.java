@@ -3,7 +3,6 @@ package com.es.core.model.phone;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.sql.PreparedStatement;
