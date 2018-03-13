@@ -19,4 +19,6 @@ public interface CartService {
     void updateOrDelete(Long phoneId, Long quantity);
 
     void deleteOutOfStock();
+
+    void clearCart();
 }

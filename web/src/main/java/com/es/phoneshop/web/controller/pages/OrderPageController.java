@@ -50,6 +50,7 @@ public class OrderPageController {
 
         try {
             orderService.placeOrder(order);
+            cartService.clearCart();
             return "redirect:/orderOverview/" + Long.toString(order.getId());
         } catch (OutOfStockException e) {
             cartService.deleteOutOfStock();
@@ -66,5 +67,6 @@ public class OrderPageController {
         destination.setSubtotal(source.getSubtotal());
         destination.setDeliveryPrice(source.getDeliveryPrice());
         destination.setStatus(source.getStatus());
+        destination.getOrderItems().forEach(orderItem -> orderItem.setOrder(destination));
     }
 }

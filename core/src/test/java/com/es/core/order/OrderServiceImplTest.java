@@ -19,6 +19,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -117,5 +118,20 @@ public class OrderServiceImplTest extends AbstractTest {
         assertTrue(order.getTotalPrice().compareTo(COST.add(deliveryPrice)) == 0);
 
         assertEquals(0, order.getOrderItems().size());
+    }
+
+    @Test
+    public void getOrder() {
+        final Long ORDER_ID = 1000L;
+        Order order = new Order();
+        order.setId(ORDER_ID);
+
+        when(orderDao.get(ORDER_ID)).thenReturn(Optional.of(order));
+
+        Order newOrder = orderService.getOrder(ORDER_ID).get();
+
+        verify(orderDao).get(eq(ORDER_ID));
+
+        assertEquals(order, newOrder);
     }
 }

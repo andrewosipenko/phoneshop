@@ -12,4 +12,6 @@ public interface ControllerMapping {
 
     String ORDER_PAGE = "/order";
 
+    String ORDER_OVERVIEW_PAGE = "/orderOverview/{id}";
+
 }

@@ -257,6 +257,13 @@ public class HttpSessionCartServiceTest extends AbstractTest {
         verify(mockCart).setCost(BigDecimal.ZERO);
     }
 
+    @Test
+    public void clearCart() {
+        cartService.clearCart();
+        verify(mockCart, atLeastOnce()).setItems(anyList());
+        verify(mockCart).setCost(BigDecimal.ZERO);
+    }
+
     private List<CartItem> initNonemptyMockCart() {
         List<CartItem> items = new ArrayList<>();
         items.add(new CartItem(phoneList.get(0), 1L));

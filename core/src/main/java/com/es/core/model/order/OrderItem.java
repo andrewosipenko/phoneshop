@@ -57,6 +57,9 @@ public class OrderItem {
     }
 
     public BigDecimal getTotal() {
+        if(phone.getPrice() == null){
+            return BigDecimal.ZERO;
+        }
         return phone.getPrice().multiply(new BigDecimal(quantity));
     }
 
