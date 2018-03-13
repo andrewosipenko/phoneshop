@@ -1,6 +1,7 @@
 package com.es.phoneshop.web.controller;
 
 import com.es.core.cart.CartService;
+import com.es.core.cart.cost.CostService;
 import com.es.phoneshop.web.model.cart.CartPhone;
 import com.es.phoneshop.web.model.cart.CartStatus;
 import org.springframework.context.MessageSource;
@@ -22,6 +23,9 @@ public class AjaxCartController {
     private CartService cartService;
 
     @Resource
+    private CostService costService;
+
+    @Resource
     private MessageSource messageSource;
 
     @PostMapping
@@ -36,7 +40,7 @@ public class AjaxCartController {
         } else {
             cartService.addPhone(cartPhone.getPhoneId(), cartPhone.getQuantity());
             cartStatus.setCountItems(cartService.getCountItems());
-            cartStatus.setPrice(cartService.getPrice());
+            cartStatus.setPrice(costService.getCost());
             status = HttpStatus.OK;
         }
 

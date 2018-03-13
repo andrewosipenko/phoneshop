@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import java.math.BigDecimal;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -51,14 +50,6 @@ public class HttpSessionCartService implements CartService {
     public long getCountItems() {
         Map<Phone, Long> items = getCart().getItems();
         return items.values().stream().reduce(0L, (v1, v2) -> v1 + v2);
-    }
-
-    @Override
-    public BigDecimal getPrice() {
-        Map<Phone, Long> items = getCart().getItems();
-        return items.keySet().stream()
-                .map(phone -> phone.getPrice().multiply(BigDecimal.valueOf(items.get(phone))))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Override

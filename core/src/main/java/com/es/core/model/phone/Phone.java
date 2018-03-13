@@ -282,8 +282,7 @@ public class Phone {
 
         if (!id.equals(phone.id)) return false;
         if (!brand.equals(phone.brand)) return false;
-        if (!model.equals(phone.model)) return false;
-        return colors.equals(phone.colors);
+        return model.equals(phone.model);
     }
 
     @Override
@@ -291,7 +290,6 @@ public class Phone {
         int result = id.hashCode();
         result = 31 * result + brand.hashCode();
         result = 31 * result + model.hashCode();
-        result = 31 * result + colors.hashCode();
         return result;
     }
 }
