@@ -1,21 +1,22 @@
 package com.es.core;
 
+import com.es.core.dao.phone.PhoneDao;
 import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.PhoneDao;
 import org.junit.BeforeClass;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class AbstractTest {
 
     @Resource
     protected PhoneDao phoneDao;
+
+    @Resource
+    private JdbcTemplate jdbcTemplate;
 
     protected static List<Color> colorList = new ArrayList<>();
 
@@ -65,6 +66,20 @@ public class AbstractTest {
         }
 
         return phoneList;
+    }
+
+    protected void setStocks(Map<Long, Long> phoneStockMap) {
+        for (Map.Entry<Long, Long> entry : phoneStockMap.entrySet()) {
+            int count = jdbcTemplate.queryForObject("select count(1) from stocks where phoneId = ?",
+                    Integer.class, entry.getKey());
+            if (count == 0) {
+                jdbcTemplate.update("insert into stocks (phoneId, stock, reserved) values (?, ?, 0)",
+                        entry.getKey(), entry.getValue());
+            } else {
+                jdbcTemplate.update("update stocks set stock = ?, reserved = 0 where phoneId = ?",
+                        entry.getValue(), entry.getKey());
+            }
+        }
     }
 
 }

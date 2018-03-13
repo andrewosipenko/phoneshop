@@ -1,9 +1,10 @@
 package com.es.core.cart;
 
 import com.es.core.AbstractTest;
+import com.es.core.dao.phone.PhoneDao;
 import com.es.core.exception.PhoneNotFoundException;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.PhoneDao;
+import com.es.core.model.phone.Stock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -234,6 +235,26 @@ public class HttpSessionCartServiceTest extends AbstractTest {
         } finally {
             verify(mockPhoneDao).get(eq(phoneWithoutPrice.getId()));
         }
+    }
+
+    @Test
+    public void deleteOutOfStockCheck() {
+        List<CartItem> cartItems = initNonemptyMockCart();
+        List<Long> phoneStock = cartItems.stream()
+                .map(cartItem -> cartItem.getPhone().getId())
+                .collect(Collectors.toList());
+
+        List<Stock> stockList = phoneStock.stream()
+                .map(phoneId -> new Stock(phoneId, 0, 0))
+                .collect(Collectors.toList());
+
+        when(mockPhoneDao.getStocks(phoneStock)).thenReturn(stockList);
+
+        cartService.deleteOutOfStock();
+
+        verify(mockPhoneDao).getStocks(eq(phoneStock));
+        verify(mockCart, atLeastOnce()).getItems();
+        verify(mockCart).setCost(BigDecimal.ZERO);
     }
 
     private List<CartItem> initNonemptyMockCart() {

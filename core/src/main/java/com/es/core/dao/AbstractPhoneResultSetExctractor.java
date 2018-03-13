@@ -1,4 +1,4 @@
-package com.es.core.model;
+package com.es.core.dao;
 
 import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;

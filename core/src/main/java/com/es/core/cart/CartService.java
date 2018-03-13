@@ -17,4 +17,6 @@ public interface CartService {
     void update(Map<Long, Long> items) throws PhoneNotFoundException;
 
     void updateOrDelete(Long phoneId, Long quantity);
+
+    void deleteOutOfStock();
 }

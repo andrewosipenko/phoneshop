@@ -1,7 +1,10 @@
-package com.es.core.model.order;
+package com.es.core.dao.order;
 
 
-import com.es.core.model.AbstractPhoneResultSetExctractor;
+import com.es.core.dao.AbstractPhoneResultSetExctractor;
+import com.es.core.model.order.Order;
+import com.es.core.model.order.OrderItem;
+import com.es.core.model.order.OrderStatus;
 import com.es.core.model.phone.Phone;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -55,6 +58,7 @@ public class OrderListResultSetExtractor extends AbstractPhoneResultSetExctracto
         order.setDeliveryAddress(rs.getString("deliveryAddress"));
         order.setContactPhoneNo(rs.getString("contactPhoneNo"));
         order.setStatus(OrderStatus.valueOf(rs.getString("status")));
+        order.setAdditionalInfo(rs.getString("additionalInfo"));
         return order;
     }
 

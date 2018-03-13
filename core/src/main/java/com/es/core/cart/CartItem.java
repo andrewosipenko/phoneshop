@@ -30,4 +30,23 @@ public class CartItem {
     public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CartItem cartItem = (CartItem) o;
+
+        if (phone != null ? !phone.equals(cartItem.phone) : cartItem.phone != null) return false;
+        return quantity.equals(cartItem.quantity);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = phone != null ? phone.hashCode() : 0;
+        result = 31 * result + quantity.hashCode();
+        return result;
+    }
 }

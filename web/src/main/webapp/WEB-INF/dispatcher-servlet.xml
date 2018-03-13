@@ -30,7 +30,12 @@
     </bean>
 
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-        <property name="basename" value="messages.cart"/>
+        <property name="basenames">
+            <list>
+                <value>messages.cart</value>
+                <value>messages.order</value>
+            </list>
+        </property>
     </bean>
 
     <mvc:resources mapping="/resources/**" location="/resources/"/>

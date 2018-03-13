@@ -1,7 +1,8 @@
-package com.es.core.model.order;
+package com.es.core.dao.order;
 
 
 import com.es.core.exception.OutOfStockException;
+import com.es.core.model.order.Order;
 
 import java.util.List;
 import java.util.Optional;

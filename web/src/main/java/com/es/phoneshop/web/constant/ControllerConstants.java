@@ -8,4 +8,5 @@ public interface ControllerConstants {
 
     String CART_PAGE_NAME = "cart";
 
+    String ORDER_PAGE_NAME = "order";
 }

@@ -1,6 +1,7 @@
-package com.es.core.model.phone;
+package com.es.core.dao.phone;
 
-import com.es.core.model.AbstractPhoneResultSetExctractor;
+import com.es.core.dao.AbstractPhoneResultSetExctractor;
+import com.es.core.model.phone.Phone;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
 import java.sql.ResultSet;

@@ -10,4 +10,6 @@ public interface ControllerMapping {
 
     String CART_PAGE = "/cart";
 
+    String ORDER_PAGE = "/order";
+
 }

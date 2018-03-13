@@ -1,7 +1,10 @@
-package com.es.core.model.order;
+package com.es.core.dao.order;
 
 import com.es.core.AbstractTest;
 import com.es.core.exception.OutOfStockException;
+import com.es.core.model.order.Order;
+import com.es.core.model.order.OrderItem;
+import com.es.core.model.order.OrderStatus;
 import com.es.core.model.phone.Phone;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,9 +51,19 @@ public class JdbcOrderDaoIntTest extends AbstractTest {
     @Test
     public void insert() throws OutOfStockException {
         Order order = createOrder(null, 3);
+        order.setStatus(OrderStatus.DELIVERED);
         orderDao.save(order);
         Order gettedOrder = orderDao.get(order.getId()).get();
 
+        assertEquals(order.getDeliveryAddress(), gettedOrder.getDeliveryAddress());
+        assertEquals(order.getContactPhoneNo(), gettedOrder.getContactPhoneNo());
+        assertEquals(order.getFirstName(), gettedOrder.getFirstName());
+        assertEquals(order.getLastName(), gettedOrder.getLastName());
+        assertEquals(order.getAdditionalInfo(), gettedOrder.getAdditionalInfo());
+        assertTrue(gettedOrder.getDeliveryPrice().compareTo(order.getDeliveryPrice()) == 0);
+        assertTrue(gettedOrder.getTotalPrice().compareTo(order.getTotalPrice()) == 0);
+        assertTrue(gettedOrder.getSubtotal().compareTo(order.getSubtotal()) == 0);
+        assertEquals(order.getStatus(), order.getStatus());
         assertEquals(order.getOrderItems(), gettedOrder.getOrderItems());
     }
 
@@ -79,6 +92,7 @@ public class JdbcOrderDaoIntTest extends AbstractTest {
         order.setContactPhoneNo(SAVED_DATA);
         order.setFirstName(SAVED_DATA);
         order.setLastName(SAVED_DATA);
+        order.setAdditionalInfo(SAVED_DATA);
         order.setDeliveryPrice(SAVED_COST);
         order.setTotalPrice(SAVED_COST);
         order.setSubtotal(SAVED_COST);
@@ -92,10 +106,11 @@ public class JdbcOrderDaoIntTest extends AbstractTest {
         assertEquals(SAVED_DATA, changedOrder.getContactPhoneNo());
         assertEquals(SAVED_DATA, changedOrder.getFirstName());
         assertEquals(SAVED_DATA, changedOrder.getLastName());
+        assertEquals(SAVED_DATA, changedOrder.getAdditionalInfo());
         assertTrue(changedOrder.getDeliveryPrice().compareTo(SAVED_COST) == 0);
         assertTrue(changedOrder.getTotalPrice().compareTo(SAVED_COST) == 0);
         assertTrue(changedOrder.getSubtotal().compareTo(SAVED_COST) == 0);
-        assertEquals(SAVED_STATUS, order.getStatus());
+        assertEquals(SAVED_STATUS, changedOrder.getStatus());
     }
 
     @Test
@@ -254,20 +269,6 @@ public class JdbcOrderDaoIntTest extends AbstractTest {
         Map<Long, Long> phoneStockMap = createdPhones.stream()
                 .collect(Collectors.toMap(Phone::getId, t -> stock));
         setStocks(phoneStockMap);
-    }
-
-    private void setStocks(Map<Long, Long> phoneStockMap) {
-        for (Map.Entry<Long, Long> entry : phoneStockMap.entrySet()) {
-            int count = jdbcTemplate.queryForObject("select count(1) from stocks where phoneId = ?",
-                    Integer.class, entry.getKey());
-            if (count == 0) {
-                jdbcTemplate.update("insert into stocks (phoneId, stock, reserved) values (?, ?, 0)",
-                        entry.getKey(), entry.getValue());
-            } else {
-                jdbcTemplate.update("update stocks set stock = ?, reserved = 0 where phoneId = ?",
-                        entry.getValue(), entry.getKey());
-            }
-        }
     }
 
     private int countRowsInTable(String tableName) {

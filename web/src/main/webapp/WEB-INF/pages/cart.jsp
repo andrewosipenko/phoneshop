@@ -78,9 +78,9 @@
                             </td>
                             <td>
                                 <c:if test="${not empty cartDisplayInfo.cartDisplayItems}">
-                                    <button type="submit" class="btn btn-success">
+                                    <a href="<c:url value="/order"/> " class="btn btn-success">
                                         Order
-                                    </button>
+                                    </a>
                                 </c:if>
                             </td>
                         </tr>

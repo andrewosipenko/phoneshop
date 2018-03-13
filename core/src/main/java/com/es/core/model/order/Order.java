@@ -1,5 +1,9 @@
 package com.es.core.model.order;
 
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -16,12 +20,26 @@ public class Order {
      */
     private BigDecimal totalPrice;
 
+    @NotEmpty(message = "{order.notEmpty}")
+    @Length(message = "{order.maxLength}", max = 254)
     private String firstName;
+
+    @NotEmpty(message = "{order.notEmpty}")
+    @Length(message = "{order.maxLength}", max = 254)
     private String lastName;
+
+    @NotEmpty(message = "{order.notEmpty}")
+    @Length(message = "{order.maxLength}", max = 500)
     private String deliveryAddress;
+
+    @NotEmpty(message = "{order.notEmpty}")
+    @Length(message = "{order.maxLength}", max = 30)
     private String contactPhoneNo;
 
-    private OrderStatus status;
+    @Length(message = "{order.maxLength}", max = 4096)
+    private String additionalInfo;
+
+    private OrderStatus status = OrderStatus.NEW;
 
     public Long getId() {
         return id;
@@ -101,5 +119,13 @@ public class Order {
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public String getAdditionalInfo() {
+        return additionalInfo;
+    }
+
+    public void setAdditionalInfo(String description) {
+        this.additionalInfo = description;
     }
 }

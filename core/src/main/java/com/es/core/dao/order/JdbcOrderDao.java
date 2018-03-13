@@ -1,10 +1,11 @@
-package com.es.core.model.order;
+package com.es.core.dao.order;
 
 import com.es.core.exception.OutOfStockException;
+import com.es.core.model.order.Order;
+import com.es.core.model.order.OrderItem;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -24,11 +25,10 @@ import java.util.stream.Collectors;
 public class JdbcOrderDao implements OrderDao {
 
     private final static String SELECT_ORDER_QUERY = "select orders.id AS orderId, subtotal, deliveryPrice," +
-            "totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status, " +
-            "orderItems.id AS orderItemId, quantity," +
-            "phones.id AS phoneId, brand, model, " +
-            "price, displaySizeInches, weightGr, lengthMm, widthMm, " +
-            "heightMm, announced, deviceType, os, displayResolution, " +
+            "totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status," +
+            "additionalInfo, orderItems.id AS orderItemId, quantity," +
+            "phones.id AS phoneId, brand, model, price, displaySizeInches, weightGr, lengthMm," +
+            "widthMm, heightMm, announced, deviceType, os, displayResolution, " +
             "pixelDensity, displayTechnology, backCameraMegapixels, " +
             "frontCameraMegapixels, ramGb, internalStorageGb, batteryCapacityMah, " +
             "talkTimeHours, standByTimeHours, bluetooth, positioning, imageUrl, " +
@@ -39,11 +39,10 @@ public class JdbcOrderDao implements OrderDao {
             "left join colors on colors.id = phone2color.colorId " +
             "where orders.id = ?";
 
-    private final static String SELECT_ORDER_LIST_QUERY = "select limitedOrders.id AS orderId, subtotal, deliveryPrice," +
-            "totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status, " +
-            "orderItems.id AS orderItemId, quantity," +
-            "phones.id AS phoneId, brand, model, " +
-            "price, displaySizeInches, weightGr, lengthMm, widthMm, " +
+    private final static String SELECT_ORDER_LIST_QUERY = "select limitedOrders.id AS orderId, subtotal," +
+            "deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status," +
+            "additionalInfo, orderItems.id AS orderItemId, quantity," +
+            "phones.id AS phoneId, brand, model, price, displaySizeInches, weightGr, lengthMm, widthMm, " +
             "heightMm, announced, deviceType, os, displayResolution, " +
             "pixelDensity, displayTechnology, backCameraMegapixels, " +
             "frontCameraMegapixels, ramGb, internalStorageGb, batteryCapacityMah, " +
@@ -59,7 +58,7 @@ public class JdbcOrderDao implements OrderDao {
 
     private final static String UPDATE_ORDER_QUERY = "update orders set subtotal = ? ,deliveryPrice = ? ," +
             "totalPrice = ? ,firstName = ? ,lastName = ? ,deliveryAddress = ? ,contactPhoneNo = ? ," +
-            "status = ? where id = ? ";
+            "additionalInfo = ? ,status = ? where id = ? ";
 
     private final static String DELETE_ORDER_ITEM_QUERY = "delete from orderItems where id = ?";
 
@@ -111,7 +110,7 @@ public class JdbcOrderDao implements OrderDao {
     }
 
     private void insert(Order order) throws OutOfStockException {
-        SqlParameterSource parameters = new BeanPropertySqlParameterSource(order);
+        SqlParameterSource parameters = getParameters(order);
         final long newId = insertOrder.executeAndReturnKey(parameters).longValue();
         order.setId(newId);
         insertOrderItems(order.getOrderItems());
@@ -122,8 +121,8 @@ public class JdbcOrderDao implements OrderDao {
                 order.getSubtotal(), order.getDeliveryPrice(),
                 order.getTotalPrice(), order.getFirstName(),
                 order.getLastName(), order.getDeliveryAddress(),
-                order.getContactPhoneNo(), order.getStatus().name(),
-                order.getId());
+                order.getContactPhoneNo(), order.getAdditionalInfo(),
+                order.getStatus().name(), order.getId());
 
         saveOrderItems(order);
     }
@@ -159,6 +158,20 @@ public class JdbcOrderDao implements OrderDao {
         } catch (DataAccessException e) {
             throw new OutOfStockException(e);
         }
+    }
+
+    private SqlParameterSource getParameters(Order order) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("subtotal", order.getSubtotal());
+        mapSqlParameterSource.addValue("deliveryPrice", order.getDeliveryPrice());
+        mapSqlParameterSource.addValue("totalPrice", order.getTotalPrice());
+        mapSqlParameterSource.addValue("firstName", order.getFirstName());
+        mapSqlParameterSource.addValue("lastName", order.getLastName());
+        mapSqlParameterSource.addValue("deliveryAddress", order.getDeliveryAddress());
+        mapSqlParameterSource.addValue("contactPhoneNo", order.getContactPhoneNo());
+        mapSqlParameterSource.addValue("additionalInfo", order.getAdditionalInfo());
+        mapSqlParameterSource.addValue("status", order.getStatus().name(), 12);
+        return mapSqlParameterSource;
     }
 
     private SqlParameterSource getParameters(OrderItem orderItem) {

@@ -65,6 +65,7 @@ CREATE TABLE orders (
   lastName        VARCHAR(254) NOT NULL,
   deliveryAddress VARCHAR(500) NOT NULL,
   contactPhoneNo  VARCHAR(30)  NOT NULL,
+  additionalInfo  VARCHAR(4096),
   status ENUM('NEW', 'DELIVERED', 'REJECTED')
 );
 
