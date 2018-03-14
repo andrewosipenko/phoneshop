@@ -22,12 +22,11 @@
       <nav class="navbar navbar-light bg-light justify-content-between">
         <h4>Phone</h4>
         <form class="form-inline mr-4 mt-3">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" name="keyWord" value="${pageContext.request.getParameter("keyWord")}">
-          <%--<input class="form-control" name="sortBy" value="${pageContext.request.getParameter("sortBy")}">--%>
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" value="${param['search']}">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
       </nav>
-        <%--Found <c:out value="${phones.size()}"/> phones.--%>
+      <p class="float-right">Found <c:out value="${phonesAmount}"/> phones</p>
 
       <table class="table">
         <thead>
@@ -70,25 +69,58 @@
           </tr>
         </c:forEach>
       </table>
-      <nav class="float-right">
-        <ul class="pagination">
-          <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span>
-              <span class="sr-only">Previous</span>
-            </a>
-          </li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
-              <span class="sr-only">Next</span>
-            </a>
-          </li>
-        </ul>
+      <nav class="float-right" id="pagination">
       </nav>
     </div>
+
+    <script>
+      $(function(){
+          var limit = ${not empty param['limit']? param['limit'] : 10};
+          var page = ${not empty param['page']? param['page'] : 1};
+          var phonesAmount = ${phonesAmount};
+          var pagesAmount =  Math.ceil(phonesAmount/limit);
+          var startPage = (pagesAmount>5 && page>3) ? page-2 : 1;
+          var endPage = (pagesAmount>5 && page<pagesAmount-2) ? startPage+4 : pagesAmount;
+
+          var paginationNav = $('#pagination');
+
+          paginationNav.append(
+              '<ul class="pagination"></ul>'
+          );
+          var ul = paginationNav.find(".pagination");
+
+          if (startPage > 1) {
+              //append "<<" button
+              ul.append(
+                  '<li class="page-item"><a class="page-link" data-page="'+1+'" aria-label="Beginning" >&laquo;</a></li>'
+              );
+          }
+
+          for (var i = startPage; i<=endPage; i++){
+              ul.append(
+                  '<li class="page-item' +( (page === i)? ' active' : '' )+ '"><a class="page-link" data-page="'+i+'" >'+i+'</a></li>'
+              );
+          }
+
+          if (endPage < pagesAmount) {
+              //append ">>" button
+              ul.append(
+                  '<li class="page-item"><a class="page-link" data-page="'+pagesAmount+'" aria-label="End" >&raquo;</a></li>'
+              );
+          }
+
+          $('#pagination').find('.page-link').on('click', function(){
+              var newPage = $(this).data('page');
+              console.log(page);
+
+              var link = "${requestScope['javax.servlet.forward.request_uri']}?"
+                  +"page=" + newPage
+                  +"${not empty param['limit'] ? '&limit='.concat(param['limit']) : ''}"
+                  +"${not empty param['sortBy'] ? '&sortBy='.concat(param['sortBy']) : ''}"
+                  +"${not empty param['search'] ? '&search='.concat(param['search']) : ''}";
+              window.location.replace(link);
+          });
+      });
+    </script>
   </jsp:body>
 </template:page>

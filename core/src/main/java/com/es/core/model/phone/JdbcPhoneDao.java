@@ -58,14 +58,14 @@ public class JdbcPhoneDao implements PhoneDao{
             "SELECT COUNT(*) " +
             "FROM phones, stocks s " +
             "WHERE phones.id=s.phoneId and s.stock>0 " +
-            "      and phones.model LIKE ? ";
+            "      and LOWER(phones.model) LIKE LOWER(?) ";
 
     private final static String SQL_PHONES_QUERY =
             "SELECT p.id, p.imageUrl, p.brand, p.model, c.code as colorCode, c.id as colorId, p.displaySizeInches, p.price " +
             "FROM (SELECT * " +
             "      FROM phones, stocks s " +
             "      WHERE phones.id=s.phoneId and s.stock>0 " +
-            "            and phones.model LIKE ? " +
+            "            and LOWER(phones.model) LIKE LOWER(?) " +
             "      ORDER BY %s " +
             "      LIMIT ? OFFSET ?) p " +
             "LEFT JOIN phone2color p2c ON p2c.phoneId = p.id " +
@@ -160,7 +160,7 @@ public class JdbcPhoneDao implements PhoneDao{
         return jdbcTemplate.queryForObject(
                 SQL_COUNT_SEARCH_QUERY,
                 Integer.class,
-                String.format("'%%%s%%'", keyString)
+                String.format("%%%s%%", keyString)
         );
     }
 

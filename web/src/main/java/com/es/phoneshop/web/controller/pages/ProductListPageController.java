@@ -16,26 +16,33 @@ public class ProductListPageController {
     @Resource
     private PhoneDao phoneDao;
 
+    private final static String DEFAULT_LIMIT = "10";
+    private final static String DEFAULT_SORT = "model";
+
     @RequestMapping(method = RequestMethod.GET)
     public String showProductList(
-            @RequestParam(name="offset", defaultValue="0") int offset,
-            @RequestParam(name="limit", defaultValue="10") int limit,
-            @RequestParam(name="sortBy", defaultValue="model") String sortBy ,
+            @RequestParam(name="page", defaultValue = "1") int page,
+            @RequestParam(name="sortBy", defaultValue = DEFAULT_SORT) String sortBy ,
+            @RequestParam(name="limit", defaultValue = DEFAULT_LIMIT) int limit,
             Model model) {
-        System.out.printf("o:%s, l:%s, sb:%s\n", offset, limit, sortBy);
+        int offset = (page-1)*limit;
         model.addAttribute("phones", phoneDao.findAll(offset, limit, sortBy));
+        model.addAttribute("phonesAmount", phoneDao.countAll());
+
         return "productList";
     }
 
-    @RequestMapping(method = RequestMethod.GET, params = "keyWord")
+    @RequestMapping(method = RequestMethod.GET, params = "search")
     public String searchProduct(
-            @RequestParam(name="keyWord") String keyWord,
-            @RequestParam(name="offset", defaultValue="0") int offset,
-            @RequestParam(name="limit", defaultValue="10") int limit,
-            @RequestParam(name="sortBy", defaultValue="model") String sortBy ,
+            @RequestParam(name="page", defaultValue = "1") int page,
+            @RequestParam(name="sortBy", defaultValue = DEFAULT_SORT) String sortBy ,
+            @RequestParam(name="search") String search,
+            @RequestParam(name="limit", defaultValue = DEFAULT_LIMIT) int limit,
             Model model) {
-        System.out.printf("o:%s, l:%s, sb:%s\n", offset, limit, sortBy);
-        model.addAttribute("phones", phoneDao.searchByModel(keyWord, limit, offset, sortBy));
+        int offset = (page-1)*limit;
+        model.addAttribute("phones", phoneDao.searchByModel(search, limit, offset, sortBy));
+        model.addAttribute("phonesAmount", phoneDao.countSearchResult(search));
+
         return "productList";
     }
 }
