@@ -95,3 +95,9 @@ AFTER DELETE
   ON orderItems
 FOR EACH ROW
 CALL "com.es.core.trigger.StockCheckOrderItemTrigger";
+
+CREATE TRIGGER beforeUpdateOrdersTrigger
+BEFORE UPDATE
+  ON orders
+FOR EACH ROW
+CALL "com.es.core.trigger.BeforeUpdateOrdersTrigger";

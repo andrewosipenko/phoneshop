@@ -50,6 +50,7 @@
                 </tr>
             </c:forEach>
         </table>
-        <template:pagination order="${order}" pagination="${productPage.pagination}" query="${query}"/>
+        <template:pagination targetPage="productList" order="${order}" pagination="${productPage.pagination}"
+                             query="${query}"/>
     </c:if>
 </template:page>

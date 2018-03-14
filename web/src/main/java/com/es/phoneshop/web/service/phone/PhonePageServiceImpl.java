@@ -1,42 +1,38 @@
-package com.es.phoneshop.web.service;
+package com.es.phoneshop.web.service.phone;
 
 import com.es.core.dao.phone.PhoneDao;
 import com.es.core.model.phone.OrderBy;
 import com.es.core.model.phone.Phone;
 import com.es.phoneshop.web.bean.Pagination;
 import com.es.phoneshop.web.bean.ProductPage;
+import com.es.phoneshop.web.service.page.PageService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
 
+import static com.es.phoneshop.web.service.page.PageService.AMOUNT_PHONES_ON_PAGE;
+
 @Service
 public class PhonePageServiceImpl implements PhonePageService {
-
-    private static int AMOUNT_PHONES_ON_PAGE = 10;
-
-    private static final int FIRST_PAGE_NUMBER = 1;
-
-    private static final int AROUND_PAGES_COUNT = 3;
 
     @Resource
     private PhoneDao phoneDao;
 
+    @Resource
+    private PageService pageService;
+
     @Override
     public ProductPage getPhonePage(OrderBy order, String query, int pageNumber) {
         int phoneCount = getPhoneCount(query);
-        int pagesCount = getPagesCount(phoneCount);
-        int normalizedPageNumber = normalizePageNumber(pageNumber, phoneCount);
+        int normalizedPageNumber = pageService.normalizePageNumber(pageNumber, phoneCount);
 
         int offset = ((normalizedPageNumber - 1) * AMOUNT_PHONES_ON_PAGE);
         int limit = AMOUNT_PHONES_ON_PAGE;
 
         List<Phone> phones = getPhoneList(query, order, offset, limit);
 
-        int startPaginationNumber = Math.max(normalizedPageNumber - AROUND_PAGES_COUNT, FIRST_PAGE_NUMBER);
-        int finishPaginationNumber = Math.min(normalizedPageNumber + AROUND_PAGES_COUNT, pagesCount);
-
-        Pagination pagination = new Pagination(normalizedPageNumber, startPaginationNumber, finishPaginationNumber);
+        Pagination pagination = pageService.getPagination(normalizedPageNumber, phoneCount);
 
         ProductPage productPage = new ProductPage(phoneCount, phones, pagination);
 
@@ -57,18 +53,5 @@ public class PhonePageServiceImpl implements PhonePageService {
         return phoneDao.getPhonesByQuery(query, order, offset, limit);
     }
 
-    private int normalizePageNumber(int pageNumber, int phonesCount) {
-        int normalizedPageNumber = Math.max(pageNumber, FIRST_PAGE_NUMBER);
-        int lastPageNumber = getPagesCount(phonesCount);
-        normalizedPageNumber = Math.min(normalizedPageNumber, lastPageNumber);
-        return normalizedPageNumber;
-    }
-
-    private int getPagesCount(int phonesCount) {
-        if (phonesCount == 0) {
-            return 1;
-        }
-        return (int) Math.ceil((double) phonesCount / AMOUNT_PHONES_ON_PAGE);
-    }
 
 }

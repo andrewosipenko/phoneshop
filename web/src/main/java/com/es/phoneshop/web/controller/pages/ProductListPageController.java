@@ -1,7 +1,7 @@
 package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.model.phone.OrderBy;
-import com.es.phoneshop.web.service.PhonePageService;
+import com.es.phoneshop.web.service.phone.PhonePageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

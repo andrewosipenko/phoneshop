@@ -1,4 +1,4 @@
-package com.es.phoneshop.web.service;
+package com.es.phoneshop.web.service.phone;
 
 import com.es.core.model.phone.OrderBy;
 import com.es.phoneshop.web.bean.ProductPage;

@@ -1,7 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ tag body-content="scriptless" trimDirectiveWhitespaces="true" pageEncoding="UTF-8" %>
 <%@ attribute name="catalogTabIsActive" type="java.lang.Boolean" %>
-<jsp:useBean id="cart" scope="session" class="com.es.core.cart.Cart"/>
+<%@ attribute name="ordersTabIsActive" type="java.lang.Boolean" %>
+<jsp:useBean id="cart" scope="session" class="com.es.core.model.cart.Cart"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +17,8 @@
 </head>
 <body>
 <div class="topnav">
-    <a ${catalogTabIsActive ? 'class="active"' : ''} href="${pageContext.request.contextPath}/productList">Catalog</a>
+    <a ${catalogTabIsActive ? 'class="active"' : ''} href="<c:url value="/productList"/>">Catalog</a>
+    <a ${ordersTabIsActive ? 'class="active"' : ''} href="<c:url value="/admin/orders"/>">Orders</a>
     <div class="cart-container">
         <a href="<c:url value="/cart"/>" class="btn btn-outline-dark">
             My Cart: <span class="cart-count"><c:out value="${not empty cart ? cart.countItems : 0}"/></span> Items ($
@@ -32,6 +34,11 @@
     </div>
 </div>
 <div class="container">
+    <c:if test="${not empty errorMessage}">
+        <div class="alert alert-danger">
+            <strong><c:out value="${errorMessage}"/></strong>
+        </div>
+    </c:if>
     <jsp:doBody/>
 </div>
 <script>

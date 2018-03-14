@@ -1,9 +1,9 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.cart.CartService;
 import com.es.core.exception.OutOfStockException;
 import com.es.core.model.order.Order;
-import com.es.core.order.OrderService;
+import com.es.core.service.cart.CartService;
+import com.es.core.service.order.OrderService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,6 +27,8 @@ public class OrderPageController {
     private final static String OUT_OF_STOCK_ERROR_MESSAGE = "Some products are out of stock. " +
             "They have been removed from your shopping cart";
 
+    private final static String ORDER_IS_EMPTY_MESSAGE = "You can't place a blank order";
+
     @Resource
     private OrderService orderService;
 
@@ -43,8 +45,13 @@ public class OrderPageController {
     @RequestMapping(method = RequestMethod.POST)
     public String placeOrder(@Valid Order order, BindingResult bindingResult, Model model) throws OutOfStockException {
         Order orderFromCart = orderService.createOrder(cartService.getCart());
-        copyProrepriesOrder(orderFromCart, order);
+        copyPropertiesOrder(orderFromCart, order);
         if (bindingResult.hasErrors()) {
+            return ORDER_PAGE_NAME;
+        }
+
+        if (order.getOrderItems().isEmpty()) {
+            model.addAttribute(ERROR_MESSAGE_ATTRIBUTE, ORDER_IS_EMPTY_MESSAGE);
             return ORDER_PAGE_NAME;
         }
 
@@ -55,13 +62,13 @@ public class OrderPageController {
         } catch (OutOfStockException e) {
             cartService.deleteOutOfStock();
             orderFromCart = orderService.createOrder(cartService.getCart());
-            copyProrepriesOrder(orderFromCart, order);
+            copyPropertiesOrder(orderFromCart, order);
             model.addAttribute(ERROR_MESSAGE_ATTRIBUTE, OUT_OF_STOCK_ERROR_MESSAGE);
             return ORDER_PAGE_NAME;
         }
     }
 
-    private void copyProrepriesOrder(Order source, Order destination) {
+    private void copyPropertiesOrder(Order source, Order destination) {
         destination.setOrderItems(source.getOrderItems());
         destination.setTotalPrice(source.getTotalPrice());
         destination.setSubtotal(source.getSubtotal());

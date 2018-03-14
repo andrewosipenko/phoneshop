@@ -39,7 +39,7 @@ insert into stocks (phoneId, stock, reserved) values (1004, 14, 3);
 insert into stocks (phoneId, stock, reserved) values (1005, 15, 4);
 
 insert into orders (id, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status) values (1001, 320, 10, 230, 'Dmitry', 'Koshelev', 'Minsk', '+375291112233', 'NEW');
-insert into orders (id, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status) values (1002, 249, 0, 249, 'Anton', 'Ivanov', 'Vitebsk', '+375441234567', 'DELIVERED');
+insert into orders (id, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status) values (1002, 249, 0, 249, 'Anton', 'Ivanov', 'Vitebsk', '+375441234567', 'NEW');
 
 insert into orderItems (id, orderId, phoneId, quantity) values(1001, 1001, 1000, 2);
 insert into orderItems (id, orderId, phoneId, quantity) values(1002, 1001, 1002, 1);

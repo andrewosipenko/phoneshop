@@ -1,10 +1,10 @@
 package com.es.phoneshop.web.controller;
 
-import com.es.core.cart.Cart;
-import com.es.core.cart.CartItem;
-import com.es.core.cart.CartService;
 import com.es.core.exception.PhoneNotFoundException;
+import com.es.core.model.cart.Cart;
+import com.es.core.model.cart.CartItem;
 import com.es.core.model.phone.Phone;
+import com.es.core.service.cart.CartService;
 import com.es.phoneshop.web.AbstractTest;
 import org.junit.After;
 import org.junit.Before;

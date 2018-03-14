@@ -110,7 +110,7 @@ public class JdbcPhoneDao implements PhoneDao {
 
     @Override
     public List<Phone> getPhonesByIdList(List<Long> idList) {
-        Map namedParameters = Collections.singletonMap("phoneIdList", idList);
+        Map<String, Object> namedParameters = Collections.singletonMap("phoneIdList", idList);
         return namedParameterJdbcTemplate.query(SELECT_PHONE_LIST_QUERY, namedParameters, PhoneListResultSetExtractor.getInstanse());
     }
 

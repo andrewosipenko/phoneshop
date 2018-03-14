@@ -1,8 +1,10 @@
-package com.es.core.cart;
+package com.es.core.service.cart;
 
 import com.es.core.AbstractTest;
 import com.es.core.dao.phone.PhoneDao;
 import com.es.core.exception.PhoneNotFoundException;
+import com.es.core.model.cart.Cart;
+import com.es.core.model.cart.CartItem;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.Stock;
 import org.junit.After;
@@ -14,10 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -35,8 +34,6 @@ public class HttpSessionCartServiceTest extends AbstractTest {
     @Mock
     private PhoneDao mockPhoneDao;
 
-    private List<Phone> phoneList;
-
     private static final int COUNT_PHONE = 5;
 
     private Phone phoneWithoutPrice;
@@ -45,17 +42,12 @@ public class HttpSessionCartServiceTest extends AbstractTest {
 
     @Before
     public void init() {
-        initPhoneList();
+        initPhoneWithoutPrice();
         initMockPhoneList();
         initMockCart();
     }
 
-    private void initPhoneList() {
-        phoneList = new ArrayList<>();
-        for (int i = 0; i < COUNT_PHONE - 1; i++) {
-            Phone newPhone = createPhone("test" + Integer.toString(i), "test" + Integer.toString(i), (long) i, i);
-            phoneList.add(newPhone);
-        }
+    private void initPhoneWithoutPrice() {
         phoneWithoutPrice = createPhone("noPrice", "noPrice", (long) (COUNT_PHONE - 1), 1);
         phoneWithoutPrice.setPrice(null);
         phoneList.add(phoneWithoutPrice);
@@ -260,7 +252,7 @@ public class HttpSessionCartServiceTest extends AbstractTest {
     @Test
     public void clearCart() {
         cartService.clearCart();
-        verify(mockCart, atLeastOnce()).setItems(anyList());
+        verify(mockCart).setItems(eq(Collections.EMPTY_LIST));
         verify(mockCart).setCost(BigDecimal.ZERO);
     }
 

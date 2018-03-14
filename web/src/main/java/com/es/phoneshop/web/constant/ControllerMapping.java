@@ -14,4 +14,12 @@ public interface ControllerMapping {
 
     String ORDER_OVERVIEW_PAGE = "/orderOverview/{id}";
 
+    String LOGIN_PAGE = "/login";
+
+    interface AdminPanel {
+        String ORDERS_PAGE = "/admin/orders";
+
+        String ORDER_DETAILS_PAGE = "/{id}";
+    }
+
 }

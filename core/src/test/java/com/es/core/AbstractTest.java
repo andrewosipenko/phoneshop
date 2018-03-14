@@ -1,8 +1,11 @@
 package com.es.core;
 
 import com.es.core.dao.phone.PhoneDao;
+import com.es.core.model.order.Order;
+import com.es.core.model.order.OrderItem;
 import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -17,6 +20,8 @@ public class AbstractTest {
 
     @Resource
     private JdbcTemplate jdbcTemplate;
+
+    protected List<Phone> phoneList;
 
     protected static List<Color> colorList = new ArrayList<>();
 
@@ -38,6 +43,13 @@ public class AbstractTest {
         colorList.add(new Color(1013L, "256"));
     }
 
+    @Before
+    public void initPhoneList() {
+        phoneList = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            phoneList.add(createPhone("test" + Integer.toString(i), "test" + Integer.toString(i), (long) i, i));
+        }
+    }
 
     protected Phone createPhone(Long id, int countColors) {
         return createPhone("testBrand", "testBrand", id, countColors);
@@ -82,4 +94,31 @@ public class AbstractTest {
         }
     }
 
+    protected Order createOrder(Long id, int phoneCount) {
+        Order order = new Order();
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (int i = 0; i < phoneCount; i++) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setPhone(phoneList.get(i));
+            orderItem.setQuantity((long) (i + 1));
+            orderItem.setOrder(order);
+            orderItems.add(orderItem);
+        }
+        order.setOrderItems(orderItems);
+
+        BigDecimal cost = orderItems.stream()
+                .map(e -> e.getPhone().getPrice().multiply(new BigDecimal(e.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        order.setSubtotal(cost);
+
+        BigDecimal delivery = new BigDecimal(5);
+        order.setDeliveryPrice(delivery);
+        order.setTotalPrice(cost.add(delivery));
+
+        order.setFirstName("test");
+        order.setLastName("test");
+        order.setDeliveryAddress("Minsk");
+        order.setContactPhoneNo("+375291234567");
+        return order;
+    }
 }

@@ -21,6 +21,7 @@
         <property name="formatters">
             <set>
                 <bean class="com.es.phoneshop.web.formatters.OrderByFormatter"/>
+                <bean class="com.es.phoneshop.web.formatters.OrderStatusFormatter"/>
             </set>
         </property>
     </bean>

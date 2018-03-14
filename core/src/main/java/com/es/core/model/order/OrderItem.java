@@ -9,19 +9,21 @@ public class OrderItem {
     private Phone phone;
     private Order order;
     private Long quantity;
+    private BigDecimal total = BigDecimal.ZERO;
 
     public OrderItem() {
     }
 
-    public OrderItem(Phone phone, Order order, Long quantity) {
-        this(null, phone, order, quantity);
+    public OrderItem(Phone phone, Order order, Long quantity, BigDecimal total) {
+        this(null, phone, order, quantity, total);
     }
 
-    public OrderItem(Long id, Phone phone, Order order, Long quantity) {
+    public OrderItem(Long id, Phone phone, Order order, Long quantity, BigDecimal total) {
         this.id = id;
         this.phone = phone;
         this.order = order;
         this.quantity = quantity;
+        this.total = total;
     }
 
     public Long getId() {
@@ -57,10 +59,11 @@ public class OrderItem {
     }
 
     public BigDecimal getTotal() {
-        if(phone.getPrice() == null){
-            return BigDecimal.ZERO;
-        }
-        return phone.getPrice().multiply(new BigDecimal(quantity));
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
     }
 
     @Override

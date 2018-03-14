@@ -1,7 +1,9 @@
-package com.es.core.cart;
+package com.es.core.service.cart;
 
 import com.es.core.dao.phone.PhoneDao;
 import com.es.core.exception.PhoneNotFoundException;
+import com.es.core.model.cart.Cart;
+import com.es.core.model.cart.CartItem;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.Stock;
 import org.springframework.stereotype.Service;

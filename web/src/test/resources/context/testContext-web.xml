@@ -7,6 +7,6 @@
     <mvc:annotation-driven/>
     <bean id="ajaxCartController" class="com.es.phoneshop.web.controller.AjaxCartController"/>
     <bean id="cartService" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="com.es.core.cart.CartService"/>
+        <constructor-arg value="com.es.core.service.cart.CartService"/>
     </bean>
 </beans>

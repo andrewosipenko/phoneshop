@@ -6,9 +6,11 @@ import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
 import com.es.core.model.phone.Phone;
+import com.es.core.model.phone.Stock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -17,7 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -33,8 +38,6 @@ public class JdbcOrderDaoIntTest extends AbstractTest {
     @Resource
     private OrderDao orderDao;
 
-    private List<Phone> createdPhones;
-
     private static final Long EXIST_ORDER_ID = 1001L;
 
     private static final String ORDERS_TABLE_NAME = "orders";
@@ -44,7 +47,7 @@ public class JdbcOrderDaoIntTest extends AbstractTest {
     @Before
     public void init() {
         final Long STOCK_INIT_PHONES = 999L;
-        createdPhones = addNewPhones(5);
+        phoneList = addNewPhones(5);
         setStock(STOCK_INIT_PHONES);
     }
 
@@ -114,6 +117,56 @@ public class JdbcOrderDaoIntTest extends AbstractTest {
     }
 
     @Test
+    public void updateSetRejected() throws OutOfStockException {
+        final OrderStatus ORDER_STATUS = OrderStatus.REJECTED;
+
+        Order order = orderDao.get(EXIST_ORDER_ID).get();
+
+        order.setStatus(ORDER_STATUS);
+
+        Long phoneId = order.getOrderItems().get(0).getPhone().getId();
+
+        Long quantity = order.getOrderItems().get(0).getQuantity();
+
+        Stock stock = getStockObject(phoneId);
+
+        orderDao.save(order);
+
+        Order changedOrder = orderDao.get(EXIST_ORDER_ID).get();
+
+        Stock changedStock = getStockObject(phoneId);
+
+        assertEquals(ORDER_STATUS, changedOrder.getStatus());
+        assertEquals((long) stock.getReserved(), changedStock.getReserved() + quantity);
+    }
+
+
+    @Test
+    public void updateSetDelivered() throws OutOfStockException {
+        final OrderStatus ORDER_STATUS = OrderStatus.DELIVERED;
+
+        Order order = orderDao.get(EXIST_ORDER_ID).get();
+
+        order.setStatus(ORDER_STATUS);
+
+        Long phoneId = order.getOrderItems().get(0).getPhone().getId();
+
+        Long quantity = order.getOrderItems().get(0).getQuantity();
+
+        Stock stock = getStockObject(phoneId);
+
+        orderDao.save(order);
+
+        Order changedOrder = orderDao.get(EXIST_ORDER_ID).get();
+
+        Stock changedStock = getStockObject(phoneId);
+
+        assertEquals(ORDER_STATUS, changedOrder.getStatus());
+        assertEquals((long) stock.getReserved(), changedStock.getReserved() + quantity);
+        assertEquals((long) stock.getStock(), changedStock.getStock() + quantity);
+    }
+
+    @Test
     public void updateOrderItems() throws OutOfStockException {
         final Long ADD_QUANTITY = 5L;
         Order order = orderDao.get(EXIST_ORDER_ID).get();
@@ -161,7 +214,7 @@ public class JdbcOrderDaoIntTest extends AbstractTest {
         final Long QUANTITY = 5L;
         Order order = orderDao.get(EXIST_ORDER_ID).get();
 
-        Phone addedPhone = createdPhones.get(0);
+        Phone addedPhone = phoneList.get(0);
 
         OrderItem newOrderItem = new OrderItem();
         newOrderItem.setQuantity(QUANTITY);
@@ -181,7 +234,7 @@ public class JdbcOrderDaoIntTest extends AbstractTest {
         final Long QUANTITY = 5L;
         Order order = orderDao.get(EXIST_ORDER_ID).get();
 
-        Phone addedPhone = createdPhones.get(0);
+        Phone addedPhone = phoneList.get(0);
 
         OrderItem newOrderItem = new OrderItem();
         newOrderItem.setQuantity(QUANTITY);
@@ -231,34 +284,6 @@ public class JdbcOrderDaoIntTest extends AbstractTest {
         assertTrue(orderList.size() < COUNT);
     }
 
-    private Order createOrder(Long id, int phoneCount) {
-        Order order = new Order();
-        List<OrderItem> orderItems = new ArrayList<>();
-        for (int i = 0; i < phoneCount; i++) {
-            OrderItem orderItem = new OrderItem();
-            orderItem.setPhone(createdPhones.get(i));
-            orderItem.setQuantity((long) (i + 1));
-            orderItem.setOrder(order);
-            orderItems.add(orderItem);
-        }
-        order.setOrderItems(orderItems);
-
-        BigDecimal cost = orderItems.stream()
-                .map(e -> e.getPhone().getPrice().multiply(new BigDecimal(e.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        order.setSubtotal(cost);
-
-        BigDecimal delivery = new BigDecimal(5);
-        order.setDeliveryPrice(delivery);
-        order.setTotalPrice(cost.add(delivery));
-
-        order.setFirstName("test");
-        order.setLastName("test");
-        order.setDeliveryAddress("Minsk");
-        order.setContactPhoneNo("+375291234567");
-        return order;
-    }
-
     private void setStock(Long phoneId, Long stock) {
         Map<Long, Long> phoneStockMap = new HashMap<>();
         phoneStockMap.put(phoneId, stock);
@@ -266,7 +291,7 @@ public class JdbcOrderDaoIntTest extends AbstractTest {
     }
 
     private void setStock(Long stock) {
-        Map<Long, Long> phoneStockMap = createdPhones.stream()
+        Map<Long, Long> phoneStockMap = phoneList.stream()
                 .collect(Collectors.toMap(Phone::getId, t -> stock));
         setStocks(phoneStockMap);
     }
@@ -277,5 +302,10 @@ public class JdbcOrderDaoIntTest extends AbstractTest {
 
     private int getStock(Long phoneId) {
         return jdbcTemplate.queryForObject("select (stock-reserved) from stocks where phoneId = ?", Integer.class, phoneId);
+    }
+
+    private Stock getStockObject(Long phoneId) {
+        return jdbcTemplate.queryForObject("select * from stocks where phoneId = ?",
+                new BeanPropertyRowMapper<>(Stock.class), phoneId);
     }
 }
