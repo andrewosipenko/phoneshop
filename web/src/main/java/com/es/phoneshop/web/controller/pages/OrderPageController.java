@@ -57,7 +57,6 @@ public class OrderPageController {
 
         try {
             orderService.placeOrder(order);
-            cartService.clearCart();
             return "redirect:/orderOverview/" + Long.toString(order.getId());
         } catch (OutOfStockException e) {
             cartService.deleteOutOfStock();

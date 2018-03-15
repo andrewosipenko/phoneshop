@@ -2,7 +2,6 @@ package com.es.core.dao.phone;
 
 import com.es.core.model.phone.OrderBy;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.Stock;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +22,4 @@ public interface PhoneDao {
     List<Phone> getPhonesByQuery(String query, OrderBy orderBy, int offset, int limit);
 
     int phoneCountByQuery(String query);
-
-    List<Stock> getStocks(List<Long> phoneIdList);
 }

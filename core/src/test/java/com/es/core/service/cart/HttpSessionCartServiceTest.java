@@ -2,6 +2,7 @@ package com.es.core.service.cart;
 
 import com.es.core.AbstractTest;
 import com.es.core.dao.phone.PhoneDao;
+import com.es.core.dao.stock.StockDao;
 import com.es.core.exception.PhoneNotFoundException;
 import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
@@ -33,6 +34,9 @@ public class HttpSessionCartServiceTest extends AbstractTest {
 
     @Mock
     private PhoneDao mockPhoneDao;
+
+    @Mock
+    private StockDao stockDao;
 
     private static final int COUNT_PHONE = 5;
 
@@ -73,6 +77,12 @@ public class HttpSessionCartServiceTest extends AbstractTest {
             verifyNoMoreInteractions(mockPhoneDao);
         } finally {
             reset(mockPhoneDao);
+        }
+
+        try {
+            verifyNoMoreInteractions(stockDao);
+        } finally {
+            reset(stockDao);
         }
     }
 
@@ -240,11 +250,11 @@ public class HttpSessionCartServiceTest extends AbstractTest {
                 .map(phoneId -> new Stock(phoneId, 0, 0))
                 .collect(Collectors.toList());
 
-        when(mockPhoneDao.getStocks(phoneStock)).thenReturn(stockList);
+        when(stockDao.getStocks(phoneStock)).thenReturn(stockList);
 
         cartService.deleteOutOfStock();
 
-        verify(mockPhoneDao).getStocks(eq(phoneStock));
+        verify(stockDao).getStocks(eq(phoneStock));
         verify(mockCart, atLeastOnce()).getItems();
         verify(mockCart).setCost(BigDecimal.ZERO);
     }

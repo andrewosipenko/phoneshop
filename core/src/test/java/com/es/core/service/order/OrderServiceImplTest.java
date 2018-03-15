@@ -9,6 +9,7 @@ import com.es.core.model.cart.CartItem;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
+import com.es.core.service.cart.CartService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +37,9 @@ public class OrderServiceImplTest extends AbstractTest {
     @Mock
     private OrderDao orderDao;
 
+    @Mock
+    private CartService cartService;
+
     private BigDecimal deliveryPrice = new BigDecimal(5);
 
     @Before
@@ -50,6 +54,12 @@ public class OrderServiceImplTest extends AbstractTest {
         } finally {
             reset(orderDao);
         }
+
+        try {
+            verifyNoMoreInteractions(cartService);
+        } finally {
+            reset(cartService);
+        }
     }
 
     @Test
@@ -57,6 +67,7 @@ public class OrderServiceImplTest extends AbstractTest {
         Order order = new Order();
         orderService.placeOrder(order);
         verify(orderDao).save(eq(order));
+        verify(cartService).clearCart();
     }
 
     @Test(expected = OutOfStockException.class)

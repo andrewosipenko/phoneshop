@@ -1,6 +1,7 @@
 package com.es.core.service.cart;
 
 import com.es.core.dao.phone.PhoneDao;
+import com.es.core.dao.stock.StockDao;
 import com.es.core.exception.PhoneNotFoundException;
 import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
@@ -24,6 +25,9 @@ public class HttpSessionCartService implements CartService {
 
     @Resource
     private PhoneDao phoneDao;
+
+    @Resource
+    private StockDao stockDao;
 
     @Override
     public Cart getCart() {
@@ -80,7 +84,7 @@ public class HttpSessionCartService implements CartService {
                 .map(cartItem -> cartItem.getPhone().getId())
                 .collect(Collectors.toList());
 
-        List<Stock> stocks = phoneDao.getStocks(phoneIdList);
+        List<Stock> stocks = stockDao.getStocks(phoneIdList);
         Map<Long, Stock> stockMap = stocks.stream()
                 .collect(Collectors.toMap(Stock::getPhoneId, o -> o));
 

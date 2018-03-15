@@ -3,9 +3,7 @@ package com.es.core.dao.phone;
 import com.es.core.model.phone.Color;
 import com.es.core.model.phone.OrderBy;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.Stock;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -192,12 +190,6 @@ public class JdbcPhoneDao implements PhoneDao {
     public int phoneCountByQuery(String query) {
         String formattedQuery = "%" + query.toLowerCase() + "%";
         return jdbcTemplate.queryForObject(QUERY_OF_PHONE_COUNT_BY_QUERY, Integer.class, formattedQuery, formattedQuery);
-    }
-
-    @Override
-    public List<Stock> getStocks(List<Long> phoneIdList) {
-        Map namedParameters = Collections.singletonMap("phoneIdList", phoneIdList);
-        return namedParameterJdbcTemplate.query(SELECT_STOCK_LIST_QUERY, namedParameters, new BeanPropertyRowMapper<Stock>(Stock.class));
     }
 
 }

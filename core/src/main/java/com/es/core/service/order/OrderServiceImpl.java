@@ -8,6 +8,7 @@ import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
 import com.es.core.model.phone.Phone;
+import com.es.core.service.cart.CartService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,10 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
 
     @Resource
-    OrderDao orderDao;
+    private OrderDao orderDao;
+
+    @Resource
+    private CartService cartService;
 
     @Value("#{new java.math.BigDecimal(${deliveryPrice})}")
     BigDecimal deliveryPrice;
@@ -61,6 +65,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void placeOrder(Order order) throws OutOfStockException {
         orderDao.save(order);
+        cartService.clearCart();
     }
 
     @Override

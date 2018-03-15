@@ -3,7 +3,6 @@ package com.es.core.dao.phone;
 import com.es.core.AbstractTest;
 import com.es.core.model.phone.OrderBy;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.Stock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +14,10 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
@@ -203,26 +205,6 @@ public class JdbcProductDaoIntTest extends AbstractTest {
         Optional<Phone> phoneOptional = phoneDao.get(phoneWithoutColors.getId());
         Assert.assertTrue(phoneOptional.isPresent());
         Assert.assertEquals(0, phoneOptional.get().getColors().size());
-    }
-
-    @Test
-    public void getStocksCheck() {
-        final int COUNT = 5;
-        List<Phone> phoneList = addNewPhones(COUNT);
-
-        List<Long> phoneIdList = phoneList.stream()
-                .map(Phone::getId).collect(Collectors.toList());
-
-        Map<Long, Long> stockMap = phoneIdList.stream()
-                .collect(Collectors.toMap(o -> o, o -> (long) (o.hashCode() % 15)));
-
-        setStocks(stockMap);
-
-        List<Stock> stockList = phoneDao.getStocks(phoneIdList);
-        for (Stock stock : stockList) {
-            Assert.assertEquals((long) stock.getReserved(), 0L);
-            Assert.assertEquals(new Long(stock.getStock()), stockMap.get(stock.getPhoneId()));
-        }
     }
 
     private void assertList(List<Phone> list1, List<Phone> list2) {
