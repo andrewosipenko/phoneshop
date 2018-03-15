@@ -20,10 +20,10 @@ public interface PhoneQueries {
 
     String FIND_ALL_QUERY =  "SELECT * FROM phones %s";
 
-    String INSERT_PHONE_QUERY = "insert into phones (id, brand, model, price, displaySizeInches," +
+    String INSERT_PHONE_QUERY = "insert into phones (brand, model, price, displaySizeInches," +
             "weightGr, lengthMm, widthMm, heightMm, announced, deviceType, os, displayResolution," +
             "pixelDensity, displayTechnology, backCameraMegapixels, frontCameraMegapixels, ramGb, " +
             "internalStorageGb, batteryCapacityMah, talkTimeHours, standByTimeHours, bluetooth, " +
             "positioning, imageUrl, description) values " +
-            "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 }

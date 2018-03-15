@@ -47,7 +47,7 @@ public abstract class AbstractJdbcPhoneDao {
 
     private Object[] getInsertParameters(final Phone phone) {
         return new Object[] {
-                phone.getId(), phone.getBrand(), phone.getModel(), phone.getPrice(),
+                phone.getBrand(), phone.getModel(), phone.getPrice(),
                 phone.getDisplaySizeInches(), phone.getWeightGr(), phone.getLengthMm(),
                 phone.getWidthMm(), phone.getHeightMm(), phone.getAnnounced(),
                 phone.getDeviceType(), phone.getOs(), phone.getDisplayResolution(),

@@ -5,6 +5,8 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import javax.annotation.Resource;
 
@@ -35,11 +37,10 @@ public class JdbcPhoneDaoIntTest {
     @Test
     public void phoneInsertion() {
         Phone phone = phoneDao.get(1001L).get();
-        int sizeBeforeInsertion = phoneDao.findAll(0, 0).size();
         phone.setId(null);
         phone.setBrand("Brandfff");
         phone.setModel("Modelfff");
         phoneDao.save(phone);
-        assertEquals(phoneDao.findAll(0, 0).size() - 1, sizeBeforeInsertion);
+        assertTrue(phoneDao.get(phone.getId()).isPresent());
     }
 }
