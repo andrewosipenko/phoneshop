@@ -3,7 +3,9 @@ package com.es.core.model.phone;
 import com.es.core.model.mapper.PhoneRowMapper;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Component;
-import java.util.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class JdbcPhoneDao extends AbstractJdbcPhoneDao implements PhoneDao {
@@ -15,6 +17,7 @@ public class JdbcPhoneDao extends AbstractJdbcPhoneDao implements PhoneDao {
           return Optional.empty();
       }
       Phone phone = phoneOfDifferentColors.get(0);
+
       phone.setColors(getPhoneColors(phoneOfDifferentColors));
       return Optional.of(phone);
     }

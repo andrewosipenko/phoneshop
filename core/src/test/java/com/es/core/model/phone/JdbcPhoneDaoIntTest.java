@@ -35,7 +35,7 @@ public class JdbcPhoneDaoIntTest {
     }
 
     @Test
-    public void phoneInsertion() {
+    public void phoneInsertionKeyCheck() {
         Phone phone = phoneDao.get(1001L).get();
         phone.setId(null);
         phone.setBrand("Brandfff");
