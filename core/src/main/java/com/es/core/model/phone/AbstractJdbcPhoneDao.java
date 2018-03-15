@@ -2,6 +2,8 @@ package com.es.core.model.phone;
 
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -12,18 +14,11 @@ import java.util.*;
 public abstract class AbstractJdbcPhoneDao {
     @Resource
     JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsert;
 
-    @PostConstruct
-    public void init() {
-        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("phones")
-                .usingGeneratedKeyColumns("id");
-    }
-
-    void insert(final Phone phone) {
-        Number newId = jdbcInsert.executeAndReturnKey(getParameters(phone));
+    void insert(Phone phone) {
+        Number newId = jdbcTemplate.queryForObject(PhoneQueries.COUNT_PHONES_QUERY, Integer.class) + 1000;
         phone.setId(newId.longValue());
+        jdbcTemplate.update(PhoneQueries.INSERT_PHONE_QUERY,getInsertParameters(phone));
     }
 
     void update(final Phone phone) {
@@ -34,37 +29,6 @@ public abstract class AbstractJdbcPhoneDao {
 
     private void insertColors(final Phone phone) {
         jdbcTemplate.batchUpdate(PhoneQueries.INSERT_COLORS_QUERY, getPhone2ColorSetter(phone));
-    }
-
-    private Map<String, Object> getParameters(final Phone phone) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("brand", phone.getBrand());
-        parameters.put("model", phone.getModel());
-        parameters.put("price", phone.getPrice());
-        parameters.put("displaySizeInches", phone.getDisplaySizeInches());
-        parameters.put("weightGr", phone.getWeightGr());
-        parameters.put("heightMm", phone.getHeightMm());
-        parameters.put("lengthMm", phone.getLengthMm());
-        parameters.put("widthMm", phone.getWidthMm());
-        parameters.put("announced", phone.getAnnounced());
-        parameters.put("deviceType", phone.getDeviceType());
-        parameters.put("os", phone.getOs());
-        parameters.put("displayResolution", phone.getDisplayResolution());
-        parameters.put("pixelDensity", phone.getPixelDensity());
-        parameters.put("displayTechnology", phone.getDisplayTechnology());
-        parameters.put("backCameraMegapixels", phone.getBackCameraMegapixels());
-        parameters.put("frontCameraMegapixels", phone.getFrontCameraMegapixels());
-        parameters.put("ramGb", phone.getRamGb());
-        parameters.put("internalStorageGb", phone.getInternalStorageGb());
-        parameters.put("batteryCapacityMah", phone.getBatteryCapacityMah());
-        parameters.put("standByTimeHours", phone.getStandByTimeHours());
-        parameters.put("talkTimeHours", phone.getTalkTimeHours());
-        parameters.put("bluetooth", phone.getBluetooth());
-        parameters.put("positioning", phone.getPositioning());
-        parameters.put("imageUrl", phone.getImageUrl());
-        parameters.put("description", phone.getDescription());
-
-        return parameters;
     }
 
     private Object[] getUpdateParameters(final Phone phone) {
@@ -78,6 +42,20 @@ public abstract class AbstractJdbcPhoneDao {
                 phone.getBatteryCapacityMah(), phone.getTalkTimeHours(), phone.getStandByTimeHours(),
                 phone.getBluetooth(), phone.getPositioning(), phone.getImageUrl(),
                 phone.getDescription(), phone.getId()
+        };
+    }
+
+    private Object[] getInsertParameters(final Phone phone) {
+        return new Object[] {
+                phone.getId(), phone.getBrand(), phone.getModel(), phone.getPrice(),
+                phone.getDisplaySizeInches(), phone.getWeightGr(), phone.getLengthMm(),
+                phone.getWidthMm(), phone.getHeightMm(), phone.getAnnounced(),
+                phone.getDeviceType(), phone.getOs(), phone.getDisplayResolution(),
+                phone.getPixelDensity(), phone.getDisplayTechnology(), phone.getBackCameraMegapixels(),
+                phone.getFrontCameraMegapixels(), phone.getRamGb(), phone.getInternalStorageGb(),
+                phone.getBatteryCapacityMah(), phone.getTalkTimeHours(), phone.getStandByTimeHours(),
+                phone.getBluetooth(), phone.getPositioning(), phone.getImageUrl(),
+                phone.getDescription()
         };
     }
 

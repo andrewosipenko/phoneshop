@@ -15,12 +15,11 @@ public class JdbcPhoneDao extends AbstractJdbcPhoneDao implements PhoneDao {
           return Optional.empty();
       }
       Phone phone = phoneOfDifferentColors.get(0);
-
       phone.setColors(getPhoneColors(phoneOfDifferentColors));
       return Optional.of(phone);
     }
 
-    public void save(final Phone phone) {
+    public void save(Phone phone) {
         if(phone.getId() == null) {
             insert(phone);
         } else {
