@@ -1,7 +1,7 @@
 package com.es.core.model.phone;
 
 public interface SqlQueryConstants {
-    public static final String SQL_QUERY_PHONE_UPDATE = "update phones set" +
+    String SQL_QUERY_PHONE_UPDATE = "update phones set" +
             " brand = ?," +
             " model = ?," +
             " price = ?," +
