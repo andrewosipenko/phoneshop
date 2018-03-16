@@ -26,10 +26,12 @@ public class PhoneResultSetExtractor implements ResultSetExtractor<List<Phone>> 
                 phoneList.add(phone);
                 setPhoneProps(phone, resultSet);
             }
-            Color color = new Color();
-            color.setId(resultSet.getLong("colorId"));
-            color.setCode(resultSet.getString("colorCode"));
-            colors.add(color);
+            if (resultSet.getString("colorCode") != null) {
+                Color color = new Color();
+                color.setId(resultSet.getLong("colorId"));
+                color.setCode(resultSet.getString("colorCode"));
+                colors.add(color);
+            }
         }
         return phoneList;
     }
@@ -40,7 +42,7 @@ public class PhoneResultSetExtractor implements ResultSetExtractor<List<Phone>> 
         phone.setModel(resultSet.getString("model"));
         phone.setPrice(resultSet.getBigDecimal("price"));
         phone.setDisplaySizeInches(resultSet.getBigDecimal("displaySizeInches"));
-        phone.setWeightGr(resultSet.getInt("weightGr"));
+        phone.setWeightGr(getIntObject(resultSet, "weightGr"));
         phone.setLengthMm(resultSet.getBigDecimal("lengthMm"));
         phone.setWidthMm(resultSet.getBigDecimal("widthMm"));
         phone.setHeightMm(resultSet.getBigDecimal("heightMm"));
@@ -48,18 +50,23 @@ public class PhoneResultSetExtractor implements ResultSetExtractor<List<Phone>> 
         phone.setDeviceType(resultSet.getString("deviceType"));
         phone.setOs(resultSet.getString("os"));
         phone.setDisplayResolution(resultSet.getString("displayResolution"));
-        phone.setPixelDensity(resultSet.getInt("pixelDensity"));
+        phone.setPixelDensity(getIntObject(resultSet, "pixelDensity"));
         phone.setDisplayTechnology(resultSet.getString("displayTechnology"));
         phone.setBackCameraMegapixels(resultSet.getBigDecimal("backCameraMegapixels"));
         phone.setFrontCameraMegapixels(resultSet.getBigDecimal("frontCameraMegapixels"));
         phone.setRamGb(resultSet.getBigDecimal("ramGb"));
         phone.setInternalStorageGb(resultSet.getBigDecimal("internalStorageGb"));
-        phone.setBatteryCapacityMah(resultSet.getInt("batteryCapacityMah"));
+        phone.setBatteryCapacityMah(getIntObject(resultSet, "batteryCapacityMah"));
         phone.setTalkTimeHours(resultSet.getBigDecimal("talkTimeHours"));
         phone.setStandByTimeHours(resultSet.getBigDecimal("standByTimeHours"));
         phone.setBluetooth(resultSet.getString("bluetooth"));
         phone.setPositioning(resultSet.getString("positioning"));
         phone.setImageUrl(resultSet.getString("imageUrl"));
         phone.setDescription(resultSet.getString("description"));
+    }
+
+    private Integer getIntObject(ResultSet resultSet, String key) throws SQLException {
+        Object intObject = resultSet.getObject(key);
+        return (intObject == null) ? null : Integer.parseInt(intObject.toString());
     }
 }
