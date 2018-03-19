@@ -4,8 +4,8 @@ public interface PhoneQueries {
     String COUNT_PHONES_QUERY = "SELECT count(*) FROM phones";
 
     String GET_BY_KEY_QUERY =  "SELECT * FROM phones " +
-    "JOIN  phone2color on phones.id = phone2color.phoneId " +
-    "JOIN colors on colors.id = phone2color.colorId WHERE phones.id = ?";
+    "LEFT OUTER JOIN  phone2color on phones.id = phone2color.phoneId " +
+    "LEFT OUTER JOIN colors on colors.id = phone2color.colorId WHERE phones.id = ?";
 
     String UPDATE_PHONE_QUERY = "update phones set brand = ? ,model = ? ," +
             "price = ? ,displaySizeInches = ? ,weightGr = ? ,lengthMm = ? ,widthMm = ? ," +

@@ -2,6 +2,7 @@ package com.es.core.model.phone;
 
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import javax.annotation.PostConstruct;
@@ -23,7 +24,7 @@ public abstract class AbstractJdbcPhoneDao {
     }
 
     void insert(Phone phone) {
-        Number newId = jdbcInsert.executeAndReturnKey(getParameters(phone));
+        Number newId = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(getParameters(phone)));
         phone.setId(newId.longValue());
     }
 
@@ -115,6 +116,9 @@ public abstract class AbstractJdbcPhoneDao {
         Set<Color> colors = new HashSet<>();
         phoneOfDifferentColors.forEach(e -> {
             Color color = e.getColors().iterator().next();
+            Long id = color.getId();
+            String code = color.getCode();
+            if(id != null && code != null)
             colors.add(new Color(color.getId(), color.getCode()));
         });
         return  colors;

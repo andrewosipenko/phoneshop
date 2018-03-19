@@ -19,6 +19,7 @@ public class JdbcPhoneDao extends AbstractJdbcPhoneDao implements PhoneDao {
       Phone phone = phoneOfDifferentColors.get(0);
 
       phone.setColors(getPhoneColors(phoneOfDifferentColors));
+      phone.setId(key);
       return Optional.of(phone);
     }
 
