@@ -21,6 +21,7 @@ public class Order
     private String lastName;
     private String deliveryAddress;
     private String contactPhoneNo;
+    private String additionInfo;
 
     private OrderStatus status;
 
@@ -94,6 +95,14 @@ public class Order
 
     public void setContactPhoneNo(String contactPhoneNo) {
         this.contactPhoneNo = contactPhoneNo;
+    }
+
+    public String getAdditionInfo() {
+        return additionInfo;
+    }
+
+    public void setAdditionInfo(String additionInfo) {
+        this.additionInfo = additionInfo;
     }
 
     public OrderStatus getStatus() {
