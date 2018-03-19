@@ -35,4 +35,9 @@ public class PhoneServiceImpl implements PhoneService {
     public long productsCountByModel(String model) {
         return phoneDao.productsCountWithModel("%" + model + "%");
     }
+
+    @Override
+    public long countProductInStock(Long id) {
+        return phoneDao.countProductInStock(id);
+    }
 }

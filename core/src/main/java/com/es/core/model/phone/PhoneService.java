@@ -9,4 +9,5 @@ public interface PhoneService {
     List<Phone> findByModelInOrder(String model, String orderBy, int offset, int limit);
     long productsCount();
     long productsCountByModel(String model);
+    long countProductInStock(Long id);
 }

@@ -47,6 +47,9 @@ public class JdbcPhoneDao implements PhoneDao {
                                                            "JOIN phone2color ON p.id = phone2color.phoneId " +
                                                            "JOIN colors ON colors.id = phone2color.colorId " +
                                                            "ORDER BY %s %s";
+
+    private static final String SELECT_COUNT_PRODUCT_IN_STOCK = "SELECT stock FROM stocks WHERE phoneId = ?";
+
     @Override
     public Optional<Phone> get(final Long key) {
         List<Phone> phones = jdbcTemplate.query(SELECT_ALL_INFO_BY_ID, new Object[]{key}, new PhoneExtractor());
@@ -72,6 +75,11 @@ public class JdbcPhoneDao implements PhoneDao {
     @Override
     public long productsCountWithModel(String model) {
         return jdbcTemplate.queryForObject(SELECT_RECORDS_COUNT_BY_MODEL, new Object[]{model}, Long.class);
+    }
+
+    @Override
+    public long countProductInStock(Long id) {
+        return jdbcTemplate.queryForObject(SELECT_COUNT_PRODUCT_IN_STOCK, new Object[]{id}, Long.class);
     }
 
     private class PhoneExtractor implements ResultSetExtractor<List<Phone>> {
