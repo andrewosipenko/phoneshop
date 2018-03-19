@@ -95,3 +95,31 @@ table.add-to-cart td {
 .padding-button {
     padding-bottom: 40px;
 }
+
+#order-table {
+    border: 0;
+}
+
+#order-table td {
+    border: black 1px solid;
+}
+
+#order-table td.empty-td {
+    border: 0;
+}
+
+#order-table tr {
+    height: 60px;
+}
+
+#person-info {
+    border: 0;
+}
+
+#person-info tr td {
+    border: 0;
+}
+
+#person-info tr>td {
+    padding-bottom: 10px;
+}

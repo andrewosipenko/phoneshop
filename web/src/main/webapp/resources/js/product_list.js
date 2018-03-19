@@ -1,5 +1,5 @@
 $(function () {
-    $("#price").number(true, 2);
+    $(".price").number(true, 2);
 });
 
 function addToCart(id) {

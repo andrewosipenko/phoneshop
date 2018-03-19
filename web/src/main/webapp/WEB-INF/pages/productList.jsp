@@ -32,7 +32,7 @@
                 </div>
                 <div class="col">
                     <form method="GET" action="${pageContext.request.contextPath}/cart">
-                        <button class="float-right cart btn" type="submit">My cart: <span id="count-items">${cartStatus.countItems}</span> items <span id="price">${cartStatus.price}</span>$</button>
+                        <button class="float-right cart btn" type="submit">My cart: <span id="count-items">${cartStatus.countItems}</span> items <span id="price" class="price">${cartStatus.price}</span>$</button>
                     </form>
                 </div>
             </div>
@@ -79,7 +79,7 @@
                                 </c:forEach>
                             </td>
                             <td>${phone.displaySizeInches}''</td>
-                            <td>$ ${phone.price}</td>
+                            <td><span class="price">${phone.price} </span>$</td>
                             <td>
                                 <input type="hidden" id="contextPath" value="${pageContext.request.contextPath}">
                                 <input id="quantity-${phone.id}" type="text" value="1">
