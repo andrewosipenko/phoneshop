@@ -11,4 +11,5 @@ public interface CartService {
     long getCountItems();
     Map<Phone, Long> getAllItems();
     void update(Map<Long, Long> phoneWithQuantity);
+    void removeProductsWhichNoInStock();
 }

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Cart {
-    private final Map<Phone, Long> items;
+    private Map<Phone, Long> items;
 
     public Cart() {
         this.items = new HashMap<>();
@@ -14,5 +14,9 @@ public class Cart {
 
     public Map<Phone, Long> getItems() {
         return items;
+    }
+
+    public void setItems(Map<Phone, Long> items) {
+        this.items = items;
     }
 }

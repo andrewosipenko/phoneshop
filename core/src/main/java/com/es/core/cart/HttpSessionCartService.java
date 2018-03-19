@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class HttpSessionCartService implements CartService {
@@ -63,6 +64,15 @@ public class HttpSessionCartService implements CartService {
         phoneWithQuantity.keySet().stream()
                 .map(key -> phoneService.get(key).get())
                 .forEach(phone -> items.put(phone, phoneWithQuantity.get(phone.getId())));
+    }
+
+    @Override
+    public void removeProductsWhichNoInStock() {
+        final Map<Phone, Long> items = getCart().getItems();
+        Map<Phone, Long> newItems = items.keySet().stream()
+                .filter(phone -> phoneService.countProductInStock(phone.getId()) >= items.get(phone))
+                .collect(Collectors.toMap(phone -> phone, items::get));
+        getCart().setItems(newItems);
     }
 
     private Phone getPhoneFromOptional(Optional<Phone> phone) throws NoSuchElementException {
