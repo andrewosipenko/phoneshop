@@ -5,7 +5,6 @@ import com.es.core.model.phone.PhoneDao;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.annotation.Timed;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -17,7 +16,7 @@ import java.util.Optional;
 @ContextConfiguration(value = "/context/testContext-core.xml")
 public class JdbcProductDaoIntTest{
     @Resource
-    PhoneDao phoneDao;
+    private PhoneDao phoneDao;
 
     private static long EXISTING_PHONE_ID = 1000L;
     private static long NOT_EXISTING_PHONE_ID = 1500L;
