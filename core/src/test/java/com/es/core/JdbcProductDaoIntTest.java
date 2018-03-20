@@ -51,7 +51,7 @@ public class JdbcProductDaoIntTest{
     }
 
     @Test
-    public void saveExistingPhone(){
+    public void testSaveExistingPhone(){
         Phone phone = phoneDao.get(EXISTING_PHONE_ID).get();
         String oldModel = phone.getModel();
         String newModel = oldModel + "newModel";
@@ -62,7 +62,7 @@ public class JdbcProductDaoIntTest{
     }
 
     @Test
-    public void saveNotExistingPhone(){
+    public void testSaveNotExistingPhone(){
         Phone phone = new Phone();
         String model = "checkModel";
         String brand = "checkBrand";
