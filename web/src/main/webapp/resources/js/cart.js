@@ -8,10 +8,14 @@ function addToCart() {
         quantity: quantity
     };
 
+    var headers = {};
+    headers[csrfHeader] = csrfToken;
+
     $.ajax({
         url: url,
         type: "POST",
         contentType: "application/json;charset=UTF-8",
+        headers: headers,
         dataType: "json",
         data: JSON.stringify(requestData),
         success: function (cartStatus) {

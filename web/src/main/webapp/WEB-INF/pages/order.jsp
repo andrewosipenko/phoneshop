@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/templates" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <template:page>
     <div class="row">
         <div class="col-sm-12 col-md-10 col-md-offset-1">
@@ -47,6 +48,7 @@
                         Order
                     </button>
                 </div>
+                <sec:csrfInput/>
             </form:form>
         </div>
     </div>

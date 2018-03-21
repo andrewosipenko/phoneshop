@@ -15,4 +15,6 @@ public interface ControllerConstants {
     String ORDERS_LIST_PAGE_NAME = "admin/orders";
 
     String ORDER_DETAILS_PAGE_NAME = "admin/orderDetails";
+
+    String LOGIN_PAGE_NAME = "login";
 }
