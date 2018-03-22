@@ -31,7 +31,7 @@ public class JdbcPhoneDao implements PhoneDao{
 
     public Optional<Phone> get(final Long key) {
         try{
-            Phone phone = (Phone)jdbcTemplate.queryForObject("select * from phones where phones.id = " + key,
+            Phone phone = (Phone)jdbcTemplate.queryForObject(SqlQueryConstants.SELECT_PHONES_BY_ID + key,
                     new BeanPropertyRowMapper(Phone.class));
             setColor(phone);
             return Optional.of(phone);
@@ -42,7 +42,7 @@ public class JdbcPhoneDao implements PhoneDao{
     }
 
     public void save(final Phone phone) {
-        long amount = jdbcTemplate.queryForObject("select count(*) from phones where phones.id = " + phone.getId(),
+        long amount = jdbcTemplate.queryForObject(SqlQueryConstants.COUNT_PHONES_WITH_ID + phone.getId(),
                 Long.class);
         if (amount == 0) {
             insertPhone(phone);
@@ -60,7 +60,7 @@ public class JdbcPhoneDao implements PhoneDao{
     }
 
     private void insertColors(final Phone phone){
-        jdbcTemplate.batchUpdate("insert into phone2color (phoneId, colorId) values (?, ?)", new BatchPreparedStatementSetter() {
+        jdbcTemplate.batchUpdate(SqlQueryConstants.INSERT_INTO_PHONE2COLOR, new BatchPreparedStatementSetter() {
 
             List<Color> colors = new ArrayList<>(phone.getColors());
 
@@ -80,7 +80,7 @@ public class JdbcPhoneDao implements PhoneDao{
     }
 
     private void updatePhone(final Phone phone) {
-        jdbcTemplate.update(SqlQueryConstants.SQL_QUERY_PHONE_UPDATE + phone.getId(),
+        jdbcTemplate.update(SqlQueryConstants.PHONE_UPDATE + phone.getId(),
                 phone.getBrand(), phone.getModel(), phone.getPrice(), phone.getDisplaySizeInches(),
                 phone.getWeightGr(), phone.getLengthMm(), phone.getWidthMm(), phone.getHeightMm(),
                 phone.getAnnounced(), phone.getDeviceType(), phone.getOs(), phone.getDisplayResolution(),
@@ -92,13 +92,12 @@ public class JdbcPhoneDao implements PhoneDao{
     }
 
     private void updateColors(final Phone phone) {
-        jdbcTemplate.update("delete from phone2color where phone2color.phoneId = " + phone.getId());
+        jdbcTemplate.update(SqlQueryConstants.DELETE_FROM_PHONE2COLOR_BY_PHONE_ID + phone.getId());
         insertColors(phone);
     }
 
-
     public List<Phone> findAll(int offset, int limit) {
-        List<Phone> phones = jdbcTemplate.query("select * from phones offset " + offset + " limit " + limit,
+        List<Phone> phones = jdbcTemplate.query(SqlQueryConstants.SELECT_PHONES_OFFSET + offset + " LIMIT " + limit,
                 new BeanPropertyRowMapper(Phone.class));
         for (Phone phone : phones) {
             setColor(phone);
@@ -108,8 +107,7 @@ public class JdbcPhoneDao implements PhoneDao{
 
     private void setColor(final Phone phone) {
         Long phoneId = phone.getId();
-        List<Color> colors = jdbcTemplate.query("select * from colors inner join phone2color " +
-                "on colors.id = phone2color.colorId where phone2color.phoneId = " + phoneId,
+        List<Color> colors = jdbcTemplate.query(SqlQueryConstants.SELECT_COLORS_BELONGS_TO_PHONE_ID + phoneId,
                 new BeanPropertyRowMapper(Color.class));
         phone.setColors(new HashSet<>(colors));
     }

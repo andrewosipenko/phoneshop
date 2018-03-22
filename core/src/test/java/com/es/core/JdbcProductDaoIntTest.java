@@ -2,9 +2,11 @@ package com.es.core;
 
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.PhoneDao;
+import com.es.core.model.phone.SqlQueryConstants;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -17,28 +19,21 @@ import java.util.Optional;
 public class JdbcProductDaoIntTest{
     @Resource
     private PhoneDao phoneDao;
-
-    private static long EXISTING_PHONE_ID = 1000L;
-    private static long NOT_EXISTING_PHONE_ID = 1500L;
-    private static int PHONE_AMOUNT = 8;
-
-    @Test
-    public void testAddPhone(){
-        Phone phone = new Phone();
-        phone.setBrand("Brrrr");
-        phone.setModel("Mllll");
-        phoneDao.save(phone);
-        Assert.assertTrue(phone.getId() == 1009L);
-    }
+    @Resource
+    private JdbcTemplate jdbcTemplate;
+    private final long FIRST_PHONE_ID = 1000L;
+    private final long EXISTING_PHONE_ID = 1000L;
+    private final long NOT_EXISTING_PHONE_ID = 1500L;
+    private final int AMOUNT_TO_FIND = 8;
 
     @Test
-    public void testGetExistingPhone(){
+    public void testGetNotExistingPhone(){
         Optional<Phone> optionalPhone = phoneDao.get(NOT_EXISTING_PHONE_ID);
         Assert.assertFalse(optionalPhone.isPresent());
     }
 
     @Test
-    public void testGetNotExistingPhone(){
+    public void testGetExistingPhone(){
         Optional<Phone> optionalPhone = phoneDao.get(EXISTING_PHONE_ID);
         Assert.assertTrue(optionalPhone.isPresent());
         Assert.assertTrue(EXISTING_PHONE_ID == optionalPhone.get().getId());
@@ -46,8 +41,8 @@ public class JdbcProductDaoIntTest{
 
     @Test
     public void testFindAll(){
-        List<Phone> phoneList = phoneDao.findAll(0, PHONE_AMOUNT);
-        Assert.assertTrue(phoneList.size() == PHONE_AMOUNT);
+        List<Phone> phoneList = phoneDao.findAll(0, AMOUNT_TO_FIND);
+        Assert.assertTrue(phoneList.size() == AMOUNT_TO_FIND);
     }
 
     @Test
@@ -68,8 +63,10 @@ public class JdbcProductDaoIntTest{
         String brand = "checkBrand";
         phone.setModel(model);
         phone.setBrand(brand);
+        int phonesCount = jdbcTemplate.queryForObject(SqlQueryConstants.COUNT_PHONES, Integer.class);
         phoneDao.save(phone);
         Assert.assertEquals(model, phoneDao.get(phone.getId()).get().getModel());
         Assert.assertEquals(brand, phoneDao.get(phone.getId()).get().getBrand());
+        Assert.assertTrue(phone.getId() == FIRST_PHONE_ID + phonesCount);
     }
 }
