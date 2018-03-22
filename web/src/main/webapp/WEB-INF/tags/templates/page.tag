@@ -23,8 +23,11 @@
         <a href="<c:url value="/login"/>">Login</a>
     </sec:authorize>
     <sec:authorize access="hasRole('ADMIN')">
-        <span><sec:authentication property="principal.username"/></span>
-        <a href="<c:url value="/logout"/>">Logout</a>
+        <form action="<c:url value="/logout"/>" method="post">
+            <sec:csrfInput/>
+            <span><sec:authentication property="principal.username"/></span>
+            <button class="logout_button" type="submit">Logout</button>
+        </form>
     </sec:authorize>
 </div>
 <div class="topnav">
