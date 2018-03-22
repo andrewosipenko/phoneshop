@@ -66,7 +66,7 @@ CREATE TABLE orders (
   deliveryAddress VARCHAR(500) NOT NULL,
   contactPhoneNo  VARCHAR(30)  NOT NULL,
   additionalInfo  VARCHAR(4096),
-  status ENUM('NEW', 'DELIVERED', 'REJECTED')
+  status          ENUM ('NEW', 'DELIVERED', 'REJECTED')
 );
 
 CREATE TABLE orderItems (
@@ -79,25 +79,25 @@ CREATE TABLE orderItems (
 );
 
 CREATE TRIGGER beforeInsertOrderItems
-BEFORE INSERT
+  BEFORE INSERT
   ON orderItems
-FOR EACH ROW
+  FOR EACH ROW
 CALL "com.es.core.trigger.StockCheckOrderItemTrigger";
 
 CREATE TRIGGER beforeUpdateOrderItems
-BEFORE UPDATE
+  BEFORE UPDATE
   ON orderItems
-FOR EACH ROW
+  FOR EACH ROW
 CALL "com.es.core.trigger.StockCheckOrderItemTrigger";
 
 CREATE TRIGGER beforeDeleteOrderItems
-AFTER DELETE
+  AFTER DELETE
   ON orderItems
-FOR EACH ROW
+  FOR EACH ROW
 CALL "com.es.core.trigger.StockCheckOrderItemTrigger";
 
 CREATE TRIGGER beforeUpdateOrdersTrigger
-BEFORE UPDATE
+  BEFORE UPDATE
   ON orders
-FOR EACH ROW
+  FOR EACH ROW
 CALL "com.es.core.trigger.BeforeUpdateOrdersTrigger";

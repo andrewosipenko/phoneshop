@@ -22,6 +22,8 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -43,7 +45,7 @@ public class AjaxCartControllerTest extends AbstractTest {
 
     @Before
     public void init() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).apply(springSecurity()).build();
         returnedCart = new Cart();
         when(mockCartService.getCart()).thenReturn(returnedCart);
     }
@@ -70,7 +72,8 @@ public class AjaxCartControllerTest extends AbstractTest {
                 "\"quantity\":" + COUNT.toString() + "" +
                 "}";
 
-        mockMvc.perform(post("/ajaxCart").contentType(MediaType.APPLICATION_JSON_UTF8).content(JSONContent))
+        mockMvc.perform(post("/ajaxCart").contentType(MediaType.APPLICATION_JSON_UTF8).with(csrf().asHeader())
+                .content(JSONContent))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -90,7 +93,8 @@ public class AjaxCartControllerTest extends AbstractTest {
                 "\"quantity\":" + QUANTITY.toString() + "" +
                 "}";
 
-        mockMvc.perform(post("/ajaxCart").contentType(MediaType.APPLICATION_JSON_UTF8).content(JSONContent))
+        mockMvc.perform(post("/ajaxCart").contentType(MediaType.APPLICATION_JSON_UTF8).with(csrf().asHeader())
+                .content(JSONContent))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -136,7 +140,8 @@ public class AjaxCartControllerTest extends AbstractTest {
     }
 
     private void sendRequestAndCheckErrorMessage(String JSONContent) throws Exception {
-        mockMvc.perform(post("/ajaxCart").contentType(MediaType.APPLICATION_JSON_UTF8).content(JSONContent))
+        mockMvc.perform(post("/ajaxCart").contentType(MediaType.APPLICATION_JSON_UTF8).with(csrf().asHeader())
+                .content(JSONContent))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
