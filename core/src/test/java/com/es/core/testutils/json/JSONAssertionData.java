@@ -1,4 +1,4 @@
-package com.es.core.testutils;
+package com.es.core.testutils.json;
 
 import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;
@@ -37,32 +37,32 @@ public class JSONAssertionData {
         phone.setModel(jsonObject.getString("model"));
         phone.setPrice(jsonObject.getBigDecimal("price"));
         phone.setDisplaySizeInches(jsonObject.getBigDecimal("displaySizeInches"));
-        phone.setWeightGr(getIntObject(jsonObject, "weightGr"));
+        phone.setWeightGr(extractIntObject(jsonObject, "weightGr"));
         phone.setLengthMm(jsonObject.getBigDecimal("lengthMm"));
         phone.setWidthMm(jsonObject.getBigDecimal("widthMm"));
         phone.setHeightMm(jsonObject.getBigDecimal("heightMm"));
-        phone.setAnnounced(getAnnounced(jsonObject));
+        phone.setAnnounced(extractAnnounced(jsonObject));
         phone.setDeviceType(jsonObject.getString("deviceType"));
         phone.setOs(jsonObject.getString("os"));
         phone.setDisplayResolution(jsonObject.getString("displayResolution"));
-        phone.setPixelDensity(getIntObject(jsonObject, "pixelDensity"));
+        phone.setPixelDensity(extractIntObject(jsonObject, "pixelDensity"));
         phone.setDisplayTechnology(jsonObject.getString("displayTechnology"));
         phone.setBackCameraMegapixels(jsonObject.getBigDecimal("backCameraMegapixels"));
         phone.setFrontCameraMegapixels(jsonObject.getBigDecimal("frontCameraMegapixels"));
         phone.setRamGb(jsonObject.getBigDecimal("ramGb"));
         phone.setInternalStorageGb(jsonObject.getBigDecimal("internalStorageGb"));
-        phone.setBatteryCapacityMah(getIntObject(jsonObject, "batteryCapacityMah"));
+        phone.setBatteryCapacityMah(extractIntObject(jsonObject, "batteryCapacityMah"));
         phone.setTalkTimeHours(jsonObject.getBigDecimal("talkTimeHours"));
         phone.setStandByTimeHours(jsonObject.getBigDecimal("standByTimeHours"));
         phone.setBluetooth(jsonObject.getString("bluetooth"));
         phone.setPositioning(jsonObject.getString("positioning"));
         phone.setImageUrl(jsonObject.getString("imageUrl"));
         phone.setDescription(jsonObject.getString("description"));
-        phone.setColors(getColors(jsonObject.getJSONArray("colors")));
+        phone.setColors(extractColors(jsonObject.getJSONArray("colors")));
         return phone;
     }
 
-    private Set<Color> getColors(JSONArray colorArray) {
+    private Set<Color> extractColors(JSONArray colorArray) {
         Set<Color> colors = new HashSet<>();
         for (int i = 0; i < colorArray.length(); i++) {
             Color color = new Color();
@@ -73,13 +73,13 @@ public class JSONAssertionData {
         return colors;
     }
 
-    private Integer getIntObject(JSONObject object, String key) {
+    private Integer extractIntObject(JSONObject object, String key) {
         if (object.isNull(key))
             return null;
         return object.getInt(key);
     }
 
-    private Date getAnnounced(JSONObject object) throws ParseException {
+    private Date extractAnnounced(JSONObject object) throws ParseException {
         String dateString = object.getString("announced");
         return (dateString == null) ? null : dateFormat.parse(dateString);
     }
@@ -90,9 +90,5 @@ public class JSONAssertionData {
 
     public int getSize() {
         return phoneMap.size();
-    }
-
-    public void reflectChanges(Phone phone) {
-        phoneMap.put(phone.getId(), phone);
     }
 }

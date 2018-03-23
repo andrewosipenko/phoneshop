@@ -250,37 +250,4 @@ public class Phone {
     public void setId(Long id) {
         this.id = id;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null || obj.getClass() != Phone.class)
-            return false;
-        Phone phone2 = (Phone) obj;
-        Object[][] compared = {
-                {id, phone2.id}, {brand, phone2.brand}, {model, phone2.model}, {price, phone2.price},
-                {displaySizeInches, phone2.displaySizeInches}, {weightGr, phone2.weightGr}, {lengthMm, phone2.lengthMm},
-                {widthMm, phone2.widthMm}, {heightMm, phone2.heightMm}, {announced, phone2.announced},
-                {deviceType, phone2.deviceType}, {os, phone2.os}, {displayResolution, phone2.displayResolution},
-                {pixelDensity, phone2.pixelDensity}, {displayTechnology, phone2.displayTechnology},
-                {backCameraMegapixels, phone2.backCameraMegapixels}, {frontCameraMegapixels, phone2.frontCameraMegapixels},
-                {ramGb, phone2.ramGb}, {internalStorageGb, phone2.internalStorageGb}, {batteryCapacityMah, phone2.batteryCapacityMah},
-                {talkTimeHours, phone2.talkTimeHours}, {standByTimeHours, phone2.standByTimeHours}, {bluetooth, phone2.bluetooth},
-                {positioning, phone2.positioning}, {imageUrl, phone2.imageUrl}, {description, phone2.description},
-                {colors, phone2.colors}
-        };
-        for (Object[] comparedPair : compared)
-            if (!Objects.equals(comparedPair[0], comparedPair[1]))
-                return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, brand, model, price, displaySizeInches, weightGr, lengthMm, widthMm, heightMm, announced,
-                deviceType, os, displayResolution, pixelDensity, displayTechnology, backCameraMegapixels, frontCameraMegapixels,
-                ramGb, internalStorageGb, batteryCapacityMah, talkTimeHours, standByTimeHours, bluetooth, positioning, imageUrl,
-                description, colors);
-    }
 }

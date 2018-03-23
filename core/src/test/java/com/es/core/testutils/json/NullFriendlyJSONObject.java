@@ -1,4 +1,4 @@
-package com.es.core.testutils;
+package com.es.core.testutils.json;
 
 import org.json.JSONArray;
 import org.json.JSONException;

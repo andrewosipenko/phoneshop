@@ -10,6 +10,10 @@
 
     <import resource="classpath:context/applicationContext-core.xml"/>
 
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
     <jdbc:initialize-database enabled="${db.insertTestData}" data-source="dataSource">
         <jdbc:script location="classpath:db/testdata-phones.sql"/>
     </jdbc:initialize-database>

@@ -67,6 +67,6 @@ public class PhoneResultSetExtractor implements ResultSetExtractor<List<Phone>> 
 
     private Integer getIntObject(ResultSet resultSet, String key) throws SQLException {
         Object intObject = resultSet.getObject(key);
-        return (intObject == null) ? null : Integer.parseInt(intObject.toString());
+        return (intObject == null) ? null : (int) (short) intObject;
     }
 }
