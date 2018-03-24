@@ -43,3 +43,14 @@ insert into phone2color (phoneId, colorId) values (1017, 1004);
 insert into phone2color (phoneId, colorId) values (1018, 1000);
 insert into phone2color (phoneId, colorId) values (1020, 1000);
 insert into phone2color (phoneId, colorId) values (1020, 1002);
+
+insert into stocks (phoneId, stock, reserved) values (1001, 11, 0);
+insert into stocks (phoneId, stock, reserved) values (1002, 12, 1);
+insert into stocks (phoneId, stock, reserved) values (1003, 13, 2);
+insert into stocks (phoneId, stock, reserved) values (1004, 14, 3);
+insert into stocks (phoneId, stock, reserved) values (1005, 15, 4);
+insert into stocks (phoneId, stock, reserved) values (1011, 21, 10);
+insert into stocks (phoneId, stock, reserved) values (1012, 22, 0);
+insert into stocks (phoneId, stock, reserved) values (1013, 23, 1);
+insert into stocks (phoneId, stock, reserved) values (1014, 24, 2);
+insert into stocks (phoneId, stock, reserved) values (1015, 25, 3);

@@ -31,9 +31,14 @@ public class PhoneDaoIntTest {
     private static Comparator<Phone> phoneComparator;
     private static JSONAssertionData assertionData;
 
-    private static final Long MIN_TEST_DATA_ID = 1000L;
-    private static final Long MAX_TEST_DATA_ID = 1020L;
-    private static final Long UNEXISTING_PHONE_ID = 999L;
+    private static final long EXISTING_RANGE_BEGIN = 1000L;
+    private static final long EXISTING_RANGE_END = 1020L;
+    private static final long UNEXISTING = 999L;
+    private static final long EXISTING_WITH_COLORS_PRESENT = 1001L;
+    private static final long EXISTING_WITH_BLACK_COLOR = 1011L;
+    private static final long EXISTING_3 = 1000L;
+    private static final long[] FIRST_8_IN_STOCK = {1001L, 1002L, 1003L, 1004L, 1005L, 1011L, 1012L, 1013L};
+    private static final int TOTAL_IN_STOCK = 10;
 
 
     @BeforeClass
@@ -44,7 +49,7 @@ public class PhoneDaoIntTest {
 
     @Test
     public void testGetExisting() {
-        for (long id = MIN_TEST_DATA_ID; id <= MAX_TEST_DATA_ID; id++) {
+        for (long id = EXISTING_RANGE_BEGIN; id <= EXISTING_RANGE_END; id++) {
             Optional<Phone> phoneOptional = phoneDao.get(id);
             assertTrue(phoneOptional.isPresent());
             Phone phone = phoneOptional.get();
@@ -55,40 +60,37 @@ public class PhoneDaoIntTest {
 
     @Test
     public void testGetUnexisting() {
-        Optional<Phone> phoneOptional = phoneDao.get(999L);
+        Optional<Phone> phoneOptional = phoneDao.get(UNEXISTING);
         assertFalse(phoneOptional.isPresent());
     }
 
     @Test
     public void textSaveWhenUpdatingExisting() {
-        long id = 1011L;
-        Optional<Phone> phoneOptional = phoneDao.get(id);
+        Optional<Phone> phoneOptional = phoneDao.get(EXISTING_WITH_BLACK_COLOR);
         assertTrue(phoneOptional.isPresent());
         Phone phone = phoneOptional.get();
         phone.setBrand("Apple");
-        Color colorToRemove = new Color(), colorToAdd = new Color();
-        colorToRemove.setId(1000L);
+        phone.getColors().removeIf(color -> color.getId().equals(1000L));
+        Color colorToAdd = new Color();
         colorToAdd.setId(1004L);
-        colorToRemove.setCode("Black");
         colorToAdd.setCode("Red");
-        phone.getColors().remove(colorToRemove);
         phone.getColors().add(colorToAdd);
         phoneDao.save(phone);
-        Optional<Phone> updatedPhoneOptional = phoneDao.get(id);
+        Optional<Phone> updatedPhoneOptional = phoneDao.get(EXISTING_WITH_BLACK_COLOR);
         assertTrue(updatedPhoneOptional.isPresent());
         Phone updatedPhone = phoneOptional.get();
         assertTrue(phoneComparator.compare(phone, updatedPhone) == 0);
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testSaveWhenUpdatingExistingWithColorListRemoval() {
-        long id = 1001L;
-        Optional<Phone> phoneOptional = phoneDao.get(id);
+        Optional<Phone> phoneOptional = phoneDao.get(EXISTING_WITH_COLORS_PRESENT);
         assertTrue(phoneOptional.isPresent());
         Phone phone = phoneOptional.get();
         phone.setColors(Collections.EMPTY_SET);
         phoneDao.save(phone);
-        Optional<Phone> updatedPhoneOptional = phoneDao.get(id);
+        Optional<Phone> updatedPhoneOptional = phoneDao.get(EXISTING_WITH_COLORS_PRESENT);
         assertTrue(updatedPhoneOptional.isPresent());
         Phone updatedPhone = phoneOptional.get();
         assertTrue(phoneComparator.compare(phone, updatedPhone) == 0);
@@ -96,14 +98,13 @@ public class PhoneDaoIntTest {
 
     @Test
     public void testSaveWhenInsertingCorrect() {
-        long id = 1000L;
-        Optional<Phone> phoneOptional = phoneDao.get(id);
+        Optional<Phone> phoneOptional = phoneDao.get(EXISTING_3);
         assertTrue(phoneOptional.isPresent());
         Phone phone = phoneOptional.get();
         phone.setId(null);
         phone.setModel("Plastmassovyi mir pobedil");
         phoneDao.save(phone);
-        id = phone.getId();
+        long id = phone.getId();
         Optional<Phone> insertedPhoneOptional = phoneDao.get(id);
         assertTrue(insertedPhoneOptional.isPresent());
         Phone insertedPhone = phoneOptional.get();
@@ -112,11 +113,11 @@ public class PhoneDaoIntTest {
 
     @Test
     public void testSaveWhenUpdatingUnexisting() {
-        long id = 1000L;
+        long id = EXISTING_3;
         Optional<Phone> phoneOptional = phoneDao.get(id);
         assertTrue(phoneOptional.isPresent());
         Phone phone = phoneOptional.get();
-        phone.setId(UNEXISTING_PHONE_ID);
+        phone.setId(UNEXISTING);
         phone.setModel("Maket okazalsia silnei");
         try {
             phoneDao.save(phone);
@@ -126,7 +127,7 @@ public class PhoneDaoIntTest {
 
     @Test
     public void testSaveWhenSavingDuplicate() {
-        long id = 1000L;
+        long id = EXISTING_3;
         Optional<Phone> phoneOptional = phoneDao.get(id);
         assertTrue(phoneOptional.isPresent());
         Phone phone = phoneOptional.get();
@@ -138,18 +139,16 @@ public class PhoneDaoIntTest {
     }
 
     @Test
-    public void testFindAllOnCorrectInterval() {
-        List<Phone> phoneList = phoneDao.findAll(9, 5);
-        assertTrue(phoneList.size() == 5);
-        for (Phone phone : phoneList)
-            assertTrue(phoneComparator.compare(phone, assertionData.getPhone(phone.getId())) == 0);
+    public void testFindAllStockOnly() {
+        List<Phone> phoneList = phoneDao.findAll(0, 8);
+        assertTrue(phoneList.size() == 8);
+        for (int i = 0; i < 8; i++)
+            assertTrue(phoneComparator.compare(phoneList.get(i), assertionData.getPhone(FIRST_8_IN_STOCK[i])) == 0);
     }
 
     @Test
-    public void testFindAllOnOutOfBoundsInterval() {
-        List<Phone> phoneList = phoneDao.findAll(9, (int) (MAX_TEST_DATA_ID - MIN_TEST_DATA_ID + 5));
-        assertTrue(phoneList.size() == assertionData.getSize() - 9);
-        for (Phone phone : phoneList)
-            assertTrue(phoneComparator.compare(phone, assertionData.getPhone(phone.getId())) == 0);
+    public void testCountStockOnly() {
+        int num = phoneDao.count();
+        assertEquals(num, TOTAL_IN_STOCK);
     }
 }

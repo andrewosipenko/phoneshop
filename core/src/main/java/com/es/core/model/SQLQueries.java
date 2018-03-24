@@ -1,27 +1,15 @@
 package com.es.core.model;
 
 public interface SQLQueries {
-    String GET_PHONE_BY_ID = "" +
-            "SELECT phones.id AS id, brand, model, price, displaySizeInches, weightGr, lengthMm, widthMm, heightMm, " +
-                "announced, deviceType, os, displayResolution, pixelDensity, displayTechnology, backCameraMegapixels, " +
-                "frontCameraMegapixels, ramGb, internalStorageGb, batteryCapacityMah, talkTimeHours, standByTimeHours, " +
-                "bluetooth, positioning, imageUrl, description, colors.id AS colorId, colors.code AS colorCode " +
-            "FROM phones LEFT JOIN phone2color ON phones.id = phoneId LEFT JOIN colors ON colors.id = phone2color.colorId " +
-            "WHERE phones.id = ?";
+    String GET_PHONE_NO_COLORS = "SELECT * FROM phones WHERE id = ?";
 
-    String SELECT_PHONES = "" +
-            "SELECT _phoneId AS id, brand, model, price, displaySizeInches, weightGr, lengthMm, widthMm, heightMm, " +
-                "announced, deviceType, os, displayResolution, pixelDensity, displayTechnology, backCameraMegapixels, " +
-                "frontCameraMegapixels, ramGb, internalStorageGb, batteryCapacityMah, talkTimeHours, standByTimeHours, " +
-                "bluetooth, positioning, imageUrl, description, colors.id AS colorId, colors.code AS colorCode " +
-            "FROM " +
-                "(SELECT id AS _phoneId, brand, model, price, displaySizeInches, weightGr, lengthMm, widthMm, heightMm, " +
-                    "announced, deviceType, os, displayResolution, pixelDensity, displayTechnology, backCameraMegapixels, " +
-                    "frontCameraMegapixels, ramGb, internalStorageGb, batteryCapacityMah, talkTimeHours, standByTimeHours, " +
-                    "bluetooth, positioning, imageUrl, description " +
-                "FROM phones OFFSET ? LIMIT ?) " +
-            "LEFT JOIN phone2color ON _phoneId = phoneId " +
-            "LEFT JOIN colors ON colors.id = phone2color.colorId";
+    String GET_COLOR_IDS_FOR_PHONE = "SELECT colorId FROM phone2color WHERE phoneId = ?";
+
+    String GET_COLORS_BY_IDS = "SELECT * FROM colors WHERE id IN (:ids) ORDER BY id";
+
+    String SELECT_PHONES_NO_COLORS_STOCK_ONLY = "SELECT * FROM (SELECT * FROM phones LEFT JOIN stocks ON id = phoneId WHERE stock > 0 ORDER BY id) OFFSET ? LIMIT ?";
+
+    String COUNT_PHONES_STOCK_ONLY = "SELECT COUNT(*) FROM phones LEFT JOIN stocks ON id = phoneId WHERE stock > 0";
 
     String INSERT_PHONE = "" +
             "INSERT INTO phones (brand, model, price, displaySizeInches, weightGr, lengthMm, widthMm, " +
@@ -45,5 +33,5 @@ public interface SQLQueries {
 
     String DELETE_COLORS_BY_PHONE_ID = "DELETE FROM phone2color WHERE phoneId = ?";
 
-    String INSERT_COLOR_FOR_PHONE_ID = "INSERT INTO phone2color (phoneId, colorId) VALUES (?,?)";
+    String INSERT_COLOR_FOR_PHONE_ID = "INSERT INTO phone2color (phoneId, colorId) VALUES (?, ?)";
 }

@@ -9,6 +9,7 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -81,7 +82,7 @@ public class JSONAssertionData {
 
     private Date extractAnnounced(JSONObject object) throws ParseException {
         String dateString = object.getString("announced");
-        return (dateString == null) ? null : dateFormat.parse(dateString);
+        return (dateString == null) ? null : new Timestamp(dateFormat.parse(dateString).getTime());
     }
 
     public Phone getPhone(long id) {

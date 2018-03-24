@@ -1,10 +1,11 @@
 package com.es.core.model.phone.dao;
 
-import com.es.core.model.PhoneResultSetExtractor;
 import com.es.core.model.SQLQueries;
 import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -24,18 +25,53 @@ public class JdbcPhoneDao implements PhoneDao {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    @Override
     public Optional<Phone> get(final Long key) {
-        List<Phone> phoneList = jdbcTemplate.query(SQLQueries.GET_PHONE_BY_ID, new PhoneResultSetExtractor(), key);
-        if (phoneList.isEmpty())
+        Phone phone;
+        try {
+            phone = jdbcTemplate.queryForObject(SQLQueries.GET_PHONE_NO_COLORS, new BeanPropertyRowMapper<>(Phone.class), key);
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
-        return Optional.of(phoneList.get(0));
+        }
+        setColors(phone);
+        return Optional.of(phone);
     }
 
+    @Override
     public void save(final Phone phone) {
         if (phone.getId() == null)
             insert(phone);
         else
             update(phone);
+    }
+
+    @Override
+    public List<Phone> findAll(int offset, int limit) {
+        String sqlSelectPhones = SQLQueries.SELECT_PHONES_NO_COLORS_STOCK_ONLY;
+        List<Phone> phones = jdbcTemplate.query(sqlSelectPhones, new BeanPropertyRowMapper<>(Phone.class), offset, limit);
+        for (Phone phone : phones)
+            setColors(phone);
+        return phones;
+    }
+
+    @Override
+    public int count() {
+        String sqlCountPhones = SQLQueries.COUNT_PHONES_STOCK_ONLY;
+        return jdbcTemplate.queryForObject(sqlCountPhones, Integer.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setColors(Phone phone) {
+        List<Integer> colorIds = jdbcTemplate.queryForList(SQLQueries.GET_COLOR_IDS_FOR_PHONE, Integer.class, phone.getId());
+        if (!colorIds.isEmpty()) {
+            MapSqlParameterSource source = new MapSqlParameterSource();
+            source.addValue("ids", colorIds);
+            List<Color> colors = namedParameterJdbcTemplate
+                    .query(SQLQueries.GET_COLORS_BY_IDS, source, new BeanPropertyRowMapper<>(Color.class));
+            phone.setColors(new LinkedHashSet<>(colors));
+        } else {
+            phone.setColors(Collections.EMPTY_SET);
+        }
     }
 
     private void insert(Phone phone) {
@@ -50,10 +86,6 @@ public class JdbcPhoneDao implements PhoneDao {
         deleteColorsForPhone(phone.getId());
         insertColorsForPhone(phone.getId(), phone.getColors());
         namedParameterJdbcTemplate.update(SQLQueries.UPDATE_PHONE, getParameters(phone));
-    }
-
-    public List<Phone> findAll(int offset, int limit) {
-        return jdbcTemplate.query(SQLQueries.SELECT_PHONES, new PhoneResultSetExtractor(), offset, limit);
     }
 
     private void deleteColorsForPhone(long phoneId) {
