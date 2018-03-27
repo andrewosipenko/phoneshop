@@ -3,6 +3,7 @@ package com.es.core.model.phone.dao;
 import com.es.core.model.SQLQueries;
 import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;
+import com.es.core.model.phone.dao.util.PhoneDaoSelector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -29,7 +30,7 @@ public class JdbcPhoneDao implements PhoneDao {
     public Optional<Phone> get(final Long key) {
         Phone phone;
         try {
-            phone = jdbcTemplate.queryForObject(SQLQueries.GET_PHONE_NO_COLORS, new BeanPropertyRowMapper<>(Phone.class), key);
+            phone = jdbcTemplate.queryForObject(SQLQueries.GET_PHONE, new BeanPropertyRowMapper<>(Phone.class), key);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -45,19 +46,35 @@ public class JdbcPhoneDao implements PhoneDao {
             update(phone);
     }
 
-    @Override
-    public List<Phone> findAll(int offset, int limit) {
-        String sqlSelectPhones = SQLQueries.SELECT_PHONES_NO_COLORS_STOCK_ONLY;
-        List<Phone> phones = jdbcTemplate.query(sqlSelectPhones, new BeanPropertyRowMapper<>(Phone.class), offset, limit);
+    private List<Phone> findAll(String query, Object... args) {
+        List<Phone> phones = jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Phone.class), args);
         for (Phone phone : phones)
             setColors(phone);
         return phones;
     }
 
+    private int count(String query) {
+        return jdbcTemplate.queryForObject(query, Integer.class);
+    }
+
+    @Override
+    public List<Phone> findAll(int offset, int limit) {
+        return findAll(SQLQueries.SELECT_PHONES, offset, limit);
+    }
+
+    @Override
+    public List<Phone> findAll(PhoneDaoSelector selector) {
+        return findAll(selector.getSelectQuery());
+    }
+
     @Override
     public int count() {
-        String sqlCountPhones = SQLQueries.COUNT_PHONES_STOCK_ONLY;
-        return jdbcTemplate.queryForObject(sqlCountPhones, Integer.class);
+        return count(SQLQueries.COUNT_PHONES);
+    }
+
+    @Override
+    public int count(PhoneDaoSelector selector) {
+        return count(selector.getCountQuery());
     }
 
     @SuppressWarnings("unchecked")

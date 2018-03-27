@@ -1,12 +1,29 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="template" tagdir="/WEB-INF/tags" %>
 <html>
 <head>
     <title>Product List</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
+<script>
+    var sortBy = function (what) {
+        var compare = '${param.sortBy}';
+        if (what === compare)
+            what += '_desc';
+        $('#sortByInput').val(what);
+        $('#sortByForm').submit();
+    }
+</script>
+<form method="get" id="sortByForm" hidden>
+    <c:if test="${not empty param.search}">
+        <input type="hidden" name="search" value="${param.search}"/>
+    </c:if>
+    <input type="hidden" name="sortBy" id="sortByInput"/>
+</form>
 <div class="bg-light w-100">
     <div class="container p-3">
         <div class="page-header text-primary">
@@ -19,8 +36,11 @@
         <h3>Phones</h3>
     </div>
     <div class="d-inline-block float-right">
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search..." aria-label="Search">
+        <form class="form-inline my-2 my-lg-0" method="get" id="searchForm">
+            <c:if test="${not empty param.sortBy}">
+                <input type="hidden" name="sortBy" value="${param.sortBy}"/>
+            </c:if>
+            <input class="form-control mr-sm-2" type="search" placeholder="Search..." aria-label="Search" name="search" value="${param.search}"/>
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
     </div>
@@ -30,11 +50,11 @@
         <thead style="background-color: #828082;">
             <tr class="d-table-row text-light text-center">
                 <th scope="col">Image</th>
-                <th scope="col">Brand</th>
-                <th scope="col">Model</th>
+                <th scope="col"><a style="display: block; cursor: pointer;" onclick="sortBy('brand')">Brand <template:tableColumnArrow test="brand"/></a></th>
+                <th scope="col"><a style="display: block; cursor: pointer;" onclick="sortBy('model')">Model <template:tableColumnArrow test="model"/></a></th>
                 <th scope="col">Colors</th>
-                <th scope="col">Display size</th>
-                <th scope="col">Price</th>
+                <th scope="col"><a style="display: block; cursor: pointer;" onclick="sortBy('display_size')">Display size <template:tableColumnArrow test="display_size"/></a></th>
+                <th scope="col"><a style="display: block; cursor: pointer;" onclick="sortBy('price')">Price <template:tableColumnArrow test="price"/></a></th>
                 <th scope="col">Quantity</th>
                 <th scope="col">Action</th>
             </tr>
@@ -55,50 +75,6 @@
         </tbody>
     </table>
 </div>
-<div class="container">
-    <div class="float-left">
-        <label>
-            <button class="btn" onclick="$(location).attr('href', '?page=' + $('#gotoPageInput').val())">
-                Goto page
-            </button>
-            <input id="gotoPageInput" class="text-field" type="number" min="1" max="${pagesTotal}" value="${currentPage}"/>
-        </label>
-    </div>
-    <nav aria-label="..." class="float-right">
-        <ul class="pagination">
-            <li class="page-item ${currentPage eq 1 ? "disabled" : ""}">
-                <a class="page-link" href="?page=${currentPage-1}">Previous</a>
-            </li>
-            <c:choose>
-                <c:when test="${pagesTotal le 10}">
-                    <c:forEach var="page" begin="1" end="${pagesTotal}">
-                        <li class="page-item ${page eq currentPage ? "active" : ""}"><a class="page-link" href="?page=${page}">${page}</a></li>
-                    </c:forEach>
-                </c:when>
-                <c:when test="${pagesTotal gt 10 && (currentPage le 3 || currentPage gt pagesTotal-3)}">
-                    <c:forEach var="page" begin="1" end="3">
-                        <li class="page-item ${page eq currentPage ? "active" : ""}"><a class="page-link" href="?page=${page}">${page}</a></li>
-                    </c:forEach>
-                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
-                    <c:forEach var="page" begin="${pagesTotal-2}" end="${pagesTotal}">
-                        <li class="page-item ${page eq currentPage ? "active" : ""}"><a class="page-link" href="?page=${page}">${page}</a></li>
-                    </c:forEach>
-                </c:when>
-                <c:otherwise>
-                    <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
-                    <li class="page-item"><a class="page-link" href="?page=2">2</a></li>
-                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
-                    <li class="page-item active"><a class="page-link" href="?page=${currentPage}">${currentPage}</a></li>
-                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
-                    <li class="page-item"><a class="page-link" href="?page=${pagesTotal-1}">${pagesTotal-1}</a></li>
-                    <li class="page-item"><a class="page-link" href="?page=${pagesTotal}">${pagesTotal}</a></li>
-                </c:otherwise>
-            </c:choose>
-            <li class="page-item ${currentPage eq pagesTotal ? "disabled" : ""}">
-                <a class="page-link" href="?page=${currentPage+1}">Next</a>
-            </li>
-        </ul>
-    </nav>
-</div>
+<template:pagination currentPage="${currentPage}" pagesTotal="${pagesTotal}"/>
 </body>
 </html>

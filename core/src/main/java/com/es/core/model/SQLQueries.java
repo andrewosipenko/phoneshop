@@ -1,15 +1,15 @@
 package com.es.core.model;
 
 public interface SQLQueries {
-    String GET_PHONE_NO_COLORS = "SELECT * FROM phones WHERE id = ?";
+    String GET_PHONE = "SELECT * FROM phones WHERE id = ?";
 
     String GET_COLOR_IDS_FOR_PHONE = "SELECT colorId FROM phone2color WHERE phoneId = ?";
 
-    String GET_COLORS_BY_IDS = "SELECT * FROM colors WHERE id IN (:ids) ORDER BY id";
+    String GET_COLORS_BY_IDS = "SELECT * FROM colors WHERE id IN (:ids)";
 
-    String SELECT_PHONES_NO_COLORS_STOCK_ONLY = "SELECT * FROM (SELECT * FROM phones LEFT JOIN stocks ON id = phoneId WHERE stock > 0 ORDER BY id) OFFSET ? LIMIT ?";
+    String SELECT_PHONES = "SELECT * FROM phones LEFT JOIN stocks ON id = phoneId WHERE stock > 0 OFFSET ? LIMIT ?";
 
-    String COUNT_PHONES_STOCK_ONLY = "SELECT COUNT(*) FROM phones LEFT JOIN stocks ON id = phoneId WHERE stock > 0";
+    String COUNT_PHONES = "SELECT COUNT(*) FROM phones LEFT JOIN stocks ON id = phoneId WHERE stock > 0";
 
     String INSERT_PHONE = "" +
             "INSERT INTO phones (brand, model, price, displaySizeInches, weightGr, lengthMm, widthMm, " +

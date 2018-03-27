@@ -6,4 +6,12 @@
     <context:property-placeholder location="WEB-INF/conf/application.properties"/>
     <import resource="classpath:context/applicationContext-core.xml"/>
     <import resource="classpath:context/applicationContext-demoda.xml"/>
+
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <list merge="true">
+                <bean class="com.es.phoneshop.web.controller.util.StringToSortByConverter"/>
+            </list>
+        </property>
+    </bean>
 </beans>
