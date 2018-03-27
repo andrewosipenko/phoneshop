@@ -3,7 +3,7 @@ package com.es.phoneshop.web.service;
 import com.es.core.model.phone.OrderEnum;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.PhoneDao;
-import com.es.phoneshop.web.pagination.CurrentPhonePage;
+import com.es.phoneshop.web.bean.pagination.CurrentPhonePage;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

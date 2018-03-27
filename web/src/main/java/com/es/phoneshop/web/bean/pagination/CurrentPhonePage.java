@@ -1,4 +1,4 @@
-package com.es.phoneshop.web.pagination;
+package com.es.phoneshop.web.bean.pagination;
 
 import com.es.core.model.phone.Phone;
 

@@ -2,16 +2,18 @@ package com.es.phoneshop.web.controller.pages;
 
 import javax.annotation.Resource;
 
+import com.es.core.cart.Cart;
+import com.es.core.cart.CartService;
 import com.es.core.model.phone.OrderEnum;
 import com.es.phoneshop.web.controller.constants.ProductListConstants;
 import com.es.phoneshop.web.service.ProductListPageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import static com.es.phoneshop.web.controller.constants.ProductListConstants.CURRENT_PAGE_NUMBER;
 import static com.es.phoneshop.web.controller.constants.ProductListConstants.PRODUCT_PAGE;

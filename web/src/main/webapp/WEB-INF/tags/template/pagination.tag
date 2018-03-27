@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ tag body-content="scriptless" trimDirectiveWhitespaces="true" pageEncoding="UTF-8" %>
-<%@ attribute name="productPage" type="com.es.phoneshop.web.pagination.CurrentPhonePage" %>
+<%@ attribute name="productPage" type="com.es.phoneshop.web.bean.pagination.CurrentPhonePage" %>
 <%@ attribute name="order" type="com.es.core.model.phone.OrderEnum"%>
 <%@ attribute name="query" type="java.lang.String" required="false" %>
 <%@ attribute name="targetPage" type="java.lang.String" required="true" %>

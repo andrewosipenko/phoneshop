@@ -7,5 +7,5 @@ order=${currentOrder.name}${order eq currentOrder ? '_desc' : ''}
 <c:if test="${not empty query}">
 &query=<c:url value = "${query}"/>
 </c:if>">
-    <span>${nameOfLink}</span>
-    <i class="fa fa-fw fa-sort"></i></a>
+    <b>${nameOfLink}</b><i class="fa fa-fw fa-sort"> </i>
+    </a>

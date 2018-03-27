@@ -50,17 +50,6 @@ public class JdbcPhoneDaoIntTest {
 
     @Test
     @Transactional
-    public void testPhoneInsertSizeIncrement() {
-        int sizeBeforeInsertion = phoneDao.findAll(0, 0).size();
-        Phone phone = new Phone();
-        phone.setBrand("Brandfff");
-        phone.setModel("Modelfff");
-        phoneDao.save(phone);
-        assertEquals(phoneDao.findAll(0, 0).size() - 1, sizeBeforeInsertion);
-    }
-
-    @Test
-    @Transactional
     public void testPhoneInsert() {
         Phone phone = new Phone();
         phone.setBrand("Brandfff");

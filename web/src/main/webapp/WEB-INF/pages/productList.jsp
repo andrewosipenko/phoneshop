@@ -2,8 +2,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/template" %>
 <template:page >
-  <c:if test="${productPage.totalCount ne 0}">
-    <div class="lead">
+  <c:choose>
+  <c:when test="${productPage.totalCount ne 0}">
+    <div class="container">
       <table class="table table-hover">
         <thead>
         <tr>
@@ -11,7 +12,7 @@
           <th> <template:tableOrderLinkHead nameOfLink="Brand" currentOrder="BRAND"/></th>
           <th><template:tableOrderLinkHead nameOfLink="Model" currentOrder="MODEL"/></th>
           <th>Color</th>
-          <th><template:tableOrderLinkHead nameOfLink="Display size" currentOrder="DISPLAY_SIZE"/></th>
+          <th><template:tableOrderLinkHead nameOfLink="Display" currentOrder="DISPLAY_SIZE"/></th>
           <th><template:tableOrderLinkHead nameOfLink="Price" currentOrder="PRICE"/></th>
           <th>Quantity</th>
           <td>Action</td>
@@ -31,9 +32,13 @@
             </td>
             <td><c:out value="${phone.displaySizeInches}" /></td>
             <td><c:out value="${phone.price}" /></td>
-            <td>TODO</td>
             <td>
-              <button type="button" class="btn btn-secondary add-to-cart">Add to cart</button>
+              <input type="text" name="amount" value="1" id="${phone.id}">
+              <div id="error-message" style="color: red"></div>
+            </td>
+            <td>
+                <button type="button" onclick="addToCart(${phone.id}, $('#${phone.id}').val())"
+                        class="btn btn-secondary add-to-cart">Add To Cart</button>
             </td>
           </tr>
         </c:forEach>
@@ -41,6 +46,43 @@
     </div>
     <template:pagination targetPage="productList" productPage="${productPage}" order="${order}" query="${query}">
     </template:pagination >
-  </c:if>
+  </c:when>
+  <c:otherwise>
+    <div class="container">
+      <div class="jumbotron">
+        <h3>No phones found</h3>
+        <a href="<c:url value="/productList"/>">
+          <p>Go to main page</p>
+        </a>
+      </div>
+    </div>
+  </c:otherwise>
+  </c:choose>
+  <script>
+      function addToCart(phoneId, quantity) {
+          $.ajax({
+                  url: "<c:url value="/ajaxCart"/>",
+                  type: "POST",
+                  data: JSON.stringify({
+                      phoneId: phoneId,
+                      quantity: quantity,
+                      errorMessage: ""
+                  }),
+                  contentType: "application/json;charset=UTF-8",
+                  dataType: "json",
+                  success: updateCartInfo,
+                  error: setErrorMessage
+              }
+          );
+      }
+      function updateCartInfo(cartInfo) {
+          $('#itemsCount').text(cartInfo.itemsCount);
+          $('#cartCost').text(cartInfo.cost);
+          $('#error-message').text("");
+      }
+      function setErrorMessage(response) {
+          var cartInfo = JSON.parse(response.responseText);
+          $('#error-message').text(cartInfo.errorMessage);
+      }
+  </script>
 </template:page>
-
