@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,14 +35,14 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void addPhone(Long phoneId, Long quantity) throws NoSuchElementException {
-        Phone phone = getPhoneFromOptional(phoneService.get(phoneId));
+        Phone phone = phoneService.get(phoneId).get();
         Cart cart = getCart();
         cart.getItems().merge(phone, quantity, (a, b) -> a + b);
     }
 
     @Override
     public void remove(Long phoneId) throws NoSuchElementException {
-        Phone phone = getPhoneFromOptional(phoneService.get(phoneId));
+        Phone phone = phoneService.get(phoneId).get();
         Cart cart = getCart();
         cart.getItems().remove(phone);
     }
@@ -75,11 +75,8 @@ public class HttpSessionCartService implements CartService {
         getCart().setItems(newItems);
     }
 
-    private Phone getPhoneFromOptional(Optional<Phone> phone) throws NoSuchElementException {
-        if (phone.isPresent()) {
-            return phone.get();
-        } else {
-            throw new NoSuchElementException();
-        }
+    @Override
+    public void emptyCart() {
+        getCart().setItems(new HashMap<>());
     }
 }

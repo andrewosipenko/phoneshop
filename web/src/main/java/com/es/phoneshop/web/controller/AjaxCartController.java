@@ -40,7 +40,7 @@ public class AjaxCartController {
         } else {
             cartService.addPhone(cartPhone.getPhoneId(), cartPhone.getQuantity());
             cartStatus.setCountItems(cartService.getCountItems());
-            cartStatus.setPrice(costService.getCost());
+            cartStatus.setPrice(costService.getCost(cartService.getCart()));
             status = HttpStatus.OK;
         }
 

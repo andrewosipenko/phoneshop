@@ -12,9 +12,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -45,14 +43,14 @@ public class OrderPageController {
 
     private static final String MESSAGE_NO_PRODUCTS = "noProducts";
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String getOrder(Model model) {
         model.addAttribute(ATTRIBUTE_ORDER, createOrder());
         model.addAttribute(ATTRIBUTE_PERSON_INFO, new PersonInfo());
         return "order";
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public String placeOrder(@Valid @ModelAttribute(ATTRIBUTE_PERSON_INFO) PersonInfo personInfo,
                              BindingResult bindingResult,
                              Model model,
@@ -64,8 +62,9 @@ public class OrderPageController {
             return "order";
         }
 
+        long orderId;
         try {
-            orderService.placeNewOrder(cartService.getCart(), createPerson(personInfo));
+            orderId = orderService.placeNewOrderAndReturnId(cartService.getCart(), createPerson(personInfo));
         } catch (OutOfStockException e) {
             cartService.removeProductsWhichNoInStock();
             model.addAttribute(ATTRIBUTE_ORDER, createOrder());
@@ -73,12 +72,12 @@ public class OrderPageController {
             return "order";
         }
 
-        return "redirect:/orderOverview";
+        return "redirect:/orderOverview/" + orderId;
     }
 
     private Order createOrder() {
         Order order = new Order();
-        BigDecimal subtotal = costService.getCost();
+        BigDecimal subtotal = costService.getCost(cartService.getCart());
         order.setItems(cartService.getAllItems());
         order.setSubtotal(subtotal);
         order.setDelivery(delivery);

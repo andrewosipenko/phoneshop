@@ -25,12 +25,17 @@ public class Advice {
     public void addCartStatusInModel(Model model) {
         CartStatus cartStatus = new CartStatus();
         cartStatus.setCountItems(cartService.getCountItems());
-        cartStatus.setPrice(costService.getCost());
+        cartStatus.setPrice(costService.getCost(cartService.getCart()));
         model.addAttribute(ATTRIBUTE_CART_STATUS, cartStatus);
     }
 
     @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
     public String handleTypeMismatch() {
+        return "errors/page404";
+    }
+
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public String handleIllegalArgument() {
         return "errors/page404";
     }
 }

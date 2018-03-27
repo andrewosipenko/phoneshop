@@ -1,6 +1,7 @@
 package com.es.core.model.order;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 
 public class Order
@@ -22,6 +23,7 @@ public class Order
     private String deliveryAddress;
     private String contactPhoneNo;
     private String additionInfo;
+    private Timestamp date;
 
     private OrderStatus status;
 
@@ -111,5 +113,28 @@ public class Order
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public Timestamp getDate() {
+        return date;
+    }
+
+    public void setDate(Timestamp date) {
+        this.date = date;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Order order = (Order) o;
+
+        return id.equals(order.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }

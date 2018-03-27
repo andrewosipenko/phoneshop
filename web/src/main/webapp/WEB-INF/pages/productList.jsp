@@ -23,7 +23,10 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12 login">
-                    <a href="#">Login</a>
+                    <c:if test="${pageContext.request.userPrincipal.name == null}"><a href="${pageContext.request.contextPath}/login">Login</a></c:if>
+                    <c:if test="${pageContext.request.userPrincipal.name != null}">
+                        ${pageContext.request.userPrincipal.name} | <a href="${pageContext.request.contextPath}/admin/orders">ADMIN</a> | <a href="${pageContext.request.contextPath}/logout">Logout</a>
+                    </c:if>
                 </div>
             </div>
             <div class="row">

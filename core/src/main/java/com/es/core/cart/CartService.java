@@ -12,4 +12,5 @@ public interface CartService {
     Map<Phone, Long> getAllItems();
     void update(Map<Long, Long> phoneWithQuantity);
     void removeProductsWhichNoInStock();
+    void emptyCart();
 }

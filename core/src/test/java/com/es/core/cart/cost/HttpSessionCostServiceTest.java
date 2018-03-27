@@ -1,5 +1,6 @@
 package com.es.core.cart.cost;
 
+import com.es.core.cart.Cart;
 import com.es.core.cart.HttpSessionCartService;
 import com.es.core.model.phone.Phone;
 import org.junit.Before;
@@ -11,7 +12,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,7 +23,7 @@ import static util.PhoneUtils.createPhone;
 @RunWith(MockitoJUnitRunner.class)
 public class HttpSessionCostServiceTest {
     @InjectMocks
-    private HttpSessionCostService httpSessionCostService;
+    private CostServiceImpl httpSessionCostService;
 
     @Mock
     private HttpSessionCartService httpSessionCartServiceMock;
@@ -41,15 +41,17 @@ public class HttpSessionCostServiceTest {
 
     @Test
     public void checkCostWhenNoItemsInCart() {
-        when(httpSessionCartServiceMock.getAllItems()).thenReturn(new HashMap<>());
-        assertEquals(BigDecimal.ZERO, httpSessionCostService.getCost());
+        when(httpSessionCartServiceMock.getCart()).thenReturn(new Cart());
+        assertEquals(BigDecimal.ZERO, httpSessionCostService.getCost(httpSessionCartServiceMock.getCart()));
     }
 
     @Test
     public void checkCostWhenItemsInCart() {
         final BigDecimal COST = BigDecimal.valueOf(1500D);
         Map<Phone, Long> items = phoneList.stream().collect(Collectors.toMap(phone -> phone, phone -> 1L));
-        when(httpSessionCartServiceMock.getAllItems()).thenReturn(items);
-        assertEquals(COST, httpSessionCostService.getCost());
+        Cart cart = new Cart();
+        cart.setItems(items);
+        when(httpSessionCartServiceMock.getCart()).thenReturn(cart);
+        assertEquals(COST, httpSessionCostService.getCost(httpSessionCartServiceMock.getCart()));
     }
 }

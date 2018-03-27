@@ -122,4 +122,14 @@ table.add-to-cart td {
 
 #person-info tr>td {
     padding-bottom: 10px;
+    text-align: left;
+}
+
+.order-href {
+    color: blue;
+    text-decoration-line: underline;
+}
+
+.pull-right {
+    text-align: right;
 }

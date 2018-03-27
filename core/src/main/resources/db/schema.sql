@@ -4,6 +4,8 @@ drop table if exists stocks;
 drop table if exists phones;
 drop table if exists orders;
 drop table if exists order2phone;
+drop table if exists users;
+drop table if exists user_roles;
 
 create table colors (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -62,7 +64,7 @@ create table orders (
   lastName VARCHAR(50) NOT NULL,
   deliveryAddress VARCHAR(100) NOT NULL,
   contactPhoneNo VARCHAR(50) NOT NULL,
-  additionInfo VARCHAR(200) NOT NULL,
+  additionInfo VARCHAR(4000) NOT NULL,
   date DATETIME NOT NULL,
   subtotal FLOAT NOT NULL,
   deliveryPrice FLOAT NOT NULL,
@@ -76,4 +78,19 @@ create table order2phone (
   quantity INT NOT NULL,
   FOREIGN KEY (orderId) REFERENCES orders (id),
   FOREIGN KEY (phoneId) REFERENCES phones (id)
+);
+
+create table users (
+  username VARCHAR(30) NOT NULL,
+  password VARCHAR(30) NOT NULL,
+  enabled INT NOT NULL DEFAULT 1,
+  PRIMARY KEY (username)
+);
+
+create table user_roles (
+  userRoleId BIGINT NOT NULL AUTO_INCREMENT,
+  username VARCHAR(30) NOT NULL,
+  role VARCHAR(30) NOT NULL,
+  PRIMARY KEY (userRoleId),
+  FOREIGN KEY (username) REFERENCES users(username)
 );

@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <!DOCTYPE html>
 <html>
@@ -33,6 +34,10 @@
                     </form>
                 </div>
             </div>
+            <c:if test="${empty order.items}">
+                <span class="error bold"><spring:message code="cart.empty"/></span>
+            </c:if>
+            <c:if test="${not empty order.items}">
             <div class="row">
                 <table id="order-table">
                     <thead>
@@ -85,17 +90,19 @@
                     </tr>
                 </table>
             </div>
+            </c:if>
 
             <div class="row">
                 <div class="col">
                     <c:if test="${not empty noProducts}">
-                        <div class="error">${noProducts}</div>
+                        <div class="error bold">${noProducts}</div>
                     </c:if>
                 </div>
             </div>
 
+            <c:if test="${not empty order.items}">
             <div class="row">
-                <div class="col-2">
+                <div class="col-3">
                     <form:form id="order" method="POST" action="${pageContext.request.contextPath}/order" modelAttribute="personInfo">
                         <table id="person-info">
                             <tr>
@@ -138,6 +145,7 @@
                     <input form="order" type="submit" value="Order">
                 </div>
             </div>
+            </c:if>
         </div>
     </body>
 </html>
