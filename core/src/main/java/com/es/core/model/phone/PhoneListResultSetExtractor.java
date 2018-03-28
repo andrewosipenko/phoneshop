@@ -1,13 +1,38 @@
 package com.es.core.model.phone;
 
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Set;
+import java.util.*;
 
-public class PhoneRowMapper implements RowMapper <Phone> {
-    public Phone mapRow(ResultSet rs, int rowNum) throws SQLException {
+public class PhoneListResultSetExtractor implements ResultSetExtractor<List<Phone>> {
+
+    public PhoneListResultSetExtractor() {
+    }
+
+    @Override
+    public List<Phone> extractData(ResultSet rs) throws SQLException {
+
+        Map<Long, Phone> phoneMap = new HashMap<>();
+        List<Phone> phoneList = new ArrayList<>();
+
+        while (rs.next()) {
+            Long phoneId = rs.getLong("phoneId");
+            Phone changePhone = phoneMap.get(phoneId);
+            if (changePhone == null) {
+                changePhone = getProperties(rs);
+                phoneMap.put(phoneId, changePhone);
+                phoneList.add(changePhone);
+            }
+            addColor(changePhone, rs);
+        }
+
+        return phoneList;
+    }
+
+    private Phone getProperties(ResultSet rs) throws SQLException {
         Phone phone = new Phone();
+
         phone.setId(rs.getLong("phoneId"));
         phone.setBrand(rs.getString("brand"));
         phone.setModel(rs.getString("model"));
@@ -31,16 +56,19 @@ public class PhoneRowMapper implements RowMapper <Phone> {
         phone.setTalkTimeHours(rs.getBigDecimal("talkTimeHours"));
         phone.setStandByTimeHours(rs.getBigDecimal("standByTimeHours"));
         phone.setBluetooth(rs.getString("bluetooth"));
-        phone.setPositioning(rs.getString("positioning"));
         phone.setImageUrl(rs.getString("imageUrl"));
         phone.setDescription(rs.getString("description"));
-
-        Set<Color> colors = phone.getColors();
-        Color color = new Color(rs.getLong("colorId"), rs.getString("code"));
-        colors.add(color);
-        phone.setColors(colors);
-
+        phone.setColors(new HashSet<>());
         return phone;
     }
-}
 
+    private void addColor(Phone phone, ResultSet rs) throws SQLException {
+        Long colorId = rs.getLong("colorId");
+        if (colorId > 0) {
+            Color newColor = new Color();
+            newColor.setCode(rs.getString("code"));
+            newColor.setId(colorId);
+            phone.getColors().add(newColor);
+        }
+    }
+}

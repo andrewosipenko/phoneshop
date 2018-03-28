@@ -1,12 +1,10 @@
 package com.es.core.model.phone;
 
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.sql.PreparedStatement;
@@ -49,7 +47,15 @@ public class JdbcPhoneDao implements PhoneDao{
     }
 
     public List<Phone> findAll(int offset, int limit) {
-        return jdbcTemplate.query( getFindAllQueryString(offset, limit), new BeanPropertyRowMapper<>(Phone.class));
+        return findAllInOrder(offset, limit, OrderEnum.BRAND);
+    }
+
+    public Long getPhoneCount() {
+        return jdbcTemplate.queryForObject(PhoneQueries.COUNT_PHONES_QUERY, Long.class);
+    }
+
+    public List<Phone> findAllInOrder(int offset, int limit, OrderEnum order) {
+        return jdbcTemplate.query( getFindAllQueryString(offset, limit, order), new PhoneListResultSetExtractor());
     }
 
     void insert(Phone phone) {
@@ -127,18 +133,18 @@ public class JdbcPhoneDao implements PhoneDao{
         };
     }
 
-    String getFindAllQueryString(int offset, int limit) {
-        return String.format(PhoneQueries.FIND_ALL_QUERY, insertOffsetAndLimit(offset, limit));
+    String getFindAllQueryString(int offset, int limit, OrderEnum order) {
+        return PhoneQueries.FIND_ALL_QUERY + queryParameters(offset, limit, order);
     }
 
-    private String insertOffsetAndLimit(int offset, int limit) {
-        StringBuilder limitBuilder = new StringBuilder();
-        if (limit > 0) {
-            limitBuilder.append("LIMIT")
-                    .append(offset >  0 ? String.format(" %d, ", offset) : " ")
-                    .append(limit);
-        }
-        return limitBuilder.toString();
+    private String queryParameters(int offset, int limit, OrderEnum order) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(" ORDER BY " + order.getSql());
+        if (limit > 0)
+            builder.append(" LIMIT " + limit);
+        if(offset > 0)
+            builder.append(" OFFSET " + offset);
+        return builder.toString();
     }
 
     Set<Color> getPhoneColors(List<Phone> phoneOfDifferentColors) {

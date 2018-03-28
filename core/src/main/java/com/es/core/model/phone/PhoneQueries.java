@@ -19,5 +19,7 @@ public interface PhoneQueries {
 
     String INSERT_COLORS_QUERY = "insert into phone2color (phoneId,colorId) values (?,?)";
 
-    String FIND_ALL_QUERY =  "SELECT * FROM phones %s";
+    String FIND_ALL_QUERY =  "SELECT * FROM phones" +
+            " LEFT OUTER JOIN  phone2color on phones.id = phone2color.phoneId" +
+            " LEFT OUTER JOIN colors on colors.id = phone2color.colorId WHERE price > 0" ;
 }
