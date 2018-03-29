@@ -7,9 +7,9 @@ public interface SQLQueries {
 
     String GET_COLORS_BY_IDS = "SELECT * FROM colors WHERE id IN (:ids)";
 
-    String SELECT_PHONES = "SELECT * FROM phones LEFT JOIN stocks ON id = phoneId WHERE stock > 0 OFFSET ? LIMIT ?";
+    String SELECT_PHONES = "SELECT * FROM phones LEFT JOIN stocks ON id = phoneId WHERE stock > 0 AND price IS NOT NULL OFFSET ? LIMIT ?";
 
-    String COUNT_PHONES = "SELECT COUNT(*) FROM phones LEFT JOIN stocks ON id = phoneId WHERE stock > 0";
+    String COUNT_PHONES = "SELECT COUNT(*) FROM phones LEFT JOIN stocks ON id = phoneId WHERE stock > 0 AND price IS NOT NULL";
 
     String INSERT_PHONE = "" +
             "INSERT INTO phones (brand, model, price, displaySizeInches, weightGr, lengthMm, widthMm, " +

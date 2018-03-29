@@ -27,12 +27,12 @@ public class PhoneDaoSelector {
     }
 
     public String getSelectQuery() {
-        return "SELECT * FROM phones LEFT JOIN stocks ON id = phoneId WHERE stock > 0"
+        return "SELECT * FROM phones LEFT JOIN stocks ON id = phoneId WHERE stock > 0 AND price IS NOT NULL"
                 + searchSuffix() + sortSuffix() + offsetSuffix() + limitSuffix();
     }
 
     public String getCountQuery() {
-        return "SELECT COUNT(*) FROM phones LEFT JOIN stocks ON id = phoneId WHERE stock > 0" + searchSuffix();
+        return "SELECT COUNT(*) FROM phones LEFT JOIN stocks ON id = phoneId WHERE stock > 0 AND price IS NOT NULL" + searchSuffix();
     }
 
     private String searchSuffix() {

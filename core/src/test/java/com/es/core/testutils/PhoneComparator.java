@@ -3,6 +3,7 @@ package com.es.core.testutils;
 import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;
 
+import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -17,18 +18,25 @@ public class PhoneComparator implements Comparator<Phone> {
         if (o1 == null || o2 == null || o1.getClass() != o2.getClass())
             return 1;
         Object[][] compared = {
-                {o1.getId(), o2.getId()}, {o1.getBrand(), o2.getBrand()}, {o1.getModel(), o2.getModel()}, {o1.getPrice(), o2.getPrice()},
-                {o1.getDisplaySizeInches(), o2.getDisplaySizeInches()}, {o1.getWeightGr(), o2.getWeightGr()}, {o1.getLengthMm(), o2.getLengthMm()},
-                {o1.getWidthMm(), o2.getWidthMm()}, {o1.getHeightMm(), o2.getHeightMm()}, {o1.getAnnounced(), o2.getAnnounced()},
-                {o1.getDeviceType(), o2.getDeviceType()}, {o1.getOs(), o2.getOs()}, {o1.getDisplayResolution(), o2.getDisplayResolution()},
-                {o1.getPixelDensity(), o2.getPixelDensity()}, {o1.getDisplayTechnology(), o2.getDisplayTechnology()},
-                {o1.getBackCameraMegapixels(), o2.getBackCameraMegapixels()}, {o1.getFrontCameraMegapixels(), o2.getFrontCameraMegapixels()},
-                {o1.getRamGb(), o2.getRamGb()}, {o1.getInternalStorageGb(), o2.getInternalStorageGb()}, {o1.getBatteryCapacityMah(), o2.getBatteryCapacityMah()},
-                {o1.getTalkTimeHours(), o2.getTalkTimeHours()}, {o1.getStandByTimeHours(), o2.getStandByTimeHours()}, {o1.getBluetooth(), o2.getBluetooth()},
-                {o1.getPositioning(), o2.getPositioning()}, {o1.getImageUrl(), o2.getImageUrl()}, {o1.getDescription(), o2.getDescription()}
+                {o1.getId(), o2.getId()}, {o1.getBrand(), o2.getBrand()}, {o1.getModel(), o2.getModel()}, {o1.getWeightGr(), o2.getWeightGr()},
+                {o1.getAnnounced(), o2.getAnnounced()}, {o1.getDeviceType(), o2.getDeviceType()}, {o1.getOs(), o2.getOs()},
+                {o1.getDisplayResolution(), o2.getDisplayResolution()}, {o1.getPixelDensity(), o2.getPixelDensity()},
+                {o1.getDisplayTechnology(), o2.getDisplayTechnology()}, {o1.getBatteryCapacityMah(), o2.getBatteryCapacityMah()},
+                {o1.getBluetooth(), o2.getBluetooth()}, {o1.getPositioning(), o2.getPositioning()}, {o1.getImageUrl(), o2.getImageUrl()},
+                {o1.getDescription(), o2.getDescription()}
         };
         for (Object[] comparedPair : compared)
             if (!Objects.equals(comparedPair[0], comparedPair[1]))
+                return 1;
+        BigDecimal[][] bigDecimalsCompared = {
+                {o1.getBackCameraMegapixels(), o2.getBackCameraMegapixels()}, {o1.getDisplaySizeInches(), o2.getDisplaySizeInches()},
+                {o1.getFrontCameraMegapixels(), o2.getFrontCameraMegapixels()}, {o1.getHeightMm(), o2.getHeightMm()},
+                {o1.getInternalStorageGb(), o2.getInternalStorageGb()}, {o1.getLengthMm(), o2.getLengthMm()}, {o1.getWidthMm(), o2.getWidthMm()},
+                {o1.getPrice(), o2.getPrice()}, {o1.getRamGb(), o2.getRamGb()}, {o1.getStandByTimeHours(), o2.getStandByTimeHours()},
+                {o1.getTalkTimeHours(), o2.getTalkTimeHours()}
+        };
+        for (BigDecimal[] comparedPair : bigDecimalsCompared)
+            if (Objects.compare(comparedPair[0], comparedPair[1], Comparator.naturalOrder()) != 0)
                 return 1;
         return compareColors(o1.getColors(), o2.getColors());
     }
