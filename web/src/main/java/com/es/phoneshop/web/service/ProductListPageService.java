@@ -14,8 +14,8 @@ public class ProductListPageService {
     @Resource
     private PhoneDao phoneDao;
 
-    public CurrentPhonePage getCurrentPage(int offset, int limit, OrderEnum order, int currentPageNumber) {
-        List<Phone> phoneList =  phoneDao.findAllInOrder(offset, limit, order);
+    public CurrentPhonePage getCurrentPage(int offset, int limit, OrderEnum order, String searchQueryString, int currentPageNumber) {
+        List<Phone> phoneList =  phoneDao.findAllInOrder(offset, limit, order, searchQueryString);
         return new CurrentPhonePage(currentPageNumber, phoneList);
     }
 }

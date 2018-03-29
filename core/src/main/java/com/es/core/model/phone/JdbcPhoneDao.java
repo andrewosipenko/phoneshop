@@ -14,7 +14,7 @@ import java.util.*;
 @Component
 public class JdbcPhoneDao implements PhoneDao{
     @Resource
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     private SimpleJdbcInsert jdbcInsert;
 
@@ -47,23 +47,28 @@ public class JdbcPhoneDao implements PhoneDao{
     }
 
     public List<Phone> findAll(int offset, int limit) {
-        return findAllInOrder(offset, limit, OrderEnum.BRAND);
+        return findAllInOrder(offset, limit, OrderEnum.BRAND, null);
     }
 
     public Long getPhoneCount() {
         return jdbcTemplate.queryForObject(PhoneQueries.COUNT_PHONES_QUERY, Long.class);
     }
 
-    public List<Phone> findAllInOrder(int offset, int limit, OrderEnum order) {
-        return jdbcTemplate.query( getFindAllQueryString(offset, limit, order), new PhoneListResultSetExtractor());
+    public List<Phone> findAllInOrder(int offset, int limit, OrderEnum order, String searchQueryString) {
+        if(searchQueryString == null || searchQueryString.length() == 0) {
+            return jdbcTemplate.query( getFindAllInOrderQueryString(offset, limit, order), new PhoneListResultSetExtractor());
+        }
+        return jdbcTemplate.query(getSearchForAllInOrderQueryString(offset, limit, order),
+                new Object[] { searchQueryString.toLowerCase(), searchQueryString.toLowerCase() },
+                new PhoneListResultSetExtractor());
     }
 
-    void insert(Phone phone) {
+    private void insert(Phone phone) {
         Number newId = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(getParameters(phone)));
         phone.setId(newId.longValue());
     }
 
-    void update(final Phone phone) {
+    private void update(final Phone phone) {
         jdbcTemplate.update(PhoneQueries.UPDATE_PHONE_QUERY, getUpdateParameters(phone));
         jdbcTemplate.update(PhoneQueries.DELETE_COLORS_QUERY, phone.getId());
         insertColors(phone);
@@ -133,7 +138,7 @@ public class JdbcPhoneDao implements PhoneDao{
         };
     }
 
-    String getFindAllQueryString(int offset, int limit, OrderEnum order) {
+    private String getFindAllInOrderQueryString(int offset, int limit, OrderEnum order) {
         return PhoneQueries.FIND_ALL_QUERY + queryParameters(offset, limit, order);
     }
 
@@ -147,7 +152,11 @@ public class JdbcPhoneDao implements PhoneDao{
         return builder.toString();
     }
 
-    Set<Color> getPhoneColors(List<Phone> phoneOfDifferentColors) {
+    private String getSearchForAllInOrderQueryString(int offset, int limit, OrderEnum order) {
+        return PhoneQueries.FIND_ALL_QUERY + PhoneQueries.SEARCH_PART_OF_FIND_ALL_QUERY + queryParameters(offset, limit, order);
+    }
+
+    private Set<Color> getPhoneColors(List<Phone> phoneOfDifferentColors) {
         Set<Color> colors = new HashSet<>();
         phoneOfDifferentColors.forEach(e -> {
             Color color = e.getColors().iterator().next();

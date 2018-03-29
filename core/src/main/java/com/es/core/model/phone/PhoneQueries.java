@@ -22,4 +22,6 @@ public interface PhoneQueries {
     String FIND_ALL_QUERY =  "SELECT * FROM phones" +
             " LEFT OUTER JOIN  phone2color on phones.id = phone2color.phoneId" +
             " LEFT OUTER JOIN colors on colors.id = phone2color.colorId WHERE price > 0" ;
+
+    String SEARCH_PART_OF_FIND_ALL_QUERY = " and (lower(brand) like ? or lower(model) like ?)";
 }

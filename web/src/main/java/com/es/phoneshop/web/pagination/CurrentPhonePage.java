@@ -36,6 +36,8 @@ public class CurrentPhonePage {
         int endIndex = currentPageNumber * AMOUNT_OF_PHONES_ON_PAGE - 1;
         if(endIndex < phoneList.size())
             return phoneList.subList(startIndex, endIndex);
+        else if(phoneList.size() == 0)
+            return phoneList;
         return phoneList.subList(startIndex, phoneList.size() - 1);
     }
 

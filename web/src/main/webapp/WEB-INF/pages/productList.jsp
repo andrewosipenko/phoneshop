@@ -39,7 +39,7 @@
         </c:forEach>
       </table>
     </div>
-    <template:pagination targetPage="productList" productPage="${productPage}" order="${order}">
+    <template:pagination targetPage="productList" productPage="${productPage}" order="${order}" query="${query}">
     </template:pagination >
   </c:if>
 </template:page>
