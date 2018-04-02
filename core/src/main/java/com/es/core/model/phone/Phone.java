@@ -272,4 +272,24 @@ public class Phone {
     public void setId(Long id) {
         this.id = id;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Phone phone = (Phone) o;
+
+        if (!id.equals(phone.id)) return false;
+        if (!brand.equals(phone.brand)) return false;
+        return model.equals(phone.model);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + brand.hashCode();
+        result = 31 * result + model.hashCode();
+        return result;
+    }
 }

@@ -1,19 +1,16 @@
 package com.es.core.model.order;
 
-import com.es.core.model.phone.Phone;
-
 public class OrderItem {
-    private Long id;
-    private Phone phone;
+    private long phoneId;
     private Order order;
     private Long quantity;
 
-    public Phone getPhone() {
-        return phone;
+    public long getPhoneId() {
+        return phoneId;
     }
 
-    public void setPhone(final Phone phone) {
-        this.phone = phone;
+    public void setPhoneId(long phoneId) {
+        this.phoneId = phoneId;
     }
 
     public Order getOrder() {
