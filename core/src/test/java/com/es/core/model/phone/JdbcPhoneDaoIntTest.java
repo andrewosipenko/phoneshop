@@ -58,17 +58,17 @@ public class JdbcPhoneDaoIntTest {
     }
 
     @Test
-    public void get_IdEquals999_ReturnEmptyOptional() {
+    public void getIdEquals999ReturnEmptyOptional() {
         assertFalse(jdbcPhoneDao.get(999L).isPresent());
     }
 
     @Test
-    public void get_IdEquals1001_ReturnNotEmptyOptional(){
+    public void getIdEquals1001ReturnNotEmptyOptional(){
         assertTrue(jdbcPhoneDao.get(1001L).isPresent());
     }
 
     @Test
-    public void get_IdEquals1001_ReturnCorrectData() {
+    public void getIdEquals1001ReturnCorrectData() {
         Optional<Phone> phone = jdbcPhoneDao.get(1001L);
         Long actual = phone.get().getId();
         Long expected = 1001L;
@@ -78,7 +78,7 @@ public class JdbcPhoneDaoIntTest {
 
     @Test
     @Transactional
-    public void save_InsertPhone() {
+    public void saveInsertPhone() {
         Phone expected = mockPhone;
 
         jdbcPhoneDao.save(expected);
@@ -89,7 +89,7 @@ public class JdbcPhoneDaoIntTest {
 
     @Test
     @Transactional
-    public void save_UpdatePhone() {
+    public void saveUpdatePhone() {
         jdbcPhoneDao.save(mockPhone);
 
         Phone expected = mockPhone;
@@ -103,7 +103,7 @@ public class JdbcPhoneDaoIntTest {
     }
 
     @Test
-    public void findAll_3Rows_Offset0_Limit2_ReturnListSize2() {
+    public void findAll3RowsOffset0Limit2ReturnListSize2() {
         List<Phone> phones = jdbcPhoneDao.findAll(0, 2, "");
         int expected = 2;
         int actual = phones.size();
@@ -113,7 +113,7 @@ public class JdbcPhoneDaoIntTest {
 
 
     @Test
-    public void findAll_3Rows_Offset2_Limit2_ReturnListSize1() {
+    public void findAll3RowsOffset2Limit2ReturnListSize1() {
         List<Phone> phones = jdbcPhoneDao.findAll(2, 2, "");
         int expected = 1;
         int actual = phones.size();
@@ -122,7 +122,7 @@ public class JdbcPhoneDaoIntTest {
     }
 
     @Test
-    public void searchByModel_SearchModel1_Offset0_Limit3_ReturnListSize2(){
+    public void searchByModelSearchModel1Offset0Limit3ReturnListSize2(){
         List<Phone> phones = jdbcPhoneDao.searchByModel("Model1", 3, 0, "");
         int expected = 2;
         int actual = phones.size();
@@ -131,7 +131,7 @@ public class JdbcPhoneDaoIntTest {
     }
 
     @Test
-    public void countSearchResult_SearchForModel1_Return2(){
+    public void countSearchResultSearchForModel1Return2(){
         int actual = jdbcPhoneDao.countSearchResult("Model1");
         int expected = 2;
 
@@ -139,7 +139,7 @@ public class JdbcPhoneDaoIntTest {
     }
 
     @Test
-    public void countAll_Return4(){
+    public void countAllReturn4(){
         int actual = jdbcPhoneDao.countAll();
         int expected = 3;
 

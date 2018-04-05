@@ -83,7 +83,7 @@ public class AjaxCartController {
             return quantity;
         }
 
-        long getLong(){
+        public long getLong(){
             return Long.valueOf(quantity);
         }
 

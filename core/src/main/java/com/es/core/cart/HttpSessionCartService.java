@@ -20,7 +20,7 @@ public class HttpSessionCartService implements CartService {
     private PhoneDao phoneDao;
 
     @PostConstruct
-    void init(){
+    private void init(){
         cart = new Cart();
     }
 
