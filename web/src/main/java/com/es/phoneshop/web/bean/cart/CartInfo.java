@@ -9,6 +9,9 @@ public class CartInfo {
 
     private String errorMessage;
 
+    public CartInfo() {
+    }
+
     public CartInfo(Long itemCount, BigDecimal cost) {
         this.itemsCount = itemCount;
         this.cost = cost;

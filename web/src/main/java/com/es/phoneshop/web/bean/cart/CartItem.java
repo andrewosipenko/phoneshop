@@ -14,6 +14,14 @@ public class CartItem {
     @Min(value = 1L, message = WRONG_INPUT)
     private Long quantity;
 
+    public CartItem() {
+    }
+
+    public CartItem(Long phoneId, Long quantity) {
+        this.phoneId = phoneId;
+        this.quantity = quantity;
+    }
+
     public Long getPhoneId() {
         return phoneId;
     }

@@ -10,6 +10,9 @@ public class CartItem {
 
     private Long quantity;
 
+    public CartItem() {
+    }
+
     public CartItem(Phone phone, Long quantity) {
         this.phone = phone;
         this.quantity = quantity;
