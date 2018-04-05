@@ -1,7 +1,7 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.order.OrderService;
-import com.es.core.order.OutOfStockException;
+import com.es.phoneshop.core.order.service.OrderService;
+import com.es.phoneshop.core.order.throwable.OutOfStockException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
