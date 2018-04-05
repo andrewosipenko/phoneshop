@@ -2,6 +2,7 @@ package com.es.phoneshop.web.controller.pages;
 
 import javax.annotation.Resource;
 
+import com.es.core.cart.CartService;
 import com.es.core.model.phone.PhoneService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping(value = "/productList")
 public class ProductListPageController {
+
+    @Resource
+    private CartService cartService;
 
     @Resource
     private PhoneService phoneService;
@@ -42,5 +46,11 @@ public class ProductListPageController {
         model.addAttribute("phonesAmount", phoneService.countSearchResult(search));
 
         return "productList";
+    }
+
+    @ModelAttribute
+    public void addCart(Model model){
+        model.addAttribute("cartBill", cartService.getCart().getBill());
+        model.addAttribute("cartQuantity", cartService.getCart().getQuantity());
     }
 }
