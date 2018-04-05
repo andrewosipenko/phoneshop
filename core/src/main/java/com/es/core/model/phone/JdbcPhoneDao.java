@@ -108,11 +108,11 @@ public class JdbcPhoneDao implements PhoneDao{
     }
 
     private List<Phone> queryPhones(String keyString, int limit, int offset, String sortBy){
-        keyString = String.format("%%%s%%", keyString);
+        String searchPattern = String.format("%%%s%%", keyString);
         return jdbcTemplate.query(
                 String.format(SQL_PHONES_QUERY, sortBy),
                 new FindAllPhonesResultSetExtractor(),
-                keyString,
+                searchPattern,
                 limit,
                 offset
         );
@@ -190,14 +190,14 @@ public class JdbcPhoneDao implements PhoneDao{
 
     @Override
     public List<Phone> findAll(int offset, int limit, String sortBy){
-        sortBy = orderBy.getOrDefault(sortBy, orderBy.get("default"));
-        return queryPhones("", limit, offset, sortBy);
+        String sortColumn = orderBy.getOrDefault(sortBy, orderBy.get("default"));
+        return queryPhones("", limit, offset, sortColumn);
     }
 
     @Override
     public List<Phone> searchByModel(String keyString, int limit, int offset, String sortBy){
-        sortBy = orderBy.getOrDefault(sortBy, orderBy.get("default"));
-        return queryPhones(keyString, limit, offset, sortBy);
+        String sortColumn = orderBy.getOrDefault(sortBy, orderBy.get("default"));
+        return queryPhones(keyString, limit, offset, sortColumn);
     }
 
     @Override

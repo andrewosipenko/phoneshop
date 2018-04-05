@@ -15,7 +15,7 @@ public class Cart {
         return products;
     }
 
-    void setProducts(Map<Long, CartEntry> products){
+    public void setProducts(Map<Long, CartEntry> products){
         this.products = products;
     }
 
