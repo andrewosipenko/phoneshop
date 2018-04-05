@@ -1,7 +1,9 @@
 package com.es.core.model.order;
 
 import com.es.core.model.phone.Phone;
+import org.springframework.stereotype.Component;
 
+@Component
 public class OrderItem {
     private Long id;
     private Phone phone;
