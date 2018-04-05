@@ -1,13 +1,8 @@
 package com.es.core.model.order;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class Order
 {
     private Long id;
@@ -29,36 +24,12 @@ public class Order
 
     private OrderStatus status;
 
-    @Autowired
-    public Order(){
-        orderItems = new ArrayList<>();
-        deliveryPrice = BigDecimal.ZERO;
-        subtotal = BigDecimal.ZERO;
-        totalPrice = BigDecimal.ZERO;
-    }
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public void addOrderItem(OrderItem orderItem){
-        orderItems.add(orderItem);
-        orderItem.setOrder(this);
-        BigDecimal price = orderItem.getPhone().getPrice();
-        if(price == null){
-            price = BigDecimal.ONE;
-        }
-        Long quantity = orderItem.getQuantity();
-        subtotal = subtotal.add(new BigDecimal(quantity).multiply(price));
-        recalculateTotalPrice();
-    }
-
-    public void recalculateTotalPrice(){
-        totalPrice = subtotal.add(deliveryPrice);
     }
 
     public List<OrderItem> getOrderItems() {

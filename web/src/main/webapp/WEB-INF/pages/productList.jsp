@@ -3,8 +3,8 @@
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/template" %>
 <template:page>
     <div class="container">
-        <form formaction="<c:url value="/productList"/>page=${page}&sort=brand<c:if test="${direction == 'asc'}">&dir=desc</c:if>&search=">
-            <input class="form-control input-sm" value="${ not empty searchText ? searchText: 'Search...' }">
+        <form formaction="<c:url value="/productList"/>?page=${page}&sort=brand<c:if test="${direction == 'asc'}">&dir=desc</c:if>&search=">
+            <input class="form-control input-sm" value="${searchText}" name="search">
         </form>
         <table class="table">
             <thead>
