@@ -57,6 +57,17 @@ public class Phone {
 
     private String description;
 
+    public Phone() {
+
+    }
+
+    public Phone(Long id, String brand, String model, BigDecimal price) {
+        this.id = id;
+        this.model = model;
+        this.brand = brand;
+        this.price = price;
+    }
+
     public String getBrand() {
         return brand;
     }
