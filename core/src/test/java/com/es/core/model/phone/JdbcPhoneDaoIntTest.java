@@ -104,7 +104,7 @@ public class JdbcPhoneDaoIntTest {
 
     @Test
     public void findAll_3Rows_Offset0_Limit2_ReturnListSize2() {
-        List<Phone> phones = jdbcPhoneDao.findAll(0, 2);
+        List<Phone> phones = jdbcPhoneDao.findAll(0, 2, "");
         int expected = 2;
         int actual = phones.size();
 
@@ -114,9 +114,34 @@ public class JdbcPhoneDaoIntTest {
 
     @Test
     public void findAll_3Rows_Offset2_Limit2_ReturnListSize1() {
-        List<Phone> phones = jdbcPhoneDao.findAll(2, 2);
+        List<Phone> phones = jdbcPhoneDao.findAll(2, 2, "");
         int expected = 1;
         int actual = phones.size();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void searchByModel_SearchModel1_Offset0_Limit3_ReturnListSize2(){
+        List<Phone> phones = jdbcPhoneDao.searchByModel("Model1", 3, 0, "");
+        int expected = 2;
+        int actual = phones.size();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void countSearchResult_SearchForModel1_Return2(){
+        int actual = jdbcPhoneDao.countSearchResult("Model1");
+        int expected = 2;
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void countAll_Return4(){
+        int actual = jdbcPhoneDao.countAll();
+        int expected = 3;
 
         assertEquals(expected, actual);
     }
