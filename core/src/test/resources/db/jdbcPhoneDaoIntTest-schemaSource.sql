@@ -13,10 +13,10 @@ insert into colors (id, code) values (1011, 'Orange');
 insert into colors (id, code) values (1012, 'Brown');
 insert into colors (id, code) values (1013, '256');
 
-insert into phones (id, brand, model) values (1001, 'Brand1001', 'Model1001');
-insert into phones (id, brand, model) values (1, 'Brand1', 'Model1');
-insert into phones (id, brand, model) values (2, 'Brand2', 'Model2');
-insert into phones (id, brand, model) values (345, 'Brand345', 'Model345');
+insert into phones (id, brand, model, price) values (1001, 'Brand1001', 'Model1001', 1);
+insert into phones (id, brand, model, price) values (1, 'Brand1', 'Model1', 1);
+insert into phones (id, brand, model, price) values (2, 'Brand2', 'Model2', 1);
+insert into phones (id, brand, model, price) values (345, 'Brand345', 'Model345', 1);
 
 
 insert into phone2color (phoneId, colorId) values (1, 1000);

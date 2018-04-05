@@ -58,6 +58,7 @@ public class JdbcPhoneDao implements PhoneDao{
             "SELECT COUNT(*) " +
             "FROM phones, stocks s " +
             "WHERE phones.id=s.phoneId and s.stock>0 " +
+            "      and NOT phones.price IS NULL "+
             "      and LOWER(phones.model) LIKE LOWER(?) ";
 
     private final static String SQL_PHONES_QUERY =
@@ -65,6 +66,7 @@ public class JdbcPhoneDao implements PhoneDao{
             "FROM (SELECT * " +
             "      FROM phones, stocks s " +
             "      WHERE phones.id=s.phoneId and s.stock>0 " +
+            "            and NOT phones.price IS NULL " +
             "            and LOWER(phones.model) LIKE LOWER(?) " +
             "      ORDER BY %s " +
             "      LIMIT ? OFFSET ?) p " +
@@ -72,7 +74,7 @@ public class JdbcPhoneDao implements PhoneDao{
             "LEFT JOIN colors c ON c.id = p2c.colorId ";
 
     private static Map<String, String> orderBy = new HashMap<String, String>();
-    {
+    static {
         orderBy.put("display", "phones.displaySizeInches");
         orderBy.put("display-desc", "phones.displaySizeInches DESC");
         orderBy.put("brand", "phones.brand");
