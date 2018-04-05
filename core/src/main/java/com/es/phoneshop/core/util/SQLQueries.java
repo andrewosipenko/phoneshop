@@ -3,6 +3,8 @@ package com.es.phoneshop.core.util;
 public interface SQLQueries {
     String GET_PHONE = "SELECT * FROM phones WHERE id = ?";
 
+    String GET_STOCK = "SELECT * FROM stocks WHERE phoneId = ?";
+
     String GET_COLOR_IDS_FOR_PHONE = "SELECT colorId FROM phone2color WHERE phoneId = ?";
 
     String GET_COLORS_BY_IDS = "SELECT * FROM colors WHERE id IN (:ids)";

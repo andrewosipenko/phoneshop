@@ -11,7 +11,7 @@
     <script> <%@ include file="scripts/productList.js" %> </script>
 </head>
 <body>
-    <components:header/>
+    <components:header cartShown="true" />
 
     <form method="get" id="sortByForm" hidden>
         <c:if test="${not empty param.search}">
@@ -61,7 +61,7 @@
                     <td style="vertical-align: middle!important">
                         <input type="text" class="form-control" id="phone${phone.id}Quantity" value="0" style="width:70px;"/>
                     </td>
-                    <td class="text-center" style="vertical-align: middle!important"><button class="btn btn-info">Add to cart</button></td>
+                    <td class="text-center" style="vertical-align: middle!important"><button class="btn btn-info" onclick="addToCart(${phone.id})">Add to cart</button></td>
                 </tr>
             </c:forEach>
             </tbody>

@@ -21,6 +21,9 @@
     <com.h2database.version>1.4.196</com.h2database.version>
     <junit.version>4.12</junit.version>
     <org.json.version>20180130</org.json.version>
+    <org.hibernate-validator.version>4.3.2.Final</org.hibernate-validator.version>
+    <jackson-core.version>2.9.5</jackson-core.version>
+    <jackson-databind.version>2.9.5</jackson-databind.version>
   </properties>
 
   <dependencyManagement>
@@ -62,6 +65,23 @@
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
         <version>${com.h2database.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>${org.hibernate-validator.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${jackson-core.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson-databind.version}</version>
       </dependency>
 
       <dependency>
