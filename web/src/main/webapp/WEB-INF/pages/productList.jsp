@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="components" tagdir="/WEB-INF/tags/components" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <html>
 <head>
@@ -26,9 +27,6 @@
         </div>
         <div class="d-inline-block float-right">
             <form class="form-inline my-2 my-lg-0" method="get" id="searchForm">
-                <c:if test="${not empty param.sortBy}">
-                    <input type="hidden" name="sortBy" value="${param.sortBy}"/>
-                </c:if>
                 <input class="form-control mr-sm-2" type="search" placeholder="Search..." aria-label="Search" name="search" value="${param.search}"/>
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
@@ -50,20 +48,24 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach items="${phones}" var="phone">
-                <tr>
-                    <td class="p-0 m-0" style="width:1px;"><img width="100px" height="100px" src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}"></td>
-                    <td style="vertical-align: middle!important"><c:out value="${phone.brand}"/></td>
-                    <td style="vertical-align: middle!important"><c:out value="${phone.model}"/></td>
-                    <td style="vertical-align: middle!important"><c:forEach items="${phone.colors}" var="color" varStatus="loop"><c:out value="${color.code}"/><c:if test="${not loop.last}">, </c:if></c:forEach></td>
-                    <td style="vertical-align: middle!important"><c:out value="${phone.displaySizeInches}''"/></td>
-                    <td style="vertical-align: middle!important">$<c:out value="${phone.price}"/></td>
-                    <td style="vertical-align: middle!important">
-                        <input type="text" class="form-control" id="phone${phone.id}Quantity" value="0" style="width:70px;"/>
-                    </td>
-                    <td class="text-center" style="vertical-align: middle!important"><button class="btn btn-info" onclick="addToCart(${phone.id})">Add to cart</button></td>
-                </tr>
-            </c:forEach>
+                <c:forEach items="${phones}" var="phone">
+                    <form:form modelAttribute="addToCartForm" id="addToCart${phone.id}Form">
+                        <input type="hidden" name="phoneId" value="${phone.id}"/>
+                        <tr>
+                            <td class="p-0 m-0" style="width:1px;"><img width="100px" height="100px" src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}"></td>
+                            <td style="vertical-align: middle!important"><c:out value="${phone.brand}"/></td>
+                            <td style="vertical-align: middle!important"><c:out value="${phone.model}"/></td>
+                            <td style="vertical-align: middle!important"><c:forEach items="${phone.colors}" var="color" varStatus="loop"><c:out value="${color.code}"/><c:if test="${not loop.last}">, </c:if></c:forEach></td>
+                            <td style="vertical-align: middle!important"><c:out value="${phone.displaySizeInches}''"/></td>
+                            <td style="vertical-align: middle!important">$<c:out value="${phone.price}"/></td>
+                            <td style="vertical-align: middle!important">
+                                <form:input cssClass="form-control" cssStyle="width:70px;" path="quantity" id="phone${phone.id}Quantity"/>
+                                <p style="position: absolute; margin-top: 7px; color:red; display: none;" id="quantity${phone.id}ErrorMessage"></p>
+                            </td>
+                            <td class="text-center" style="vertical-align: middle!important"><button class="btn btn-info" type="button" onclick="addToCart(${phone.id})">Add to cart</button></td>
+                        </tr>
+                    </form:form>
+                </c:forEach>
             </tbody>
         </table>
     </div>
