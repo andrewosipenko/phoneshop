@@ -1,18 +1,19 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="components" tagdir="/WEB-INF/tags/components" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="template" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="components" tagdir="/WEB-INF/tags/components" %>
 
-<html>
-<head>
-    <title>Product List</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<template:page title="Product List">
     <script> <%@ include file="scripts/productList.js" %> </script>
-</head>
-<body>
-    <components:header cartShown="true" />
+
+    <components:header cartShown="true"/>
+
+    <div class="container mt-3 py-1">
+        <div class="d-inline-block">
+            <h3>Phones</h3>
+        </div>
+        <components:search/>
+    </div>
 
     <form method="get" id="sortByForm" hidden>
         <c:if test="${not empty param.search}">
@@ -20,18 +21,6 @@
         </c:if>
         <input type="hidden" name="sortBy" id="sortByInput"/>
     </form>
-
-    <div class="container mt-3 py-1">
-        <div class="d-inline-block">
-            <h3>Phones</h3>
-        </div>
-        <div class="d-inline-block float-right">
-            <form class="form-inline my-2 my-lg-0" method="get" id="searchForm">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search..." aria-label="Search" name="search" value="${param.search}"/>
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </div>
-    </div>
 
     <div class="container">
         <table class="table table-bordered table-striped">
@@ -48,28 +37,27 @@
             </tr>
             </thead>
             <tbody>
-                <c:forEach items="${phones}" var="phone">
-                    <form:form modelAttribute="addToCartForm" id="addToCart${phone.id}Form">
-                        <input type="hidden" name="phoneId" value="${phone.id}"/>
-                        <tr>
-                            <td class="p-0 m-0" style="width:1px;"><img width="100px" height="100px" src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}"></td>
-                            <td style="vertical-align: middle!important"><c:out value="${phone.brand}"/></td>
-                            <td style="vertical-align: middle!important"><c:out value="${phone.model}"/></td>
-                            <td style="vertical-align: middle!important"><c:forEach items="${phone.colors}" var="color" varStatus="loop"><c:out value="${color.code}"/><c:if test="${not loop.last}">, </c:if></c:forEach></td>
-                            <td style="vertical-align: middle!important"><c:out value="${phone.displaySizeInches}''"/></td>
-                            <td style="vertical-align: middle!important">$<c:out value="${phone.price}"/></td>
-                            <td style="vertical-align: middle!important">
-                                <form:input cssClass="form-control" cssStyle="width:70px;" path="quantity" id="phone${phone.id}Quantity"/>
-                                <p style="position: absolute; margin-top: 7px; color:red; display: none;" id="quantity${phone.id}ErrorMessage"></p>
-                            </td>
-                            <td class="text-center" style="vertical-align: middle!important"><button class="btn btn-info" type="button" onclick="addToCart(${phone.id})">Add to cart</button></td>
-                        </tr>
-                    </form:form>
-                </c:forEach>
+            <c:forEach items="${phones}" var="phone">
+                <form:form modelAttribute="addToCartForm" id="addToCart${phone.id}Form">
+                    <input type="hidden" name="phoneId" value="${phone.id}"/>
+                    <tr>
+                        <td class="p-0 m-0" style="width:1px;"><img width="100px" height="100px" src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}"></td>
+                        <td style="vertical-align: middle!important"><c:out value="${phone.brand}"/></td>
+                        <td style="vertical-align: middle!important"><c:out value="${phone.model}"/></td>
+                        <td style="vertical-align: middle!important"><c:forEach items="${phone.colors}" var="color" varStatus="loop"><c:out value="${color.code}"/><c:if test="${not loop.last}">, </c:if></c:forEach></td>
+                        <td style="vertical-align: middle!important"><c:out value="${phone.displaySizeInches}''"/></td>
+                        <td style="vertical-align: middle!important">$<c:out value="${phone.price}"/></td>
+                        <td style="vertical-align: middle!important">
+                            <form:input cssClass="form-control" cssStyle="width:70px;" path="quantity" id="phone${phone.id}Quantity"/>
+                            <p style="position: absolute; margin-top: 7px; color:red; display: none;" id="quantity${phone.id}ErrorMessage"></p>
+                        </td>
+                        <td class="text-center" style="vertical-align: middle!important"><button class="btn btn-info" type="button" onclick="addToCart(${phone.id})">Add to cart</button></td>
+                    </tr>
+                </form:form>
+            </c:forEach>
             </tbody>
         </table>
     </div>
 
     <components:pagination currentPage="${currentPage}" pagesTotal="${pagesTotal}"/>
-</body>
-</html>
+</template:page>

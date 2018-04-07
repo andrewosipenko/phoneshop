@@ -17,13 +17,12 @@ public class PhonePageServiceImpl implements PhonePageService {
 
     @Override
     public int countPagesTotal(String search) {
-        return phoneService.countPhones(search);
+        return phoneService.countPhones(search) / PHONES_PER_PAGE + 1;
     }
 
     @Override
     public List<Phone> getPhoneList(String search, SortBy sortBy, int page) throws NoSuchPageFoundException {
-        int total = phoneService.countPhones(search);
-        int pagesTotal = total / PHONES_PER_PAGE + 1;
+        int pagesTotal = countPagesTotal(search);
         if (page > pagesTotal || page <= 0)
             throw new NoSuchPageFoundException();
         int begin = (page - 1) * PHONES_PER_PAGE;

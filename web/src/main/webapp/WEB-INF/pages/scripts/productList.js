@@ -1,15 +1,3 @@
-$(document).ready(function() {
-    $.get({
-        url: "${pageContext.request.contextPath}/ajaxCart",
-        success: updateCartStatus
-    });
-});
-
-var updateCartStatus = function(status) {
-    $('#phonesTotal').html(status.phonesTotal);
-    $('#costTotal').html(status.costTotal);
-};
-
 var addToCart = function (id) {
     var data = $('#addToCart' + id + 'Form').serialize();
     $.post({
@@ -17,7 +5,8 @@ var addToCart = function (id) {
         data: data,
         success: function(status) {
             $('#phone' + id + 'Quantity').val(0);
-            updateCartStatus(status);
+            $('#phonesTotal').html(status.phonesTotal);
+            $('#costTotal').html(status.costTotal);
         }
     }).fail(function(msg) {
         var msgHolder = $('#quantity' + id + 'ErrorMessage');

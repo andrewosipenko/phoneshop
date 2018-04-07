@@ -2,6 +2,20 @@
 <%@ tag body-content="scriptless" trimDirectiveWhitespaces="true" pageEncoding="UTF-8" %>
 <%@ attribute name="cartShown" type="java.lang.Boolean" required="false" %>
 
+<c:if test="${cartShown}">
+    <script>
+        $(document).ready(function() {
+            $.get({
+                url: "${pageContext.request.contextPath}/ajaxCart",
+                success: function(status) {
+                    $('#phonesTotal').html(status.phonesTotal);
+                    $('#costTotal').html(status.costTotal);
+                }
+            });
+        });
+    </script>
+</c:if>
+
 <div class="bg-light w-100">
     <div class="container p-3">
         <div class="page-header text-primary">
