@@ -1,7 +1,7 @@
 var addToCart = function (id) {
     var data = $('#addToCart' + id + 'Form').serialize();
     $.post({
-        url: 'ajaxCart',
+        url: '${pageContext.request.contextPath}/ajaxCart',
         data: data,
         success: function(status) {
             $('#phone' + id + 'Quantity').val(0);
@@ -16,12 +16,4 @@ var addToCart = function (id) {
         msgHolder.fadeIn();
         msgHolder.fadeOut({duration: 3000});
     });
-};
-
-var sortBy = function (what) {
-    var compare = '${param.sortBy}';
-    if (what === compare)
-        what += '_desc';
-    $('#sortByInput').val(what);
-    $('#sortByForm').submit();
 };

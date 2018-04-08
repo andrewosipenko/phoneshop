@@ -19,7 +19,7 @@
                 <c:if test="${not empty param.sortBy}">
                     <input type="hidden" name="sortBy" value="${param.sortBy}"/>
                 </c:if>
-                <button class="btn" type="submit">Goto page</button>
+                <button class="btn btn-secondary" type="submit">Goto page</button>
                 <input id="gotoPageInput" class="text-field" type="number" min="1" max="${pagesTotal}" name="page" value="${currentPage}"/>
             </label>
         </form>

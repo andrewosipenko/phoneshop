@@ -17,7 +17,7 @@ public class PhonePageServiceImpl implements PhonePageService {
 
     @Override
     public int countPagesTotal(String search) {
-        return phoneService.countPhones(search) / PHONES_PER_PAGE + 1;
+        return (phoneService.countPhones(search) - 1) / PHONES_PER_PAGE + 1;
     }
 
     @Override
@@ -26,6 +26,6 @@ public class PhonePageServiceImpl implements PhonePageService {
         if (page > pagesTotal || page <= 0)
             throw new NoSuchPageFoundException();
         int begin = (page - 1) * PHONES_PER_PAGE;
-        return phoneService.getPhones(search, sortBy, begin, PHONES_PER_PAGE);
+        return phoneService.getPhoneList(search, sortBy, begin, PHONES_PER_PAGE);
     }
 }

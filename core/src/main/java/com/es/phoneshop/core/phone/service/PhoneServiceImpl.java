@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PhoneServiceImpl implements PhoneService {
@@ -20,11 +21,16 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
-    public List<Phone> getPhones(String search, SortBy sortBy, int offset, int limit) {
+    public List<Phone> getPhoneList(String search, SortBy sortBy, int offset, int limit) {
         return phoneDao.findAll(new PhoneDaoSelector()
                 .searching(search)
                 .sortedBy(sortBy)
                 .offset(offset)
                 .limit(limit));
+    }
+
+    @Override
+    public Optional<Phone> getPhone(Long id) {
+        return phoneDao.get(id);
     }
 }

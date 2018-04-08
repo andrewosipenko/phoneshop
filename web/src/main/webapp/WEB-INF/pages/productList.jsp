@@ -4,7 +4,8 @@
 <%@ taglib prefix="components" tagdir="/WEB-INF/tags/components" %>
 
 <template:page title="Product List">
-    <script> <%@ include file="scripts/productList.js" %> </script>
+    <script> <%@ include file="scripts/addToCart.js" %> </script>
+    <script> <%@ include file="scripts/sortTable.js" %> </script>
 
     <components:header cartShown="true"/>
 
@@ -22,18 +23,18 @@
         <input type="hidden" name="sortBy" id="sortByInput"/>
     </form>
 
-    <div class="container">
+    <div class="container mt-2">
         <table class="table table-bordered table-striped">
             <thead style="background-color: #828082;">
             <tr class="d-table-row text-light text-center">
-                <th scope="col">Image</th>
-                <th scope="col"><a style="display: block; cursor: pointer;" onclick="sortBy('brand')">Brand <components:tableColumnArrow test="brand"/></a></th>
-                <th scope="col"><a style="display: block; cursor: pointer;" onclick="sortBy('model')">Model <components:tableColumnArrow test="model"/></a></th>
-                <th scope="col">Colors</th>
-                <th scope="col"><a style="display: block; cursor: pointer;" onclick="sortBy('display_size')">Display size <components:tableColumnArrow test="display_size"/></a></th>
-                <th scope="col"><a style="display: block; cursor: pointer;" onclick="sortBy('price')">Price <components:tableColumnArrow test="price"/></a></th>
-                <th scope="col">Quantity</th>
-                <th scope="col">Action</th>
+                <th scope="col" style="width: 0%">Image</th>
+                <th scope="col" style="width: 10%"><a style="display: block; cursor: pointer;" onclick="sortBy('brand')">Brand <components:tableColumnArrow test="brand"/></a></th>
+                <th scope="col" style="width: 19%"><a style="display: block; cursor: pointer;" onclick="sortBy('model')">Model <components:tableColumnArrow test="model"/></a></th>
+                <th scope="col" style="width: 20%">Colors</th>
+                <th scope="col" style="width: 15%"><a style="display: block; cursor: pointer;" onclick="sortBy('display_size')">Display size<components:tableColumnArrow test="display_size"/></a></th>
+                <th scope="col" style="width: 9%"><a style="display: block; cursor: pointer;" onclick="sortBy('price')">Price <components:tableColumnArrow test="price"/></a></th>
+                <th scope="col" style="width: 9%">Quantity</th>
+                <th scope="col" colspan="2">Action</th>
             </tr>
             </thead>
             <tbody>
@@ -51,6 +52,7 @@
                             <form:input cssClass="form-control" cssStyle="width:70px;" path="quantity" id="phone${phone.id}Quantity"/>
                             <p style="position: absolute; margin-top: 7px; color:red; display: none;" id="quantity${phone.id}ErrorMessage"></p>
                         </td>
+                        <td class="text-center" style="vertical-align: middle!important"><a style="text-decoration: underline;" href="${pageContext.request.contextPath}/productDetails?phoneId=${phone.id}">Details</a></td>
                         <td class="text-center" style="vertical-align: middle!important"><button class="btn btn-info" type="button" onclick="addToCart(${phone.id})">Add to cart</button></td>
                     </tr>
                 </form:form>
