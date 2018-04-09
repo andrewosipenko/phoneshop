@@ -1,4 +1,4 @@
-package com.es.phoneshop.core.cart;
+package com.es.phoneshop.core.cart.model;
 
 import java.math.BigDecimal;
 
@@ -6,7 +6,7 @@ public class CartStatus {
     private Long phonesTotal;
     private BigDecimal costTotal;
 
-    CartStatus(Long phonesTotal, BigDecimal costTotal) {
+    public CartStatus(Long phonesTotal, BigDecimal costTotal) {
         this.phonesTotal = phonesTotal;
         this.costTotal = costTotal;
     }

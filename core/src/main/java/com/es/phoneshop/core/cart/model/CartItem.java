@@ -1,4 +1,4 @@
-package com.es.phoneshop.core.cart;
+package com.es.phoneshop.core.cart.model;
 
 import com.es.phoneshop.core.phone.model.Phone;
 
@@ -6,7 +6,7 @@ public class CartItem {
     private final Phone phone;
     private Long quantity;
 
-    CartItem(Phone phone, Long quantity) {
+    public CartItem(Phone phone, Long quantity) {
         this.phone = phone;
         this.quantity = quantity;
     }

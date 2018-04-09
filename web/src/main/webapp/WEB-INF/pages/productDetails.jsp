@@ -48,9 +48,9 @@
             <h4><b>Dimensions & weight</b></h4>
             <table class="table table-bordered">
                 <tbody>
-                    <tr><td>Length: </td><td><c:out value="${phone.lengthMm.intValue()}"/>mm</td></tr>
-                    <tr><td>Width: </td><td><c:out value="${phone.widthMm.intValue()}"/>mm</td></tr>
-                    <tr><td>Weight: </td><td><c:out value="${phone.weightGr.intValue()}"/>g</td></tr>
+                    <tr><td>Length: </td><td><c:out value="${phone.lengthMm.intValue()}"/> mm</td></tr>
+                    <tr><td>Width: </td><td><c:out value="${phone.widthMm.intValue()}"/> mm</td></tr>
+                    <tr><td>Weight: </td><td><c:out value="${phone.weightGr.intValue()}"/> g</td></tr>
                 </tbody>
             </table>
             <br/>
@@ -65,9 +65,9 @@
             <h4><b>Battery</b></h4>
             <table class="table table-bordered">
                 <tbody>
-                <tr><td>Talk time: </td><td><c:out value="${phone.talkTimeHours.intValue()}"/>h</td></tr>
-                <tr><td>Stand by time: </td><td><c:out value="${phone.standByTimeHours.intValue()}"/>h</td></tr>
-                <tr><td>Battery capacity: </td><td><c:out value="${phone.batteryCapacityMah}"/>mAh</td></tr>
+                <tr><td>Talk time: </td><td><c:out value="${phone.talkTimeHours.intValue()}"/> h</td></tr>
+                <tr><td>Stand by time: </td><td><c:out value="${phone.standByTimeHours.intValue()}"/> h</td></tr>
+                <tr><td>Battery capacity: </td><td><c:out value="${phone.batteryCapacityMah}"/> mAh</td></tr>
                 </tbody>
             </table>
             <br/>

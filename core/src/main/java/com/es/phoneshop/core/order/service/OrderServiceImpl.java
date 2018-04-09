@@ -1,6 +1,6 @@
 package com.es.phoneshop.core.order.service;
 
-import com.es.phoneshop.core.cart.Cart;
+import com.es.phoneshop.core.cart.model.Cart;
 import com.es.phoneshop.core.order.model.Order;
 import com.es.phoneshop.core.order.throwable.OutOfStockException;
 import org.springframework.stereotype.Service;

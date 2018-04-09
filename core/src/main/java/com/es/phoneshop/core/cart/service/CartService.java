@@ -1,11 +1,16 @@
-package com.es.phoneshop.core.cart;
+package com.es.phoneshop.core.cart.service;
 
+import com.es.phoneshop.core.cart.model.CartItem;
+import com.es.phoneshop.core.cart.model.CartStatus;
 import com.es.phoneshop.core.phone.model.Phone;
 
+import java.util.List;
 import java.util.Map;
 
 public interface CartService {
-    Cart getCart();
+    CartStatus getCartStatus();
+
+    List<CartItem> getCartItems();
 
     void addPhone(Long phoneId, Long quantity);
 

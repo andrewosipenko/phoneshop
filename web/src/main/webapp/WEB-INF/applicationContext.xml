@@ -8,14 +8,14 @@
 
     <mvc:annotation-driven conversion-service="conversionService" validator="validator"/>
     <context:component-scan base-package="com.es.phoneshop.web.controller"/>
+
     <context:property-placeholder location="WEB-INF/conf/application.properties"/>
+    <bean class="com.es.phoneshop.core.cart.model.Cart" scope="session">
+        <aop:scoped-proxy/>
+    </bean>
 
     <import resource="classpath:context/applicationContext-core.xml"/>
     <import resource="classpath:context/applicationContext-demodata.xml"/>
-
-    <bean id="cart" class="com.es.phoneshop.core.cart.Cart" scope="session">
-        <aop:scoped-proxy/>
-    </bean>
 
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
         <property name="converters">

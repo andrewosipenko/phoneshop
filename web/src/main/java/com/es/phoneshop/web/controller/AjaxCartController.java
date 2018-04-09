@@ -1,7 +1,7 @@
 package com.es.phoneshop.web.controller;
 
-import com.es.phoneshop.core.cart.CartService;
-import com.es.phoneshop.core.cart.CartStatus;
+import com.es.phoneshop.core.cart.service.CartService;
+import com.es.phoneshop.core.cart.model.CartStatus;
 import com.es.phoneshop.core.cart.throwable.NoStockFoundException;
 import com.es.phoneshop.core.cart.throwable.NoSuchPhoneException;
 import com.es.phoneshop.core.cart.throwable.TooBigQuantityException;
@@ -23,7 +23,7 @@ public class AjaxCartController {
 
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody CartStatus getCartStatus() {
-        return cartService.getCart().getStatus();
+        return cartService.getCartStatus();
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -31,7 +31,7 @@ public class AjaxCartController {
         if (bindingResult.hasFieldErrors())
             throw new IncorrectFormFormatException();
         cartService.addPhone(form.getPhoneId(), form.getQuantity());
-        return cartService.getCart().getStatus();
+        return cartService.getCartStatus();
     }
 
     @ExceptionHandler(IncorrectFormFormatException.class)

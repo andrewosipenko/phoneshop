@@ -1,5 +1,8 @@
-package com.es.phoneshop.core.cart;
+package com.es.phoneshop.core.cart.service;
 
+import com.es.phoneshop.core.cart.model.Cart;
+import com.es.phoneshop.core.cart.model.CartItem;
+import com.es.phoneshop.core.cart.model.CartStatus;
 import com.es.phoneshop.core.cart.throwable.NoStockFoundException;
 import com.es.phoneshop.core.cart.throwable.NoSuchPhoneException;
 import com.es.phoneshop.core.cart.throwable.TooBigQuantityException;
@@ -10,6 +13,9 @@ import com.es.phoneshop.core.stock.model.Stock;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -22,8 +28,18 @@ public class CartServiceImpl implements CartService {
     private Cart cart;
 
     @Override
-    public Cart getCart() {
-        return cart;
+    public CartStatus getCartStatus() {
+        List<CartItem> items = cart.getItems();
+        long phonesTotal = items.stream()
+                .reduce(0L, (num, item) -> num + item.getQuantity(), (num1, num2) -> num1 + num2);
+        BigDecimal costTotal = items.stream()
+                .reduce(BigDecimal.ZERO, (cost, item) -> cost.add(item.getPhone().getPrice().multiply(BigDecimal.valueOf(item.getQuantity()))), BigDecimal::add);
+        return new CartStatus(phonesTotal, costTotal);
+    }
+
+    @Override
+    public List<CartItem> getCartItems() {
+        return Collections.unmodifiableList(cart.getItems());
     }
 
     @Override

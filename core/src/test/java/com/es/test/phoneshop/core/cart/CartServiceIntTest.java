@@ -1,8 +1,8 @@
 package com.es.test.phoneshop.core.cart;
 
-import com.es.phoneshop.core.cart.CartItem;
-import com.es.phoneshop.core.cart.CartService;
-import com.es.phoneshop.core.cart.CartStatus;
+import com.es.phoneshop.core.cart.model.CartItem;
+import com.es.phoneshop.core.cart.service.CartService;
+import com.es.phoneshop.core.cart.model.CartStatus;
 import com.es.phoneshop.core.cart.throwable.NoStockFoundException;
 import com.es.phoneshop.core.cart.throwable.NoSuchPhoneException;
 import com.es.phoneshop.core.cart.throwable.TooBigQuantityException;
@@ -42,13 +42,13 @@ public class CartServiceIntTest {
         cartService.addPhone(EXISTING_PHONE_A_ID, PHONE_A_ACCEPTABLE_QUANTITY_1);
         cartService.addPhone(EXISTING_PHONE_B_ID, PHONE_B_ACCEPTABLE_QUANTITY);
         cartService.addPhone(EXISTING_PHONE_A_ID, PHONE_A_ACCEPTABLE_QUANTITY_2);
-        List<CartItem> items = cartService.getCart().getItems();
+        List<CartItem> items = cartService.getCartItems();
         assertEquals(items.size(), 2);
         assertEquals(items.get(0).getPhone().getId(), EXISTING_PHONE_A_ID);
         assertEquals(items.get(0).getQuantity(), (Long) (PHONE_A_ACCEPTABLE_QUANTITY_1 + PHONE_A_ACCEPTABLE_QUANTITY_2));
         assertEquals(items.get(1).getPhone().getId(), EXISTING_PHONE_B_ID);
         assertEquals(items.get(1).getQuantity(), PHONE_B_ACCEPTABLE_QUANTITY);
-        CartStatus status = cartService.getCart().getStatus();
+        CartStatus status = cartService.getCartStatus();
         assertEquals(status.getPhonesTotal(), (Long) (PHONE_A_ACCEPTABLE_QUANTITY_1 + PHONE_A_ACCEPTABLE_QUANTITY_2 + PHONE_B_ACCEPTABLE_QUANTITY));
         assertTrue(status.getCostTotal().compareTo(PHONES_AB_TOTAL_COST) == 0);
     }
