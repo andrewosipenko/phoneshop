@@ -1,15 +1,12 @@
 package com.es.core.model.phone;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 
 @Component
-@EnableWebMvc
 public class AddToCartForm {
     @NotNull
     private Long phoneId;

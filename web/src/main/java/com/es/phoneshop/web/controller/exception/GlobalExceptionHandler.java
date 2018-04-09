@@ -4,9 +4,7 @@ import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-@EnableWebMvc
 @ControllerAdvice
 public class GlobalExceptionHandler {
     public static final String ERROR_MESSAGE_ATTRIBUTE = "errorMessage";
