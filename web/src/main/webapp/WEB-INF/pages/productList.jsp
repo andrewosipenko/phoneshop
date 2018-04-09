@@ -4,8 +4,17 @@
 <template:page>
     <script> <%@ include file="js/productList.js" %> </script>
     <div class="container">
-        <form formaction="<c:url value="/productList"/>?page=${page}&sort=brand<c:if test="${direction == 'asc'}">&dir=desc</c:if>&search=">
-            <input class="form-control input-sm" value="${searchText}" name="search">
+        <form action="<c:url value="/productList"/>" method="get">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search for..." value="${searchText}" name="search">
+                    <span class="input-group-btn">
+                            <button class="btn btn-secondary" type="submit">Search</button>
+                        </span>
+                </div>
+            </div>
+        </div>
         </form>
         <table class="table">
             <thead>

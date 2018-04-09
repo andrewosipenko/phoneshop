@@ -3,14 +3,17 @@ function addToCart (phoneId, quantity) {
         url: '${pageContext.request.contextPath}/ajaxCart',
         type: 'POST',
         data: 'phoneId=' + phoneId + '&quantity=' + quantity,
-        success:  functionSuccess,
+        success:  function(receivedData){
+                functionSuccess(receivedData, phoneId);
+        },
         error: function (){
             functionError(phoneId);
         }
     });
 }
 
-function functionSuccess(receivedData) {
+function functionSuccess(receivedData, phoneId) {
+    $("#" + phoneId).val("0");
     $("#itemsAmount").text(receivedData.itemsAmount);
     $("#subtotal").text(receivedData.subtotal);
 }
