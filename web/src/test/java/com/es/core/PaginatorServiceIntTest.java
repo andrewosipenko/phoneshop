@@ -5,6 +5,7 @@ import com.es.phoneshop.web.controller.paginator.PaginatorService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -13,6 +14,9 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @ContextConfiguration(value = "classpath:context/testContext-web.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class PaginatorServiceIntTest {
+    @Autowired
+    private PaginatorService paginatorService;
+    
     private final String SEARCH_ANY = "%";
     private final String SEARCH_NOT_EXISTING = "Don't exist";
     private final Integer VALID_PAGE_NUMBER = 1;
@@ -21,27 +25,27 @@ public class PaginatorServiceIntTest {
 
     @Test
     public void testGetPageBeginNumberWithValidPage() throws InvalidUrlParamException{
-        Integer pageBeginNumber = PaginatorService.getPageBeginNumber(VALID_PAGE_NUMBER, SEARCH_ANY);
+        Integer pageBeginNumber = paginatorService.getPageBeginNumber(VALID_PAGE_NUMBER, SEARCH_ANY);
         Assert.assertTrue(pageBeginNumber.equals(1));
     }
 
     @Test(expected = InvalidUrlParamException.class)
     public void testGetPageBeginNumberWithNotValidPage() throws InvalidUrlParamException{
-        PaginatorService.getPageBeginNumber(NOT_VALID_PAGE_NUMBER, SEARCH_ANY);
+        paginatorService.getPageBeginNumber(NOT_VALID_PAGE_NUMBER, SEARCH_ANY);
     }
 
     @Test
     public void testGetPageBeginNumberWhenPhonesAbsent() throws InvalidUrlParamException{
-        Integer pageNumber = PaginatorService.getPageBeginNumber(VALID_PAGE_NUMBER, SEARCH_NOT_EXISTING);
+        Integer pageNumber = paginatorService.getPageBeginNumber(VALID_PAGE_NUMBER, SEARCH_NOT_EXISTING);
         Assert.assertTrue(pageNumber.equals(1));
     }
 
     @Test
     public void testGetNewPage() throws InvalidUrlParamException{
-        Integer pageFromFirstSegment = PaginatorService.PREFERABLE_PAGES_AMOUNT - 1;
-        Integer pageFromSecondSegment = PaginatorService.PREFERABLE_PAGES_AMOUNT + 1;
-        Integer newPage = PaginatorService.getNewPage(pageFromFirstSegment, PaginatorService.NEXT_PAGE, SEARCH_ANY);
-        Integer maxPhoneAmountInSegment = PaginatorService.PREFERABLE_PAGES_AMOUNT * PaginatorService.PHONES_TO_DISPLAY;
+        Integer pageFromFirstSegment = paginatorService.PREFERABLE_PAGES_AMOUNT - 1;
+        Integer pageFromSecondSegment = paginatorService.PREFERABLE_PAGES_AMOUNT + 1;
+        Integer newPage = paginatorService.getNewPage(pageFromFirstSegment, paginatorService.NEXT_PAGE, SEARCH_ANY);
+        Integer maxPhoneAmountInSegment = paginatorService.PREFERABLE_PAGES_AMOUNT * paginatorService.PHONES_TO_DISPLAY;
         if(AMOUNT_OF_AVAILABLE_PHONES >= maxPhoneAmountInSegment) {
             Assert.assertTrue(pageFromSecondSegment.equals(newPage));
         }
@@ -52,8 +56,8 @@ public class PaginatorServiceIntTest {
 
     @Test
     public void testGetPageAmountToDisplay(){
-        Integer pageAmountToDisplay = PaginatorService.getPageAmountToDisplay(1, SEARCH_ANY);
-        Integer expectedValue = (int) Math.ceil((double) (AMOUNT_OF_AVAILABLE_PHONES / PaginatorService.PHONES_TO_DISPLAY));
+        Integer pageAmountToDisplay = paginatorService.getPageAmountToDisplay(1, SEARCH_ANY);
+        Integer expectedValue = (int) Math.ceil((double) (AMOUNT_OF_AVAILABLE_PHONES / paginatorService.PHONES_TO_DISPLAY));
         Assert.assertTrue(pageAmountToDisplay.equals(expectedValue));
     }
 }

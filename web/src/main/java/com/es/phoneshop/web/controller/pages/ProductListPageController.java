@@ -17,10 +17,13 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/productList")
 public class ProductListPageController {
-    private final String SORT_ABSENT = "sortAbsent";
-    private final String SEARCH_ANY = "";
     @Resource
     private PhoneDao phoneDao;
+    @Resource
+    private PaginatorService paginatorService;
+
+    private final String SORT_ABSENT = "";
+    private final String SEARCH_ANY = "";
 
     @RequestMapping(method = RequestMethod.GET, params = {"page", "action"})
     public String changePages(@RequestParam Map<String,String> urlParams)
@@ -31,7 +34,7 @@ public class ProductListPageController {
 
         String search = urlParams.get("search");
         return "redirect:/productList?page=" +
-                PaginatorService.getNewPage(currentPage, pageAction, search) +
+                paginatorService.getNewPage(currentPage, pageAction, search) +
                 restParams;
     }
 
@@ -43,18 +46,18 @@ public class ProductListPageController {
             @RequestParam(name = "search", required = false, defaultValue = SEARCH_ANY) String search,
             Model model)
             throws IllegalArgumentException, InvalidUrlParamException {
-        Integer pageBeginNumber = PaginatorService.getPageBeginNumber(page, search);
+        Integer pageBeginNumber = paginatorService.getPageBeginNumber(page, search);
         model.addAttribute("pageBeginNumber", pageBeginNumber);
 
-        page = PaginatorService.getValidNewPage(page, search);
+        page = paginatorService.getValidNewPage(page, search);
         model.addAttribute("page", page);
 
-        model.addAttribute("pagesToDisplay", PaginatorService.getPageAmountToDisplay(pageBeginNumber, search));
+        model.addAttribute("pagesToDisplay", paginatorService.getPageAmountToDisplay(pageBeginNumber, search));
         model.addAttribute("direction", dir);
         model.addAttribute("sort", sortBy);
         model.addAttribute("searchText", search);
 
-        int offset = PaginatorService.PHONES_TO_DISPLAY * (page - 1);
+        int offset = paginatorService.PHONES_TO_DISPLAY * (page - 1);
         List<Phone> phoneList = getPhoneList(sortBy, offset, search, dir);
         model.addAttribute("phones", phoneList);
         return "productList";
@@ -62,10 +65,10 @@ public class ProductListPageController {
 
     private List<Phone> getPhoneList(String sortBy, int offset, String search, String dir){
         if(SORT_ABSENT.equals(sortBy)) {
-            return phoneDao.findAll(offset, PaginatorService.PHONES_TO_DISPLAY, search);
+            return phoneDao.findAll(offset, paginatorService.PHONES_TO_DISPLAY, search);
         }
         else{
-            return phoneDao.findAllSortedBy(offset, PaginatorService.PHONES_TO_DISPLAY,
+            return phoneDao.findAllSortedBy(offset, paginatorService.PHONES_TO_DISPLAY,
                     search, sortBy, dir);
         }
     }
