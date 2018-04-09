@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/template" %>
 <template:page>
+    <script> <%@ include file="js/productList.js" %> </script>
     <div class="container">
         <form formaction="<c:url value="/productList"/>?page=${page}&sort=brand<c:if test="${direction == 'asc'}">&dir=desc</c:if>&search=">
             <input class="form-control input-sm" value="${searchText}" name="search">
@@ -71,27 +72,4 @@
             </ul>
         </nav>
     </div>
-    <script>
-        function addToCart (phoneId, quantity) {
-                $.ajax({
-                    url: "<c:url value="ajaxCart"/>",
-                    type: 'POST',
-                    data: 'phoneId=' + phoneId + '&quantity=' + quantity,
-                    success:  functionSuccess,
-                    error: function (){
-                            functionError(phoneId);
-                    }
-                });
-            }
-
-       function functionSuccess(receivedData) {
-           $("#itemsAmount").text(receivedData.itemsAmount);
-           $("#subtotal").text(receivedData.subtotal);
-       }
-
-       function functionError(phoneId) {
-           var selector = '#errorMessage' + phoneId;
-           $(selector).text("wrong format");
-       }
-    </script>
 </template:page>
