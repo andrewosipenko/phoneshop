@@ -8,5 +8,6 @@ public interface PhoneDao {
     void save(Phone phone);
     List<Phone> findAll(int offset, int limit);
     List<Phone> findAllInOrder(int offset, int limit, OrderEnum order, String searchQueryString);
-    Long getPhoneCount();
+    Long getPhonesCount();
+    Long getPhonesCountByQuery(String searchQueryString);
 }

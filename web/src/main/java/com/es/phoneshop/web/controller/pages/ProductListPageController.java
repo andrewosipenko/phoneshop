@@ -5,6 +5,8 @@ import javax.annotation.Resource;
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartService;
 import com.es.core.model.phone.OrderEnum;
+import com.es.phoneshop.web.bean.cart.CartInfo;
+import com.es.phoneshop.web.bean.cart.CartItem;
 import com.es.phoneshop.web.controller.constants.ProductListConstants;
 import com.es.phoneshop.web.service.ProductListPageService;
 import org.springframework.stereotype.Controller;
@@ -29,11 +31,11 @@ public class ProductListPageController {
     public String showProductList(@RequestParam(defaultValue = "BRAND") String order,
                                   @RequestParam(name = CURRENT_PAGE_NUMBER, defaultValue = "1") int pageNumber,
                                   @RequestParam(name = SEARCH_QUERY_STRING, defaultValue = "") String query,
-                                  Model model) {
-        model.addAttribute(PRODUCT_PAGE, pageService.getCurrentPage(0, 200,
-                OrderEnum.valueOf(order.toUpperCase()), query, pageNumber));
+                                  Model model) throws IllegalArgumentException {
+        model.addAttribute(PRODUCT_PAGE, pageService.getCurrentPage(OrderEnum.valueOf(order.toUpperCase()), query, pageNumber));
         model.addAttribute(ProductListConstants.ORDER_BY_ATTRIBUTE, OrderEnum.valueOf(order.toUpperCase()));
         model.addAttribute(ProductListConstants.SEARCH_QUERY_STRING, query);
+        model.addAttribute(ProductListConstants.CART_ITEM, new CartItem());
         return "productList";
     }
 }

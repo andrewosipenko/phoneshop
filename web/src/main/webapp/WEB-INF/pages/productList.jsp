@@ -1,7 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/template" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <template:page >
+  <script> <%@ include file="js/addToCart.js" %> </script>
   <c:choose>
   <c:when test="${productPage.totalCount ne 0}">
     <div class="container">
@@ -18,7 +20,7 @@
           <td>Action</td>
         </tr>
         </thead>
-        <c:forEach var="phone" items="${productPage.curentPagePhoneList}">
+        <c:forEach var="phone" items="${productPage.currentPagePhoneList}">
           <tr>
             <td>
               <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
@@ -31,15 +33,18 @@
               </c:forEach>
             </td>
             <td><c:out value="${phone.displaySizeInches}" /></td>
-            <td><c:out value="${phone.price}" /></td>
-            <td>
-              <input type="text" name="amount" value="1" id="${phone.id}">
-              <div id="error-message" style="color: red"></div>
-            </td>
-            <td>
-                <button type="button" onclick="addToCart(${phone.id}, $('#${phone.id}').val())"
+            <td><c:out value="${phone.price} $" /></td>
+            <form:form modelAttribute="cartItem" id="addToCart${phone.id}">
+              <td>
+                <form:input path="quantity" cssClass="form-control" id="phone-${phone.id}-quantity" />
+                <input type="hidden" name="phoneId" value="${phone.id}"/>
+                <div id="error-message-${phone.id}" style="color: red; font-size: small"></div>
+              </td>
+              <td>
+                <button type="button" onclick="addToCart(${phone.id})"
                         class="btn btn-secondary add-to-cart">Add To Cart</button>
-            </td>
+              </td>
+            </form:form>
           </tr>
         </c:forEach>
       </table>
@@ -58,31 +63,4 @@
     </div>
   </c:otherwise>
   </c:choose>
-  <script>
-      function addToCart(phoneId, quantity) {
-          $.ajax({
-                  url: "<c:url value="/ajaxCart"/>",
-                  type: "POST",
-                  data: JSON.stringify({
-                      phoneId: phoneId,
-                      quantity: quantity,
-                      errorMessage: ""
-                  }),
-                  contentType: "application/json;charset=UTF-8",
-                  dataType: "json",
-                  success: updateCartInfo,
-                  error: setErrorMessage
-              }
-          );
-      }
-      function updateCartInfo(cartInfo) {
-          $('#itemsCount').text(cartInfo.itemsCount);
-          $('#cartCost').text(cartInfo.cost);
-          $('#error-message').text("");
-      }
-      function setErrorMessage(response) {
-          var cartInfo = JSON.parse(response.responseText);
-          $('#error-message').text(cartInfo.errorMessage);
-      }
-  </script>
 </template:page>

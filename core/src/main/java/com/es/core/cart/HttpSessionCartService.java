@@ -25,11 +25,6 @@ public class HttpSessionCartService implements CartService {
         return cart;
     }
 
-    /**
-     * @value cartItem is not present only if we haven't already added such phone in a cart.
-     * In that case we have to add a new CartItem. In other case we have to update
-     * existing CartItem in a cart.
-     */
     @Override
     public void addPhone(Long phoneId, Long quantity) throws PhoneNotFoundException {
 
@@ -50,10 +45,6 @@ public class HttpSessionCartService implements CartService {
         }
     }
 
-    /**
-     * @value newCost is always present for now (in case the implementation of HttpSessionCartService
-     * doesn't support removing items from cart for now. Method is to be updated.
-     */
     private BigDecimal updateAndReturnCost() {
         List<CartItem> items = cart.getItems();
         Optional<BigDecimal> newCost = items

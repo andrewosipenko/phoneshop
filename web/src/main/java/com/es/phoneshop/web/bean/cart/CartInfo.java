@@ -7,19 +7,12 @@ public class CartInfo {
 
     private BigDecimal cost;
 
-    private String errorMessage;
-
     public CartInfo() {
     }
 
     public CartInfo(Long itemCount, BigDecimal cost) {
         this.itemsCount = itemCount;
         this.cost = cost;
-        this.errorMessage = "";
-    }
-
-    public CartInfo(String errorMessage) {
-        this.errorMessage = errorMessage;
     }
 
     public Long getItemsCount() {
@@ -36,13 +29,5 @@ public class CartInfo {
 
     public void setCost(BigDecimal cost) {
         this.cost = cost;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
     }
 }

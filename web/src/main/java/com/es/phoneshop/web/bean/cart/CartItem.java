@@ -3,15 +3,13 @@ package com.es.phoneshop.web.bean.cart;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import static com.es.phoneshop.web.controller.constants.AjaxConstants.WRONG_INPUT;
-
 public class CartItem {
-    @NotNull(message = WRONG_INPUT)
-    @Min(value = 1000L, message = WRONG_INPUT)
+    @NotNull
+    @Min(value = 1000L)
     private Long phoneId;
 
-    @NotNull(message = WRONG_INPUT)
-    @Min(value = 1L, message = WRONG_INPUT)
+    @NotNull
+    @Min(value = 1L)
     private Long quantity;
 
     public CartItem() {

@@ -5,4 +5,5 @@ public interface ProductListConstants {
     String ORDER_BY_ATTRIBUTE = "order";
     String SEARCH_QUERY_STRING = "query";
     String PRODUCT_PAGE = "productPage";
+    String CART_ITEM = "cartItem";
 }

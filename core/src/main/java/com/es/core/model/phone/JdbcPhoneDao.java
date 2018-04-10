@@ -1,8 +1,10 @@
 package com.es.core.model.phone;
 
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
@@ -12,9 +14,12 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Component
-public class JdbcPhoneDao implements PhoneDao{
+public class JdbcPhoneDao implements PhoneDao {
     @Resource
     private JdbcTemplate jdbcTemplate;
+
+    @Resource
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private SimpleJdbcInsert jdbcInsert;
 
@@ -50,18 +55,43 @@ public class JdbcPhoneDao implements PhoneDao{
         return findAllInOrder(offset, limit, OrderEnum.BRAND, null);
     }
 
-    public Long getPhoneCount() {
+    public Long getPhonesCount() {
         return jdbcTemplate.queryForObject(PhoneQueries.COUNT_PHONES_QUERY, Long.class);
     }
 
-    public List<Phone> findAllInOrder(int offset, int limit, OrderEnum order, String searchQueryString) {
-        if(searchQueryString == null || searchQueryString.length() == 0) {
-            return jdbcTemplate.query( getFindAllInOrderQueryString(offset, limit, order), new PhoneListResultSetExtractor());
-        }
-        return jdbcTemplate.query(getSearchForAllInOrderQueryString(offset, limit, order),
-                new Object[] { searchQueryString.toLowerCase(), searchQueryString.toLowerCase() },
-                new PhoneListResultSetExtractor());
+    public Long getPhonesCountByQuery(String searchQueryString) {
+        if(searchQueryString == null || searchQueryString.equals(""))
+            return getPhonesCount();
+        return jdbcTemplate.queryForObject(PhoneQueries.COUNT_PHONES_BY_SEARCH_QUERY, Long.class, searchQueryString.toLowerCase(), searchQueryString.toLowerCase());
     }
+
+    public List<Phone> findAllInOrder(int offset, int limit, OrderEnum order, String searchQueryString) {
+        List<Phone> phones;
+        if(searchQueryString == null || searchQueryString.length() == 0) {
+             phones = jdbcTemplate.query( getFindAllInOrderQueryString(offset, limit, order), new BeanPropertyRowMapper<>(Phone.class));
+        } else {
+            phones = jdbcTemplate.query(getSearchForAllInOrderQueryString(offset, limit, order), new BeanPropertyRowMapper<>(Phone.class),
+                    searchQueryString.toLowerCase(), searchQueryString.toLowerCase());
+        }
+        for (Phone phone : phones) {
+            setColors(phone);
+        }
+        return phones;
+    }
+
+    private void setColors(Phone phone) {
+        List<Integer> colorIds = jdbcTemplate.queryForList(PhoneQueries.GET_COLOR_IDS_FOR_PHONE, Integer.class, phone.getId());
+        if (!colorIds.isEmpty()) {
+            MapSqlParameterSource source = new MapSqlParameterSource();
+            source.addValue("ids", colorIds);
+            List<Color> colors = namedParameterJdbcTemplate
+                    .query(PhoneQueries.GET_COLORS_BY_IDS, source, new BeanPropertyRowMapper<>(Color.class));
+            phone.setColors(new LinkedHashSet<>(colors));
+        } else {
+            phone.setColors(Collections.EMPTY_SET);
+        }
+    }
+
 
     private void insert(Phone phone) {
         Number newId = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(getParameters(phone)));

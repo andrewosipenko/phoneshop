@@ -90,6 +90,7 @@ public class JdbcPhoneDaoIntTest {
 
     @Test
     @Transactional
+    @SuppressWarnings("unchecked")
     public void testGetColorSetAfterUpdate() {
         Phone phone = phoneDao.get(1017L).get();
         Set<Color> expectedColorSet = phone.getColors();
