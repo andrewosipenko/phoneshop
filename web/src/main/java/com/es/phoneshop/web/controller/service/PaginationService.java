@@ -1,19 +1,19 @@
-package com.es.phoneshop.web.controller.paginator;
+package com.es.phoneshop.web.controller.service;
 
 import com.es.core.dao.PhoneDao;
-import com.es.phoneshop.web.controller.exception.InvalidUrlParamException;
+import com.es.phoneshop.web.controller.exception.throwable.InvalidUrlParamException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PaginatorService {
+public class PaginationService {
     @Autowired
     private PhoneDao phoneDao;
 
-    public final String NEXT_PAGE = "next";
-    public final String PREV_PAGE = "prev";
-    public final int PHONES_TO_DISPLAY = 5;
-    public final int PREFERABLE_PAGES_AMOUNT = 10;
+    public static final String NEXT_PAGE = "next";
+    public static final String PREV_PAGE = "prev";
+    public static final int PHONES_TO_DISPLAY = 5;
+    public static final int PREFERABLE_PAGES_AMOUNT = 10;
 
     public  int getPageBeginNumber(Integer pageNumber, String search)
             throws InvalidUrlParamException{

@@ -45,14 +45,9 @@ public class HttpSessionCartService implements CartService {
         Phone newPhone = phoneDao.get(phoneId).orElseThrow(
                 () -> new IllegalArgumentException("There is no such phone with id " + phoneId));
         BigDecimal phonePrice = newPhone.getPrice();
-        if(phonePrice == null){
-            throw new NullPointerException("Price of phone with id " + phoneId + " is null");
-        }
-        else{
-            BigDecimal newSubtotal = phonePrice.multiply(new BigDecimal(quantity));
-            newSubtotal = newSubtotal.add(cart.getSubtotal());
-            cart.setSubtotal(newSubtotal);
-        }
+        BigDecimal newSubtotal = phonePrice.multiply(new BigDecimal(quantity));
+        newSubtotal = newSubtotal.add(cart.getSubtotal());
+        cart.setSubtotal(newSubtotal);
     }
 
     private void updateItemsAmount(Long quantity){

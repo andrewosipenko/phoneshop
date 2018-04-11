@@ -34,7 +34,8 @@ public interface SqlQueryConstants {
     String DELETE_FROM_PHONE2COLOR_BY_PHONE_ID = "DELETE FROM phone2color WHERE phone2color.phoneId = ";
     String SELECT_COLORS_BELONGS_TO_PHONE_ID = "SELECT * FROM colors INNER JOIN phone2color " +
             "ON colors.id = phone2color.colorId WHERE phone2color.phoneId = ";
-    String AVAILABLE_PHONES = "INNER JOIN stocks ON stocks.phoneId = phones.id WHERE stocks.stock > 0";
+    String AVAILABLE_PHONES = "INNER JOIN stocks ON stocks.phoneId = phones.id WHERE stocks.stock > 0" +
+            " AND phones.price IS NOT NULL ";
     String SELECT_AVAILABLE_PHONES_WITH_OFFSET =  "SELECT * FROM phones " + AVAILABLE_PHONES + " AND lower(brand) like ? OFFSET ";
     String SELECT_AVAILABLE_PHONES_SORTED = "SELECT * FROM phones " + AVAILABLE_PHONES + " AND lower(brand) like ? ORDER BY phones.";
 }

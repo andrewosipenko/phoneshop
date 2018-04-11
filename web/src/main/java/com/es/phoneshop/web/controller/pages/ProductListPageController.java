@@ -1,9 +1,9 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.dao.PhoneDao;
 import com.es.core.model.phone.Phone;
-import com.es.phoneshop.web.controller.exception.InvalidUrlParamException;
-import com.es.phoneshop.web.controller.paginator.PaginatorService;
+import com.es.phoneshop.web.controller.exception.throwable.InvalidUrlParamException;
+import com.es.phoneshop.web.controller.service.PaginationService;
+import com.es.phoneshop.web.controller.service.phone.PhoneService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,11 +18,12 @@ import java.util.Map;
 @RequestMapping(value = "/productList")
 public class ProductListPageController {
     @Resource
-    private PhoneDao phoneDao;
+    private PaginationService paginationService;
     @Resource
-    private PaginatorService paginatorService;
+    private PhoneService phoneService;
 
-    private final String SORT_ABSENT = "";
+    private final String DEFAULT_SORT_BY = "brand";
+    private final String DEFAULT_SORT_DIRECTION = "asc";
     private final String SEARCH_ANY = "";
 
     @RequestMapping(method = RequestMethod.GET, params = {"page", "action"})
@@ -34,43 +35,33 @@ public class ProductListPageController {
 
         String search = urlParams.get("search");
         return "redirect:/productList?page=" +
-                paginatorService.getNewPage(currentPage, pageAction, search) +
+                paginationService.getNewPage(currentPage, pageAction, search) +
                 restParams;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public String showProductList(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(name = "sort", required = false, defaultValue = SORT_ABSENT) String sortBy,
-            @RequestParam(name = "dir", required = false, defaultValue = "asc") String dir,
+            @RequestParam(name = "sort", required = false, defaultValue = DEFAULT_SORT_BY) String sortBy,
+            @RequestParam(name = "dir", required = false, defaultValue = DEFAULT_SORT_DIRECTION) String dir,
             @RequestParam(name = "search", required = false, defaultValue = SEARCH_ANY) String search,
             Model model)
             throws IllegalArgumentException, InvalidUrlParamException {
-        Integer pageBeginNumber = paginatorService.getPageBeginNumber(page, search);
+        Integer pageBeginNumber = paginationService.getPageBeginNumber(page, search);
         model.addAttribute("pageBeginNumber", pageBeginNumber);
 
-        page = paginatorService.getValidNewPage(page, search);
+        page = paginationService.getValidNewPage(page, search);
         model.addAttribute("page", page);
 
-        model.addAttribute("pagesToDisplay", paginatorService.getPageAmountToDisplay(pageBeginNumber, search));
+        model.addAttribute("pagesToDisplay", paginationService.getPageAmountToDisplay(pageBeginNumber, search));
         model.addAttribute("direction", dir);
         model.addAttribute("sort", sortBy);
         model.addAttribute("searchText", search);
 
-        int offset = paginatorService.PHONES_TO_DISPLAY * (page - 1);
-        List<Phone> phoneList = getPhoneList(sortBy, offset, search, dir);
+        int offset = PaginationService.PHONES_TO_DISPLAY * (page - 1);
+        List<Phone> phoneList = phoneService.getPhoneList(sortBy, offset, search, dir);
         model.addAttribute("phones", phoneList);
         return "productList";
-    }
-
-    private List<Phone> getPhoneList(String sortBy, int offset, String search, String dir){
-        if(SORT_ABSENT.equals(sortBy)) {
-            return phoneDao.findAll(offset, paginatorService.PHONES_TO_DISPLAY, search);
-        }
-        else{
-            return phoneDao.findAllSortedBy(offset, paginatorService.PHONES_TO_DISPLAY,
-                    search, sortBy, dir);
-        }
     }
 
     private String getRestParams(Map<String, String> urlParams){
