@@ -1,14 +1,13 @@
-package com.es.phoneshop.web.controller.ajax;
+package com.es.phoneshop.web.controller.pages.ajax;
 
 import com.es.core.cart.CartService;
 import com.es.core.model.phone.AddToCartForm;
+import com.es.core.model.phone.exception.InvalidAddToCartFormException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
@@ -22,10 +21,10 @@ public class AjaxCartController {
 
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody
-    ModelAndView addPhone(@Validated AddToCartForm form, BindingResult result) {
+    ModelAndView addPhone(@Validated AddToCartForm form, BindingResult result) throws InvalidAddToCartFormException {
         ModelAndView mv = new ModelAndView(new MappingJackson2JsonView());
         if(result.hasErrors()){
-            mv.setStatus(HttpStatus.BAD_REQUEST);
+            throw new InvalidAddToCartFormException(result.getFieldError().getDefaultMessage());
         }
         else {
             cartService.addPhone(form.getPhoneId(), form.getQuantity());
@@ -34,5 +33,10 @@ public class AjaxCartController {
             mv.setStatus(HttpStatus.OK);
         }
         return mv;
+    }
+
+    @ExceptionHandler(InvalidAddToCartFormException.class)
+    public @ResponseBody @ResponseStatus(HttpStatus.BAD_REQUEST) String handleInvalidAddToCartException(InvalidAddToCartFormException e){
+        return e.getMessage();
     }
 }

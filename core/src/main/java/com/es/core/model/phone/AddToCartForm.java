@@ -11,7 +11,7 @@ public class AddToCartForm {
     @NotNull
     private Long phoneId;
 
-    @Min(1L)
+    @Min(value = 1L, message = "Quantity should be integer positive number")
     @NotNull
     private Long quantity;
 
