@@ -23,7 +23,9 @@
         <c:forEach var="phone" items="${productPage.currentPagePhoneList}">
           <tr>
             <td>
-              <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
+              <a href="<c:url value="/productDetails/${phone.id}"/>">
+                <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
+              </a>
             </td>
             <td><c:out value="${phone.brand}" /></td>
             <td><c:out value="${phone.model}" /></td>
@@ -39,10 +41,11 @@
                 <form:input path="quantity" cssClass="form-control" id="phone-${phone.id}-quantity" />
                 <input type="hidden" name="phoneId" value="${phone.id}"/>
                 <div id="error-message-${phone.id}" style="color: red; font-size: small"></div>
+                <div id="success-message-${phone.id}" style="color: green"></div>
               </td>
               <td>
                 <button type="button" onclick="addToCart(${phone.id})"
-                        class="btn btn-secondary add-to-cart">Add To Cart</button>
+                        class="btn btn-success">Add To Cart</button>
               </td>
             </form:form>
           </tr>

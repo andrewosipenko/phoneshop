@@ -7,10 +7,14 @@ var addToCart = function (id) {
             $('#phone-' + id + 'quantity').html('');
             $('#itemsCount').html(status.itemsCount);
             $('#cartCost').html(status.cost);
+            $('#error-message-'+id).html('');
+            $('#success-message-'+id).html('added to cart');
         }
     }).fail(function(msg) {
-        var message = $('#error-message-' + id);
-        message.html('');
-        message.html(msg.responseText);
+        var errorMessage = $('#error-message-' + id);
+        errorMessage.html('');
+        errorMessage.html(msg.responseText);
+        var successMessage = $('#success-message-' + id);
+        successMessage.html('');
     });
 };
