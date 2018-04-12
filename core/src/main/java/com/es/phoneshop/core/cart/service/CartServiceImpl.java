@@ -14,9 +14,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -52,12 +51,41 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void update(Map<Long, Long> items) {
-        throw new UnsupportedOperationException("TODO");
+    public void update(Map<Long, Long> updateItems) {
+        ckeckUpdateItems(updateItems);
+        cart.update(updateItems);
+    }
+
+    @Override
+    public void ckeckUpdateItems(Map<Long, Long> updateItems) {
+        checkIfAllUpdatedPhonesPresent(new HashSet<>(updateItems.keySet()));
+        List<CartItem> cartItems = cart.getItems();
+        Set<Long> tooBigQuantityPhoneIds = new HashSet<>();
+
+        for (CartItem item : cartItems) {
+            Phone phone = item.getPhone();
+            if (!updateItems.containsKey(phone.getId()))
+                continue;
+            Long quantity = updateItems.get(phone.getId());
+            Stock stock = stockDao.get(phone).orElseThrow(NoStockFoundException::new);
+            if (stock.getStock() < quantity)
+                tooBigQuantityPhoneIds.add(phone.getId());
+        }
+        if (!tooBigQuantityPhoneIds.isEmpty())
+            throw new TooBigQuantityException(tooBigQuantityPhoneIds);
     }
 
     @Override
     public void remove(Long phoneId) {
         throw new UnsupportedOperationException("TODO");
+    }
+
+    private void checkIfAllUpdatedPhonesPresent(Set<Long> updatedPhoneIds) {
+        Set<Long> cartPhoneIds = cart.getItems().stream()
+                .map(item -> item.getPhone().getId())
+                .collect(Collectors.toSet());
+        updatedPhoneIds.removeAll(cartPhoneIds);
+        if (!updatedPhoneIds.isEmpty())
+            throw new NoSuchPhoneException();
     }
 }
