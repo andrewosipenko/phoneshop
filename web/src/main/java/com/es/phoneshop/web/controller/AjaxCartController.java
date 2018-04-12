@@ -6,7 +6,9 @@ import com.es.phoneshop.core.cart.throwable.NoStockFoundException;
 import com.es.phoneshop.core.cart.throwable.NoSuchPhoneException;
 import com.es.phoneshop.core.cart.throwable.TooBigQuantityException;
 import com.es.phoneshop.web.controller.throwable.IncorrectFormFormatException;
+import com.es.phoneshop.web.controller.throwable.InternalException;
 import com.es.phoneshop.web.controller.util.AddToCartForm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -20,6 +22,10 @@ import javax.validation.Valid;
 public class AjaxCartController {
     @Resource
     private CartService cartService;
+    @Value("${error.incorrect.quantity}")
+    private String INCORRECT_QUANTITY_MESSAGE;
+    @Value("${error.tooBig.quantity}")
+    private String TOO_BIG_QUANTITY_MESSAGE;
 
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody CartStatus getCartStatus() {
@@ -27,30 +33,24 @@ public class AjaxCartController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody CartStatus addPhone(@Valid AddToCartForm form, BindingResult bindingResult) {
+    public @ResponseBody CartStatus addPhone(@ModelAttribute("addToCartForm") @Valid AddToCartForm addToCartForm, BindingResult bindingResult) {
         if (bindingResult.hasFieldErrors())
             throw new IncorrectFormFormatException();
-        cartService.addPhone(form.getPhoneId(), form.getQuantity());
+        try {
+            cartService.addPhone(addToCartForm.getPhoneId(), addToCartForm.getQuantity());
+        } catch (NoSuchPhoneException | NoStockFoundException e) {
+            throw new InternalException();
+        }
         return cartService.getCartStatus();
     }
 
     @ExceptionHandler(IncorrectFormFormatException.class)
     private @ResponseBody @ResponseStatus(HttpStatus.BAD_REQUEST) String handleIncorrectFormFormat() {
-        return "Quantity must be positive integer value";
+        return INCORRECT_QUANTITY_MESSAGE;
     }
 
     @ExceptionHandler(TooBigQuantityException.class)
     private @ResponseBody @ResponseStatus(HttpStatus.BAD_REQUEST) String handleTooBigQuantity() {
-        return "Quantity value is too big";
-    }
-
-    @ExceptionHandler(NoSuchPhoneException.class)
-    private @ResponseBody @ResponseStatus(HttpStatus.NOT_FOUND) String handleNoSuchPhone() {
-        return "No such phone";
-    }
-
-    @ExceptionHandler(NoStockFoundException.class)
-    private @ResponseBody @ResponseStatus(HttpStatus.NOT_FOUND) String handleNoStockFound() {
-        return "No stock info found";
+        return TOO_BIG_QUANTITY_MESSAGE;
     }
 }

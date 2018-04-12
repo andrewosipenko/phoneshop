@@ -1,8 +1,8 @@
 package com.es.test.phoneshop.core.cart;
 
 import com.es.phoneshop.core.cart.model.CartItem;
-import com.es.phoneshop.core.cart.service.CartService;
 import com.es.phoneshop.core.cart.model.CartStatus;
+import com.es.phoneshop.core.cart.service.CartService;
 import com.es.phoneshop.core.cart.throwable.NoStockFoundException;
 import com.es.phoneshop.core.cart.throwable.NoSuchPhoneException;
 import com.es.phoneshop.core.cart.throwable.TooBigQuantityException;
@@ -16,9 +16,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(locations = "classpath:context/applicationIntTestContext.xml")
@@ -38,7 +36,7 @@ public class CartServiceIntTest {
     private static final Long PHONE_A_TOO_MUCH_QUANTITY = 30L;
 
     @Test
-    public void testAddPhoneNormal() {
+    public void testAddPhone() {
         cartService.addPhone(EXISTING_PHONE_A_ID, PHONE_A_ACCEPTABLE_QUANTITY_1);
         cartService.addPhone(EXISTING_PHONE_B_ID, PHONE_B_ACCEPTABLE_QUANTITY);
         cartService.addPhone(EXISTING_PHONE_A_ID, PHONE_A_ACCEPTABLE_QUANTITY_2);

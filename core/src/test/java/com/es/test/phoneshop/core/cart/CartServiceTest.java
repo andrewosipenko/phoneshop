@@ -4,6 +4,7 @@ import com.es.phoneshop.core.cart.model.Cart;
 import com.es.phoneshop.core.cart.model.CartItem;
 import com.es.phoneshop.core.cart.model.CartStatus;
 import com.es.phoneshop.core.cart.service.CartService;
+import com.es.phoneshop.core.cart.service.CartServiceImpl;
 import com.es.phoneshop.core.phone.model.Phone;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,10 +12,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -22,16 +23,16 @@ import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 @ContextConfiguration(locations = "classpath:context/applicationIntTestContext.xml")
+@Transactional
 public class CartServiceTest {
     @Mock
     private Cart cart;
-    @Resource
     @InjectMocks
-    private CartService cartService;
+    private CartService cartService = new CartServiceImpl();
 
     @Before
     public void setUp() {

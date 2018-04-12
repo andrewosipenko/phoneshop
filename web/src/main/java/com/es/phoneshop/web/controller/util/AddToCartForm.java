@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 
 public class AddToCartForm {
     @NotNull
-    @Min(value = 1L)
+    @Min(1)
     private Long quantity = 0L;
     @NotNull
     private Long phoneId;

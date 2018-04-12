@@ -21,7 +21,7 @@
         <div class="page-header text-primary">
             <a style="text-decoration: none; color: inherit;" href="${pageContext.request.contextPath}"><h1 class="d-inline">Phone Shop</h1></a>
             <c:if test="${cartShown}">
-                <a class="btn btn-primary d-inline-block float-right mt-2" href="#">
+                <a class="btn btn-primary d-inline-block float-right mt-2" href="${pageContext.request.contextPath}/cart">
                     My cart: <span id="phonesTotal"></span> items $<span id="costTotal"></span>
                 </a>
             </c:if>
