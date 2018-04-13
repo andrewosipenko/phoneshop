@@ -1,10 +1,11 @@
-package com.es.test.phoneshop.core.cart;
+package com.es.test.phoneshop.core.cart.service;
 
 import com.es.phoneshop.core.cart.model.Cart;
 import com.es.phoneshop.core.cart.model.CartItem;
 import com.es.phoneshop.core.cart.model.CartStatus;
 import com.es.phoneshop.core.cart.service.CartService;
 import com.es.phoneshop.core.cart.service.CartServiceImpl;
+import com.es.phoneshop.core.cart.throwable.NoStockFoundException;
 import com.es.phoneshop.core.cart.throwable.NoSuchPhoneException;
 import com.es.phoneshop.core.cart.throwable.TooBigQuantityException;
 import com.es.phoneshop.core.phone.dao.PhoneDao;
@@ -131,7 +132,11 @@ public class CartServiceTest {
         when(stockDao.get(phone3)).thenReturn(Optional.of(stock3));
 
         Long[][] updateArr = {{1001L, 7L}, {1003L, 5L}};
-        cartService.update(Stream.of(updateArr).collect(Collectors.toMap(ar -> ar[0], ar -> ar[1])));
+        try {
+            cartService.update(Stream.of(updateArr).collect(Collectors.toMap(ar -> ar[0], ar -> ar[1])));
+        } catch (Throwable e) {
+            fail();
+        }
     }
 
     @Test
@@ -162,5 +167,66 @@ public class CartServiceTest {
             cartService.update(updateMap);
             fail();
         } catch (TooBigQuantityException ignored) {}
+    }
+
+    @Test
+    public void testUpdateNoStock() {
+        Phone phone1 = new Phone();
+        phone1.setId(1001L);
+        when(cart.getItems()).thenReturn(Stream.of(new CartItem(phone1, 5L)).collect(Collectors.toList()));
+        when(stockDao.get(phone1)).thenReturn(Optional.empty());
+        try {
+            Map<Long, Long> updateMap = new HashMap<>();
+            updateMap.put(1001L, 3L);
+            cartService.update(updateMap);
+            fail();
+        } catch (NoStockFoundException ignored) {}
+    }
+
+    @Test
+    public void testGetCartItems() {
+        Phone phone1 = new Phone();
+        phone1.setId(1001L);
+        Phone phone2 = new Phone();
+        phone2.setId(1002L);
+        Phone phone3 = new Phone();
+        phone3.setId(1003L);
+        List<CartItem> expectedItems = Stream
+                .of(new CartItem(phone1, 5L), new CartItem(phone2, 2L), new CartItem(phone3, 4L))
+                .collect(Collectors.toList());
+        when(cart.getItems()).thenReturn(expectedItems);
+        List<CartItem> actualItems = cartService.getCartItems();
+        for (int i = 0; i < 3; i++) {
+            assertSame(expectedItems.get(i).getPhone(), actualItems.get(i).getPhone());
+            assertSame(expectedItems.get(i).getQuantity(), actualItems.get(i).getQuantity());
+        }
+    }
+
+    @Test
+    public void testRemove() {
+        Phone phone1 = new Phone();
+        phone1.setId(1001L);
+        Phone phone2 = new Phone();
+        phone2.setId(1002L);
+        Phone phone3 = new Phone();
+        phone3.setId(1003L);
+        List<CartItem> expectedItems = Stream
+                .of(new CartItem(phone1, 5L), new CartItem(phone2, 2L), new CartItem(phone3, 4L))
+                .collect(Collectors.toList());
+        when(cart.getItems()).thenReturn(expectedItems);
+        try {
+            cartService.remove(1001L);
+        } catch (Throwable e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testRemovePhoneNotInCart() {
+        when(cart.getItems()).thenReturn(new ArrayList<>());
+        try {
+            cartService.remove(1001L);
+            fail();
+        } catch (NoSuchPhoneException ignored) {}
     }
 }

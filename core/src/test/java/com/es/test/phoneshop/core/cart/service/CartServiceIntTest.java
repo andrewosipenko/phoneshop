@@ -1,4 +1,4 @@
-package com.es.test.phoneshop.core.cart;
+package com.es.test.phoneshop.core.cart.service;
 
 import com.es.phoneshop.core.cart.model.CartItem;
 import com.es.phoneshop.core.cart.model.CartStatus;
@@ -29,7 +29,7 @@ public class CartServiceIntTest {
     @Resource
     private CartService cartService;
 
-    private static final Long[] EXISTING_PHONE_IDS = {1001L, 1002L, 1003L, 1004L};
+    private static final Long[] EXISTING_PHONE_IDS = {1001L, 1002L, 1003L, 1004L}; // ascending
     private static final Long[] PHONE_ACCEPTABLE_QUANTITIES_1 = {5L, 9L, 2L, 4L};
     private static final Long[] PHONE_ACCEPTABLE_QUANTITIES_2 = {3L, 4L, 3L, 4L};
     private static final BigDecimal P0Q1_P0Q2_P1Q1_TOTAL_COST = BigDecimal.valueOf(7103);
@@ -120,5 +120,27 @@ public class CartServiceIntTest {
             cartService.update(Stream.of(new Long[][]{{1001L, 1000L}}).collect(Collectors.toMap(ar -> ar[0], ar -> ar[1])));
             fail();
         } catch (TooBigQuantityException ignored) {}
+    }
+
+    @Test
+    public void testRemove() {
+        cartService.addPhone(EXISTING_PHONE_IDS[0], PHONE_ACCEPTABLE_QUANTITIES_1[0]);
+        cartService.addPhone(EXISTING_PHONE_IDS[1], PHONE_ACCEPTABLE_QUANTITIES_1[1]);
+        cartService.addPhone(EXISTING_PHONE_IDS[2], PHONE_ACCEPTABLE_QUANTITIES_1[2]);
+        cartService.remove(EXISTING_PHONE_IDS[0]);
+        List<CartItem> items = cartService.getCartItems();
+        items = items.stream().sorted(Comparator.comparing(item -> item.getPhone().getId())).collect(Collectors.toList());
+        assertEquals(EXISTING_PHONE_IDS[1], items.get(0).getPhone().getId());
+        assertEquals(EXISTING_PHONE_IDS[2], items.get(1).getPhone().getId());
+        assertEquals(PHONE_ACCEPTABLE_QUANTITIES_1[1], items.get(0).getQuantity());
+        assertEquals(PHONE_ACCEPTABLE_QUANTITIES_1[2], items.get(1).getQuantity());
+    }
+
+    @Test
+    public void testRemovePhoneNotInCart() {
+        try {
+            cartService.remove(EXISTING_PHONE_IDS[0]);
+            fail();
+        } catch (NoSuchPhoneException ignored) {}
     }
 }
