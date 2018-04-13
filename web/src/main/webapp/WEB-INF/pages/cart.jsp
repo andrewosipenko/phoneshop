@@ -5,7 +5,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <template:page title="Cart">
-    <script> <%@ include file="scripts/updateCart.js" %> </script>
+    <script> <%@ include file="scripts/cart.js" %> </script>
     <components:header cartShown="true"/>
 
     <div class="container mt-3 py-1">
@@ -16,6 +16,10 @@
     <div class="container mt-1">
         <a class="btn btn-secondary" href="${pageContext.request.contextPath}/productList">Back to product List</a>
     </div>
+    <form method="post" id="deleteFromCartForm" hidden>
+        <input type="hidden" name="_method" value="DELETE"/>
+        <input type="hidden" name="phoneId" id="deleteFromCartPhoneId"/>
+    </form>
 
     <div class="container mt-3">
         <table class="table table-bordered table-striped">
@@ -46,7 +50,7 @@
                                 <form:input cssClass="form-control" cssStyle="width:70px;" path="updateCartItems[${index}].quantity"/>
                                 <form:errors path="updateCartItems[${index}].quantity" cssStyle="color: red;"/>
                             </td>
-                            <td class="text-center" style="vertical-align: middle!important"><button class="btn btn-info" type="button" onclick="">Delete</button></td>
+                            <td class="text-center" style="vertical-align: middle!important"><button class="btn btn-info" type="button" onclick="deleteFromCart(${phones[index].id})">Delete</button></td>
                         </tr>
                     </c:forEach>
                 </form:form>

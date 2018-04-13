@@ -51,13 +51,13 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void update(Map<Long, Long> updateItems) {
+    public void update(Map<Long, Long> updateItems) throws NoSuchPhoneException, NoStockFoundException, TooBigQuantityException {
         checkUpdateItems(updateItems);
         cart.update(updateItems);
     }
 
     @Override
-    public void checkUpdateItems(Map<Long, Long> updateItems) {
+    public void checkUpdateItems(Map<Long, Long> updateItems) throws NoSuchPhoneException, NoStockFoundException, TooBigQuantityException {
         checkIfAllUpdatedPhonesPresent(new HashSet<>(updateItems.keySet()));
         List<CartItem> cartItems = cart.getItems();
         Set<Long> tooBigQuantityPhoneIds = new HashSet<>();
@@ -75,8 +75,13 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void remove(Long phoneId) {
-        throw new UnsupportedOperationException("TODO");
+    public void remove(Long phoneId) throws NoSuchPhoneException {
+        Set<Long> cartPhoneIds = cart.getItems().stream()
+                .map(item -> item.getPhone().getId())
+                .collect(Collectors.toSet());
+        if (!cartPhoneIds.contains(phoneId))
+            throw new NoSuchPhoneException();
+        cart.remove(phoneId);
     }
 
     private void checkIfAllUpdatedPhonesPresent(Set<Long> updatedPhoneIds) {

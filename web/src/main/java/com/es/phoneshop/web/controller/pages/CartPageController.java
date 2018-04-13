@@ -58,6 +58,16 @@ public class CartPageController {
         return "redirect:/cart";
     }
 
+    @RequestMapping(method = RequestMethod.DELETE)
+    public String deleteFromCart(Long phoneId) {
+        try {
+            cartService.remove(phoneId);
+        } catch (NoSuchPhoneException e) {
+            throw new InternalException();
+        }
+        return "redirect:/cart";
+    }
+
     private void handleTooBigQuantities(BindingResult result, Set<Long> phoneIds, List<UpdateCartItem> items) {
         for (int i = 0; i < items.size(); i++) {
             Long phoneId = items.get(i).getPhoneId();

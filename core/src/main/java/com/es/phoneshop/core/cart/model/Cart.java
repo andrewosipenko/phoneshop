@@ -7,10 +7,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @Scope(value = "${cart.scope}", proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -39,5 +36,9 @@ public class Cart {
             Long quantity = updateItems.get(phone.getId());
             item.setQuantity(quantity);
         }
+    }
+
+    public void remove(Long phoneId) {
+        items.removeIf(item -> Objects.equals(item.getPhone().getId(), phoneId));
     }
 }
