@@ -21,7 +21,7 @@ public interface CartService {
      */
     void update(Map<Long, Long> items);
 
-    void ckeckUpdateItems(Map<Long, Long> updateItems);
+    void checkUpdateItems(Map<Long, Long> updateItems);
 
     void remove(Long phoneId);
 }

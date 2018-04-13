@@ -46,7 +46,7 @@ public class CartPageController {
                 .filter(item -> item.getPhoneId() != null && item.getQuantity() != null)
                 .collect(Collectors.toMap(UpdateCartItem::getPhoneId, UpdateCartItem::getQuantity));
         try {
-            cartService.ckeckUpdateItems(updateMap);
+            cartService.checkUpdateItems(updateMap);
         } catch (TooBigQuantityException e) {
             handleTooBigQuantities(result, e.getPhoneIds(), items);
         } catch (NoSuchPhoneException | NoStockFoundException e) {

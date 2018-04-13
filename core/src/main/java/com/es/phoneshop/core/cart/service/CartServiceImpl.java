@@ -52,16 +52,15 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void update(Map<Long, Long> updateItems) {
-        ckeckUpdateItems(updateItems);
+        checkUpdateItems(updateItems);
         cart.update(updateItems);
     }
 
     @Override
-    public void ckeckUpdateItems(Map<Long, Long> updateItems) {
+    public void checkUpdateItems(Map<Long, Long> updateItems) {
         checkIfAllUpdatedPhonesPresent(new HashSet<>(updateItems.keySet()));
         List<CartItem> cartItems = cart.getItems();
         Set<Long> tooBigQuantityPhoneIds = new HashSet<>();
-
         for (CartItem item : cartItems) {
             Phone phone = item.getPhone();
             if (!updateItems.containsKey(phone.getId()))

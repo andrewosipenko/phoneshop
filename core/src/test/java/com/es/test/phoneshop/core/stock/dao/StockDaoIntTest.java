@@ -29,14 +29,14 @@ public class StockDaoIntTest {
     private static final Long UNEXISTING_PHONE_ID = 999L;
 
     @Test
-    public void testGetNormal() {
+    public void testGet() {
         Phone phone = new Phone();
         phone.setId(EXISTING_PHONE_A_ID);
         Optional<Stock> stockOptional = stockDao.get(phone);
         assertTrue(stockOptional.isPresent());
         Stock stock = stockOptional.get();
-        assertEquals(stock.getStock(), PHONE_A_STOCK);
-        assertEquals(stock.getReserved(), PHONE_A_RESERVED);
+        assertEquals(PHONE_A_STOCK, stock.getStock());
+        assertEquals(PHONE_A_RESERVED, stock.getReserved());
     }
 
     @Test

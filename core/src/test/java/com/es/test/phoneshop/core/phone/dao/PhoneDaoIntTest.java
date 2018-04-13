@@ -102,7 +102,7 @@ public class PhoneDaoIntTest {
     }
 
     @Test
-    public void testSaveWhenInsertingCorrect() {
+    public void testSaveWhenInserting() {
         Optional<Phone> phoneOptional = phoneDao.get(EXISTING_3);
         assertTrue(phoneOptional.isPresent());
         Phone phone = phoneOptional.get();
@@ -142,7 +142,7 @@ public class PhoneDaoIntTest {
     }
 
     @Test
-    public void testFindAllStockOnly() {
+    public void testFindAll() {
         List<Phone> phoneList = phoneDao.findAll(0, 8);
         assertTrue(phoneList.size() == 8);
         for (int i = 0; i < 8; i++)
@@ -167,7 +167,7 @@ public class PhoneDaoIntTest {
     }
 
     @Test
-    public void testCountStockOnly() {
+    public void testCount() {
         int num = phoneDao.count();
         assertEquals(num, TOTAL_IN_STOCK_PRICE_NE);
     }
