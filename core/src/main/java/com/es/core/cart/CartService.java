@@ -1,5 +1,6 @@
 package com.es.core.cart;
 
+import com.es.core.exception.PhoneInCartNotFoundException;
 import com.es.core.exception.PhoneNotFoundException;
 
 import java.util.Map;
@@ -15,7 +16,7 @@ public interface CartService {
      * key: {@link com.es.core.model.phone.Phone#id}
      * value: quantity
      */
-    void update(Map<Long, Long> items);
+    void update(Map<Long, Long> items) throws PhoneInCartNotFoundException;
 
-    void remove(Long phoneId);
+    void remove(Long phoneId) throws PhoneInCartNotFoundException;
 }
