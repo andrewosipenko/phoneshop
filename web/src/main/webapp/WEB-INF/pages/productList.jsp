@@ -41,7 +41,6 @@
                 <form:input path="quantity" cssClass="form-control" id="phone-${phone.id}-quantity" />
                 <input type="hidden" name="phoneId" value="${phone.id}"/>
                 <div id="error-message-${phone.id}" style="color: red; font-size: small"></div>
-                <div id="success-message-${phone.id}" style="color: green"></div>
               </td>
               <td>
                 <button type="button" onclick="addToCart(${phone.id})"

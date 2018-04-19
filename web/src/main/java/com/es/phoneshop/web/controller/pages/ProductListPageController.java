@@ -3,7 +3,7 @@ package com.es.phoneshop.web.controller.pages;
 import javax.annotation.Resource;
 
 import com.es.core.model.phone.OrderEnum;
-import com.es.phoneshop.web.bean.cart.CartItem;
+import com.es.phoneshop.web.bean.cart.CartItemInfo;
 import com.es.phoneshop.web.controller.constants.ProductConstants;
 import com.es.phoneshop.web.service.ProductListPageService;
 import org.springframework.stereotype.Controller;
@@ -31,7 +31,7 @@ public class ProductListPageController {
         model.addAttribute(PRODUCT_PAGE, pageService.getCurrentPage(OrderEnum.valueOf(order.toUpperCase()), query, pageNumber));
         model.addAttribute(ProductConstants.ORDER_BY_ATTRIBUTE, OrderEnum.valueOf(order.toUpperCase()));
         model.addAttribute(ProductConstants.SEARCH_QUERY_STRING, query);
-        model.addAttribute(ProductConstants.CART_ITEM, new CartItem());
+        model.addAttribute(ProductConstants.CART_ITEM, new CartItemInfo());
         return "productList";
     }
 }

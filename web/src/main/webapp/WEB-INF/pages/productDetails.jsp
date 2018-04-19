@@ -11,7 +11,9 @@
                     <div class="col">
                         <div class="container">
                             <div class="d-flex align-content-between flex-wrap">
-                                <button class="btn btn-secondary btn-lg" onclick="<c:url value="/productList"/>">Back to Product List</button>
+                                <a href="<c:url value="/productList"/>">
+                                    <button class="btn btn-secondary btn-lg">Back to Product List</button>
+                                </a>
                             </div>
                         </div>
                         <div class="jumbotron" style="background:transparent !important">
@@ -37,7 +39,6 @@
                                                 <input type="hidden" name="phoneId" value="${phone.id}"/>
                                                 <form:input path="quantity" cssClass="form-control" id="phone-${phone.id}-quantity" />
                                                 <div id="error-message-${phone.id}" style="color: red; font-size: small"></div>
-                                                <div id="success-message-${phone.id}" style="color: green"></div>
                                             </div>
                                             <div class="col">
                                                 <button type="button" onclick="addToCart(${phone.id})"

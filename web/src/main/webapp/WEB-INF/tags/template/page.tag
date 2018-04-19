@@ -24,7 +24,7 @@
                 <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="#"><c:out value="My Cart : "/>
+                            <a class="nav-link" href="<c:url value="/cart"/>"><c:out value="My Cart : "/>
                                 <span id="itemsCount">${not empty sessionScope.get("scopedTarget.cart").itemsCount ?
                                         sessionScope.get("scopedTarget.cart").itemsCount : '0'} </span>
                                 <c:out value=" items, "/>

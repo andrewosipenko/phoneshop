@@ -3,19 +3,20 @@ package com.es.phoneshop.web.bean.cart;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-public class CartItem {
+public class CartItemInfo {
     @NotNull
     @Min(value = 1000L)
     private Long phoneId;
 
     @NotNull
-    @Min(value = 1L)
+    @Min(value = 1L, message = "positive value expected")
     private Long quantity;
 
-    public CartItem() {
+    public CartItemInfo() {
+        quantity = 1L;
     }
 
-    public CartItem(Long phoneId, Long quantity) {
+    public CartItemInfo(Long phoneId, Long quantity) {
         this.phoneId = phoneId;
         this.quantity = quantity;
     }
