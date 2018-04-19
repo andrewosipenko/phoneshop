@@ -6,7 +6,7 @@ function addToCart (phoneId, quantity) {
     });
 
     request.done(function(data){
-        $("#" + phoneId).val("0");
+        $("#quantity" + phoneId).val("0");
         $("#itemsAmount").text(data.itemsAmount);
         $("#subtotal").text(data.subtotal);
     });

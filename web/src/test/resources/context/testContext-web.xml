@@ -8,9 +8,7 @@
 
     <import resource="applicationContext-core.xml"/>
     <context:property-placeholder location="classpath:conf/test.properties"/>
-    <bean class="com.es.phoneshop.web.controller.paginator.PaginatorService">
-        <constructor-arg ref="jdbcPhoneDao"/>
-    </bean>
+    <bean class="com.es.phoneshop.web.controller.service.PaginationService"/>
 
     <jdbc:initialize-database enabled="${db.insertDemodata}" data-source="dataSource">
         <jdbc:script location="classpath:db/testdata-phones.sql" />

@@ -1,5 +1,6 @@
 package com.es.core.cart;
 
+import com.es.core.model.phone.exception.NoSuchPhoneException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
@@ -34,6 +35,13 @@ public class Cart {
 
     public Long getItemsAmount(){
         return itemsAmount;
+    }
+
+    public Long getItemQuantity(Long phoneId){
+        if(!items.containsKey(phoneId)){
+            throw new NoSuchPhoneException();
+        }
+        return items.get(phoneId);
     }
 
     public void setItemsAmount(Long itemsAmount) {

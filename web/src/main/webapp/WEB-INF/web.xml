@@ -27,4 +27,8 @@
         <error-code>400</error-code>
         <location>/WEB-INF/pages/error/page400.jsp</location>
     </error-page>
+  <error-page>
+    <error-code>404</error-code>
+    <location>/WEB-INF/pages/error/page404.jsp</location>
+  </error-page>
 </web-app>

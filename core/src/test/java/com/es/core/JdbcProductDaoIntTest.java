@@ -24,7 +24,7 @@ public class JdbcProductDaoIntTest{
     private final long FIRST_PHONE_ID = 1000L;
     private final long EXISTING_PHONE_ID = 1000L;
     private final long NOT_EXISTING_PHONE_ID = 1500L;
-    private final int AMOUNT_TO_FIND = 8;
+    private final int AMOUNT_TO_FIND = 6;
     private final int AMOUNT_OF_AVAILABLE_PHONES = 6;
     private final String SEARCH = "%";
 

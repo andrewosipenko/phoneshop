@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/template" %>
 <template:page>
-    <script> <%@ include file="js/productList.js" %> </script>
+    <script> <%@ include file="js/addToCart.js" %> </script>
     <div class="container">
         <form action="<c:url value="/productList"/>" method="get">
         <div class="row">
@@ -16,7 +16,7 @@
             </div>
         </div>
         </form>
-        <table class="table">
+        <table class="table table-striped">
             <thead>
             <tr>
                 <td>Image</td>
@@ -40,27 +40,22 @@
             <c:forEach var="phone" items="${phones}">
                 <tr>
                     <td>
-                        <img height="30%" width="100%"
+                        <img width="90"
                              src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
                     </td>
                     <td>${phone.brand}</td>
-                    <td width="100%">${phone.model}</td>
+                    <td><a class="hyperlink" href="<c:url value="/productDetails/phoneId=${phone.id}"/>">${phone.model}</a></td>
                     <td>
-                        <c:forEach var="color" items="${phone.colors}" varStatus="index">
-                            ${color.code}
-                            <c:if test="${index.count != phone.colors.size()}">
-                                ,
-                            </c:if>
-                        </c:forEach>
+                        <template:getColors phoneColors="${phone.colors}"/>
                     </td>
                     <td>${phone.displaySizeInches}</td>
                     <td>$ ${phone.price}</td>
                     <td>
-                        <input class="text-input" name="quantity" id="${phone.id}" value="0">
-                        <a id="errorMessage${phone.id}"></a>
+                        <input class="text-input" name="quantity" id="quantity${phone.id}" value="0"><br>
+                        <a class="text-danger" id="errorMessage${phone.id}"></a>
                     </td>
                     <td>
-                        <input type="button" onclick="addToCart(${phone.id}, $('#${phone.id}').val())" value="Add to">
+                        <input type="button" onclick="addToCart(${phone.id}, $('#quantity${phone.id}').val())" value="Add to">
                     </td>
                 </tr>
             </c:forEach>

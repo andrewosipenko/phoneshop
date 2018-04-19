@@ -42,10 +42,10 @@ public class PaginationServiceIntTest {
 
     @Test
     public void testGetNewPage() throws InvalidUrlParamException{
-        Integer pageFromFirstSegment = paginationService.PREFERABLE_PAGES_AMOUNT - 1;
-        Integer pageFromSecondSegment = paginationService.PREFERABLE_PAGES_AMOUNT + 1;
-        Integer newPage = paginationService.getNewPage(pageFromFirstSegment, paginationService.NEXT_PAGE, SEARCH_ANY);
-        Integer maxPhoneAmountInSegment = paginationService.PREFERABLE_PAGES_AMOUNT * paginationService.PHONES_TO_DISPLAY;
+        Integer pageFromFirstSegment = PaginationService.PREFERABLE_PAGES_AMOUNT - 1;
+        Integer pageFromSecondSegment = PaginationService.PREFERABLE_PAGES_AMOUNT + 1;
+        Integer newPage = paginationService.getNewPage(pageFromFirstSegment, PaginationService.NEXT_PAGE, SEARCH_ANY);
+        Integer maxPhoneAmountInSegment = PaginationService.PREFERABLE_PAGES_AMOUNT * PaginationService.PHONES_TO_DISPLAY;
         if(AMOUNT_OF_AVAILABLE_PHONES >= maxPhoneAmountInSegment) {
             Assert.assertTrue(pageFromSecondSegment.equals(newPage));
         }
@@ -57,7 +57,7 @@ public class PaginationServiceIntTest {
     @Test
     public void testGetPageAmountToDisplay(){
         Integer pageAmountToDisplay = paginationService.getPageAmountToDisplay(1, SEARCH_ANY);
-        Integer expectedValue = (int) Math.ceil((double) (AMOUNT_OF_AVAILABLE_PHONES / paginationService.PHONES_TO_DISPLAY));
+        Integer expectedValue = (int) Math.ceil((double) (AMOUNT_OF_AVAILABLE_PHONES / PaginationService.PHONES_TO_DISPLAY));
         Assert.assertTrue(pageAmountToDisplay.equals(expectedValue));
     }
 }

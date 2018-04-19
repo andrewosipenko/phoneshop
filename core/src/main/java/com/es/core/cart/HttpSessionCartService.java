@@ -2,6 +2,7 @@ package com.es.core.cart;
 
 import com.es.core.dao.PhoneDao;
 import com.es.core.model.phone.Phone;
+import com.es.core.model.phone.exception.NoSuchPhoneException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,36 +22,43 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void addPhone(Long phoneId, Long quantity) {
-        cart.addPhone(phoneId, quantity);
+    public void addPhone(Long phoneId, Long quantity){
         updateInfo(phoneId, quantity);
+        cart.addPhone(phoneId, quantity);
     }
 
     @Override
     public void update(Map<Long, Long> items) {
-        throw new UnsupportedOperationException("TODO");
+        for(Map.Entry<Long, Long> entry : items.entrySet()) {
+            Long phoneId = entry.getKey();
+            Long oldQuantity = cart.getItemQuantity(phoneId);
+            Long newQuantity = entry.getValue();
+
+            cart.getItems().put(phoneId, (oldQuantity.equals(newQuantity) ? oldQuantity : newQuantity));
+            updateInfo(phoneId, newQuantity - oldQuantity);
+        }
     }
 
     @Override
     public void remove(Long phoneId) {
-        throw new UnsupportedOperationException("TODO");
+        updateInfo(phoneId, -cart.getItemQuantity(phoneId));
+        cart.getItems().remove(phoneId);
     }
 
-    private void updateInfo(Long phoneId, Long quantity) {
-        updateSubtotal(phoneId, quantity);
-        updateItemsAmount(quantity);
+    private void updateInfo(Long phoneId, Long deltaQuantity){
+        updateSubtotal(phoneId, deltaQuantity);
+        updateItemsAmount(deltaQuantity);
     }
 
-    private void  updateSubtotal(Long phoneId, Long quantity){
-        Phone newPhone = phoneDao.get(phoneId).orElseThrow(
-                () -> new IllegalArgumentException("There is no such phone with id " + phoneId));
+    private void  updateSubtotal(Long phoneId, Long deltaQuantity){
+        Phone newPhone = phoneDao.get(phoneId).orElseThrow(NoSuchPhoneException::new);
         BigDecimal phonePrice = newPhone.getPrice();
-        BigDecimal newSubtotal = phonePrice.multiply(new BigDecimal(quantity));
+        BigDecimal newSubtotal = phonePrice.multiply(new BigDecimal(deltaQuantity));
         newSubtotal = newSubtotal.add(cart.getSubtotal());
         cart.setSubtotal(newSubtotal);
     }
 
-    private void updateItemsAmount(Long quantity){
-        cart.setItemsAmount(cart.getItemsAmount() + quantity);
+    private void updateItemsAmount(Long deltaQuantity){
+        cart.setItemsAmount(cart.getItemsAmount() + deltaQuantity);
     }
 }

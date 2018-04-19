@@ -7,7 +7,7 @@
             400 bad request
         </h4>
         <a class="selection-handle">
-            Go back to <a class="hyperlink" href="${pageContext.request.contextPath}/productList">product list</a> page
+            Go back to <a class="hyperlink" href="<c:url value="/productList"/>">product list</a> page
         </a>
     </div>
 </template:page>

@@ -19,7 +19,7 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-12 col-md-8 push-md-2">
+        <div class="col-16 col-md-12 ">
             <nav class="navbar navbar-toggleable-md navbar-inverse bg-primary">
                 <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -28,10 +28,12 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item">
-                               <button>
+                                <form action="<c:url value="/cart"/>">
+                                <button type="submit" class ="btn btn-success">
                                    My cart: <a id="itemsAmount">${empty sessionScope.get("scopedTarget.cart") ? '0' : sessionScope.get("scopedTarget.cart").itemsAmount}</a> items,
                                    price: <a id="subtotal">${empty sessionScope.get("scopedTarget.cart").subtotal ? '0' : sessionScope.get("scopedTarget.cart").subtotal}</a> $
-                               </button>
+                                </button>
+                                </form>
                             </li>
                         </ul>
                     </div>

@@ -4,13 +4,8 @@
 <template:page>
     <div class = "container">
         <h4 class="headers-region">
-            Seems you've done something illegal
+            404 not found
         </h4>
-        <p class="error">
-            <c:if test="${errorMessage ne null}">
-                Error message: ${errorMessage}
-            </c:if>
-        </p>
         <a class="selection-handle">
             Go back to <a class="hyperlink" href="<c:url value="/productList"/>">product list</a> page
         </a>
