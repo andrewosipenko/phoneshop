@@ -139,4 +139,10 @@ public class JdbcPhoneDao implements PhoneDao {
                         + "AND lower(brand) LIKE ?", Integer.class,
                 searchText);
     }
+
+    @Override
+    public boolean contains(Long key) {
+        Long amount = jdbcTemplate.queryForObject(SqlQueryConstants.COUNT_PHONES_WITH_ID + key, Long.class);
+        return amount > 0;
+    }
 }

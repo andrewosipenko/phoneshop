@@ -19,7 +19,7 @@ public class MessageCodeResolveService {
         List<ObjectError> allErrors = result.getAllErrors();
         for (ObjectError error : allErrors) {
             String message = messageSource.getMessage(error, LocaleContextHolder.getLocale());
-            errors.append(message + ", ");
+            errors.append(message + "<br>");
         }
         return errors.toString();
     }

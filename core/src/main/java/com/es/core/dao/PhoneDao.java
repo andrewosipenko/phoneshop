@@ -11,4 +11,5 @@ public interface PhoneDao {
     List<Phone> findAll(int offset, int limit, String searchText);
     List<Phone> findAllSortedBy(int offset, int limit, String searchText, String sortBy, String dir);
     Integer countAvailablePhone(String search);
+    boolean contains(Long key);
 }

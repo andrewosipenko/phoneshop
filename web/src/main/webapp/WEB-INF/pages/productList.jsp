@@ -52,7 +52,7 @@
                     <td>$ ${phone.price}</td>
                     <td>
                         <input class="text-input" name="quantity" id="quantity${phone.id}" value="0"><br>
-                        <a class="text-danger" id="errorMessage${phone.id}"></a>
+                        <p class="text-danger" id="errorMessage${phone.id}"></p>
                     </td>
                     <td>
                         <input type="button" onclick="addToCart(${phone.id}, $('#quantity${phone.id}').val())" value="Add to">

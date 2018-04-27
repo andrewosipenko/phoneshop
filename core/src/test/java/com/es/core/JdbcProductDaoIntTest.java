@@ -77,4 +77,14 @@ public class JdbcProductDaoIntTest{
         int amount = phoneDao.countAvailablePhone(SEARCH);
         Assert.assertEquals(AMOUNT_OF_AVAILABLE_PHONES, amount);
     }
+
+    @Test
+    public void testContainsAvailablePhone(){
+        Assert.assertTrue(phoneDao.contains(EXISTING_PHONE_ID));
+    }
+
+    @Test
+    public void testContainsUnavailablePhone(){
+        Assert.assertFalse(phoneDao.contains(NOT_EXISTING_PHONE_ID));
+    }
 }

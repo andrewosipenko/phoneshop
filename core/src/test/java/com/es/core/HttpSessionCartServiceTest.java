@@ -64,6 +64,8 @@ public class HttpSessionCartServiceTest {
     private void setupStubs(){
         Mockito.when(mockPhoneDao.get(EXISTING_PHONE_ID)).thenReturn(Optional.of(existingPhone));
         Mockito.when(mockPhoneDao.get(NOT_EXISTING_PHONE_ID)).thenReturn(Optional.ofNullable(null));
+        Mockito.when(mockPhoneDao.contains(EXISTING_PHONE_ID)).thenReturn(true);
+        Mockito.when(mockPhoneDao.contains(NOT_EXISTING_PHONE_ID)).thenReturn(false);
         Mockito.when(mockCart.getItems()).thenReturn(existingItems);
     }
 

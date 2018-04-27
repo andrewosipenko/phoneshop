@@ -1,6 +1,7 @@
 package com.es.core.cart;
 
 import com.es.core.model.phone.exception.NoSuchPhoneException;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
@@ -8,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-@SessionScope
+@SessionScope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Component
 public class Cart {
     private Map<Long, Long> items;
@@ -37,7 +38,7 @@ public class Cart {
         return itemsAmount;
     }
 
-    public Long getItemQuantity(Long phoneId){
+    public Long getItemQuantity(Long phoneId){ // вынести
         if(!items.containsKey(phoneId)){
             throw new NoSuchPhoneException();
         }

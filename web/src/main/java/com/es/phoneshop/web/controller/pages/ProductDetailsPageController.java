@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ProductDetailsPageController {
     @Autowired
     private PhoneService phoneService;
+
     @GetMapping(value = "/phoneId={phoneId}")
     public String showProductDetails(@PathVariable Long phoneId, Model model){
         model.addAttribute("phone", phoneService.getPhone(phoneId));
