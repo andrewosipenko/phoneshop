@@ -14,19 +14,11 @@ public class ProductListPageService {
     private static final int AMOUNT_OF_PHONES_ON_PAGE = 10;
     private static final int AMOUNT_OF_ACCESSIBLE_PAGES_ON_LINE = 5;
 
-    private Integer currentPageNumber;
-    private Long totalCount;
-    private String searchQueryString;
-    private OrderEnum order;
-
     @Resource
     private PhoneDao phoneDao;
 
     public CurrentPhonePage getCurrentPage(OrderEnum order, String searchQueryString, int currentPageNumber) {
-        this.totalCount = phoneDao.getPhonesCountByQuery(searchQueryString);
-        this.currentPageNumber = currentPageNumber;
-        this.searchQueryString = searchQueryString;
-        this.order = order;
+        Long totalCount = phoneDao.getPhonesCountByQuery(searchQueryString);
         Integer firstShownPageNumber = currentPageNumber - AMOUNT_OF_ACCESSIBLE_PAGES_ON_LINE / 2;
         if(firstShownPageNumber <= 0)
             firstShownPageNumber = 1;
@@ -35,8 +27,8 @@ public class ProductListPageService {
                 AMOUNT_OF_ACCESSIBLE_PAGES_ON_LINE : currentPageNumber + AMOUNT_OF_ACCESSIBLE_PAGES_ON_LINE / 2;
         if(lastShownPageNumber > lastPageNumber)
             lastShownPageNumber = lastPageNumber;
-        List<Phone> currentPagePhoneList = getPhoneListByCurrentPageIndex();
-        CurrentPhonePage currentPhonePage = new CurrentPhonePage(
+        List<Phone> currentPagePhoneList = getPhoneListByCurrentPageIndex(order, searchQueryString, currentPageNumber, totalCount);
+        return new CurrentPhonePage(
                 totalCount,
                 firstShownPageNumber,
                 lastShownPageNumber,
@@ -44,10 +36,9 @@ public class ProductListPageService {
                 currentPageNumber,
                 currentPagePhoneList
         );
-        return currentPhonePage;
     }
 
-    private List<Phone> getPhoneListByCurrentPageIndex() {
+    private List<Phone> getPhoneListByCurrentPageIndex(OrderEnum order, String searchQueryString, int currentPageNumber, Long totalCount) {
         int offset = AMOUNT_OF_PHONES_ON_PAGE * (currentPageNumber - 1);
         int limit = AMOUNT_OF_PHONES_ON_PAGE;
         if(limit + offset < totalCount)

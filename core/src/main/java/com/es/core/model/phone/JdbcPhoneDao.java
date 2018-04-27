@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.sql.PreparedStatement;
@@ -60,14 +62,14 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     public Long getPhonesCountByQuery(String searchQueryString) {
-        if(searchQueryString == null || searchQueryString.equals(""))
+        if(StringUtils.isEmpty(searchQueryString))
             return getPhonesCount();
         return jdbcTemplate.queryForObject(PhoneQueries.COUNT_PHONES_BY_SEARCH_QUERY, Long.class, searchQueryString.toLowerCase(), searchQueryString.toLowerCase());
     }
 
     public List<Phone> findAllInOrder(int offset, int limit, OrderEnum order, String searchQueryString) {
         List<Phone> phones;
-        if(searchQueryString == null || searchQueryString.length() == 0) {
+        if(StringUtils.isEmpty(searchQueryString)) {
              phones = jdbcTemplate.query( getFindAllInOrderQueryString(offset, limit, order), new BeanPropertyRowMapper<>(Phone.class));
         } else {
             phones = jdbcTemplate.query(getSearchForAllInOrderQueryString(offset, limit, order), new BeanPropertyRowMapper<>(Phone.class),

@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.es.phoneshop.web.controller.constants.ControllerConstants.CartPageConstants.*;
 
 @Controller
 @RequestMapping(value = "/cart")
@@ -29,22 +30,22 @@ public class CartPageController {
     @RequestMapping(method = RequestMethod.GET)
     public String getCart(Model model) {
         Cart cart = cartService.getCart();
-        model.addAttribute("cart", cart);
-        model.addAttribute("cartPageInfo" , new CartPageInfo(getCartItemInfoList(cart)));
+        model.addAttribute(CART, cart);
+        model.addAttribute(CART_PAGE_INFO , new CartPageInfo(getCartItemInfoList(cart)));
         return "cartPage";
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String deletePhone(@RequestParam("phoneId") Long phoneId) throws PhoneInCartNotFoundException {
+    public String deletePhone(@RequestParam(PHONE_ID) Long phoneId) throws PhoneInCartNotFoundException {
         cartService.remove(phoneId);
         return "redirect:/cart";
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public String updateCart(@ModelAttribute("cartPageInfo")@Valid CartPageInfo cartPageInfo, BindingResult bindingResult, Model model)
+    public String updateCart(@ModelAttribute(CART_PAGE_INFO)@Valid CartPageInfo cartPageInfo, BindingResult bindingResult, Model model)
             throws PhoneInCartNotFoundException {
         if(bindingResult.hasErrors()) {
-            model.addAttribute("cart", cartService.getCart());
+            model.addAttribute(CART, cartService.getCart());
             return "cartPage";
         }
             cartService.update(getCartUpdateInfoMap(cartPageInfo.getCartItemInfo()));
