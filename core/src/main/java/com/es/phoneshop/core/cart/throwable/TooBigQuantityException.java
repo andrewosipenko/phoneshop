@@ -12,18 +12,6 @@ public class TooBigQuantityException extends RuntimeException {
         this.phoneIds = phoneIds;
     }
 
-    public TooBigQuantityException(String message) {
-        super(message);
-    }
-
-    public TooBigQuantityException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public TooBigQuantityException(Throwable cause) {
-        super(cause);
-    }
-
     public Set<Long> getPhoneIds() {
         return phoneIds;
     }

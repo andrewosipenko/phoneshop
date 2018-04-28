@@ -1,8 +1,8 @@
 package com.es.phoneshop.web.controller.pages;
 
 import com.es.phoneshop.core.phone.dao.util.SortBy;
+import com.es.phoneshop.web.controller.form.AddToCartForm;
 import com.es.phoneshop.web.controller.service.PhonePageService;
-import com.es.phoneshop.web.controller.util.AddToCartForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;

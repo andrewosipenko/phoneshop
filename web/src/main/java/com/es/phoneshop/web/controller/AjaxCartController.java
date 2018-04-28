@@ -1,13 +1,13 @@
 package com.es.phoneshop.web.controller;
 
-import com.es.phoneshop.core.cart.service.CartService;
 import com.es.phoneshop.core.cart.model.CartStatus;
+import com.es.phoneshop.core.cart.service.CartService;
 import com.es.phoneshop.core.cart.throwable.NoStockFoundException;
 import com.es.phoneshop.core.cart.throwable.NoSuchPhoneException;
 import com.es.phoneshop.core.cart.throwable.TooBigQuantityException;
+import com.es.phoneshop.web.controller.form.AddToCartForm;
 import com.es.phoneshop.web.controller.throwable.IncorrectFormFormatException;
 import com.es.phoneshop.web.controller.throwable.InternalException;
-import com.es.phoneshop.web.controller.util.AddToCartForm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -29,7 +29,7 @@ public class AjaxCartController {
 
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody CartStatus getCartStatus() {
-        return cartService.getCartStatus();
+        return cartService.getStatus();
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -37,11 +37,11 @@ public class AjaxCartController {
         if (bindingResult.hasFieldErrors())
             throw new IncorrectFormFormatException();
         try {
-            cartService.addPhone(addToCartForm.getPhoneId(), addToCartForm.getQuantity());
+            cartService.add(addToCartForm.getPhoneId(), addToCartForm.getQuantity());
         } catch (NoSuchPhoneException | NoStockFoundException e) {
             throw new InternalException();
         }
-        return cartService.getCartStatus();
+        return cartService.getStatus();
     }
 
     @ExceptionHandler(IncorrectFormFormatException.class)

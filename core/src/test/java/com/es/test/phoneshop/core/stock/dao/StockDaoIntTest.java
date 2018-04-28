@@ -12,9 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(locations = "classpath:context/applicationIntTestContext.xml")
@@ -24,8 +22,8 @@ public class StockDaoIntTest {
     private StockDao stockDao;
 
     private static final Long EXISTING_PHONE_A_ID = 1002L;
-    private static final Integer PHONE_A_STOCK = 12;
-    private static final Integer PHONE_A_RESERVED = 1;
+    private static final Long PHONE_A_STOCK = 12L;
+    private static final Long PHONE_A_RESERVED = 1L;
     private static final Long UNEXISTING_PHONE_ID = 999L;
 
     @Test

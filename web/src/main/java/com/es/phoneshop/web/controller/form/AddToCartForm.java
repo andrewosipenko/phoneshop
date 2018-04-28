@@ -1,4 +1,4 @@
-package com.es.phoneshop.web.controller.util;
+package com.es.phoneshop.web.controller.form;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;

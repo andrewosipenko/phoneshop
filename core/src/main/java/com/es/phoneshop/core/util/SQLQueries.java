@@ -5,6 +5,8 @@ public interface SQLQueries {
 
     String GET_STOCK = "SELECT * FROM stocks WHERE phoneId = ?";
 
+    String UPDATE_STOCK = "UPDATE stocks SET stock = ?, reserved = ? WHERE phoneId = ?";
+
     String GET_COLOR_IDS_FOR_PHONE = "SELECT colorId FROM phone2color WHERE phoneId = ?";
 
     String GET_COLORS_BY_IDS = "SELECT * FROM colors WHERE id IN (:ids)";

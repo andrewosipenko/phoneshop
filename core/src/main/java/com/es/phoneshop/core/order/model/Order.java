@@ -3,8 +3,7 @@ package com.es.phoneshop.core.order.model;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class Order
-{
+public class Order {
     private Long id;
     private List<OrderItem> orderItems;
     /**

@@ -1,17 +1,17 @@
 package com.es.test.phoneshop.core.cart.service;
 
 import com.es.phoneshop.core.cart.model.Cart;
-import com.es.phoneshop.core.cart.model.CartItem;
+import com.es.phoneshop.core.cart.model.CartRecord;
 import com.es.phoneshop.core.cart.model.CartStatus;
 import com.es.phoneshop.core.cart.service.CartService;
 import com.es.phoneshop.core.cart.service.CartServiceImpl;
 import com.es.phoneshop.core.cart.throwable.NoStockFoundException;
 import com.es.phoneshop.core.cart.throwable.NoSuchPhoneException;
 import com.es.phoneshop.core.cart.throwable.TooBigQuantityException;
-import com.es.phoneshop.core.phone.dao.PhoneDao;
 import com.es.phoneshop.core.phone.model.Phone;
-import com.es.phoneshop.core.stock.dao.StockDao;
+import com.es.phoneshop.core.phone.service.PhoneService;
 import com.es.phoneshop.core.stock.model.Stock;
+import com.es.phoneshop.core.stock.service.StockService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -37,9 +39,9 @@ public class CartServiceTest {
     @Mock
     private Cart cart;
     @Mock
-    private PhoneDao phoneDao;
+    private PhoneService phoneService;
     @Mock
-    private StockDao stockDao;
+    private StockService stockService;
     @InjectMocks
     private CartService cartService = new CartServiceImpl();
 
@@ -48,6 +50,7 @@ public class CartServiceTest {
         MockitoAnnotations.initMocks(this);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testGetCartStatus() {
         Phone phone1 = new Phone();
@@ -59,23 +62,26 @@ public class CartServiceTest {
         Phone phone3 = new Phone();
         phone3.setPrice(BigDecimal.valueOf(59));
 
-        when(cart.getItems()).thenReturn(Stream.of(
-                new CartItem(phone1, 4L),
-                new CartItem(phone2, 3L),
-                new CartItem(phone3, 5L)
+        when(cart.getRecords()).thenReturn(Stream.of(
+                new CartRecord(phone1, 4L),
+                new CartRecord(phone2, 3L),
+                new CartRecord(phone3, 5L)
         ).collect(Collectors.toList()));
+        cartService.update(Collections.EMPTY_MAP);
+        verify(cart).setTotal(argThat(total -> total.compareTo(BigDecimal.valueOf(1394)) == 0));
 
-        CartStatus cartStatus = cartService.getCartStatus();
+        CartStatus cartStatus = cartService.getStatus();
         assertEquals((Long) 12L, cartStatus.getPhonesTotal());
-        assertTrue(cartStatus.getCostTotal().compareTo(BigDecimal.valueOf(1394)) == 0);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testGetCartStatusWhenEmpty() {
-        when(cart.getItems()).thenReturn(new ArrayList<>());
-        CartStatus cartStatus = cartService.getCartStatus();
+        when(cart.getRecords()).thenReturn(new ArrayList<>());
+        cartService.update(Collections.EMPTY_MAP);
+        verify(cart).setTotal(argThat(total -> total.compareTo(BigDecimal.ZERO) == 0));
+        CartStatus cartStatus = cartService.getStatus();
         assertEquals((Long) 0L, cartStatus.getPhonesTotal());
-        assertTrue(cartStatus.getCostTotal().compareTo(BigDecimal.ZERO) == 0);
     }
 
     @Test
@@ -84,10 +90,10 @@ public class CartServiceTest {
         phone.setId(1001L);
         Stock stock = new Stock();
         stock.setPhone(phone);
-        stock.setStock(5);
-        when(phoneDao.get(1001L)).thenReturn(Optional.of(phone));
-        when(stockDao.get(phone)).thenReturn(Optional.of(stock));
-        cartService.addPhone(1001L, 3L);
+        stock.setStock(5L);
+        when(phoneService.getPhone(1001L)).thenReturn(Optional.of(phone));
+        when(stockService.getStock(phone)).thenReturn(Optional.of(stock));
+        cartService.add(1001L, 3L);
     }
 
     @Test
@@ -96,11 +102,11 @@ public class CartServiceTest {
         phone.setId(1001L);
         Stock stock = new Stock();
         stock.setPhone(phone);
-        stock.setStock(5);
-        when(phoneDao.get(1001L)).thenReturn(Optional.of(phone));
-        when(stockDao.get(phone)).thenReturn(Optional.of(stock));
+        stock.setStock(5L);
+        when(phoneService.getPhone(1001L)).thenReturn(Optional.of(phone));
+        when(stockService.getStock(phone)).thenReturn(Optional.of(stock));
         try {
-            cartService.addPhone(1001L, 10L);
+            cartService.add(1001L, 10L);
             fail();
         } catch (TooBigQuantityException ignored) {}
     }
@@ -109,27 +115,30 @@ public class CartServiceTest {
     public void testUpdate() {
         Phone phone1 = new Phone();
         phone1.setId(1001L);
+        phone1.setPrice(BigDecimal.valueOf(2000));
         Stock stock1 = new Stock();
         stock1.setPhone(phone1);
-        stock1.setStock(10);
+        stock1.setStock(10L);
 
         Phone phone2 = new Phone();
         phone2.setId(1002L);
+        phone2.setPrice(BigDecimal.valueOf(1000));
         Stock stock2 = new Stock();
         stock2.setPhone(phone2);
-        stock2.setStock(9);
+        stock2.setStock(9L);
 
         Phone phone3 = new Phone();
         phone3.setId(1003L);
+        phone3.setPrice(BigDecimal.valueOf(500));
         Stock stock3 = new Stock();
         stock3.setPhone(phone3);
-        stock3.setStock(12);
+        stock3.setStock(12L);
 
         Object[][] arr = {{phone1, 5L}, {phone2, 3L}, {phone3, 4L}};
-        when(cart.getItems()).thenReturn(Stream.of(arr).map(ar -> new CartItem((Phone) ar[0], (Long) ar[1])).collect(Collectors.toList()));
-        when(stockDao.get(phone1)).thenReturn(Optional.of(stock1));
-        when(stockDao.get(phone2)).thenReturn(Optional.of(stock2));
-        when(stockDao.get(phone3)).thenReturn(Optional.of(stock3));
+        when(cart.getRecords()).thenReturn(Stream.of(arr).map(ar -> new CartRecord((Phone) ar[0], (Long) ar[1])).collect(Collectors.toList()));
+        when(stockService.getStock(phone1)).thenReturn(Optional.of(stock1));
+        when(stockService.getStock(phone2)).thenReturn(Optional.of(stock2));
+        when(stockService.getStock(phone3)).thenReturn(Optional.of(stock3));
 
         Long[][] updateArr = {{1001L, 7L}, {1003L, 5L}};
         try {
@@ -141,7 +150,7 @@ public class CartServiceTest {
 
     @Test
     public void testUpdatePhoneNotInCart() {
-        when(cart.getItems()).thenReturn(new ArrayList<>());
+        when(cart.getRecords()).thenReturn(new ArrayList<>());
         try {
             Map<Long, Long> updateMap = new HashMap<>();
             updateMap.put(1001L, 5L);
@@ -156,11 +165,11 @@ public class CartServiceTest {
         phone1.setId(1001L);
         Stock stock1 = new Stock();
         stock1.setPhone(phone1);
-        stock1.setStock(10);
-        when(cart.getItems()).thenReturn(Stream.of(phone1)
-                .map(phone -> new CartItem(phone, 1L))
+        stock1.setStock(10L);
+        when(cart.getRecords()).thenReturn(Stream.of(phone1)
+                .map(phone -> new CartRecord(phone, 1L))
                 .collect(Collectors.toList()));
-        when(stockDao.get(phone1)).thenReturn(Optional.of(stock1));
+        when(stockService.getStock(phone1)).thenReturn(Optional.of(stock1));
         try {
             Map<Long, Long> updateMap = new HashMap<>();
             updateMap.put(1001L, 100L);
@@ -173,8 +182,8 @@ public class CartServiceTest {
     public void testUpdateNoStock() {
         Phone phone1 = new Phone();
         phone1.setId(1001L);
-        when(cart.getItems()).thenReturn(Stream.of(new CartItem(phone1, 5L)).collect(Collectors.toList()));
-        when(stockDao.get(phone1)).thenReturn(Optional.empty());
+        when(cart.getRecords()).thenReturn(Stream.of(new CartRecord(phone1, 5L)).collect(Collectors.toList()));
+        when(stockService.getStock(phone1)).thenReturn(Optional.empty());
         try {
             Map<Long, Long> updateMap = new HashMap<>();
             updateMap.put(1001L, 3L);
@@ -191,11 +200,11 @@ public class CartServiceTest {
         phone2.setId(1002L);
         Phone phone3 = new Phone();
         phone3.setId(1003L);
-        List<CartItem> expectedItems = Stream
-                .of(new CartItem(phone1, 5L), new CartItem(phone2, 2L), new CartItem(phone3, 4L))
+        List<CartRecord> expectedItems = Stream
+                .of(new CartRecord(phone1, 5L), new CartRecord(phone2, 2L), new CartRecord(phone3, 4L))
                 .collect(Collectors.toList());
-        when(cart.getItems()).thenReturn(expectedItems);
-        List<CartItem> actualItems = cartService.getCartItems();
+        when(cart.getRecords()).thenReturn(expectedItems);
+        List<CartRecord> actualItems = cartService.getRecords();
         for (int i = 0; i < 3; i++) {
             assertSame(expectedItems.get(i).getPhone(), actualItems.get(i).getPhone());
             assertSame(expectedItems.get(i).getQuantity(), actualItems.get(i).getQuantity());
@@ -206,14 +215,17 @@ public class CartServiceTest {
     public void testRemove() {
         Phone phone1 = new Phone();
         phone1.setId(1001L);
+        phone1.setPrice(BigDecimal.valueOf(500));
         Phone phone2 = new Phone();
         phone2.setId(1002L);
+        phone2.setPrice(BigDecimal.valueOf(500));
         Phone phone3 = new Phone();
         phone3.setId(1003L);
-        List<CartItem> expectedItems = Stream
-                .of(new CartItem(phone1, 5L), new CartItem(phone2, 2L), new CartItem(phone3, 4L))
+        phone3.setPrice(BigDecimal.valueOf(500));
+        List<CartRecord> expectedItems = Stream
+                .of(new CartRecord(phone1, 5L), new CartRecord(phone2, 2L), new CartRecord(phone3, 4L))
                 .collect(Collectors.toList());
-        when(cart.getItems()).thenReturn(expectedItems);
+        when(cart.getRecords()).thenReturn(expectedItems);
         try {
             cartService.remove(1001L);
         } catch (Throwable e) {
@@ -223,7 +235,7 @@ public class CartServiceTest {
 
     @Test
     public void testRemovePhoneNotInCart() {
-        when(cart.getItems()).thenReturn(new ArrayList<>());
+        when(cart.getRecords()).thenReturn(new ArrayList<>());
         try {
             cartService.remove(1001L);
             fail();

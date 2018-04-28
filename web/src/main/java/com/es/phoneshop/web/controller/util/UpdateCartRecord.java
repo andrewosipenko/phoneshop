@@ -1,19 +1,19 @@
 package com.es.phoneshop.web.controller.util;
 
-import com.es.phoneshop.core.cart.model.CartItem;
+import com.es.phoneshop.core.cart.model.CartRecord;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-public class UpdateCartItem {
+public class UpdateCartRecord {
     @NotNull
     @Min(1)
     private Long quantity;
     @NotNull
     private Long phoneId;
 
-    public static UpdateCartItem fromCartItem(CartItem item) {
-        UpdateCartItem updateItem = new UpdateCartItem();
+    public static UpdateCartRecord fromCartItem(CartRecord item) {
+        UpdateCartRecord updateItem = new UpdateCartRecord();
         updateItem.setPhoneId(item.getPhone().getId());
         updateItem.setQuantity(item.getQuantity());
         return updateItem;

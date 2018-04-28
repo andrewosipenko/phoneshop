@@ -3,7 +3,6 @@ package com.es.phoneshop.core.order.model;
 import com.es.phoneshop.core.phone.model.Phone;
 
 public class OrderItem {
-    private Long id;
     private Phone phone;
     private Order order;
     private Long quantity;

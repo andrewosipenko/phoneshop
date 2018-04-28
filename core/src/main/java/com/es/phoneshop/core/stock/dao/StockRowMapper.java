@@ -10,8 +10,8 @@ public class StockRowMapper implements RowMapper<Stock> {
     @Override
     public Stock mapRow(ResultSet resultSet, int i) throws SQLException {
         Stock stock = new Stock();
-        stock.setReserved(resultSet.getInt("reserved"));
-        stock.setStock(resultSet.getInt("stock"));
+        stock.setReserved(resultSet.getLong("reserved"));
+        stock.setStock(resultSet.getLong("stock"));
         return stock;
     }
 }

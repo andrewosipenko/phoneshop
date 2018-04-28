@@ -37,9 +37,9 @@
             <tbody>
             <c:if test="${not empty phones}">
                 <form:form modelAttribute="updateCartForm" method="PUT" id="updateCartForm">
-                    <c:set var="updateCartItems" value="${updateCartForm.updateCartItems}"/>
-                    <c:forEach begin="0" end="${updateCartItems.size()-1}" var="index">
-                        <form:hidden path="updateCartItems[${index}].phoneId"/>
+                    <c:set var="updateCartRecords" value="${updateCartForm.updateCartRecords}"/>
+                    <c:forEach begin="0" end="${updateCartRecords.size()-1}" var="index">
+                        <form:hidden path="updateCartRecords[${index}].phoneId"/>
                         <tr>
                             <td style="vertical-align: middle!important"><c:out value="${phones[index].brand}"/></td>
                             <td style="vertical-align: middle!important"><c:out value="${phones[index].model}"/></td>
@@ -47,8 +47,8 @@
                             <td style="vertical-align: middle!important"><c:out value="${phones[index].displaySizeInches}''"/></td>
                             <td style="vertical-align: middle!important">$<c:out value="${phones[index].price}"/></td>
                             <td style="vertical-align: middle!important">
-                                <form:input cssClass="form-control" cssStyle="width:70px;" path="updateCartItems[${index}].quantity"/>
-                                <form:errors path="updateCartItems[${index}].quantity" cssStyle="color: red;"/>
+                                <form:input cssClass="form-control" cssStyle="width:70px;" path="updateCartRecords[${index}].quantity"/>
+                                <form:errors path="updateCartRecords[${index}].quantity" cssStyle="color: red;"/>
                             </td>
                             <td class="text-center" style="vertical-align: middle!important"><button class="btn btn-info" type="button" onclick="deleteFromCart(${phones[index].id})">Delete</button></td>
                         </tr>

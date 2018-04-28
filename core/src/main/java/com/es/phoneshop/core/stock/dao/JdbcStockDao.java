@@ -28,6 +28,6 @@ public class JdbcStockDao implements StockDao {
 
     @Override
     public void save(Stock stock) {
-        throw new UnsupportedOperationException("TODO");
+        jdbcTemplate.update(SQLQueries.UPDATE_STOCK, stock.getStock(), stock.getReserved(), stock.getPhone().getId());
     }
 }

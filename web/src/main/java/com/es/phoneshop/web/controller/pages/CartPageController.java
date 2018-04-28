@@ -1,14 +1,14 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.phoneshop.core.cart.model.CartItem;
+import com.es.phoneshop.core.cart.model.CartRecord;
 import com.es.phoneshop.core.cart.service.CartService;
 import com.es.phoneshop.core.cart.throwable.NoStockFoundException;
 import com.es.phoneshop.core.cart.throwable.NoSuchPhoneException;
 import com.es.phoneshop.core.cart.throwable.TooBigQuantityException;
 import com.es.phoneshop.core.phone.model.Phone;
+import com.es.phoneshop.web.controller.form.UpdateCartForm;
 import com.es.phoneshop.web.controller.throwable.InternalException;
-import com.es.phoneshop.web.controller.util.UpdateCartForm;
-import com.es.phoneshop.web.controller.util.UpdateCartItem;
+import com.es.phoneshop.web.controller.util.UpdateCartRecord;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,7 +32,7 @@ public class CartPageController {
     @RequestMapping(method = RequestMethod.GET)
     public String getCart(Model model) {
         UpdateCartForm form = new UpdateCartForm();
-        form.setUpdateCartItems(getUpdateCartItems());
+        form.setUpdateCartRecords(getUpdateCartItems());
         model.addAttribute("updateCartForm", form);
         model.addAttribute("phones", getPhones());
         return "cart";
@@ -40,21 +40,21 @@ public class CartPageController {
 
     @RequestMapping(method = RequestMethod.PUT)
     public String updateCart(@ModelAttribute("updateCartForm") @Valid UpdateCartForm form, BindingResult result, Model model) {
-        List<UpdateCartItem> items = form.getUpdateCartItems();
         model.addAttribute("phones", getPhones());
-        Map<Long, Long> updateMap = items.stream()
-                .filter(item -> item.getPhoneId() != null && item.getQuantity() != null)
-                .collect(Collectors.toMap(UpdateCartItem::getPhoneId, UpdateCartItem::getQuantity));
+        if (result.hasFieldErrors())
+            return "cart";
+        List<UpdateCartRecord> updateCartRecords = form.getUpdateCartRecords();
         try {
-            cartService.checkUpdateItems(updateMap);
+            Map<Long, Long> updateMap = updateCartRecords.stream()
+                    .collect(Collectors.toMap(UpdateCartRecord::getPhoneId, UpdateCartRecord::getQuantity));
+            cartService.update(updateMap);
         } catch (TooBigQuantityException e) {
-            handleTooBigQuantities(result, e.getPhoneIds(), items);
+            handleTooBigQuantities(result, e.getPhoneIds(), updateCartRecords);
         } catch (NoSuchPhoneException | NoStockFoundException e) {
             throw new InternalException();
         }
         if (result.hasFieldErrors())
             return "cart";
-        cartService.update(updateMap);
         return "redirect:/cart";
     }
 
@@ -68,23 +68,23 @@ public class CartPageController {
         return "redirect:/cart";
     }
 
-    private void handleTooBigQuantities(BindingResult result, Set<Long> phoneIds, List<UpdateCartItem> items) {
-        for (int i = 0; i < items.size(); i++) {
-            Long phoneId = items.get(i).getPhoneId();
+    private void handleTooBigQuantities(BindingResult result, Set<Long> phoneIds, List<UpdateCartRecord> records) {
+        for (int i = 0; i < records.size(); i++) {
+            Long phoneId = records.get(i).getPhoneId();
             if (phoneIds.contains(phoneId))
-                result.rejectValue("updateCartItems[" + i + "].quantity", "error.tooBig.quantity");
+                result.rejectValue("updateCartRecords[" + i + "].quantity", "error.tooBig.quantity");
         }
     }
 
     private List<Phone> getPhones() {
-        return cartService.getCartItems().stream()
-                .map(CartItem::getPhone)
+        return cartService.getRecords().stream()
+                .map(CartRecord::getPhone)
                 .collect(Collectors.toList());
     }
 
-    private List<UpdateCartItem> getUpdateCartItems() {
-        return cartService.getCartItems().stream()
-                .map(UpdateCartItem::fromCartItem)
+    private List<UpdateCartRecord> getUpdateCartItems() {
+        return cartService.getRecords().stream()
+                .map(UpdateCartRecord::fromCartItem)
                 .collect(Collectors.toList());
     }
 }
