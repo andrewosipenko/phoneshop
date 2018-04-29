@@ -48,8 +48,8 @@ create table phone2color (
 
 create table stocks (
   phoneId BIGINT NOT NULL,
-  stock SMALLINT NOT NULL,
-  reserved SMALLINT NOT NULL,
+  stock BIGINT NOT NULL,
+  reserved BIGINT NOT NULL,
   UNIQUE (phoneId),
   CONSTRAINT FK_stocks_phoneId FOREIGN KEY (phoneId) REFERENCES phones (id) ON DELETE CASCADE ON UPDATE CASCADE
 );

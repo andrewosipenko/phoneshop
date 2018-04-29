@@ -1,4 +1,4 @@
-package com.es.core.model.phone.exception;
+package com.es.core.form;
 
 public class InvalidAddToCartFormException extends Exception {
     public InvalidAddToCartFormException(String message){

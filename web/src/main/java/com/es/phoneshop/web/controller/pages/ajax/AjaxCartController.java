@@ -2,7 +2,7 @@ package com.es.phoneshop.web.controller.pages.ajax;
 
 import com.es.core.cart.CartService;
 import com.es.core.form.AddToCartForm;
-import com.es.core.model.phone.exception.InvalidAddToCartFormException;
+import com.es.core.form.InvalidAddToCartFormException;
 import com.es.core.validation.validator.AddToCartFormValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;

@@ -1,6 +1,6 @@
 package com.es.phoneshop.web.controller.service;
 
-import com.es.core.dao.PhoneDao;
+import com.es.core.dao.phoneDao.PhoneDao;
 import com.es.phoneshop.web.controller.exception.throwable.InvalidUrlParamException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

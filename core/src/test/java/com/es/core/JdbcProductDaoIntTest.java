@@ -1,8 +1,9 @@
 package com.es.core;
 
+import com.es.core.dao.phoneDao.PhoneDao;
+import com.es.core.dao.phoneDao.SqlQueryConstants;
 import com.es.core.model.phone.Phone;
-import com.es.core.dao.PhoneDao;
-import com.es.core.dao.SqlQueryConstants;
+import com.es.core.model.phone.Stock;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +29,12 @@ public class JdbcProductDaoIntTest{
     private final int AMOUNT_TO_FIND = 6;
     private final int AMOUNT_OF_AVAILABLE_PHONES = 6;
     private final String SEARCH = "%";
+    private final long PHONE_WITH_STOCK_ID_1 = 1001L;
+    private final long PHONE_WITH_STOCK_ID_2 = 1004L;
+    private final long PHONE_STOCK_1 = 0L;
+    private final long PHONE_RESERVED_1 = 0L;
+    private final long PHONE_STOCK_2 = 14L;
+    private final long PHONE_RESERVED_2 = 3L;
 
     @Test
     public void testGetNotExistingPhone(){
@@ -86,5 +94,27 @@ public class JdbcProductDaoIntTest{
     @Test
     public void testContainsUnavailablePhone(){
         Assert.assertFalse(phoneDao.contains(NOT_EXISTING_PHONE_ID));
+    }
+
+    @Test
+    public void testGetPhonesStocks(){
+        Phone phone1 = new Phone();
+        Phone phone2 = new Phone();
+        phone1.setId(PHONE_WITH_STOCK_ID_1);
+        phone2.setId(PHONE_WITH_STOCK_ID_2);
+        List<Phone> phones = Arrays.asList(phone1, phone2);
+        List<Stock> stocks = phoneDao.getPhonesStocks(phones);
+        Assert.assertTrue(stocks.size() == phones.size());
+        Stock stock1 = stocks.get(0);
+        Stock stock2 = stocks.get(1);
+
+        Assert.assertTrue(stock1.getPhone().equals(phone1));
+        Assert.assertTrue(stock2.getPhone().equals(phone2));
+
+        Assert.assertTrue(stock1.getReserved().equals(PHONE_RESERVED_1));
+        Assert.assertTrue(stock2.getReserved().equals(PHONE_RESERVED_2));
+
+        Assert.assertTrue(stock1.getStock().equals(PHONE_STOCK_1));
+        Assert.assertTrue(stock2.getStock().equals(PHONE_STOCK_2));
     }
 }

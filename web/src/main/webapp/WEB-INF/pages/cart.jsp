@@ -48,7 +48,7 @@
                 </table>
                 <input type="submit" class ="btn btn-success" value="Update">
                 </form:form>
-                <a class ="btn btn-success" href="<c:url value="/productList"/>">Order</a>
+                <a class ="btn btn-success" href="<c:url value="/order"/>">Order</a>
             </c:when>
             <c:otherwise>
                 <h4>Cart is empty</h4>

@@ -2,8 +2,9 @@ package com.es.core;
 
 import com.es.core.cart.Cart;
 import com.es.core.cart.HttpSessionCartService;
-import com.es.core.dao.PhoneDao;
+import com.es.core.dao.phoneDao.PhoneDao;
 import com.es.core.model.phone.Phone;
+import com.es.core.model.phone.Stock;
 import com.es.core.model.phone.exception.NoSuchPhoneException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,9 +18,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @ContextConfiguration(value = "classpath:context/testContext-core.xml")
@@ -42,6 +41,12 @@ public class HttpSessionCartServiceTest {
 
     private Map<Long, Long> updateItemsMap;
     private Map<Long, Long> existingItems;
+    private List<Phone> phonesToTestStock;
+    private List<Stock> stocks;
+
+    public HttpSessionCartServiceTest() {
+    }
+
     @Before
     public void setupMock(){
         MockitoAnnotations.initMocks(this);

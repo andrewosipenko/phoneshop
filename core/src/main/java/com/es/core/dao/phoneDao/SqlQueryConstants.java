@@ -1,4 +1,4 @@
-package com.es.core.dao;
+package com.es.core.dao.phoneDao;
 
 public interface SqlQueryConstants {
     String PHONE_VALUES = " brand = ?," +
@@ -38,4 +38,5 @@ public interface SqlQueryConstants {
             " AND phones.price IS NOT NULL ";
     String SELECT_AVAILABLE_PHONES_WITH_OFFSET =  "SELECT * FROM phones " + AVAILABLE_PHONES + " AND lower(brand) like ? OFFSET ";
     String SELECT_AVAILABLE_PHONES_SORTED = "SELECT * FROM phones " + AVAILABLE_PHONES + " AND lower(brand) like ? ORDER BY phones.";
+    String SELECT_STOCK = "SELECT * from stocks WHERE phoneId = ";
 }

@@ -1,12 +1,14 @@
 package com.es.core.cart;
 
-import com.es.core.dao.PhoneDao;
+import com.es.core.dao.phoneDao.PhoneDao;
 import com.es.core.model.phone.Phone;
+import com.es.core.model.phone.Stock;
 import com.es.core.model.phone.exception.NoSuchPhoneException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -67,5 +69,22 @@ public class HttpSessionCartService implements CartService {
         }
         cart.setSubtotal(newSubtotal);
         cart.setItemsAmount(newQuantity);
+    }
+
+    public void removePhonesOutOfTheStock(List<Phone> phones){
+        List<Stock> stocks = phoneDao.getPhonesStocks(phones);
+        Cart cart = getCart();
+        for(Stock stock : stocks){
+            Long phoneId = stock.getPhone().getId();
+            Long quantity = cart.getItemQuantity(phoneId);
+            if(stock.getStock().compareTo(quantity) < 0){
+                remove(phoneId);
+            }
+        }
+    }
+
+    @Override
+    public void clearCart() {
+        getCart().getItems().clear();
     }
 }
