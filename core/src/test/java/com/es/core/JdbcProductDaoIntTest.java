@@ -1,7 +1,7 @@
 package com.es.core;
 
 import com.es.core.dao.phoneDao.PhoneDao;
-import com.es.core.dao.phoneDao.SqlQueryConstants;
+import com.es.core.dao.SqlQueryConstants;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.Stock;
 import org.junit.Assert;
@@ -73,7 +73,7 @@ public class JdbcProductDaoIntTest{
         String brand = "checkBrand";
         phone.setModel(model);
         phone.setBrand(brand);
-        int phonesCount = jdbcTemplate.queryForObject(SqlQueryConstants.COUNT_PHONES, Integer.class);
+        int phonesCount = jdbcTemplate.queryForObject(SqlQueryConstants.PhoneDao.COUNT_PHONES, Integer.class);
         phoneDao.save(phone);
         Assert.assertEquals(model, phoneDao.get(phone.getId()).get().getModel());
         Assert.assertEquals(brand, phoneDao.get(phone.getId()).get().getBrand());

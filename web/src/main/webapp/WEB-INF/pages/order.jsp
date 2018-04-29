@@ -81,6 +81,10 @@
                 <td><form:input path="contactPhoneNo" /></td>
                 <td><form:errors cssClass="text-danger" path="contactPhoneNo" /></td>
             </tr>
+        <tr>
+            <td>Extra information:</td>
+            <td><form:input path="extraInfo" /></td>
+        </tr>
         </table>
         <input type="submit" class ="btn btn-success" value="Order">
     </form:form>

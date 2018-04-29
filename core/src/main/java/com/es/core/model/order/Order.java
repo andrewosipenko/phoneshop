@@ -28,6 +28,7 @@ public class Order
     private String deliveryAddress;
     @PhoneNumber
     private String contactPhoneNo;
+    private String extraInfo;
 
     private OrderStatus status;
 
@@ -109,5 +110,13 @@ public class Order
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public String getExtraInfo() {
+        return extraInfo;
+    }
+
+    public void setExtraInfo(String extraInfo) {
+        this.extraInfo = extraInfo;
     }
 }

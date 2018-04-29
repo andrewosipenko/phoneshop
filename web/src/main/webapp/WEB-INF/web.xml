@@ -31,9 +31,4 @@
     <error-code>404</error-code>
     <location>/WEB-INF/pages/error/page404.jsp</location>
   </error-page>
-
-  <context-param>
-    <param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
-    <param-value>true</param-value>
-  </context-param>
 </web-app>
