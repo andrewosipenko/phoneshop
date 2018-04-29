@@ -62,7 +62,7 @@
     <div class="container mt-3">
         <div class="float-right">
             <button class="btn btn-primary mx-2" onclick="updateCart()">Update</button>
-            <button class="btn btn-primary mx-2">Order</button>
+            <a class="btn btn-primary mx-2" href="${pageContext.request.contextPath}/order">Order</a>
         </div>
     </div>
 </template:page>

@@ -96,6 +96,12 @@ public class CartServiceImpl implements CartService {
         recountTotal();
     }
 
+    @Override
+    public void clear() {
+        cart.getRecords().clear();
+        recountTotal();
+    }
+
     private void checkIfAllUpdatedPhonesPresent(Set<Long> updatedPhoneIds) {
         Set<Long> cartPhoneIds = cart.getRecords().stream()
                 .map(item -> item.getPhone().getId())

@@ -20,6 +20,7 @@ public class Order {
     private String lastName;
     private String deliveryAddress;
     private String contactPhoneNo;
+    private String additionalInformation;
 
     private OrderStatus status;
 
@@ -101,5 +102,13 @@ public class Order {
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public String getAdditionalInformation() {
+        return additionalInformation;
+    }
+
+    public void setAdditionalInformation(String additionalInformation) {
+        this.additionalInformation = additionalInformation;
     }
 }
