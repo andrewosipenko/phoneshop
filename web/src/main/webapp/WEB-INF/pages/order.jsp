@@ -83,7 +83,7 @@
             </tr>
         <tr>
             <td>Extra information:</td>
-            <td><form:input path="extraInfo" /></td>
+            <td><form:textarea path="extraInfo" /></td>
         </tr>
         </table>
         <input type="submit" class ="btn btn-success" value="Order">

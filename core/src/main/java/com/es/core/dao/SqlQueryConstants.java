@@ -42,6 +42,11 @@ public interface SqlQueryConstants {
         String SELECT_STOCK = "SELECT * from stocks WHERE phoneId = ";
     }
     interface OrderDao{
-
+        String SET_PHONE_ID_IN_ORDER_ITEM = "UPDATE orderItems SET phoneId = ? WHERE id = ?";
+        String SELECT_ORDER_BY_ID = "SELECT * FROM orders WHERE id = ";
+        String SET_ORDER_ID_IN_ORDER_ITEM = "UPDATE orderItems SET orderId = ? WHERE id = ?";
+        String INSERT_ORDER_ITEM_BELONG_TO_ORDER = "INSERT INTO order2orderItem (orderId, orderItemId) VALUES (?, ?) ";
+        String SELECT_ORDER_ITEMS_BELONG_TO_ORDER = "SELECT * FROM orderItems INNER JOIN order2orderItem ON orderItems.id = order2orderItem.orderItemId WHERE order2orderItem.orderId = ";
+        String SELECT_PHONE_ID_BELONG_TO_ORDER_ITEM = "SELECT phoneId FROM orderItems WHERE orderItems.id = ";
     }
 }

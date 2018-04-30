@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 @WebAppConfiguration
@@ -54,5 +55,7 @@ public class HttpSessionCartServiceIntTest {
         Assert.assertTrue(cartService.getCart().getItems().size() == PHONE_AMOUNT_TO_ADD);
         cartService.clearCart();
         Assert.assertTrue(cartService.getCart().getItems().size() == 0);
+        Assert.assertTrue(cartService.getCart().getSubtotal().compareTo(BigDecimal.ZERO) == 0);
+        Assert.assertTrue(cartService.getCart().getItemsAmount().equals(0L));
     }
 }

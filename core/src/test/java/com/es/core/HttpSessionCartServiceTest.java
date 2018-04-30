@@ -4,7 +4,6 @@ import com.es.core.cart.Cart;
 import com.es.core.cart.HttpSessionCartService;
 import com.es.core.dao.phoneDao.PhoneDao;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.Stock;
 import com.es.core.model.phone.exception.NoSuchPhoneException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -41,8 +40,6 @@ public class HttpSessionCartServiceTest {
 
     private Map<Long, Long> updateItemsMap;
     private Map<Long, Long> existingItems;
-    private List<Phone> phonesToTestStock;
-    private List<Stock> stocks;
 
     public HttpSessionCartServiceTest() {
     }
@@ -68,7 +65,7 @@ public class HttpSessionCartServiceTest {
 
     private void setupStubs(){
         Mockito.when(mockPhoneDao.get(EXISTING_PHONE_ID)).thenReturn(Optional.of(existingPhone));
-        Mockito.when(mockPhoneDao.get(NOT_EXISTING_PHONE_ID)).thenReturn(Optional.ofNullable(null));
+        Mockito.when(mockPhoneDao.get(NOT_EXISTING_PHONE_ID)).thenReturn(Optional.empty());
         Mockito.when(mockPhoneDao.contains(EXISTING_PHONE_ID)).thenReturn(true);
         Mockito.when(mockPhoneDao.contains(NOT_EXISTING_PHONE_ID)).thenReturn(false);
         Mockito.when(mockCart.getItems()).thenReturn(existingItems);

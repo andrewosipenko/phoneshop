@@ -86,5 +86,6 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void clearCart() {
         getCart().getItems().clear();
+        recalculateCart();
     }
 }
