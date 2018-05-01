@@ -1,10 +1,8 @@
 package com.es.core.dao.phoneDao;
 
 import com.es.core.dao.SqlQueryConstants;
-import com.es.core.dao.phoneDao.rowMapper.StockPropertyRowMapper;
 import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.Stock;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -147,17 +145,5 @@ public class JdbcPhoneDao implements PhoneDao {
     public boolean contains(Long key) {
         Long amount = jdbcTemplate.queryForObject(SqlQueryConstants.PhoneDao.COUNT_PHONES_WITH_ID + key, Long.class);
         return amount > 0;
-    }
-
-    @Override
-    public List<Stock> getPhonesStocks(List<Phone> phones) {
-        List<Stock> stocks = new ArrayList<>();
-        for(Phone phone : phones){
-            Stock stock = jdbcTemplate.queryForObject(SqlQueryConstants.PhoneDao.SELECT_STOCK + phone.getId(),
-                    new StockPropertyRowMapper());
-            stock.setPhone(phone);
-            stocks.add(stock);
-        }
-        return stocks;
     }
 }

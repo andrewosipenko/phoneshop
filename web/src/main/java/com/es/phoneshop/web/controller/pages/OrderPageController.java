@@ -3,9 +3,10 @@ package com.es.phoneshop.web.controller.pages;
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartService;
 import com.es.core.model.order.Order;
-import com.es.core.order.OrderService;
-import com.es.core.order.OutOfStockException;
-import com.es.phoneshop.web.controller.service.phone.PhoneService;
+import com.es.core.service.order.OrderService;
+import com.es.core.model.stock.exception.OutOfStockException;
+import com.es.core.service.order.orderItem.OrderItemService;
+import com.es.phoneshop.web.controller.service.phone.PhoneWebService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,9 +23,11 @@ public class OrderPageController {
     @Resource
     private OrderService orderService;
     @Resource
+    private OrderItemService orderItemService;
+    @Resource
     private CartService cartService;
     @Resource
-    private PhoneService phoneService;
+    private PhoneWebService phoneWebService;
 
     private final String ORDER = "order";
     private final String ERROR_MESSAGE = "errorMessage";
@@ -52,8 +55,8 @@ public class OrderPageController {
         }
         catch (OutOfStockException e){
             Cart cart = cartService.getCart();
-            cartService.removePhonesOutOfTheStock(phoneService.getPhonesFromCart(cart));
-            orderService.setNewOrderItems(order, cart);
+            cartService.removePhonesOutOfTheStock(phoneWebService.getPhonesFromCart(cart));
+            orderItemService.setNewOrderItems(order, cart);
 
             model.addAttribute(ERROR_MESSAGE, e.getMessage());
             return "order";

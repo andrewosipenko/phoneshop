@@ -6,7 +6,7 @@ import com.es.core.form.updateForm.UpdateCartForm;
 import com.es.core.form.updateForm.UpdateCartFormService;
 import com.es.core.model.phone.Phone;
 import com.es.core.validation.validator.UpdateCartFormValidator;
-import com.es.phoneshop.web.controller.service.phone.PhoneService;
+import com.es.phoneshop.web.controller.service.phone.PhoneWebService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,7 +23,7 @@ public class CartPageController {
     @Resource
     private CartService cartService;
     @Resource
-    private PhoneService phoneService;
+    private PhoneWebService phoneWebService;
     @Resource
     private UpdateCartFormService updateCartFormService;
     @Resource
@@ -37,7 +37,7 @@ public class CartPageController {
     @RequestMapping(method = RequestMethod.GET)
     public String getCart(Model model) {
         Cart cart = cartService.getCart();
-        List<Phone> phones = phoneService.getPhonesFromCart(cart);
+        List<Phone> phones = phoneWebService.getPhonesFromCart(cart);
         model.addAttribute("phones", phones);
         model.addAttribute("updateCartForm",
                 updateCartFormService.getUpdateCartForm(phones, cart.getItems()));
@@ -47,7 +47,7 @@ public class CartPageController {
     @RequestMapping(method = RequestMethod.POST, value = "/update")
     public String updateCart(@Validated @ModelAttribute("updateCartForm") UpdateCartForm updateCartForm, BindingResult result, Model model) {
         if(result.hasErrors()){
-            model.addAttribute("phones", phoneService.getPhonesFromCart(cartService.getCart()));
+            model.addAttribute("phones", phoneWebService.getPhonesFromCart(cartService.getCart()));
             model.addAttribute("updateCartForm", updateCartForm);
             return "cart";
         }

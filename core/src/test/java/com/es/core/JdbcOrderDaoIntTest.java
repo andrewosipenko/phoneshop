@@ -6,7 +6,7 @@ import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
 import com.es.core.model.order.exception.NoSuchOrderException;
-import com.es.core.order.OrderService;
+import com.es.core.service.order.OrderService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

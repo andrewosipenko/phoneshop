@@ -1,8 +1,9 @@
 package com.es.core.cart;
 
 import com.es.core.dao.phoneDao.PhoneDao;
+import com.es.core.dao.stockDao.StockDao;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.Stock;
+import com.es.core.model.stock.Stock;
 import com.es.core.model.phone.exception.NoSuchPhoneException;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ public class HttpSessionCartService implements CartService {
     private Cart cart;
     @Resource
     private PhoneDao phoneDao;
+    @Resource
+    private StockDao stockDao;
 
     @Override
     public Cart getCart() {
@@ -72,7 +75,7 @@ public class HttpSessionCartService implements CartService {
     }
 
     public void removePhonesOutOfTheStock(List<Phone> phones){
-        List<Stock> stocks = phoneDao.getPhonesStocks(phones);
+        List<Stock> stocks = stockDao.getPhonesStocks(phones);
         Cart cart = getCart();
         for(Stock stock : stocks){
             Long phoneId = stock.getPhone().getId();

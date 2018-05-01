@@ -78,5 +78,5 @@
             <td>${order.extraInfo}</td>
         </tr>
     </table>
-    <a class="btn btn-success" href="<c:out value="/productList"/>">Back to shopping</a>
+    <a class="btn btn-success" href="<c:url value="/productList"/>">Back to shopping</a>
 </template:page>

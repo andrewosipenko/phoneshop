@@ -39,7 +39,6 @@ public interface SqlQueryConstants {
                 " AND phones.price IS NOT NULL ";
         String SELECT_AVAILABLE_PHONES_WITH_OFFSET =  "SELECT * FROM phones " + AVAILABLE_PHONES + " AND lower(brand) like ? OFFSET ";
         String SELECT_AVAILABLE_PHONES_SORTED = "SELECT * FROM phones " + AVAILABLE_PHONES + " AND lower(brand) like ? ORDER BY phones.";
-        String SELECT_STOCK = "SELECT * from stocks WHERE phoneId = ";
     }
     interface OrderDao{
         String SET_PHONE_ID_IN_ORDER_ITEM = "UPDATE orderItems SET phoneId = ? WHERE id = ?";
@@ -48,5 +47,9 @@ public interface SqlQueryConstants {
         String INSERT_ORDER_ITEM_BELONG_TO_ORDER = "INSERT INTO order2orderItem (orderId, orderItemId) VALUES (?, ?) ";
         String SELECT_ORDER_ITEMS_BELONG_TO_ORDER = "SELECT * FROM orderItems INNER JOIN order2orderItem ON orderItems.id = order2orderItem.orderItemId WHERE order2orderItem.orderId = ";
         String SELECT_PHONE_ID_BELONG_TO_ORDER_ITEM = "SELECT phoneId FROM orderItems WHERE orderItems.id = ";
+    }
+    interface StockDao{
+        String SELECT_STOCK_BY_PHONE_ID = "SELECT * from stocks WHERE phoneId = ";
+        String UPDATE_STOCK_BY_PHONE_ID = "UPDATE stocks SET stock = :stock, reserved = :reserved WHERE phoneId = :phone.id";
     }
 }

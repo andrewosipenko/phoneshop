@@ -1,6 +1,6 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.phoneshop.web.controller.service.phone.PhoneService;
+import com.es.phoneshop.web.controller.service.phone.PhoneWebService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/productDetails")
 public class ProductDetailsPageController {
     @Autowired
-    private PhoneService phoneService;
+    private PhoneWebService phoneWebService;
 
     @GetMapping(value = "/phoneId={phoneId}")
     public String showProductDetails(@PathVariable Long phoneId, Model model){
-        model.addAttribute("phone", phoneService.getPhone(phoneId));
+        model.addAttribute("phone", phoneWebService.getPhone(phoneId));
         return "productDetails";
     }
 }

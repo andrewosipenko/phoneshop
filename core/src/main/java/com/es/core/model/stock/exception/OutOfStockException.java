@@ -1,4 +1,4 @@
-package com.es.core.order;
+package com.es.core.model.stock.exception;
 
 public class OutOfStockException extends Exception {
     public OutOfStockException(String message){

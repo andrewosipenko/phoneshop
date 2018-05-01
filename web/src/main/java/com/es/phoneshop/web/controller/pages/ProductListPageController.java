@@ -3,7 +3,7 @@ package com.es.phoneshop.web.controller.pages;
 import com.es.core.model.phone.Phone;
 import com.es.phoneshop.web.controller.exception.throwable.InvalidUrlParamException;
 import com.es.phoneshop.web.controller.service.PaginationService;
-import com.es.phoneshop.web.controller.service.phone.PhoneService;
+import com.es.phoneshop.web.controller.service.phone.PhoneWebService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +20,7 @@ public class ProductListPageController {
     @Resource
     private PaginationService paginationService;
     @Resource
-    private PhoneService phoneService;
+    private PhoneWebService phoneWebService;
 
     private final String DEFAULT_SORT_BY = "brand";
     private final String DEFAULT_SORT_DIRECTION = "asc";
@@ -59,7 +59,7 @@ public class ProductListPageController {
         model.addAttribute("searchText", search);
 
         int offset = PaginationService.PHONES_TO_DISPLAY * (page - 1);
-        List<Phone> phoneList = phoneService.getPhoneList(sortBy, offset, search, dir);
+        List<Phone> phoneList = phoneWebService.getPhoneList(sortBy, offset, search, dir);
         model.addAttribute("phones", phoneList);
         return "productList";
     }

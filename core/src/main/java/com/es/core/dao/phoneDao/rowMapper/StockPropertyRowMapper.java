@@ -1,6 +1,6 @@
 package com.es.core.dao.phoneDao.rowMapper;
 
-import com.es.core.model.phone.Stock;
+import com.es.core.model.stock.Stock;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

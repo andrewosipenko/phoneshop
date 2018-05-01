@@ -1,7 +1,6 @@
 package com.es.core.dao.phoneDao;
 
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.Stock;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,5 +12,4 @@ public interface PhoneDao {
     List<Phone> findAllSortedBy(int offset, int limit, String searchText, String sortBy, String dir);
     Integer countAvailablePhone(String search);
     boolean contains(Long key);
-    List<Stock> getPhonesStocks(List<Phone> phones);
 }
