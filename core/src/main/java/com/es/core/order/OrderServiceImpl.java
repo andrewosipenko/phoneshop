@@ -55,7 +55,7 @@ public class OrderServiceImpl implements OrderService {
             Long quantity = entry.getValue();
             Phone phone = phoneDao.get(phoneId).orElseThrow(NoSuchPhoneException::new);
 
-            orderItems.add(createOrderItem(phone, quantity, order));
+            orderItems.add(createOrderItem(phone, quantity));
         }
         return orderItems;
     }
@@ -72,11 +72,10 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalPrice(deliveryPrice.add(order.getSubtotal()));
     }
 
-    private OrderItem createOrderItem(Phone phone, Long quantity, Order order){
+    private OrderItem createOrderItem(Phone phone, Long quantity){
         OrderItem orderItem = new OrderItem();
         orderItem.setPhone(phone);
         orderItem.setQuantity(quantity);
-        orderItem.setOrder(order);
         return orderItem;
     }
 }
