@@ -42,7 +42,7 @@ public class HttpSessionCartServiceIntTest {
 
         Assert.assertTrue(cartService.getCart().getItems().containsKey(PHONE_ID_WITH_AVAILABLE_STOCK));
         Assert.assertTrue(cartService.getCart().getItems().containsKey(PHONE_ID_WITH_UNAVAILABLE_STOCK));
-        cartService.removePhonesOutOfTheStock(Arrays.asList(phoneWithAvailableStock, phoneWithUnavailableStock));
+        cartService.removePhonesOutOfTheStock();
         Assert.assertFalse(cartService.getCart().getItems().containsKey(PHONE_ID_WITH_UNAVAILABLE_STOCK));
         Assert.assertTrue(cartService.getCart().getItems().containsKey(PHONE_ID_WITH_AVAILABLE_STOCK));
     }

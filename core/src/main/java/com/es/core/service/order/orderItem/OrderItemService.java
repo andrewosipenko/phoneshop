@@ -1,12 +1,10 @@
 package com.es.core.service.order.orderItem;
 
 import com.es.core.cart.Cart;
-import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
 
 import java.util.List;
 
 public interface OrderItemService {
-    List<OrderItem> getOrderItemList(Cart cart, Order order);
-    void setNewOrderItems(Order order, Cart cart);
+    List<OrderItem> getOrderItemList(Cart cart);
 }

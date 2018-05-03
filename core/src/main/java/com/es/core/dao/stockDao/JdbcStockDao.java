@@ -2,7 +2,6 @@ package com.es.core.dao.stockDao;
 
 import com.es.core.dao.SqlQueryConstants;
 import com.es.core.dao.phoneDao.rowMapper.StockPropertyRowMapper;
-import com.es.core.model.phone.Phone;
 import com.es.core.model.stock.Stock;
 import com.es.core.model.stock.exception.NoSuchStockException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -13,7 +12,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -31,23 +29,13 @@ public class JdbcStockDao implements StockDao {
     }
 
     @Override
-    public List<Stock> getPhonesStocks(List<Phone> phones) {
-        List<Stock> stocks = new ArrayList<>();
-        for(Phone phone : phones){
-            Stock stock = getStockByPhoneId(phone.getId());
-            stock.setPhone(phone);
-            stocks.add(stock);
-        }
-        return stocks;
-    }
-
-    @Override
     public void updateStocks(List<Stock> stocks) {
         SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(stocks.toArray());
         namedParameterJdbcTemplate.batchUpdate(SqlQueryConstants.StockDao.UPDATE_STOCK_BY_PHONE_ID, batch);
     }
 
-    private Stock getStockByPhoneId(Long phoneId){
+    @Override
+    public Stock getStockByPhoneId(Long phoneId){
         try {
             return jdbcTemplate.queryForObject(SqlQueryConstants.StockDao.SELECT_STOCK_BY_PHONE_ID + phoneId,
                     new StockPropertyRowMapper());

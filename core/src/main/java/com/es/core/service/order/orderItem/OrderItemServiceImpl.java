@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
-import com.es.core.model.order.Order;
 
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
@@ -20,7 +19,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     private PhoneDao phoneDao;
 
     @Override
-    public List<OrderItem> getOrderItemList(Cart cart, Order order){
+    public List<OrderItem> getOrderItemList(Cart cart){
         List<OrderItem> orderItems = new ArrayList<>();
         for(Map.Entry<Long, Long> entry : cart.getItems().entrySet()){
             Long phoneId = entry.getKey();
@@ -30,11 +29,6 @@ public class OrderItemServiceImpl implements OrderItemService {
             orderItems.add(createOrderItem(phone, quantity));
         }
         return orderItems;
-    }
-
-    @Override
-    public void setNewOrderItems(Order order, Cart cart) {
-        order.setOrderItems(getOrderItemList(cart, order));
     }
 
     private OrderItem createOrderItem(Phone phone, Long quantity){

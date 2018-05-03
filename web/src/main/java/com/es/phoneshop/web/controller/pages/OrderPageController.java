@@ -54,9 +54,8 @@ public class OrderPageController {
             return "redirect:/orderOverview/" + order.getId();
         }
         catch (OutOfStockException e){
-            Cart cart = cartService.getCart();
-            cartService.removePhonesOutOfTheStock(phoneWebService.getPhonesFromCart(cart));
-            orderItemService.setNewOrderItems(order, cart);
+            cartService.removePhonesOutOfTheStock();
+            orderService.updateOrder(order, cartService.getCart());
 
             model.addAttribute(ERROR_MESSAGE, e.getMessage());
             return "order";

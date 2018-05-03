@@ -8,4 +8,5 @@ import com.es.core.model.stock.exception.OutOfStockException;
 public interface OrderService {
     Order createOrder(Cart cart);
     void placeOrder(Order order) throws OutOfStockException;
+    void updateOrder(Order order, Cart cart);
 }

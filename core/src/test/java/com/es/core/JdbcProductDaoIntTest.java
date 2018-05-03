@@ -5,6 +5,7 @@ import com.es.core.dao.SqlQueryConstants;
 import com.es.core.dao.stockDao.StockDao;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.stock.Stock;
+import com.es.core.service.stock.StockService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +24,7 @@ public class JdbcProductDaoIntTest{
     @Resource
     private PhoneDao phoneDao;
     @Resource
-    private StockDao stockDao;
+    private StockService stockService;
     @Resource
     private JdbcTemplate jdbcTemplate;
     private final long FIRST_PHONE_ID = 1000L;
@@ -106,7 +107,7 @@ public class JdbcProductDaoIntTest{
         phone1.setId(PHONE_WITH_STOCK_ID_1);
         phone2.setId(PHONE_WITH_STOCK_ID_2);
         List<Phone> phones = Arrays.asList(phone1, phone2);
-        List<Stock> stocks = stockDao.getPhonesStocks(phones);
+        List<Stock> stocks = stockService.getPhonesStocks(phones);
         Assert.assertTrue(stocks.size() == phones.size());
         Stock stock1 = stocks.get(0);
         Stock stock2 = stocks.get(1);

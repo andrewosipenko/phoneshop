@@ -33,7 +33,7 @@ public class StockService {
     public void updateStocks(Order order) throws OutOfStockException {
         List<OrderItem> orderItems = order.getOrderItems();
         List<Phone> phones = phoneService.getPhonesFromOrder(order);
-        Map<Long, Stock> stockMap = convertListStocksToMap(stockDao.getPhonesStocks(phones));
+        Map<Long, Stock> stockMap = convertListStocksToMap(getPhonesStocks(phones));
         for(OrderItem orderItem : orderItems){
             Long quantity = orderItem.getQuantity();
             Long phoneId = orderItem.getPhone().getId();
@@ -50,5 +50,16 @@ public class StockService {
             }
         }
         stockDao.updateStocks(convertStockMapToList(stockMap));
+    }
+
+    public List<Stock> getPhonesStocks(List<Phone> phones) {
+        List<Stock> stocks = new ArrayList<>();
+        for(Phone phone : phones){
+            Stock stock = stockDao.getStockByPhoneId(phone.getId());
+            stock.setPhone(phone);
+
+            stocks.add(stock);
+        }
+        return stocks;
     }
 }
