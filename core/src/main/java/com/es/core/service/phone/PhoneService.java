@@ -17,10 +17,6 @@ public class PhoneService {
     @Resource
     protected PhoneDao phoneDao;
 
-    public Phone getPhone(Long id){
-        return phoneDao.get(id).orElseThrow(NoSuchPhoneException::new);
-    }
-
     public List<Phone> getPhonesFromCart(Cart cart){
         List<Phone> phones = new ArrayList<>();
         for(Long phoneId : cart.getItems().keySet()){

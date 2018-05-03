@@ -52,7 +52,12 @@ public class JdbcOrderDao implements OrderDao {
         Long orderId = insertOrder.executeAndReturnKey(parameters).longValue();
         order.setId(orderId);
 
-        orderItemDao.saveOrderItems(order.getOrderItems());
+        saveOrderItems(order);
+
     }
 
+    private void saveOrderItems(Order order){
+        jdbcTemplate.update(SqlQueryConstants.OrderDao.DELETE_ORDER_ITEMS_BELONGS_TO_ORDER + order.getId());
+        orderItemDao.saveOrderItems(order.getOrderItems());
+    }
 }

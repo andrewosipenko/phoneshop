@@ -1,30 +1,26 @@
-package com.es.core;
+package com.es.core.dao.productDao;
 
 import com.es.core.dao.phoneDao.PhoneDao;
 import com.es.core.dao.SqlQueryConstants;
-import com.es.core.dao.stockDao.StockDao;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.stock.Stock;
-import com.es.core.service.stock.StockService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@Transactional
 @ContextConfiguration(value = "/context/testContext-core.xml")
-public class JdbcProductDaoIntTest{
+public class JdbcProductDaoIntTest {
     @Resource
     private PhoneDao phoneDao;
-    @Resource
-    private StockService stockService;
     @Resource
     private JdbcTemplate jdbcTemplate;
     private final long FIRST_PHONE_ID = 1000L;
@@ -32,35 +28,51 @@ public class JdbcProductDaoIntTest{
     private final long NOT_EXISTING_PHONE_ID = 1500L;
     private final int AMOUNT_TO_FIND = 6;
     private final int AMOUNT_OF_AVAILABLE_PHONES = 6;
-    private final String SEARCH = "%";
-    private final long PHONE_WITH_STOCK_ID_1 = 1001L;
-    private final long PHONE_WITH_STOCK_ID_2 = 1004L;
-    private final long PHONE_STOCK_1 = 0L;
-    private final long PHONE_RESERVED_1 = 0L;
-    private final long PHONE_STOCK_2 = 14L;
-    private final long PHONE_RESERVED_2 = 3L;
+    private final String SEARCH_ALL = "%";
+    private final String SEARCH_CONCRETE_EXISTING = "ARCHOS";
+    private final String SEARCH_CONCRETE_NOT_EXISTING = "NotExisting";
 
     @Test
-    public void testGetNotExistingPhone(){
+    public void testGetNotExistingPhone() {
         Optional<Phone> optionalPhone = phoneDao.get(NOT_EXISTING_PHONE_ID);
         Assert.assertFalse(optionalPhone.isPresent());
     }
 
     @Test
-    public void testGetExistingPhone(){
+    public void testGetExistingPhone() {
         Optional<Phone> optionalPhone = phoneDao.get(EXISTING_PHONE_ID);
         Assert.assertTrue(optionalPhone.isPresent());
         Assert.assertTrue(EXISTING_PHONE_ID == optionalPhone.get().getId());
     }
 
     @Test
-    public void testFindAll(){
-        List<Phone> phoneList = phoneDao.findAll(0, AMOUNT_TO_FIND, SEARCH);
+    public void testFindAll() {
+        List<Phone> phoneList = phoneDao.findAll(0, AMOUNT_TO_FIND, SEARCH_ALL);
         Assert.assertTrue(phoneList.size() == AMOUNT_TO_FIND);
     }
 
     @Test
-    public void testSaveExistingPhone(){
+    public void testFindAllSortedBy() {
+        String sortDirection = "asc";
+        String fieldToBeSortedBy = "price";
+        List<Phone> phones = phoneDao.findAllSortedBy(0, AMOUNT_OF_AVAILABLE_PHONES, SEARCH_CONCRETE_EXISTING,
+                fieldToBeSortedBy, sortDirection);
+        for (int i = 0; i < phones.size(); ++i) {
+            Assert.assertTrue(phones.get(i).getBrand().contains(SEARCH_CONCRETE_EXISTING));
+            if (i < phones.size() - 1) {
+                Phone currentPhone = phones.get(i);
+                Phone nextPhone = phones.get(i + 1);
+                if ("asc".equals(sortDirection)) {
+                    Assert.assertTrue(currentPhone.getPrice().compareTo(nextPhone.getPrice()) <= 0);
+                } else {
+                    Assert.assertTrue(currentPhone.getPrice().compareTo(nextPhone.getPrice()) >= 0);
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testSaveExistingPhone() {
         Phone phone = phoneDao.get(EXISTING_PHONE_ID).get();
         String oldModel = phone.getModel();
         String newModel = oldModel + "newModel";
@@ -71,7 +83,7 @@ public class JdbcProductDaoIntTest{
     }
 
     @Test
-    public void testSaveNotExistingPhone(){
+    public void testSaveNotExistingPhone() {
         Phone phone = new Phone();
         String model = "checkModel";
         String brand = "checkBrand";
@@ -85,40 +97,18 @@ public class JdbcProductDaoIntTest{
     }
 
     @Test
-    public void testCountAvailablePhones(){
-        int amount = phoneDao.countAvailablePhone(SEARCH);
+    public void testCountAvailablePhones() {
+        int amount = phoneDao.countAvailablePhone(SEARCH_ALL);
         Assert.assertEquals(AMOUNT_OF_AVAILABLE_PHONES, amount);
     }
 
     @Test
-    public void testContainsAvailablePhone(){
+    public void testContainsAvailablePhone() {
         Assert.assertTrue(phoneDao.contains(EXISTING_PHONE_ID));
     }
 
     @Test
-    public void testContainsUnavailablePhone(){
+    public void testContainsUnavailablePhone() {
         Assert.assertFalse(phoneDao.contains(NOT_EXISTING_PHONE_ID));
-    }
-
-    @Test
-    public void testGetPhonesStocks(){
-        Phone phone1 = new Phone();
-        Phone phone2 = new Phone();
-        phone1.setId(PHONE_WITH_STOCK_ID_1);
-        phone2.setId(PHONE_WITH_STOCK_ID_2);
-        List<Phone> phones = Arrays.asList(phone1, phone2);
-        List<Stock> stocks = stockService.getPhonesStocks(phones);
-        Assert.assertTrue(stocks.size() == phones.size());
-        Stock stock1 = stocks.get(0);
-        Stock stock2 = stocks.get(1);
-
-        Assert.assertTrue(stock1.getPhone().equals(phone1));
-        Assert.assertTrue(stock2.getPhone().equals(phone2));
-
-        Assert.assertTrue(stock1.getReserved().equals(PHONE_RESERVED_1));
-        Assert.assertTrue(stock2.getReserved().equals(PHONE_RESERVED_2));
-
-        Assert.assertTrue(stock1.getStock().equals(PHONE_STOCK_1));
-        Assert.assertTrue(stock2.getStock().equals(PHONE_STOCK_2));
     }
 }

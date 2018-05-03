@@ -9,6 +9,10 @@
     <import resource="classpath:context/applicationContext-core.xml"/>
     <context:property-placeholder location="classpath:conf/test.properties"/>
 
+    <bean id="transactionalManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
     <jdbc:initialize-database enabled="${db.insertDemodata}" data-source="dataSource">
         <jdbc:script location="classpath:db/testdata-phones.sql" />
     </jdbc:initialize-database>

@@ -1,4 +1,4 @@
-package com.es.core;
+package com.es.core.dao.orderDao;
 
 import com.es.core.cart.Cart;
 import com.es.core.dao.orderDao.JdbcOrderDao;
@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@Transactional
 @ContextConfiguration(value = "/context/testContext-core.xml")
 public class JdbcOrderDaoIntTest {
     @Resource
@@ -76,7 +78,7 @@ public class JdbcOrderDaoIntTest {
 
     @Test(expected = NoSuchOrderException.class)
     public void getNotExistingOrder(){
-       Order order =  orderDao.get(NOT_EXISTING_ORDER_ID).orElseThrow(NoSuchOrderException::new);
+       orderDao.get(NOT_EXISTING_ORDER_ID).orElseThrow(NoSuchOrderException::new);
     }
 
     private void initOrder(){

@@ -38,7 +38,7 @@ public class Cart {
         return itemsAmount;
     }
 
-    public Long getItemQuantity(Long phoneId){ // вынести
+    public Long getItemQuantity(Long phoneId){
         if(!items.containsKey(phoneId)){
             throw new NoSuchPhoneException();
         }

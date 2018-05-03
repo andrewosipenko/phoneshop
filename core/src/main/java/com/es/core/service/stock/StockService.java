@@ -56,8 +56,6 @@ public class StockService {
         List<Stock> stocks = new ArrayList<>();
         for(Phone phone : phones){
             Stock stock = stockDao.getStockByPhoneId(phone.getId());
-            stock.setPhone(phone);
-
             stocks.add(stock);
         }
         return stocks;

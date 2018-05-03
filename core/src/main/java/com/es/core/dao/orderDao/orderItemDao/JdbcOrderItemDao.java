@@ -1,6 +1,7 @@
 package com.es.core.dao.orderDao.orderItemDao;
 
 import com.es.core.dao.SqlQueryConstants;
+import com.es.core.dao.orderDao.OrderDao;
 import com.es.core.dao.phoneDao.PhoneDao;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.phone.Phone;
@@ -49,12 +50,7 @@ public class JdbcOrderItemDao implements OrderItemDao {
         Long orderItemId = insertOrderItem.executeAndReturnKey(sqlParameterSource).longValue();
         orderItem.setId(orderItemId);
 
-        jdbcTemplate.update(SqlQueryConstants.OrderDao.SET_PHONE_ID_IN_ORDER_ITEM,
-                orderItem.getPhone().getId(), orderItemId);
-        jdbcTemplate.update(SqlQueryConstants.OrderDao.SET_ORDER_ID_IN_ORDER_ITEM,
-                orderItem.getOrder().getId(), orderItem.getId());
-        jdbcTemplate.update(SqlQueryConstants.OrderDao.INSERT_ORDER_ITEM_BELONG_TO_ORDER,
-                orderItem.getOrder().getId(), orderItem.getId());
+        updateDependencies(orderItem);
     }
 
     private void setPhone(OrderItem orderItem){
@@ -63,5 +59,16 @@ public class JdbcOrderItemDao implements OrderItemDao {
                         SELECT_PHONE_ID_BELONG_TO_ORDER_ITEM + orderItem.getId(), Long.class);
         Phone phone = phoneDao.get(phoneId).orElseThrow(NoSuchPhoneException::new);
         orderItem.setPhone(phone);
+    }
+
+    private void updateDependencies(OrderItem orderItem){
+        jdbcTemplate.update(SqlQueryConstants.OrderDao.INSERT_ORDER_ITEM_BELONG_TO_ORDER,
+                orderItem.getOrder().getId(), orderItem.getId());
+
+        jdbcTemplate.update(SqlQueryConstants.OrderDao.SET_PHONE_ID_IN_ORDER_ITEM,
+                orderItem.getPhone().getId(), orderItem.getId());
+
+        jdbcTemplate.update(SqlQueryConstants.OrderDao.SET_ORDER_ID_IN_ORDER_ITEM,
+                orderItem.getOrder().getId(), orderItem.getId());
     }
 }

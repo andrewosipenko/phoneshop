@@ -1,7 +1,5 @@
-package com.es.core;
+package com.es.core.cart;
 
-import com.es.core.cart.Cart;
-import com.es.core.cart.HttpSessionCartService;
 import com.es.core.dao.phoneDao.PhoneDao;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.exception.NoSuchPhoneException;
@@ -15,11 +13,13 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
 
 @RunWith(MockitoJUnitRunner.class)
+@Transactional
 @ContextConfiguration(value = "classpath:context/testContext-core.xml")
 public class HttpSessionCartServiceTest {
     @Mock
@@ -40,9 +40,6 @@ public class HttpSessionCartServiceTest {
 
     private Map<Long, Long> updateItemsMap;
     private Map<Long, Long> existingItems;
-
-    public HttpSessionCartServiceTest() {
-    }
 
     @Before
     public void setupMock(){
@@ -89,7 +86,7 @@ public class HttpSessionCartServiceTest {
     }
 
     @Test (expected = NoSuchPhoneException.class)
-    public void testNotExistingPhone(){
+    public void testAddNotExistingPhone(){
         cartService.addPhone(NOT_EXISTING_PHONE_ID, QUANTITY);
     }
 
