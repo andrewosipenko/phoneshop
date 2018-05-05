@@ -13,12 +13,14 @@ import java.util.Optional;
 @Component
 public class JdbcStockDao implements StockDao {
     @Resource
+    private StockRowMapper stockRowMapper;
+    @Resource
     private JdbcTemplate jdbcTemplate;
 
     @Override
     public Optional<Stock> get(Phone phone) {
         try {
-            Stock stock = jdbcTemplate.queryForObject(SQLQueries.GET_STOCK, new StockRowMapper(), phone.getId());
+            Stock stock = jdbcTemplate.queryForObject(SQLQueries.GET_STOCK, stockRowMapper, phone.getId());
             stock.setPhone(phone);
             return Optional.of(stock);
         } catch (EmptyResultDataAccessException e) {

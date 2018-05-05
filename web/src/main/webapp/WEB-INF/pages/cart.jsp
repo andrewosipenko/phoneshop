@@ -61,8 +61,10 @@
 
     <div class="container mt-3">
         <div class="float-right">
-            <button class="btn btn-primary mx-2" onclick="updateCart()">Update</button>
-            <a class="btn btn-primary mx-2" href="${pageContext.request.contextPath}/order">Order</a>
+            <c:if test="${not empty phones}">
+                <button class="btn btn-primary mx-2" onclick="updateCart()">Update</button>
+                <a class="btn btn-primary mx-2" href="${pageContext.request.contextPath}/order">Order</a>
+            </c:if>
         </div>
     </div>
 </template:page>

@@ -5,6 +5,21 @@ public interface SQLQueries {
 
     String GET_STOCK = "SELECT * FROM stocks WHERE phoneId = ?";
 
+    String GET_ORDER = "SELECT * FROM orders WHERE id = ?";
+
+    String TEST_ORDER = "SELECT COUNT(*) FROM orders WHERE id = ?";
+
+    String DELETE_ORDER_ITEMS_BY_ORDER_ID = "DELETE FROM orderItems WHERE orderId = ?";
+
+    String DELETE_ORDER = "DELETE FROM orders WHERE id = ?";
+
+    String INSERT_ORDER = "INSERT INTO orders (id, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, additionalInformation, status)" +
+            "VALUES (:id, :subtotal, :deliveryPrice, :totalPrice, :firstName, :lastName, :deliveryAddress, :contactPhoneNo, :additionalInformation, :status)";
+
+    String INSERT_ORDER_ITEMS = "INSERT INTO orderItems (orderId, phoneId, quantity) VALUES (:orderId, :phoneId, :quantity)";
+
+    String GET_ORDER_ITEMS = "SELECT * FROM orderItems WHERE orderId = ?";
+
     String UPDATE_STOCK = "UPDATE stocks SET stock = ?, reserved = ? WHERE phoneId = ?";
 
     String GET_COLOR_IDS_FOR_PHONE = "SELECT colorId FROM phone2color WHERE phoneId = ?";

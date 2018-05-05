@@ -52,7 +52,7 @@
                             <form:input cssClass="form-control" cssStyle="width:70px;" path="quantity" id="phone${phone.id}Quantity"/>
                             <p style="position: absolute; margin-top: 7px; color:red; display: none;" id="quantity${phone.id}ErrorMessage"></p>
                         </td>
-                        <td class="text-center" style="vertical-align: middle!important"><a style="text-decoration: underline;" href="${pageContext.request.contextPath}/productDetails?phoneId=${phone.id}">Details</a></td>
+                        <td class="text-center" style="vertical-align: middle!important"><a style="text-decoration: underline;" href="${pageContext.request.contextPath}/productDetails/${phone.id}">Details</a></td>
                         <td class="text-center" style="vertical-align: middle!important"><button class="btn btn-info" type="button" onclick="addToCart(${phone.id})">Add to cart</button></td>
                     </tr>
                 </form:form>

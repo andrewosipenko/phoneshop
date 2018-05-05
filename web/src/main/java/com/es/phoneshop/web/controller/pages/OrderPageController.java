@@ -4,6 +4,7 @@ import com.es.phoneshop.core.cart.service.CartService;
 import com.es.phoneshop.core.cart.throwable.NoStockFoundException;
 import com.es.phoneshop.core.order.model.Order;
 import com.es.phoneshop.core.order.service.OrderService;
+import com.es.phoneshop.core.order.throwable.EmptyCartPlacingOrderException;
 import com.es.phoneshop.core.order.throwable.OutOfStockException;
 import com.es.phoneshop.core.phone.model.Phone;
 import com.es.phoneshop.web.controller.form.OrderPageForm;
@@ -27,7 +28,7 @@ public class OrderPageController {
     private CartService cartService;
 
     @ModelAttribute("orderPageForm")
-    private OrderPageForm addOrderPageForm() {
+    private OrderPageForm makeOrderPageForm() {
         Order order = makeNewOrder();
         OrderPageForm form = new OrderPageForm();
         form.setOrder(order);
@@ -52,8 +53,10 @@ public class OrderPageController {
             return "order";
         } catch (NoStockFoundException e) {
             throw new InternalException();
+        } catch (EmptyCartPlacingOrderException e) {
+            return "redirect:/productList";
         }
-        return "redirect:/productList";
+        return "redirect:/orderOverview/" + form.getOrder().getId();
     }
 
     private void handleOutOfStock(List<Phone> rejectedPhones, BindingResult result, OrderPageForm form) {

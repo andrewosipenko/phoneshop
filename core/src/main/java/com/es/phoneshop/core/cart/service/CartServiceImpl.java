@@ -43,11 +43,11 @@ public class CartServiceImpl implements CartService {
     public void add(Long phoneId, Long quantity) throws NoSuchPhoneException, NoStockFoundException, TooBigQuantityException {
         Phone phone = phoneService.getPhone(phoneId).orElseThrow(NoSuchPhoneException::new);
         Stock stock = stockService.getStock(phone).orElseThrow(NoStockFoundException::new);
-        if (stock.getStock() < quantity)
-            throw new TooBigQuantityException();
         Optional<CartRecord> item = cart.getRecords().stream()
                 .filter(cartRecord -> cartRecord.getPhone().getId().equals(phone.getId()))
                 .findFirst();
+        if (stock.getStock() < quantity + (item.isPresent() ? item.get().getQuantity() : 0))
+            throw new TooBigQuantityException();
         if (item.isPresent())
             item.get().setQuantity(item.get().getQuantity() + quantity);
         else

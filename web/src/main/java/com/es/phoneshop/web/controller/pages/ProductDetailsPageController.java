@@ -6,23 +6,28 @@ import com.es.phoneshop.web.controller.form.AddToCartForm;
 import com.es.phoneshop.web.controller.throwable.PhoneNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 
 @Controller
-@RequestMapping(value = "/productDetails")
+@RequestMapping(value = "/productDetails/{phoneId:[1-9][\\d]{0,17}}")
 public class ProductDetailsPageController {
     @Resource
     private PhoneService phoneService;
 
+    @ModelAttribute("addToCartForm")
+    private AddToCartForm makeAddToCartForm() {
+        return new AddToCartForm();
+    }
+
     @RequestMapping(method = RequestMethod.GET)
-    public String showProductDetails(Model model, @RequestParam Long phoneId) {
+    public String showProductDetails(Model model, @PathVariable("phoneId") Long phoneId) {
         Phone phone = phoneService.getPhone(phoneId).orElseThrow(PhoneNotFoundException::new);
         model.addAttribute("phone", phone);
-        model.addAttribute("addToCartForm", new AddToCartForm());
         return "productDetails";
     }
 }

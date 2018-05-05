@@ -29,18 +29,31 @@ public class CartPageController {
     @Resource
     private CartService cartService;
 
+    @ModelAttribute("updateCartForm")
+    private UpdateCartForm makeUpdateCartForm() {
+        UpdateCartForm form = new UpdateCartForm();
+        form.setUpdateCartRecords(
+                cartService.getRecords().stream()
+                .map(UpdateCartRecord::fromCartItem)
+                .collect(Collectors.toList())
+        );
+        return form;
+    }
+
+    @ModelAttribute("phones")
+    private List<Phone> makePhones() {
+        return cartService.getRecords().stream()
+                .map(CartRecord::getPhone)
+                .collect(Collectors.toList());
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     public String getCart(Model model) {
-        UpdateCartForm form = new UpdateCartForm();
-        form.setUpdateCartRecords(getUpdateCartItems());
-        model.addAttribute("updateCartForm", form);
-        model.addAttribute("phones", getPhones());
         return "cart";
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public String updateCart(@ModelAttribute("updateCartForm") @Valid UpdateCartForm form, BindingResult result, Model model) {
-        model.addAttribute("phones", getPhones());
+    public String updateCart(@ModelAttribute("updateCartForm") @Valid UpdateCartForm form, BindingResult result) {
         if (result.hasFieldErrors())
             return "cart";
         List<UpdateCartRecord> updateCartRecords = form.getUpdateCartRecords();
@@ -50,7 +63,9 @@ public class CartPageController {
             cartService.update(updateMap);
         } catch (TooBigQuantityException e) {
             handleTooBigQuantities(result, e.getPhoneIds(), updateCartRecords);
-        } catch (NoSuchPhoneException | NoStockFoundException e) {
+        } catch (NoSuchPhoneException e) {
+            return "redirect:/cart";
+        } catch (NoStockFoundException e) {
             throw new InternalException();
         }
         if (result.hasFieldErrors())
@@ -74,17 +89,5 @@ public class CartPageController {
             if (phoneIds.contains(phoneId))
                 result.rejectValue("updateCartRecords[" + i + "].quantity", "error.tooBig.quantity");
         }
-    }
-
-    private List<Phone> getPhones() {
-        return cartService.getRecords().stream()
-                .map(CartRecord::getPhone)
-                .collect(Collectors.toList());
-    }
-
-    private List<UpdateCartRecord> getUpdateCartItems() {
-        return cartService.getRecords().stream()
-                .map(UpdateCartRecord::fromCartItem)
-                .collect(Collectors.toList());
     }
 }

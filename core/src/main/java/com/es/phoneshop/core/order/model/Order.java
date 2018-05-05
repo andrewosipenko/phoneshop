@@ -15,13 +15,11 @@ public class Order {
      * <code>subtotal</code> + <code>deliveryPrice</code>
      */
     private BigDecimal totalPrice;
-
     private String firstName;
     private String lastName;
     private String deliveryAddress;
     private String contactPhoneNo;
     private String additionalInformation;
-
     private OrderStatus status;
 
     public Long getId() {
