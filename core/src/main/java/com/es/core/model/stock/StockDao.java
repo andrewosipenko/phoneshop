@@ -1,5 +1,7 @@
 package com.es.core.model.stock;
 
+import com.es.core.model.phone.Stock;
+
 import java.util.List;
 import java.util.Map;
 

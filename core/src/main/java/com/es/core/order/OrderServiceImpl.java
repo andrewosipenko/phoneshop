@@ -8,7 +8,7 @@ import com.es.core.model.order.OrderDao;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.stock.Stock;
+import com.es.core.model.phone.Stock;
 import com.es.core.model.stock.StockDao;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

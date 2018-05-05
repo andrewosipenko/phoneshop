@@ -1,4 +1,4 @@
-package com.es.core.model.stock;
+package com.es.core.model.phone;
 
 public class Stock {
     private Long phoneId;
