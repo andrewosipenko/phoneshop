@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.es.phoneshop.web.controller.constants.ControllerConstants.CartPageConstants.*;
+import static com.es.phoneshop.web.utils.CartInfoUtils.getCartItemInfoList;
+import static com.es.phoneshop.web.utils.CartInfoUtils.getCartUpdateInfoMap;
 
 @Controller
 @RequestMapping(value = "/cart")
@@ -50,19 +52,5 @@ public class CartPageController {
         }
             cartService.update(getCartUpdateInfoMap(cartPageInfo.getCartItemInfo()));
         return "redirect:/cart";
-    }
-
-    private List<CartItemInfo> getCartItemInfoList(Cart cart) {
-        if(cart.getItems().size() == 0)
-            return new ArrayList<>();
-        return cart.getItems()
-                .stream()
-                .map(e -> new CartItemInfo(e.getPhone().getId(), e.getQuantity()))
-                .collect(Collectors.toList());
-    }
-
-    private  Map<Long, Long> getCartUpdateInfoMap(List<CartItemInfo> cartItemInfo) {
-        return cartItemInfo.stream()
-                .collect(Collectors.toMap(CartItemInfo::getPhoneId, CartItemInfo::getQuantity));
     }
 }

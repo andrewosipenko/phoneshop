@@ -1,26 +1,39 @@
 package com.es.core.model.order;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Order
-{
+public class Order {
+    private final String ORDER_INFO_ERROR_MESSAGE = "this value is required";
     private Long id;
-    private List<OrderItem> orderItems;
+    private List<OrderItem> orderItems = new ArrayList<>();
     /**
      *  A sum of order item prices;
      */
     private BigDecimal subtotal;
+
     private BigDecimal deliveryPrice;
     /**
      * <code>subtotal</code> + <code>deliveryPrice</code>
      */
     private BigDecimal totalPrice;
 
+    @NotEmpty(message = ORDER_INFO_ERROR_MESSAGE)
     private String firstName;
+
+    @NotEmpty(message = ORDER_INFO_ERROR_MESSAGE)
     private String lastName;
+
+    @NotEmpty(message = ORDER_INFO_ERROR_MESSAGE)
     private String deliveryAddress;
+
+    @NotEmpty(message = ORDER_INFO_ERROR_MESSAGE)
     private String contactPhoneNo;
+
+    private String additionalInfo;
 
     private OrderStatus status;
 
@@ -102,5 +115,13 @@ public class Order
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public String getAdditionalInfo() {
+        return additionalInfo;
+    }
+
+    public void setAdditionalInfo(String additionalInformation) {
+        this.additionalInfo = additionalInformation;
     }
 }

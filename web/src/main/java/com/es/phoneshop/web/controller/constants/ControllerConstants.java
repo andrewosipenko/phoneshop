@@ -17,4 +17,10 @@ public interface ControllerConstants {
         String CART = "cart";
         String PHONE_ID = "phoneId";
     }
+
+    interface OrderPageConstants {
+        String ORDER = "order";
+        String OUT_OF_STOCK_ATTRIBUTE = "outOfStock";
+        String OUT_OF_STOCK_MESSAGE = "Some phones are out of stock so that they were removed from your cart";
+    }
 }

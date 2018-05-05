@@ -6,7 +6,7 @@
 <template:page >
     <script> <%@include file="js/cartPage.js" %> </script>
     <c:choose>
-        <c:when test="${cart ne null}">
+        <c:when test="${cart ne null and cart.items.size() ne 0}">
             <div class="container">
                 <div class="row">
                     <div class="col-md-auto">
@@ -15,12 +15,11 @@
                     <div class="col-md-auto">
                         <div class="container" style="padding-top: 10px">
                             <a href="<c:url value="/productList"/>">
-                                <button class="btn btn-secondary btn-lg">Back to Product List</button>
+                                <button class="btn btn-dark btn-lg">Back to Product List</button>
                             </a>
                         </div>
                     </div>
                 </div>
-                <c:if test="${cart.items.size() ne 0}">
                     <div class="container">
                         <table class="table table-hover">
                             <thead>
@@ -85,7 +84,7 @@
                                             </button>
                                         </td>
                                         <td>
-                                            <a href="#"  class="btn btn-primary">
+                                            <a href="<c:url value="/order"/>"  class="btn btn-primary">
                                                 Order
                                             </a>
                                         </td>
@@ -95,13 +94,12 @@
                             </tbody>
                         </table>
                     </div>
-                </c:if>
             </div>
         </c:when>
         <c:otherwise>
             <div class="container">
                 <div class="jumbotron">
-                    <p class="lead">No cart found</p>
+                    <p class="lead">Your cart is empty</p>
                     <a href="<c:url value="/productList"/>">
                         <p class="lead">Go to main page</p>
                     </a>
