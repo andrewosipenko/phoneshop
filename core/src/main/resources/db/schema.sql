@@ -5,6 +5,7 @@ drop table if exists phones;
 drop table if exists orders;
 drop table if exists orderItems;
 drop table if exists order2orderItem;
+drop table if exists orderId2orderKey;
 
 create table colors (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -86,4 +87,11 @@ create table order2orderItem (
   orderItemId BIGINT,
   CONSTRAINT FK_order2orderItem_orderId FOREIGN KEY (orderId) REFERENCES orders (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT FK_order2orderItem_orderItemId FOREIGN KEY (orderItemId) REFERENCES orderItems (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+create table orderId2orderKey (
+  orderId BIGINT NOT NULL,
+  orderKey VARCHAR(50) NOT NULL,
+  UNIQUE (orderId),
+  CONSTRAINT FK_orderId2orderKey_orderId FOREIGN KEY (orderId) REFERENCES orders (id) ON DELETE CASCADE  ON UPDATE CASCADE
 );

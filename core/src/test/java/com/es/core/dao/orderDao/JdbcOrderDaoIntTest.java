@@ -33,6 +33,9 @@ public class JdbcOrderDaoIntTest {
     private final Long EXISTING_PHONE_ID_TO_GET = 1003L;
     private final Long EXISTING_ORDER_ID = 1000L;
     private final Long NOT_EXISTING_ORDER_ID = 2000L;
+    private final String EXISTING_ORDER_KEY = "testKey";
+    private final String NOT_EXISTING_ORDER_KEY = "notExistingKey";
+
     private final Long ORDER_ITEM_ID_BELONGS_TO_ORDER = 500L;
     private final Long PHONE_QUANTITY_1 = 2L;
     private final Long PHONE_QUANTITY_2 = 4L;
@@ -42,6 +45,7 @@ public class JdbcOrderDaoIntTest {
     private final String PHONE_NUMBER = "testPhone";
     private final String EXTRA_INFO = "testExtraInfo";
     private final OrderStatus ORDER_STATUS = OrderStatus.NEW;
+
     private Cart cart;
     private Order order;
 
@@ -52,6 +56,8 @@ public class JdbcOrderDaoIntTest {
 
         Assert.assertTrue(order.getId() != null);
         order = orderDao.get(order.getId()).orElseThrow(NoSuchOrderException::new);
+        String orderKey = orderDao.getOrderKey(order.getId()).orElseThrow(NoSuchOrderException::new);
+        Assert.assertFalse("".equals(orderKey));
 
         List<OrderItem> orderItems = order.getOrderItems();
         Assert.assertTrue(orderItems.size() == 2);
@@ -66,7 +72,7 @@ public class JdbcOrderDaoIntTest {
     }
 
     @Test
-    public void getExistingOrder(){
+    public void getExistingOrderById(){
         Order order = orderDao.get(EXISTING_ORDER_ID).orElseThrow(NoSuchOrderException::new);
         Assert.assertTrue(order.getId().equals(EXISTING_ORDER_ID));
         List<OrderItem> orderItems = order.getOrderItems();
@@ -77,8 +83,30 @@ public class JdbcOrderDaoIntTest {
     }
 
     @Test(expected = NoSuchOrderException.class)
-    public void getNotExistingOrder(){
+    public void getNotExistingOrderById(){
        orderDao.get(NOT_EXISTING_ORDER_ID).orElseThrow(NoSuchOrderException::new);
+    }
+
+    @Test
+    public void getExistingOrderByKey(){
+        Order order = orderDao.get(EXISTING_ORDER_KEY).orElseThrow(NoSuchOrderException::new);
+        Assert.assertTrue(order.getId().equals(EXISTING_ORDER_ID));
+    }
+
+    @Test(expected = NoSuchOrderException.class)
+    public void getNotExistingOrderByKey(){
+        Order order = orderDao.get(NOT_EXISTING_ORDER_KEY).orElseThrow(NoSuchOrderException::new);
+    }
+
+    @Test
+    public void getOrderKeyByExistingOrderId(){
+        String orderKey = orderDao.getOrderKey(EXISTING_ORDER_ID).orElseThrow(NoSuchOrderException::new);
+        Assert.assertTrue(orderKey.equals(EXISTING_ORDER_KEY));
+    }
+
+    @Test(expected = NoSuchOrderException.class)
+    public void getOrderKeyByNotExistingOrderId(){
+        String orderKey = orderDao.getOrderKey(NOT_EXISTING_ORDER_ID).orElseThrow(NoSuchOrderException::new);
     }
 
     private void initOrder(){

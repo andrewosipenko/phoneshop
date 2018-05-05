@@ -1,12 +1,11 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.cart.Cart;
 import com.es.core.cart.CartService;
+import com.es.core.dao.orderDao.OrderDao;
 import com.es.core.model.order.Order;
+import com.es.core.model.order.exception.NoSuchOrderException;
 import com.es.core.service.order.OrderService;
 import com.es.core.model.stock.exception.OutOfStockException;
-import com.es.core.service.order.orderItem.OrderItemService;
-import com.es.phoneshop.web.controller.service.phone.PhoneWebService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,11 +22,9 @@ public class OrderPageController {
     @Resource
     private OrderService orderService;
     @Resource
-    private OrderItemService orderItemService;
-    @Resource
     private CartService cartService;
     @Resource
-    private PhoneWebService phoneWebService;
+    private OrderDao orderDao;
 
     private final String ORDER = "order";
     private final String ERROR_MESSAGE = "errorMessage";
@@ -51,7 +48,8 @@ public class OrderPageController {
         try {
             orderService.placeOrder(order);
             cartService.clearCart();
-            return "redirect:/orderOverview/" + order.getId();
+            return "redirect:/orderOverview/" + orderDao.getOrderKey(order.getId()).
+                    orElseThrow(NoSuchOrderException::new);
         }
         catch (OutOfStockException e){
             cartService.removePhonesOutOfTheStock();

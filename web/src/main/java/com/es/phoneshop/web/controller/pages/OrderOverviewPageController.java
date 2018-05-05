@@ -18,9 +18,9 @@ public class OrderOverviewPageController {
     @Resource
     private OrderDao orderDao;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{orderId}")
-    public String showOrder(@PathVariable Long orderId, Model model){
-        model.addAttribute("order", orderDao.get(orderId).orElseThrow(NoSuchOrderException::new));
+    @RequestMapping(method = RequestMethod.GET, value = "/{orderKey}")
+    public String showOrder(@PathVariable String orderKey, Model model){
+        model.addAttribute("order", orderDao.get(orderKey).orElseThrow(NoSuchOrderException::new));
         return "orderOverview";
     }
 }

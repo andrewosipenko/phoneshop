@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface OrderDao {
     void save(Order order);
     Optional<Order> get(Long orderId);
+    Optional<Order> get(String orderKey);
+    Optional<String> getOrderKey(Long orderId);
 }
