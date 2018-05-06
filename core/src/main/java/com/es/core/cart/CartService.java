@@ -19,4 +19,8 @@ public interface CartService {
     void update(Map<Long, Long> items) throws PhoneInCartNotFoundException;
 
     void remove(Long phoneId) throws PhoneInCartNotFoundException;
+
+    void clearCart();
+
+    void recalculateCartCost();
 }

@@ -12,7 +12,7 @@
                         <div class="container">
                             <div class="d-flex align-content-between flex-wrap">
                                 <a href="<c:url value="/productList"/>">
-                                    <button class="btn btn-secondary btn-lg">Back to Product List</button>
+                                    <button class="btn btn-dark btn-lg">Back to Product List</button>
                                 </a>
                             </div>
                         </div>

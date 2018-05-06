@@ -63,6 +63,17 @@ public class HttpSessionCartService implements CartService {
         }
     }
 
+    @Override
+    public void clearCart() {
+        cart.getItems().clear();
+        cart.setCost(BigDecimal.ZERO);
+    }
+
+    @Override
+    public void recalculateCartCost() {
+        updateAndReturnCost();
+    }
+
     private BigDecimal updateAndReturnCost() {
         List<CartItem> items = cart.getItems();
         Optional<BigDecimal> newCost = items
@@ -87,8 +98,6 @@ public class HttpSessionCartService implements CartService {
     private void onUpdate(Long phoneId, Long quantity) throws PhoneInCartNotFoundException {
        Optional<CartItem> cartItem = getItemFromCart(phoneId);
        CartItem updatedCartItem = cartItem.orElseThrow(PhoneInCartNotFoundException::new);
-       cart.getItems().remove(updatedCartItem);
-       updatedCartItem.setQuantity(quantity);
-       cart.getItems().add(updatedCartItem);
+       cart.getItems().get(cart.getItems().indexOf(updatedCartItem)).setQuantity(quantity);
     }
 }
