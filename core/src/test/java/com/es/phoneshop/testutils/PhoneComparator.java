@@ -1,4 +1,4 @@
-package com.es.test.phoneshop.core.testutils;
+package com.es.phoneshop.testutils;
 
 import com.es.phoneshop.core.phone.model.Color;
 import com.es.phoneshop.core.phone.model.Phone;

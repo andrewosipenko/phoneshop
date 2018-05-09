@@ -1,16 +1,13 @@
-package com.es.test.phoneshop.core.phone.dao;
+package com.es.phoneshop.core.phone.service;
 
-import com.es.phoneshop.core.phone.dao.PhoneDao;
-import com.es.phoneshop.core.phone.dao.PhoneDaoSelector;
 import com.es.phoneshop.core.phone.dao.util.SortBy;
 import com.es.phoneshop.core.phone.model.Color;
 import com.es.phoneshop.core.phone.model.Phone;
-import com.es.test.phoneshop.core.testutils.PhoneComparator;
-import com.es.test.phoneshop.core.testutils.json.JSONAssertionData;
+import com.es.phoneshop.testutils.PhoneComparator;
+import com.es.phoneshop.testutils.json.JSONAssertionData;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,9 +25,10 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @ContextConfiguration(locations = "classpath:context/applicationIntTestContext.xml")
 @Transactional
-public class PhoneDaoIntTest {
+public class PhoneServiceIntTest {
     @Resource
-    private PhoneDao phoneDao;
+    private PhoneService phoneService;
+
     private static Comparator<Phone> phoneComparator;
     private static JSONAssertionData assertionData;
 
@@ -55,23 +53,23 @@ public class PhoneDaoIntTest {
     @Test
     public void testGetExisting() {
         for (long id = EXISTING_RANGE_BEGIN; id <= EXISTING_RANGE_END; id++) {
-            Optional<Phone> phoneOptional = phoneDao.get(id);
+            Optional<Phone> phoneOptional = phoneService.getPhone(id);
             assertTrue(phoneOptional.isPresent());
             Phone phone = phoneOptional.get();
             Phone expectedPhone = assertionData.getPhone(id);
-            assertTrue(phoneComparator.compare(phone, expectedPhone) == 0);
+            assertEquals(0, phoneComparator.compare(phone, expectedPhone));
         }
     }
 
     @Test
     public void testGetUnexisting() {
-        Optional<Phone> phoneOptional = phoneDao.get(UNEXISTING);
+        Optional<Phone> phoneOptional = phoneService.getPhone(UNEXISTING);
         assertFalse(phoneOptional.isPresent());
     }
 
     @Test
     public void textSaveWhenUpdatingExisting() {
-        Optional<Phone> phoneOptional = phoneDao.get(EXISTING_WITH_BLACK_COLOR);
+        Optional<Phone> phoneOptional = phoneService.getPhone(EXISTING_WITH_BLACK_COLOR);
         assertTrue(phoneOptional.isPresent());
         Phone phone = phoneOptional.get();
         phone.setBrand("Apple");
@@ -80,101 +78,95 @@ public class PhoneDaoIntTest {
         colorToAdd.setId(1004L);
         colorToAdd.setCode("Red");
         phone.getColors().add(colorToAdd);
-        phoneDao.save(phone);
-        Optional<Phone> updatedPhoneOptional = phoneDao.get(EXISTING_WITH_BLACK_COLOR);
+        phoneService.save(phone);
+        Optional<Phone> updatedPhoneOptional = phoneService.getPhone(EXISTING_WITH_BLACK_COLOR);
         assertTrue(updatedPhoneOptional.isPresent());
         Phone updatedPhone = phoneOptional.get();
-        assertTrue(phoneComparator.compare(phone, updatedPhone) == 0);
+        assertEquals(0, phoneComparator.compare(phone, updatedPhone));
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void testSaveWhenUpdatingExistingWithColorListRemoval() {
-        Optional<Phone> phoneOptional = phoneDao.get(EXISTING_WITH_COLORS_PRESENT);
+        Optional<Phone> phoneOptional = phoneService.getPhone(EXISTING_WITH_COLORS_PRESENT);
         assertTrue(phoneOptional.isPresent());
         Phone phone = phoneOptional.get();
         phone.setColors(Collections.EMPTY_SET);
-        phoneDao.save(phone);
-        Optional<Phone> updatedPhoneOptional = phoneDao.get(EXISTING_WITH_COLORS_PRESENT);
+        phoneService.save(phone);
+        Optional<Phone> updatedPhoneOptional = phoneService.getPhone(EXISTING_WITH_COLORS_PRESENT);
         assertTrue(updatedPhoneOptional.isPresent());
         Phone updatedPhone = phoneOptional.get();
-        assertTrue(phoneComparator.compare(phone, updatedPhone) == 0);
+        assertEquals(0, phoneComparator.compare(phone, updatedPhone));
     }
 
     @Test
     public void testSaveWhenInserting() {
-        Optional<Phone> phoneOptional = phoneDao.get(EXISTING_3);
+        Optional<Phone> phoneOptional = phoneService.getPhone(EXISTING_3);
         assertTrue(phoneOptional.isPresent());
         Phone phone = phoneOptional.get();
         phone.setId(null);
         phone.setModel("Plastmassovyi mir pobedil");
-        phoneDao.save(phone);
+        phoneService.save(phone);
         long id = phone.getId();
-        Optional<Phone> insertedPhoneOptional = phoneDao.get(id);
+        Optional<Phone> insertedPhoneOptional = phoneService.getPhone(id);
         assertTrue(insertedPhoneOptional.isPresent());
         Phone insertedPhone = phoneOptional.get();
-        assertTrue(phoneComparator.compare(phone, insertedPhone) == 0);
+        assertEquals(0, phoneComparator.compare(phone, insertedPhone));
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testSaveWhenUpdatingUnexisting() {
-        Optional<Phone> phoneOptional = phoneDao.get(EXISTING_3);
+        Optional<Phone> phoneOptional = phoneService.getPhone(EXISTING_3);
         assertTrue(phoneOptional.isPresent());
         Phone phone = phoneOptional.get();
         phone.setId(UNEXISTING);
         phone.setModel("Maket okazalsia silnei");
-        try {
-            phoneDao.save(phone);
-            fail();
-        } catch (DataIntegrityViolationException ignored) {}
+        phoneService.save(phone);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testSaveWhenSavingDuplicate() {
-        Optional<Phone> phoneOptional = phoneDao.get(EXISTING_3);
+        Optional<Phone> phoneOptional = phoneService.getPhone(EXISTING_3);
         assertTrue(phoneOptional.isPresent());
         Phone phone = phoneOptional.get();
         phone.setId(null);
-        try {
-            phoneDao.save(phone);
-            fail();
-        } catch (DataIntegrityViolationException ignored) {}
+        phoneService.save(phone);
     }
 
     @Test
     public void testFindAll() {
-        List<Phone> phoneList = phoneDao.findAll(0, 8);
-        assertTrue(phoneList.size() == 8);
+        List<Phone> phoneList = phoneService.getPhoneList(null, null, 0, 8);
+        assertEquals(8, phoneList.size());
         for (int i = 0; i < 8; i++)
-            assertTrue(phoneComparator.compare(phoneList.get(i), assertionData.getPhone(FIRST_8_IN_STOCK_PRICE_NE[i])) == 0);
+            assertEquals(0, phoneComparator.compare(phoneList.get(i), assertionData.getPhone(FIRST_8_IN_STOCK_PRICE_NE[i])));
     }
 
     @Test
     public void testFindAllWithSelectorSearching() {
-        List<Phone> phoneList = phoneDao.findAll(new PhoneDaoSelector().searching("titanium"));
+        List<Phone> phoneList = phoneService.getPhoneList("titanium", null, null, null);
         phoneList.sort(Comparator.comparing(Phone::getId));
         assertEquals(phoneList.size(), SEARCH_TITANIUM_IN_STOCK_PRICE_NE.length);
         for (int i = 0; i < phoneList.size(); i++)
-            assertTrue(phoneComparator.compare(phoneList.get(i), assertionData.getPhone(SEARCH_TITANIUM_IN_STOCK_PRICE_NE[i])) == 0);
+            assertEquals(0, phoneComparator.compare(phoneList.get(i), assertionData.getPhone(SEARCH_TITANIUM_IN_STOCK_PRICE_NE[i])));
     }
 
     @Test
     public void testFindAllWithSelectorSearchingAndSorting() {
-        List<Phone> phoneList = phoneDao.findAll(new PhoneDaoSelector().searching("101").sortedBy(SortBy.PRICE));
+        List<Phone> phoneList = phoneService.getPhoneList("101", SortBy.PRICE, 0, null);
         assertEquals(phoneList.size(), SEARCH_101_SORT_BY_PRICE_IN_STOCK_PRICE_NE.length);
         for (int i = 0; i < phoneList.size(); i++)
-            assertTrue(phoneComparator.compare(phoneList.get(i), assertionData.getPhone(SEARCH_101_SORT_BY_PRICE_IN_STOCK_PRICE_NE[i])) == 0);
+            assertEquals(0, phoneComparator.compare(phoneList.get(i), assertionData.getPhone(SEARCH_101_SORT_BY_PRICE_IN_STOCK_PRICE_NE[i])));
     }
 
     @Test
     public void testCount() {
-        int num = phoneDao.count();
+        int num = phoneService.countPhones(null);
         assertEquals(num, TOTAL_IN_STOCK_PRICE_NE);
     }
 
     @Test
     public void testCountWithSelector() {
-        int num = phoneDao.count(new PhoneDaoSelector().searching("Internet"));
+        int num = phoneService.countPhones("Internet");
         assertEquals(num, SEARCHING_INTERNET_IN_STOCK_PRICE_NE);
     }
 }

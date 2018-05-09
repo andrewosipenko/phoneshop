@@ -1,4 +1,4 @@
-package com.es.test.phoneshop.core.testutils.json;
+package com.es.phoneshop.testutils.json;
 
 import org.json.JSONArray;
 import org.json.JSONException;

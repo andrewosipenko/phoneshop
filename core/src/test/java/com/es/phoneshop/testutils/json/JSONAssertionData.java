@@ -1,4 +1,4 @@
-package com.es.test.phoneshop.core.testutils.json;
+package com.es.phoneshop.testutils.json;
 
 import com.es.phoneshop.core.phone.model.Color;
 import com.es.phoneshop.core.phone.model.Phone;
