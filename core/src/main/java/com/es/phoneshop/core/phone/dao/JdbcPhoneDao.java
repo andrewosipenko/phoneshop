@@ -3,6 +3,7 @@ package com.es.phoneshop.core.phone.dao;
 import com.es.phoneshop.core.phone.model.Color;
 import com.es.phoneshop.core.phone.model.Phone;
 import com.es.phoneshop.core.util.SQLQueries;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -45,35 +46,17 @@ public class JdbcPhoneDao implements PhoneDao {
             update(phone);
     }
 
-    private List<Phone> findAll(String query, Object... args) {
-        List<Phone> phones = jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Phone.class), args);
+    @Override
+    public List<Phone> findAll(PhoneDaoSelector selector) {
+        List<Phone> phones = jdbcTemplate.query(selector.getSelectQuery(), new BeanPropertyRowMapper<>(Phone.class));
         for (Phone phone : phones)
             setColors(phone);
         return phones;
     }
 
-    private int count(String query) {
-        return jdbcTemplate.queryForObject(query, Integer.class);
-    }
-
-    @Override
-    public List<Phone> findAll(int offset, int limit) {
-        return findAll(SQLQueries.SELECT_PHONES, offset, limit);
-    }
-
-    @Override
-    public List<Phone> findAll(PhoneDaoSelector selector) {
-        return findAll(selector.getSelectQuery());
-    }
-
-    @Override
-    public int count() {
-        return count(SQLQueries.COUNT_PHONES);
-    }
-
     @Override
     public int count(PhoneDaoSelector selector) {
-        return count(selector.getCountQuery());
+        return jdbcTemplate.queryForObject(selector.getCountQuery(), Integer.class);
     }
 
     @SuppressWarnings("unchecked")
@@ -90,17 +73,25 @@ public class JdbcPhoneDao implements PhoneDao {
         }
     }
 
-    private void insert(Phone phone) {
+    private void insert(Phone phone) throws IllegalArgumentException {
         SqlParameterSource source = new MapSqlParameterSource(getParameters(phone));
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(SQLQueries.INSERT_PHONE, source, keyHolder);
-        phone.setId(keyHolder.getKey().longValue());
-        insertColorsForPhone(phone.getId(), phone.getColors());
+        try {
+            namedParameterJdbcTemplate.update(SQLQueries.INSERT_PHONE, source, keyHolder);
+            phone.setId(keyHolder.getKey().longValue());
+            insertColorsForPhone(phone.getId(), phone.getColors());
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException();
+        }
     }
 
-    private void update(Phone phone) {
+    private void update(Phone phone) throws IllegalArgumentException {
         deleteColorsForPhone(phone.getId());
-        insertColorsForPhone(phone.getId(), phone.getColors());
+        try {
+            insertColorsForPhone(phone.getId(), phone.getColors());
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException();
+        }
         namedParameterJdbcTemplate.update(SQLQueries.UPDATE_PHONE, getParameters(phone));
     }
 

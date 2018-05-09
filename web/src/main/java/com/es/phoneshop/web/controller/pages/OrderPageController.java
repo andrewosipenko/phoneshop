@@ -1,15 +1,17 @@
 package com.es.phoneshop.web.controller.pages;
 
+import com.es.phoneshop.core.cart.model.Cart;
 import com.es.phoneshop.core.cart.service.CartService;
 import com.es.phoneshop.core.cart.throwable.NoStockFoundException;
+import com.es.phoneshop.core.cart.throwable.OutOfStockException;
 import com.es.phoneshop.core.order.model.Order;
 import com.es.phoneshop.core.order.service.OrderService;
 import com.es.phoneshop.core.order.throwable.EmptyCartPlacingOrderException;
-import com.es.phoneshop.core.order.throwable.OutOfStockException;
 import com.es.phoneshop.core.phone.model.Phone;
-import com.es.phoneshop.web.controller.form.OrderPageForm;
+import com.es.phoneshop.web.controller.form.OrderPersonalDataForm;
 import com.es.phoneshop.web.controller.throwable.InternalException;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,27 +29,36 @@ public class OrderPageController {
     @Resource
     private CartService cartService;
 
-    @ModelAttribute("orderPageForm")
-    private OrderPageForm makeOrderPageForm() {
-        Order order = makeNewOrder();
-        OrderPageForm form = new OrderPageForm();
-        form.setOrder(order);
-        return form;
+    @ModelAttribute("orderPersonalDataForm")
+    private OrderPersonalDataForm makeOrderPageForm() {
+        return new OrderPersonalDataForm();
+    }
+
+    @ModelAttribute("cart")
+    private Cart getCart() {
+        return cartService.getCart();
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String getOrder() throws OutOfStockException {
+    public String getOrder(@ModelAttribute("orderPersonalDataForm") OrderPersonalDataForm form, BindingResult result, Model model) {
+        try {
+            cartService.validateStocksAndRemoveOdd();
+        } catch (OutOfStockException e) {
+            handleOutOfStock(e.getRejectedPhones(), result, form);
+        }
         return "order";
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String placeOrder(@ModelAttribute("orderPageForm") @Valid OrderPageForm form, BindingResult result) throws OutOfStockException {
+    public String placeOrder(@ModelAttribute("orderPersonalDataForm") @Valid OrderPersonalDataForm form, BindingResult result) throws OutOfStockException {
         if (result.hasFieldErrors())
             return "order";
+        Order order;
         try {
-            form.applyDataToAnOrder();
-            orderService.placeOrder(form.getOrder());
-            cartService.clear();
+            cartService.validateStocksAndRemoveOdd();
+            order = orderService.createOrder(cartService.getCart());
+            setOrderPersonalData(order, form);
+            orderService.placeOrder(order);
         } catch (OutOfStockException e) {
             handleOutOfStock(e.getRejectedPhones(), result, form);
             return "order";
@@ -56,13 +67,10 @@ public class OrderPageController {
         } catch (EmptyCartPlacingOrderException e) {
             return "redirect:/productList";
         }
-        return "redirect:/orderOverview/" + form.getOrder().getId();
+        return "redirect:/orderOverview/" + order.getId();
     }
 
-    private void handleOutOfStock(List<Phone> rejectedPhones, BindingResult result, OrderPageForm form) {
-        for (Phone phone : rejectedPhones)
-            cartService.remove(phone.getId());
-        form.setOrder(makeNewOrder());
+    private void handleOutOfStock(List<Phone> rejectedPhones, BindingResult result, OrderPersonalDataForm form) {
         String rejectedPhonesString = rejectedPhones.stream()
                 .map(Phone::getModel)
                 .reduce("", (s1, s2) -> s1 + s2 + ", ");
@@ -71,7 +79,11 @@ public class OrderPageController {
         result.rejectValue("stocksAvailable", "error.outOfStock", args, null);
     }
 
-    private Order makeNewOrder() {
-        return orderService.createOrder(cartService.getRecords(), cartService.getStatus().getCostTotal());
+    private void setOrderPersonalData(Order order, OrderPersonalDataForm form) {
+        order.setFirstName(form.getFirstName());
+        order.setLastName(form.getLastName());
+        order.setDeliveryAddress(form.getDeliveryAddress());
+        order.setContactPhoneNo(form.getContactPhoneNo());
+        order.setAdditionalInformation(form.getAdditionalInformation());
     }
 }

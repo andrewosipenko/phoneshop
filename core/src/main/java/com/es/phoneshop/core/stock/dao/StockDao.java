@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface StockDao {
     Optional<Stock> get(Phone phone);
+
     void save(Stock stock);
 }

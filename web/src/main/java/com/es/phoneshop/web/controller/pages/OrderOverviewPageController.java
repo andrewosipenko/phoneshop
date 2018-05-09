@@ -13,13 +13,13 @@ import javax.annotation.Resource;
 import java.util.Optional;
 
 @Controller
-@RequestMapping(value = "/orderOverview/{orderId:[1-9][\\d]{0,18}}")
+@RequestMapping(value = "/orderOverview/{orderId:[0-9a-zA-Z]{10}}")
 public class OrderOverviewPageController {
     @Resource
     private OrderService orderService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String showOrderOverview(@PathVariable("orderId") Long orderId, Model model) {
+    public String showOrderOverview(@PathVariable("orderId") String orderId, Model model) {
         Optional<Order> orderOptional = orderService.getOrder(orderId);
         if (!orderOptional.isPresent())
             throw new OrderNotFoundException();

@@ -25,7 +25,7 @@ public class JdbcOrderDao implements OrderDao {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public Optional<Order> get(Long id) {
+    public Optional<Order> get(String id) {
         try {
             Order order = jdbcTemplate.queryForObject(SQLQueries.GET_ORDER, orderRowMapper, id);
             populateOrderItems(order);
@@ -35,13 +35,17 @@ public class JdbcOrderDao implements OrderDao {
         }
     }
 
+    private void populateOrderItems(Order order) {
+        List<OrderItem> orderItems = jdbcTemplate.query(SQLQueries.GET_ORDER_ITEMS, orderItemRowMapper, order.getId());
+        orderItems.forEach(item -> item.setOrder(order));
+        order.setOrderItems(orderItems);
+    }
+
     @Override
-    public void save(Order order) {
+    public void save(Order order) throws IllegalArgumentException {
         Integer test = jdbcTemplate.queryForObject(SQLQueries.TEST_ORDER, Integer.class, order.getId());
-        if (test != 0) {
-            jdbcTemplate.update(SQLQueries.DELETE_ORDER, order.getId());
-            jdbcTemplate.update(SQLQueries.DELETE_ORDER_ITEMS_BY_ORDER_ID, order.getId());
-        }
+        if (test != 0)
+            throw new IllegalArgumentException();
         namedParameterJdbcTemplate.update(SQLQueries.INSERT_ORDER, prepareOrderMap(order));
         Map<String, Object>[] mapBatchArgs = order.getOrderItems().stream()
                 .map(orderItem -> {
@@ -53,12 +57,6 @@ public class JdbcOrderDao implements OrderDao {
                 })
                 .toArray((IntFunction<Map<String, Object>[]>) Map[]::new);
         namedParameterJdbcTemplate.batchUpdate(SQLQueries.INSERT_ORDER_ITEMS, mapBatchArgs);
-    }
-
-    private void populateOrderItems(Order order) {
-        List<OrderItem> orderItems = jdbcTemplate.query(SQLQueries.GET_ORDER_ITEMS, orderItemRowMapper, order.getId());
-        orderItems.forEach(item -> item.setOrder(order));
-        order.setOrderItems(orderItems);
     }
 
     private Map<String, Object> prepareOrderMap(Order order) {
@@ -74,5 +72,10 @@ public class JdbcOrderDao implements OrderDao {
                 new AbstractMap.SimpleEntry<>("additionalInformation", order.getAdditionalInformation()),
                 new AbstractMap.SimpleEntry<>("status", order.getStatus().toString())
         ).collect(HashMap::new, (m, v) -> m.put(v.getKey(), v.getValue()), HashMap::putAll);
+    }
+
+    @Override
+    public boolean isIdUnique(String id) {
+        return jdbcTemplate.queryForObject(SQLQueries.TEST_ORDER, Integer.class, id) == 0;
     }
 }

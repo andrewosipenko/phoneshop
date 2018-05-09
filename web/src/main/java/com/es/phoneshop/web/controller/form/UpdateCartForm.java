@@ -1,6 +1,6 @@
 package com.es.phoneshop.web.controller.form;
 
-import com.es.phoneshop.web.controller.util.UpdateCartRecord;
+import com.es.phoneshop.web.controller.util.UpdateCartItem;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -8,16 +8,13 @@ import java.util.List;
 
 public class UpdateCartForm {
     @Valid
-    private List<UpdateCartRecord> updateCartRecords = new ArrayList<>();
+    private List<UpdateCartItem> updateCartItems = new ArrayList<>();
 
-    public UpdateCartForm() {
+    public List<UpdateCartItem> getUpdateCartItems() {
+        return updateCartItems;
     }
 
-    public List<UpdateCartRecord> getUpdateCartRecords() {
-        return updateCartRecords;
-    }
-
-    public void setUpdateCartRecords(List<UpdateCartRecord> updateCartRecords) {
-        this.updateCartRecords = updateCartRecords;
+    public void setUpdateCartItems(List<UpdateCartItem> updateCartItems) {
+        this.updateCartItems = updateCartItems;
     }
 }

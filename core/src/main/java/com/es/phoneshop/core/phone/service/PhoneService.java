@@ -8,6 +8,10 @@ import java.util.Optional;
 
 public interface PhoneService {
     int countPhones(String search);
-    List<Phone> getPhoneList(String search, SortBy sortBy, int offset, int limit);
+
+    List<Phone> getPhoneList(String search, SortBy sortBy, Integer offset, Integer limit);
+
     Optional<Phone> getPhone(Long id);
+
+    void save(Phone phone);
 }

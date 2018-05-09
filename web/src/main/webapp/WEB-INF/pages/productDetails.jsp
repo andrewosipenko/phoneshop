@@ -7,11 +7,7 @@
 <template:page title="Product Details">
     <script> <%@ include file="scripts/addToCart.js"%> </script>
 
-    <components:header cartShown="true"/>
-
-    <div class="container mt-3">
-        <a class="btn btn-secondary" href="${pageContext.request.contextPath}/productList">Back to product List</a>
-    </div>
+    <components:header cartShown="true" productListButtonEnabled="true"/>
 
     <div class="container mt-3">
         <div class="float-left">

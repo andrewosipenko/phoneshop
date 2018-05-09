@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface PhonePageService {
     int countPagesTotal(String search);
+
     List<Phone> getPhoneList(String search, SortBy sortBy, int pageNumber);
 }

@@ -1,6 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ tag body-content="scriptless" trimDirectiveWhitespaces="true" pageEncoding="UTF-8" %>
 <%@ attribute name="cartShown" type="java.lang.Boolean" required="false" %>
+<%@ attribute name="productListButtonEnabled" type="java.lang.Boolean" required="false" %>
+<%@ attribute name="titleEnabled" type="java.lang.Boolean" required="false" %>
+<%@ attribute name="title" type="java.lang.String" required="false" %>
 
 <c:if test="${cartShown}">
     <script>
@@ -9,7 +12,7 @@
                 url: "${pageContext.request.contextPath}/ajaxCart",
                 success: function(status) {
                     $('#phonesTotal').html(status.phonesTotal);
-                    $('#costTotal').html(status.costTotal);
+                    $('#costTotal').html(status.subtotal);
                 }
             });
         });
@@ -28,4 +31,16 @@
         </div>
     </div>
 </div>
+<c:if test="${titleEnabled}">
+    <div class="container mt-3 py-1">
+        <div class="d-inline-block">
+            <h3><c:out value="${title}"/></h3>
+        </div>
+    </div>
+</c:if>
+<c:if test="${productListButtonEnabled}">
+    <div class="container mt-1">
+        <a class="btn btn-secondary" href="${pageContext.request.contextPath}/productList">Back to product list</a>
+    </div>
+</c:if>
 

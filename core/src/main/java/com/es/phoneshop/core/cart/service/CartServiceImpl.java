@@ -1,10 +1,10 @@
 package com.es.phoneshop.core.cart.service;
 
 import com.es.phoneshop.core.cart.model.Cart;
-import com.es.phoneshop.core.cart.model.CartRecord;
-import com.es.phoneshop.core.cart.model.CartStatus;
+import com.es.phoneshop.core.cart.model.CartItem;
 import com.es.phoneshop.core.cart.throwable.NoStockFoundException;
 import com.es.phoneshop.core.cart.throwable.NoSuchPhoneException;
+import com.es.phoneshop.core.cart.throwable.OutOfStockException;
 import com.es.phoneshop.core.cart.throwable.TooBigQuantityException;
 import com.es.phoneshop.core.phone.model.Phone;
 import com.es.phoneshop.core.phone.service.PhoneService;
@@ -27,23 +27,15 @@ public class CartServiceImpl implements CartService {
     private Cart cart;
 
     @Override
-    public CartStatus getStatus() {
-        List<CartRecord> records = cart.getRecords();
-        long phonesTotal = records.stream()
-                .reduce(0L, (num, item) -> num + item.getQuantity(), (num1, num2) -> num1 + num2);
-        return new CartStatus(phonesTotal, cart.getTotal());
-    }
-
-    @Override
-    public List<CartRecord> getRecords() {
-        return Collections.unmodifiableList(cart.getRecords());
+    public Cart getCart() {
+        return cart;
     }
 
     @Override
     public void add(Long phoneId, Long quantity) throws NoSuchPhoneException, NoStockFoundException, TooBigQuantityException {
         Phone phone = phoneService.getPhone(phoneId).orElseThrow(NoSuchPhoneException::new);
         Stock stock = stockService.getStock(phone).orElseThrow(NoStockFoundException::new);
-        Optional<CartRecord> item = cart.getRecords().stream()
+        Optional<CartItem> item = cart.getCartItems().stream()
                 .filter(cartRecord -> cartRecord.getPhone().getId().equals(phone.getId()))
                 .findFirst();
         if (stock.getStock() < quantity + (item.isPresent() ? item.get().getQuantity() : 0))
@@ -51,28 +43,28 @@ public class CartServiceImpl implements CartService {
         if (item.isPresent())
             item.get().setQuantity(item.get().getQuantity() + quantity);
         else
-            cart.getRecords().add(new CartRecord(phone, quantity));
-        recountTotal();
+            cart.getCartItems().add(new CartItem(phone, quantity));
+        recountSubtotal();
     }
 
     @Override
     public void update(Map<Long, Long> updateItems) throws NoSuchPhoneException, NoStockFoundException, TooBigQuantityException {
         checkUpdateRecords(updateItems);
-        for (CartRecord item : cart.getRecords()) {
+        for (CartItem item : cart.getCartItems()) {
             Phone phone = item.getPhone();
             if (!updateItems.containsKey(phone.getId()))
                 continue;
             Long quantity = updateItems.get(phone.getId());
             item.setQuantity(quantity);
         }
-        recountTotal();
+        recountSubtotal();
     }
 
     private void checkUpdateRecords(Map<Long, Long> updateItems) throws NoSuchPhoneException, NoStockFoundException, TooBigQuantityException {
         checkIfAllUpdatedPhonesPresent(new HashSet<>(updateItems.keySet()));
-        List<CartRecord> cartRecords = cart.getRecords();
+        List<CartItem> cartItems = cart.getCartItems();
         Set<Long> tooBigQuantityPhoneIds = new HashSet<>();
-        for (CartRecord item : cartRecords) {
+        for (CartItem item : cartItems) {
             Phone phone = item.getPhone();
             if (!updateItems.containsKey(phone.getId()))
                 continue;
@@ -85,25 +77,8 @@ public class CartServiceImpl implements CartService {
             throw new TooBigQuantityException(tooBigQuantityPhoneIds);
     }
 
-    @Override
-    public void remove(Long phoneId) throws NoSuchPhoneException {
-        Set<Long> cartPhoneIds = cart.getRecords().stream()
-                .map(item -> item.getPhone().getId())
-                .collect(Collectors.toSet());
-        if (!cartPhoneIds.contains(phoneId))
-            throw new NoSuchPhoneException();
-        cart.getRecords().removeIf(item -> Objects.equals(item.getPhone().getId(), phoneId));
-        recountTotal();
-    }
-
-    @Override
-    public void clear() {
-        cart.getRecords().clear();
-        recountTotal();
-    }
-
     private void checkIfAllUpdatedPhonesPresent(Set<Long> updatedPhoneIds) {
-        Set<Long> cartPhoneIds = cart.getRecords().stream()
+        Set<Long> cartPhoneIds = cart.getCartItems().stream()
                 .map(item -> item.getPhone().getId())
                 .collect(Collectors.toSet());
         updatedPhoneIds.removeAll(cartPhoneIds);
@@ -111,10 +86,41 @@ public class CartServiceImpl implements CartService {
             throw new NoSuchPhoneException();
     }
 
-    private void recountTotal() {
-        List<CartRecord> records = cart.getRecords();
-        BigDecimal total = records.stream()
+    @Override
+    public void remove(Long phoneId) throws NoSuchPhoneException {
+        Set<Long> cartPhoneIds = cart.getCartItems().stream()
+                .map(item -> item.getPhone().getId())
+                .collect(Collectors.toSet());
+        if (!cartPhoneIds.contains(phoneId))
+            throw new NoSuchPhoneException();
+        cart.getCartItems().removeIf(item -> Objects.equals(item.getPhone().getId(), phoneId));
+        recountSubtotal();
+    }
+
+    @Override
+    public void clear() {
+        cart.getCartItems().clear();
+        recountSubtotal();
+    }
+
+    @Override
+    public void validateStocksAndRemoveOdd() throws OutOfStockException {
+        List<Phone> rejectedPhones = new ArrayList<>();
+        for (CartItem item : cart.getCartItems()) {
+            Stock stock = stockService.getStock(item.getPhone()).orElseThrow(NoStockFoundException::new);
+            if (stock.getStock() < item.getQuantity())
+                rejectedPhones.add(item.getPhone());
+        }
+        for (Phone phone : rejectedPhones)
+            remove(phone.getId());
+        recountSubtotal();
+        if (!rejectedPhones.isEmpty())
+            throw new OutOfStockException(rejectedPhones);
+    }
+
+    private void recountSubtotal() {
+        BigDecimal subtotal = cart.getCartItems().stream()
                 .reduce(BigDecimal.ZERO, (cost, item) -> cost.add(item.getPhone().getPrice().multiply(BigDecimal.valueOf(item.getQuantity()))), BigDecimal::add);
-        cart.setTotal(total);
+        cart.setSubtotal(subtotal);
     }
 }

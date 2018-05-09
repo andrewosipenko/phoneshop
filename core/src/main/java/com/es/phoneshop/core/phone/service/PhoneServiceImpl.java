@@ -21,7 +21,7 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
-    public List<Phone> getPhoneList(String search, SortBy sortBy, int offset, int limit) {
+    public List<Phone> getPhoneList(String search, SortBy sortBy, Integer offset, Integer limit) {
         return phoneDao.findAll(new PhoneDaoSelector()
                 .searching(search)
                 .sortedBy(sortBy)
@@ -32,5 +32,10 @@ public class PhoneServiceImpl implements PhoneService {
     @Override
     public Optional<Phone> getPhone(Long id) {
         return phoneDao.get(id);
+    }
+
+    @Override
+    public void save(Phone phone) {
+        phoneDao.save(phone);
     }
 }

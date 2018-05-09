@@ -5,6 +5,8 @@ public interface SQLQueries {
 
     String GET_STOCK = "SELECT * FROM stocks WHERE phoneId = ?";
 
+    String TEST_STOCK = "SELECT COUNT(*) FROM stocks WHERE phoneId = ?";
+
     String GET_ORDER = "SELECT * FROM orders WHERE id = ?";
 
     String TEST_ORDER = "SELECT COUNT(*) FROM orders WHERE id = ?";

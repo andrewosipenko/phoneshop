@@ -29,7 +29,10 @@ public class JdbcStockDao implements StockDao {
     }
 
     @Override
-    public void save(Stock stock) {
+    public void save(Stock stock) throws IllegalArgumentException {
+        Integer test = jdbcTemplate.queryForObject(SQLQueries.TEST_STOCK, Integer.class, stock.getPhone().getId());
+        if (test == 0)
+            throw new IllegalArgumentException();
         jdbcTemplate.update(SQLQueries.UPDATE_STOCK, stock.getStock(), stock.getReserved(), stock.getPhone().getId());
     }
 }

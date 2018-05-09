@@ -57,21 +57,21 @@ create table stocks (
 );
 
 create table orders (
-  id BIGINT,
+  id VARCHAR(20),
   subtotal FLOAT,
   deliveryPrice FLOAT,
   totalPrice FLOAT,
-  firstName VARCHAR(50),
-  lastName VARCHAR(50),
-  deliveryAddress VARCHAR(254),
-  contactPhoneNo VARCHAR(100),
+  firstName VARCHAR(50) NOT NULL CHECK (firstName <> ''),
+  lastName VARCHAR(50) NOT NULL CHECK (lastName <> ''),
+  deliveryAddress VARCHAR(254) NOT NULL CHECK (deliveryAddress <> ''),
+  contactPhoneNo VARCHAR(100) NOT NULL CHECK (contactPhoneNo <> ''),
   additionalInformation VARCHAR(4096),
   status VARCHAR(50),
   UNIQUE (id)
 );
 
 create table orderItems (
-  orderId BIGINT,
+  orderId VARCHAR(20),
   phoneId BIGINT,
   quantity BIGINT,
   CONSTRAINT FK_orderItems_orderId FOREIGN KEY (orderId) REFERENCES orders (id) ON DELETE CASCADE ON UPDATE CASCADE,

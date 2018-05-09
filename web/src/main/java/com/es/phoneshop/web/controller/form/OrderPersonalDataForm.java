@@ -1,10 +1,8 @@
 package com.es.phoneshop.web.controller.form;
 
-import com.es.phoneshop.core.order.model.Order;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class OrderPageForm {
-    private Order order;
+public class OrderPersonalDataForm {
     @NotEmpty
     private String firstName;
     @NotEmpty
@@ -15,14 +13,6 @@ public class OrderPageForm {
     private String contactPhoneNo;
     private String additionalInformation;
     private Object stocksAvailable;
-
-    public void applyDataToAnOrder() {
-        order.setFirstName(firstName);
-        order.setLastName(lastName);
-        order.setDeliveryAddress(deliveryAddress);
-        order.setContactPhoneNo(contactPhoneNo);
-        order.setAdditionalInformation(additionalInformation);
-    }
 
     public String getFirstName() {
         return firstName;
@@ -62,14 +52,6 @@ public class OrderPageForm {
 
     public void setAdditionalInformation(String additionalInformation) {
         this.additionalInformation = additionalInformation;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
     }
 
     public Object getStocksAvailable() {

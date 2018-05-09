@@ -1,5 +1,6 @@
 package com.es.phoneshop.core.cart.model;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
@@ -11,18 +12,29 @@ import java.util.List;
 @Component
 @Scope(value = "${cart.scope}", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class Cart {
-    private List<CartRecord> records = new ArrayList<>();
-    private BigDecimal total = BigDecimal.ZERO;
+    private List<CartItem> cartItems = new ArrayList<>();
+    private BigDecimal subtotal = BigDecimal.ZERO;
+    @Value("${delivery.price}")
+    private BigDecimal deliveryPrice;
 
-    public List<CartRecord> getRecords() {
-        return records;
+    public List<CartItem> getCartItems() {
+        return cartItems;
     }
 
-    public BigDecimal getTotal() {
-        return total;
+    public long getPhonesTotal() {
+        return cartItems.stream()
+                .reduce(0L, (num, item) -> num + item.getQuantity(), Long::sum);
     }
 
-    public void setTotal(BigDecimal total) {
-        this.total = total;
+    public BigDecimal getSubtotal() {
+        return subtotal;
+    }
+
+    public BigDecimal getDeliveryPrice() {
+        return deliveryPrice;
+    }
+
+    public void setSubtotal(BigDecimal subtotal) {
+        this.subtotal = subtotal;
     }
 }

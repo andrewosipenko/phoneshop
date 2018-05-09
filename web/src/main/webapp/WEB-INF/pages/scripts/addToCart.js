@@ -6,7 +6,7 @@ var addToCart = function (id) {
         success: function(status) {
             $('#phone' + id + 'Quantity').val(0);
             $('#phonesTotal').html(status.phonesTotal);
-            $('#costTotal').html(status.costTotal);
+            $('#costTotal').html(status.subtotal);
         }
     }).fail(function(msg) {
         var msgHolder = $('#quantity' + id + 'ErrorMessage');

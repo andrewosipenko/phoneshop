@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface StockService {
     Optional<Stock> getStock(Phone phone);
+
     void update(Stock stock);
 }

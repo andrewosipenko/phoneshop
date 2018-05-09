@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="container mt-1">
-        <a class="btn btn-secondary" href="${pageContext.request.contextPath}/productList">Back to shopping</a>
+        <a class="btn btn-secondary" href="${pageContext.request.contextPath}/productList">Back to product list</a>
     </div>
     <div class="container mt-3">
         <table class="table table-bordered table-striped">
@@ -29,14 +29,14 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach items="${order.orderItems}" var="orderItem">
+            <c:forEach items="${order.orderItems}" var="cartItem">
                 <tr>
-                    <td style="vertical-align: middle!important"><c:out value="${orderItem.phone.brand}"/></td>
-                    <td style="vertical-align: middle!important"><c:out value="${orderItem.phone.model}"/></td>
-                    <td style="vertical-align: middle!important"><c:forEach items="${orderItem.phone.colors}" var="color" varStatus="loop"><c:out value="${color.code}"/><c:if test="${not loop.last}">, </c:if></c:forEach></td>
-                    <td style="vertical-align: middle!important"><c:out value="${orderItem.phone.displaySizeInches}''"/></td>
-                    <td style="vertical-align: middle!important"><c:out value="${orderItem.quantity}"/></td>
-                    <td style="vertical-align: middle!important"><c:out value="$${orderItem.phone.price}"/></td>
+                    <td style="vertical-align: middle!important"><c:out value="${cartItem.phone.brand}"/></td>
+                    <td style="vertical-align: middle!important"><c:out value="${cartItem.phone.model}"/></td>
+                    <td style="vertical-align: middle!important"><c:forEach items="${cartItem.phone.colors}" var="color" varStatus="loop"><c:out value="${color.code}"/><c:if test="${not loop.last}">, </c:if></c:forEach></td>
+                    <td style="vertical-align: middle!important"><c:out value="${cartItem.phone.displaySizeInches}''"/></td>
+                    <td style="vertical-align: middle!important"><c:out value="${cartItem.quantity}"/></td>
+                    <td style="vertical-align: middle!important"><c:out value="$${cartItem.phone.price}"/></td>
                 </tr>
             </c:forEach>
             </tbody>
