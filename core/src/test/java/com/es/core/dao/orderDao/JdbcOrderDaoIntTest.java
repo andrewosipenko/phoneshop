@@ -1,7 +1,7 @@
 package com.es.core.dao.orderDao;
 
 import com.es.core.cart.Cart;
-import com.es.core.dao.orderDao.JdbcOrderDao;
+import com.es.core.form.order.OrderForm;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
@@ -50,7 +50,7 @@ public class JdbcOrderDaoIntTest {
     private Order order;
 
     @Test
-    public void save(){
+    public void save() {
         initOrder();
         orderDao.save(order);
 
@@ -72,7 +72,7 @@ public class JdbcOrderDaoIntTest {
     }
 
     @Test
-    public void getExistingOrderById(){
+    public void getExistingOrderById() {
         Order order = orderDao.get(EXISTING_ORDER_ID).orElseThrow(NoSuchOrderException::new);
         Assert.assertTrue(order.getId().equals(EXISTING_ORDER_ID));
         List<OrderItem> orderItems = order.getOrderItems();
@@ -83,37 +83,43 @@ public class JdbcOrderDaoIntTest {
     }
 
     @Test(expected = NoSuchOrderException.class)
-    public void getNotExistingOrderById(){
-       orderDao.get(NOT_EXISTING_ORDER_ID).orElseThrow(NoSuchOrderException::new);
+    public void getNotExistingOrderById() {
+        orderDao.get(NOT_EXISTING_ORDER_ID).orElseThrow(NoSuchOrderException::new);
     }
 
     @Test
-    public void getExistingOrderByKey(){
+    public void getExistingOrderByKey() {
         Order order = orderDao.get(EXISTING_ORDER_KEY).orElseThrow(NoSuchOrderException::new);
         Assert.assertTrue(order.getId().equals(EXISTING_ORDER_ID));
     }
 
     @Test(expected = NoSuchOrderException.class)
-    public void getNotExistingOrderByKey(){
+    public void getNotExistingOrderByKey() {
         Order order = orderDao.get(NOT_EXISTING_ORDER_KEY).orElseThrow(NoSuchOrderException::new);
     }
 
     @Test
-    public void getOrderKeyByExistingOrderId(){
+    public void getOrderKeyByExistingOrderId() {
         String orderKey = orderDao.getOrderKey(EXISTING_ORDER_ID).orElseThrow(NoSuchOrderException::new);
         Assert.assertTrue(orderKey.equals(EXISTING_ORDER_KEY));
     }
 
     @Test(expected = NoSuchOrderException.class)
-    public void getOrderKeyByNotExistingOrderId(){
+    public void getOrderKeyByNotExistingOrderId() {
         String orderKey = orderDao.getOrderKey(NOT_EXISTING_ORDER_ID).orElseThrow(NoSuchOrderException::new);
     }
 
-    private void initOrder(){
+    private void initOrder() {
         cart = new Cart();
         cart.addPhone(EXISTING_PHONE_ID_TO_SAVE_1, PHONE_QUANTITY_1);
         cart.addPhone(EXISTING_PHONE_ID_TO_SAVE_2, PHONE_QUANTITY_2);
-        order = orderService.createOrder(cart);
+        OrderForm orderForm = new OrderForm();
+        orderForm.setContactPhoneNo(PHONE_NUMBER);
+        orderForm.setFirstName(FIRST_NAME);
+        orderForm.setLastName(LAST_NAME);
+        orderForm.setDeliveryAddress(DELIVERY_ADDRESS);
+        orderForm.setExtraInfo(EXTRA_INFO);
+        order = orderService.createOrder(orderForm, cart);
         order.setStatus(ORDER_STATUS);
         order.setContactPhoneNo(PHONE_NUMBER);
         order.setFirstName(FIRST_NAME);
@@ -122,7 +128,7 @@ public class JdbcOrderDaoIntTest {
         order.setExtraInfo(EXTRA_INFO);
     }
 
-    private Set<Long> getPhoneIds(List<OrderItem> orderItems){
+    private Set<Long> getPhoneIds(List<OrderItem> orderItems) {
         return orderItems.stream().collect(Collectors.toMap(
                 OrderItem -> OrderItem.getPhone().getId(),
                 OrderItem -> OrderItem)).
@@ -130,7 +136,7 @@ public class JdbcOrderDaoIntTest {
     }
 
     private void assertOrderEquals(String firstName, String lastName, String deliveryAddress,
-                                      String phone, String extraInfo, OrderStatus orderStatus){
+                                   String phone, String extraInfo, OrderStatus orderStatus) {
         Assert.assertTrue(order.getContactPhoneNo().equals(phone));
         Assert.assertTrue(order.getDeliveryAddress().equals(deliveryAddress));
         Assert.assertTrue(order.getFirstName().equals(firstName));

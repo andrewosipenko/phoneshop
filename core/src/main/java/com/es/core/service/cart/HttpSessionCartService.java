@@ -1,5 +1,6 @@
-package com.es.core.cart;
+package com.es.core.service.cart;
 
+import com.es.core.cart.Cart;
 import com.es.core.dao.phoneDao.PhoneDao;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.stock.Stock;
@@ -77,7 +78,9 @@ public class HttpSessionCartService implements CartService {
         cart.setItemsAmount(newQuantity);
     }
 
-    public void removePhonesOutOfTheStock(){
+    @Override
+    public boolean removePhonesOutOfTheStock(){
+        boolean isExistPhoneOutOfTheStock = false;
         Cart cart = getCart();
         List<Stock> stocks = stockService.getPhonesStocks(phoneService.getPhonesFromCart(cart));
         for(Stock stock : stocks){
@@ -85,8 +88,10 @@ public class HttpSessionCartService implements CartService {
             Long quantity = cart.getItemQuantity(phoneId);
             if(stock.getStock().compareTo(quantity) < 0){
                 remove(phoneId);
+                isExistPhoneOutOfTheStock = true;
             }
         }
+        return isExistPhoneOutOfTheStock;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.es.core.form.updateForm;
+package com.es.core.form.cart.updateForm;
 
 import org.springframework.stereotype.Component;
 

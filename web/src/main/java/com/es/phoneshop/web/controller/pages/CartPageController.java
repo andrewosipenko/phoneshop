@@ -1,9 +1,9 @@
 package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.cart.Cart;
-import com.es.core.cart.CartService;
-import com.es.core.form.updateForm.UpdateCartForm;
-import com.es.core.service.form.updateForm.UpdateCartFormService;
+import com.es.core.service.cart.CartService;
+import com.es.core.form.cart.updateForm.UpdateCartForm;
+import com.es.core.service.form.update.UpdateCartFormService;
 import com.es.core.model.phone.Phone;
 import com.es.core.validation.validator.UpdateCartFormValidator;
 import com.es.phoneshop.web.controller.service.phone.PhoneWebService;

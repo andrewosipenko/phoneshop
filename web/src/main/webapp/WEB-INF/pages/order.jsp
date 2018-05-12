@@ -9,7 +9,7 @@
         </p>
     </c:if>
     <c:choose>
-        <c:when test="${order.orderItems.size() ne 0}">
+        <c:when test="${orderForm.orderFormItems.size() ne 0}">
         <table class="table table-striped">
             <thead>
             <tr>
@@ -21,17 +21,17 @@
                 <td>Price</td>
             </tr>
             </thead>
-            <c:set var="orderItems" value="${order.orderItems}"/>
-            <c:forEach var="orderItem" items="${orderItems}" >
+            <c:set var="orderFormItems" value="${orderForm.orderFormItems}"/>
+            <c:forEach var="orderFormItem" items="${orderFormItems}" >
                 <tr>
-                    <td>${orderItem.phone.brand}</td>
-                    <td><a class="hyperlink" href="<c:url value="/productDetails/phoneId=${orderItem.phone.id}"/>">${orderItem.phone.model}</a></td>
+                    <td>${orderFormItem.phone.brand}</td>
+                    <td><a class="hyperlink" href="<c:url value="/productDetails/phoneId=${orderFormItem.phone.id}"/>">${orderFormItem.phone.model}</a></td>
                     <td>
-                        <template:getColors phoneColors="${orderItem.phone.colors}"/>
+                        <template:getColors phoneColors="${orderFormItem.phone.colors}"/>
                     </td>
-                    <td>${orderItem.phone.displaySizeInches}"</td>
-                    <td>${orderItem.quantity}</td>
-                    <td>${orderItem.phone.price} $</td>
+                    <td>${orderFormItem.phone.displaySizeInches}"</td>
+                    <td>${orderFormItem.quantity}</td>
+                    <td>${orderFormItem.phone.price} $</td>
                 </tr>
             </c:forEach>
             <tr>
@@ -40,7 +40,7 @@
                 <td></td>
                 <td></td>
                 <td>Subtotal</td>
-                <td>${order.subtotal} $</td>
+                <td>${orderForm.subtotal} $</td>
             </tr>
             <tr>
                 <td></td>
@@ -48,7 +48,7 @@
                 <td></td>
                 <td></td>
                 <td>Delivery price</td>
-                <td>${order.deliveryPrice} $</td>
+                <td>${orderForm.deliveryPrice} $</td>
             </tr>
             <tr>
                 <td></td>
@@ -56,10 +56,10 @@
                 <td></td>
                 <td></td>
                 <td>TOTAL</td>
-                <td>${order.totalPrice} $</td>
+                <td>${orderForm.totalPrice} $</td>
             </tr>
         </table>
-    <form:form method="post" commandName="order" >
+    <form:form method="post" commandName="orderForm" >
     <table>
             <tr>
                 <td>First name*</td>

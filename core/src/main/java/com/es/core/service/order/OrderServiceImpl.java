@@ -1,7 +1,9 @@
 package com.es.core.service.order;
 
 import com.es.core.cart.Cart;
+import com.es.core.service.cart.CartService;
 import com.es.core.dao.orderDao.OrderDao;
+import com.es.core.form.order.OrderForm;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
@@ -22,13 +24,16 @@ public class OrderServiceImpl implements OrderService {
     private StockService stockService;
     @Resource
     private OrderItemService orderItemService;
+    @Resource
+    private CartService cartService;
 
     @Value("#{new java.math.BigDecimal(${delivery.price})}")
     private BigDecimal deliveryPrice;
 
     @Override
-    public Order createOrder(Cart cart) {
+    public Order createOrder(OrderForm orderForm, Cart cart) {
         Order order = new Order();
+        fillOrder(order, orderForm);
         updateOrder(order, cart);
         return order;
     }
@@ -38,6 +43,7 @@ public class OrderServiceImpl implements OrderService {
         stockService.updateStocks(order);
         order.setStatus(OrderStatus.NEW);
         orderDao.save(order);
+        cartService.clearCart();
     }
 
     @Override
@@ -45,6 +51,20 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderItems(orderItemService.getOrderItemList(cart));
         recalculateOrder(order);
     }
+
+    @Override
+    public BigDecimal getDeliveryPrice() {
+        return deliveryPrice;
+    }
+
+    private void fillOrder(Order order, OrderForm orderForm){
+        order.setFirstName(orderForm.getFirstName());
+        order.setLastName(orderForm.getLastName());
+        order.setDeliveryAddress(orderForm.getDeliveryAddress());
+        order.setContactPhoneNo(orderForm.getContactPhoneNo());
+        order.setExtraInfo(orderForm.getExtraInfo());
+    }
+
 
     private void recalculateOrder(Order order){
         BigDecimal subtotal = BigDecimal.ZERO;

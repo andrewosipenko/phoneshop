@@ -1,8 +1,6 @@
 package com.es.core.model.order;
 
-import com.es.core.validation.annotation.PhoneNumber;
 
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -20,13 +18,9 @@ public class Order
      */
     private BigDecimal totalPrice;
 
-    @Size(min = 4, max = 20, message = "Size should be between 4 and 20")
     private String firstName;
-    @Size(min = 4, max = 20, message = "Size should be between 4 and 20")
     private String lastName;
-    @Size(min = 1, message = "Value is required")
     private String deliveryAddress;
-    @PhoneNumber
     private String contactPhoneNo;
     private String extraInfo;
 

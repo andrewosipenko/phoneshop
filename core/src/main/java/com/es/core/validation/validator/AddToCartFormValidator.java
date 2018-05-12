@@ -1,6 +1,6 @@
 package com.es.core.validation.validator;
 
-import com.es.core.form.AddToCartForm;
+import com.es.core.form.cart.AddToCartForm;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

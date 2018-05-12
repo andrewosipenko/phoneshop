@@ -1,4 +1,6 @@
-package com.es.core.cart;
+package com.es.core.service.cart;
+
+import com.es.core.cart.Cart;
 
 import java.util.Map;
 
@@ -16,6 +18,6 @@ public interface CartService {
     void update(Map<Long, Long> items);
 
     void remove(Long phoneId);
-    void removePhonesOutOfTheStock();
+    boolean removePhonesOutOfTheStock();
     void clearCart();
 }

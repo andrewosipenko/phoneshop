@@ -84,7 +84,6 @@ public class JdbcOrderDao implements OrderDao {
         SqlParameterSource parameters = new BeanPropertySqlParameterSource(order);
         Long orderId = insertOrder.executeAndReturnKey(parameters).longValue();
         order.setId(orderId);
-
         String orderKey = orderDaoService.generateOrderKey();
         jdbcTemplate.update(SqlQueryConstants.OrderDao.INSERT_ORDER_KEY, orderId, orderKey);
 

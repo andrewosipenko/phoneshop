@@ -1,4 +1,4 @@
-package com.es.core.form.updateForm;
+package com.es.core.form.cart.updateForm;
 
 public class CartFormItem {
     private Long phoneId;

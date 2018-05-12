@@ -1,7 +1,8 @@
-package com.es.core.cart;
+package com.es.core.service.cart;
 
 import com.es.core.dao.phoneDao.PhoneDao;
 import com.es.core.model.phone.Phone;
+import com.es.core.service.cart.HttpSessionCartService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
