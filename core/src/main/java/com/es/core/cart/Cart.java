@@ -1,5 +1,6 @@
 package com.es.core.cart;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,11 @@ import java.util.List;
 @Component
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class Cart {
+    @Value("#{new java.math.BigDecimal(${delivery.price})}")
+    private BigDecimal deliveryPrice;
+    /**
+     *  A sum of order item prices;
+     */
     private List<CartItem> items;
 
     private BigDecimal cost;
@@ -39,5 +45,13 @@ public class Cart {
 
     public void setCost(BigDecimal cost) {
         this.cost = cost;
+    }
+
+    public BigDecimal getDeliveryPrice() {
+        return deliveryPrice;
+    }
+
+    public void setDeliveryPrice(BigDecimal deliveryPrice) {
+        this.deliveryPrice = deliveryPrice;
     }
 }

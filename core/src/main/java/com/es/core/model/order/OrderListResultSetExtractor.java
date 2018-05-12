@@ -14,10 +14,10 @@ public class OrderListResultSetExtractor implements ResultSetExtractor<List<Orde
     @Override
     public List<Order> extractData(ResultSet rs) throws SQLException {
         List<Order> orders = new ArrayList<>();
-        Map<Long, Order> ordersMap = new HashMap<>();
+        Map<String, Order> ordersMap = new HashMap<>();
         Map<Long, OrderItem> orderItemsMap = new HashMap<>();
         while (rs.next()) {
-            Long orderId = rs.getLong("orderId");
+            String orderId = rs.getString("orderId");
             Order order = ordersMap.get(orderId);
             if (order == null) {
                 order = setOrderData(rs);
@@ -31,7 +31,7 @@ public class OrderListResultSetExtractor implements ResultSetExtractor<List<Orde
 
     private Order setOrderData(ResultSet rs) throws SQLException {
         Order order = new Order();
-        order.setId(rs.getLong("orderId"));
+        order.setId(rs.getString("orderId"));
         order.setOrderItems(new ArrayList<>());
         order.setSubtotal(rs.getBigDecimal("subtotal"));
         order.setDeliveryPrice(rs.getBigDecimal("deliveryPrice"));

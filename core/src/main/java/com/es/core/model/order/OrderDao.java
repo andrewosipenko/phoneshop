@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface OrderDao {
     int count();
-    Optional<Order> get(Long key);
+    Optional<Order> get(String key);
     void save(Order order) throws EmptyOrderListException;
     List<Order> findAll(int offset, int limit);
 }

@@ -12,22 +12,16 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
-import static com.es.core.model.order.OrderDaoQueries.FIND_ALL_QUERY;
-import static com.es.core.model.order.OrderDaoQueries.GET_BY_KEY_QUERY;
-import static com.es.core.model.order.OrderDaoQueries.SELECT_ORDER_COUNT;
+import static com.es.core.model.order.OrderDaoQueries.*;
 
 @Component
 public class JdbcOrderDao implements OrderDao {
     @Resource
     private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert insertOrder;
     private SimpleJdbcInsert insertOrderItems;
 
     @PostConstruct
     public void initSimpleJdbcInsert() {
-        this.insertOrder = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("orders")
-                .usingGeneratedKeyColumns("id");
 
         this.insertOrderItems = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("orderItems")
@@ -40,7 +34,7 @@ public class JdbcOrderDao implements OrderDao {
     }
 
     @Override
-    public Optional<Order> get(Long key) {
+    public Optional<Order> get(String key) {
         List<Order> orders = jdbcTemplate.query(GET_BY_KEY_QUERY, new OrderListResultSetExtractor(), key);
         if(orders.size() == 0) {
             return Optional.empty();
@@ -57,9 +51,7 @@ public class JdbcOrderDao implements OrderDao {
     public void save(Order order) throws EmptyOrderListException {
         if(order.getOrderItems().size() == 0)
             throw new EmptyOrderListException();
-        SqlParameterSource parameters = getParameters(order);
-        Long newId = insertOrder.executeAndReturnKey(parameters).longValue();
-        order.setId(newId);
+        jdbcTemplate.update(INSERT_ORDER_QUERY, getParameters(order));
         insertOrderItems(order.getOrderItems());
     }
 
@@ -72,18 +64,11 @@ public class JdbcOrderDao implements OrderDao {
             }
     }
 
-    private SqlParameterSource getParameters(Order order) {
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("subtotal", order.getSubtotal());
-        mapSqlParameterSource.addValue("deliveryPrice", order.getDeliveryPrice());
-        mapSqlParameterSource.addValue("totalPrice", order.getTotalPrice());
-        mapSqlParameterSource.addValue("firstName", order.getFirstName());
-        mapSqlParameterSource.addValue("lastName", order.getLastName());
-        mapSqlParameterSource.addValue("deliveryAddress", order.getDeliveryAddress());
-        mapSqlParameterSource.addValue("contactPhoneNo", order.getContactPhoneNo());
-        mapSqlParameterSource.addValue("additionalInfo", order.getAdditionalInfo());
-        mapSqlParameterSource.addValue("status", order.getStatus().name(), 12);
-        return mapSqlParameterSource;
+    private Object[] getParameters(Order order) {
+        return new Object[] {order.getId(), order.getSubtotal(),
+        order.getDeliveryPrice(), order.getTotalPrice(),
+        order.getFirstName(), order.getLastName(),
+        order.getDeliveryAddress(), order.getContactPhoneNo(), order.getAdditionalInfo(), order.getStatus().name()};
     }
 
     private SqlParameterSource getParameters(OrderItem orderItem) {

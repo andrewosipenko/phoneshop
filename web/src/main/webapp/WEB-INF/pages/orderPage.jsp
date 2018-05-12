@@ -7,10 +7,16 @@
     <c:if test="${outOfStock ne null}">
         <div class="alert alert-danger">
             <strong><c:out value = "${outOfStock}"/></strong>
+                <c:forEach var="phone" items="${rejectedPhones}">
+                    <div class="row">
+                    <div class="col">${phone.model}</div>
+                    <div class="col">${phone.brand}</div>
+                    </div>
+                </c:forEach>
         </div>
     </c:if>
     <c:choose>
-        <c:when test="${order ne null and order.orderItems.size() ne 0 }">
+        <c:when test="${cart ne null and cart.items.size() ne 0 }">
             <div class="container">
                 <div class="row">
                     <div class="col-md-auto">
@@ -38,7 +44,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                                <c:forEach var="orderItem" items="${order.orderItems}" varStatus="status">
+                                <c:forEach var="orderItem" items="${cart.items}" varStatus="status">
                                     <tr>
                                         <c:set var="phone" value="${orderItem.phone}" />
                                         <td>
@@ -65,7 +71,7 @@
                                     <td></td>
                                     <td></td>
                                     <td><p class="lead">Subtotal</p></td>
-                                    <td><p class="lead">${order.subtotal}$</p></td>
+                                    <td><p class="lead">${cart.cost}$</p></td>
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -74,7 +80,7 @@
                                     <td></td>
                                     <td></td>
                                     <td><p class="lead">Delivery Price</p></td>
-                                    <td><p class="lead">${order.deliveryPrice}$</p></td>
+                                    <td><p class="lead">${cart.deliveryPrice}$</p></td>
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -83,7 +89,7 @@
                                     <td></td>
                                     <td></td>
                                     <td><p class="lead">Total Price</p></td>
-                                    <td><p class="lead">${order.totalPrice}$</p></td>
+                                    <td><p class="lead">${total}$</p></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -91,7 +97,7 @@
             </div>
             <div class="jumbotron">
                 <div class="lead">
-                            <form:form method="post" modelAttribute="order">
+                    <form:form method="post" modelAttribute="orderForm">
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">

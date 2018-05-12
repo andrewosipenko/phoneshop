@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import javax.annotation.Resource;
 import java.util.Optional;
-
 import static com.es.phoneshop.web.controller.constants.ControllerConstants.OrderPageConstants.ORDER;
 
 @Controller
@@ -19,7 +18,7 @@ public class OrderOverviewPageController {
     private OrderDao orderDao;
 
     @RequestMapping(method = RequestMethod.GET, value = "/{orderId}")
-    public String showProductDetails(@PathVariable Long orderId, Model model) {
+    public String showProductDetails(@PathVariable String orderId, Model model) {
         Optional<Order> order = orderDao.get(orderId);
         model.addAttribute(ORDER, order.orElse(null));
         return "orderOverview";

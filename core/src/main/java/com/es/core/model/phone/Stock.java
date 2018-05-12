@@ -14,6 +14,12 @@ public class Stock {
         this.reserved = reserved;
     }
 
+    public Stock(Stock stock) {
+        this.phoneId = stock.phoneId;
+        this.stock = stock.stock;
+        this.reserved = stock.reserved;
+    }
+
     public Long getPhoneId() {
         return phoneId;
     }

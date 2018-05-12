@@ -31,4 +31,6 @@ public interface OrderDaoQueries {
             "left join phones on phones.id = orderItems.phoneId " +
             "left join phone2color on phones.id = phone2color.phoneId " +
             "left join colors on colors.id = phone2color.colorId ";
+
+    String INSERT_ORDER_QUERY = "INSERT INTO orders values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 }
