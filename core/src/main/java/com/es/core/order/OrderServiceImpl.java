@@ -37,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order createOrder(Cart cart) throws PhoneInCartNotFoundException, OutOfStockException {
         Order order = new Order();
-        order.setId(UUID.randomUUID().toString().substring(0, 13));
+        order.setId(UUID.randomUUID().toString().substring(2, 13));
         order.setStatus(OrderStatus.NEW);
         order.setDeliveryPrice(cart.getDeliveryPrice());
         order.setSubtotal(cart.getCost());

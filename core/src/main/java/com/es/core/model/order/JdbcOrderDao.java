@@ -2,7 +2,6 @@ package com.es.core.model.order;
 
 import com.es.core.order.EmptyOrderListException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.SqlTypeValue;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -44,7 +43,10 @@ public class JdbcOrderDao implements OrderDao {
 
     @Override
     public List<Order> findAll(int offset, int limit) {
-        return jdbcTemplate.query(FIND_ALL_QUERY, new OrderListResultSetExtractor(), offset, limit);
+        String offsetAndLimit = offset > 0 ? "limit " + limit : "";
+        if(offset > 0)
+            offsetAndLimit += " offset " + offset;
+        return jdbcTemplate.query(FIRST_PART_FIND_ALL_QUERY + offsetAndLimit + SECOND_PART_FIND_ALL_QUERY, new OrderListResultSetExtractor());
     }
 
     @Override
@@ -53,6 +55,11 @@ public class JdbcOrderDao implements OrderDao {
             throw new EmptyOrderListException();
         jdbcTemplate.update(INSERT_ORDER_QUERY, getParameters(order));
         insertOrderItems(order.getOrderItems());
+    }
+
+    @Override
+    public void updateStatus(String key, OrderStatus orderStatus) {
+        jdbcTemplate.update(UPDATE_STATUS_QUERY, orderStatus.name(), key);
     }
 
     private void insertOrderItems(List<OrderItem> orderItems) {

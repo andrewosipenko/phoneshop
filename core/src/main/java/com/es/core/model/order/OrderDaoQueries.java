@@ -17,7 +17,7 @@ public interface OrderDaoQueries {
             "left join colors on colors.id = phone2color.colorId " +
             "where orders.id = ?";
 
-    String FIND_ALL_QUERY = "select limitedOrders.id AS orderId, subtotal," +
+    String FIRST_PART_FIND_ALL_QUERY = "select limitedOrders.id AS orderId, subtotal," +
             "deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status," +
             "additionalInfo, orderItems.id AS orderItemId, quantity," +
             "phones.id AS phoneId, brand, model, price, displaySizeInches, weightGr, lengthMm, widthMm, " +
@@ -26,11 +26,14 @@ public interface OrderDaoQueries {
             "frontCameraMegapixels, ramGb, internalStorageGb, batteryCapacityMah, " +
             "talkTimeHours, standByTimeHours, bluetooth, positioning, imageUrl, " +
             "description, colors.id AS colorId, colors.code AS colorCode from " +
-            "(select * from orders limit ? offset ?) as limitedOrders " +
+            "(select * from orders ";
+    String SECOND_PART_FIND_ALL_QUERY = ") as limitedOrders " +
             "left join orderItems on limitedOrders.id = orderItems.orderId " +
             "left join phones on phones.id = orderItems.phoneId " +
             "left join phone2color on phones.id = phone2color.phoneId " +
             "left join colors on colors.id = phone2color.colorId ";
 
     String INSERT_ORDER_QUERY = "INSERT INTO orders values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    String UPDATE_STATUS_QUERY = "UPDATE orders set status = ? where id = ?";
 }

@@ -21,10 +21,15 @@ public interface ControllerConstants {
     interface OrderPageConstants {
         String CART = "cart";
         String REJECTED_PHONES = "rejectedPhones";
-        String ORDER = "order";
         String TOTAL = "total";
         String ORDER_FORM = "orderForm";
         String OUT_OF_STOCK_ATTRIBUTE = "outOfStock";
         String OUT_OF_STOCK_MESSAGE = "Some products are out of stock so that they were removed from your cart";
+        String ORDER = "order";
+    }
+
+    interface OrdersPageConstants {
+        String ORDER = "order";
+        String ORDERS = "orders";
     }
 }
