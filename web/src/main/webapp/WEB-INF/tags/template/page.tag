@@ -38,7 +38,7 @@
                         </ul>
                     </div>
                     <div>
-                        <a class ="btn btn-success" href="#">Login</a>
+                        <a class ="btn btn-success" href="<c:url value="/admin/orders"/>">Log in</a>
                     </div>
             </nav>
             <jsp:doBody/>

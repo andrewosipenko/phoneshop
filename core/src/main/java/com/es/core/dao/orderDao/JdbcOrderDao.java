@@ -3,6 +3,7 @@ package com.es.core.dao.orderDao;
 import com.es.core.dao.SqlQueryConstants;
 import com.es.core.dao.orderDao.orderItemDao.OrderItemDao;
 import com.es.core.model.order.Order;
+import com.es.core.model.order.OrderStatus;
 import com.es.core.model.order.exception.NoSuchOrderException;
 import com.es.core.service.order.orderDao.OrderDaoService;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -68,6 +70,22 @@ public class JdbcOrderDao implements OrderDao {
             return Optional.empty();
         }
     }
+
+    @Override
+    public List<Order> getAll(){
+        List<Order> orders = jdbcTemplate.query(SqlQueryConstants.OrderDao.SELECT_ALL,
+                new BeanPropertyRowMapper<>(Order.class));
+        for(Order order : orders){
+            order.setOrderItems(orderItemDao.getOrderItemsByOrderId(order.getId()));
+        }
+        return orders;
+    }
+
+    @Override
+    public void updateOrderStatus(Long orderId, OrderStatus newOrderStatus){
+        jdbcTemplate.update("UPDATE orders SET status = ? WHERE id = " + orderId, newOrderStatus.toString());
+    }
+
 
     private Optional<Long> getOrderIdByOrderKey(String orderKey){
         try{

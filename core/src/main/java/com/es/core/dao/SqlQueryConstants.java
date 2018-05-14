@@ -51,6 +51,8 @@ public interface SqlQueryConstants {
         String INSERT_ORDER_KEY = "INSERT INTO orderId2orderKey (orderId, orderKey) VALUES (?, ?)";
         String SELECT_ORDER_ID_BY_ORDER_KEY = "SELECT orderId FROM orderId2orderKey WHERE orderKey = ";
         String SELECT_ORDER_KEY_BY_ORDER_ID = "SELECT orderKey FROM orderId2OrderKey WHERE orderId = ";
+        String COUNT_ORDER_KEY = "SELECT COUNT(*) FROM orderId2orderKey WHERE orderKey = ";
+        String SELECT_ALL = "SELECT * FROM orders";
     }
     interface StockDao{
         String SELECT_STOCK_BY_PHONE_ID = "SELECT * from stocks WHERE phoneId = ";

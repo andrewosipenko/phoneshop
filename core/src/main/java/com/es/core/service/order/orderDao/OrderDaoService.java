@@ -21,6 +21,7 @@ public class OrderDaoService {
     }
 
     private boolean isUsed(String orderKey){
-        return jdbcTemplate.queryForObject(SqlQueryConstants.OrderDao.SELECT_ORDER_ID_BY_ORDER_KEY + orderKey, Long.class) != 0;
+        return jdbcTemplate.queryForObject(
+                SqlQueryConstants.OrderDao.COUNT_ORDER_KEY + "\'" + orderKey + "\'", Long.class) != 0;
     }
 }
