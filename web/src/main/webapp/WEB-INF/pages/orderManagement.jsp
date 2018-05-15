@@ -3,20 +3,19 @@
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="components" tagdir="/WEB-INF/tags/components" %>
 
-<template:page title="Order overview">
-    <script> <%@ include file="scripts/cart.js" %> </script>
-    <components:header cartShown="true"/>
+<template:page title="Order management">
+    <script> <%@ include file="scripts/orderManagement.js" %> </script>
+    <components:header cartShown="false"/>
 
-    <div class="container mt-3 py-1">
-        <div class="d-inline-block">
-            <h3>Thank you for your order</h3>
+    <div class="container mt-3 py-1 w-100">
+        <div class="d-inline-block float-left">
             <h4>Order id: <c:out value="${order.id}"/></h4>
         </div>
+        <div class="d-inline-block float-right">
+            <h4>Order status: <span style="font-size: 20pt; font-weight: bold;"><c:out value="${order.status}"/></span></h4>
+        </div>
     </div>
-    <div class="container mt-1">
-        <a class="btn btn-secondary" href="${pageContext.request.contextPath}/productList">Back to product list</a>
-    </div>
-    <div class="container mt-3">
+    <div class="container mt-3 clearfix">
         <table class="table table-bordered table-striped">
             <thead style="background-color: #828082;">
             <tr class="d-table-row text-light text-center">
@@ -42,7 +41,7 @@
             </tbody>
         </table>
     </div>
-    <div class="container mt-3">
+    <div class="container mt-3 clearfix">
         <table class="table table-bordered table-striped float-right w-25">
             <tbody>
             <tr>
@@ -66,5 +65,10 @@
             <p><b>Contact phone number:</b> <c:out value="${order.contactPhoneNo}"/></p>
             <p><b>Additional information:</b> <br/> <c:out value="${order.additionalInformation}"/></p>
         </div>
+    </div>
+    <div class="container mt-3">
+        <a class="btn btn-primary mx-2" href="${pageContext.request.contextPath}/admin/orders">Back to orders</a>
+        <button class="btn btn-primary mx-2" onclick="updateStatus('${order.id}', 'DELIVERED')">Delivered</button>
+        <button class="btn btn-primary mx-2" onclick="updateStatus('${order.id}', 'REJECTED')">Rejected</button>
     </div>
 </template:page>

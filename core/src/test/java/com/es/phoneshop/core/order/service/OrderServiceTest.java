@@ -23,6 +23,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -117,8 +118,9 @@ public class OrderServiceTest {
 
     @Test
     public void testGetOrder() {
-        //just for code coverage to be happy
-        orderService.getOrder("fafqwf245");
+        String id = "fafqwf245";
+        orderService.getOrder(id);
+        verify(orderDao).get(id);
     }
 
     @Test
@@ -172,5 +174,20 @@ public class OrderServiceTest {
 
         Order order = orderService.createOrder(cart);
         orderService.placeOrder(order);
+    }
+
+    @Test
+    public void testGetAllOrders() {
+        List<Order> orders = new ArrayList<>();
+        when(orderDao.getAll()).thenReturn(orders);
+        assertSame(orders, orderService.getAllOrders());
+    }
+
+    @Test
+    public void testSetOrderStatus() {
+        String id = "asfgas";
+        OrderStatus status = OrderStatus.REJECTED;
+        orderService.setOrderStatus(id, status);
+        verify(orderDao).updateStatus(id, status);
     }
 }

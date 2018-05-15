@@ -74,6 +74,16 @@ public class OrderServiceImpl implements OrderService {
         cartService.clear();
     }
 
+    @Override
+    public void setOrderStatus(String orderId, OrderStatus status) {
+        orderDao.updateStatus(orderId, status);
+    }
+
+    @Override
+    public List<Order> getAllOrders() {
+        return orderDao.getAll();
+    }
+
     private String generateRandomId() {
         String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random random = new Random();

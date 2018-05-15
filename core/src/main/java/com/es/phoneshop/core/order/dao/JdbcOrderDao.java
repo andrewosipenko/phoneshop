@@ -2,6 +2,7 @@ package com.es.phoneshop.core.order.dao;
 
 import com.es.phoneshop.core.order.model.Order;
 import com.es.phoneshop.core.order.model.OrderItem;
+import com.es.phoneshop.core.order.model.OrderStatus;
 import com.es.phoneshop.core.util.SQLQueries;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -77,5 +78,17 @@ public class JdbcOrderDao implements OrderDao {
     @Override
     public boolean isIdUnique(String id) {
         return jdbcTemplate.queryForObject(SQLQueries.TEST_ORDER, Integer.class, id) == 0;
+    }
+
+    @Override
+    public List<Order> getAll() {
+        List<Order> orders = jdbcTemplate.query(SQLQueries.GET_ORDERS, orderRowMapper);
+        orders.forEach(this::populateOrderItems);
+        return orders;
+    }
+
+    @Override
+    public void updateStatus(String id, OrderStatus status) {
+        jdbcTemplate.update(SQLQueries.UPDATE_ORDER_STATUS, status.toString(), id);
     }
 }

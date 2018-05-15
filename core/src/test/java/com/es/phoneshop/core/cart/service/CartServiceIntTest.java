@@ -8,6 +8,7 @@ import com.es.phoneshop.core.cart.throwable.TooBigQuantityException;
 import com.es.phoneshop.core.phone.model.Phone;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -28,6 +29,8 @@ import static org.junit.Assert.*;
 public class CartServiceIntTest {
     @Resource
     private CartService cartService;
+    @Value("${delivery.price}")
+    private BigDecimal deliveryPrice;
 
     private static final Long[] EXISTING_PHONE_IDS = {1001L, 1002L, 1003L, 1004L}; // ascending
     private static final Long[] PHONE_ACCEPTABLE_QUANTITIES_1 = {5L, 9L, 2L, 4L};
@@ -177,7 +180,6 @@ public class CartServiceIntTest {
 
     @Test
     public void testGetDeliveryPrice() {
-        //just for code coverage to be happy
-        cartService.getCart().getDeliveryPrice();
+        assertEquals(0, deliveryPrice.compareTo(cartService.getCart().getDeliveryPrice()));
     }
 }

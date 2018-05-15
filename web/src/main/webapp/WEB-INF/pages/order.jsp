@@ -23,14 +23,14 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${cart.cartItems}" var="cartItem">
+                    <c:forEach items="${cart.cartItems}" var="orderItem">
                         <tr>
-                            <td style="vertical-align: middle!important"><c:out value="${cartItem.phone.brand}"/></td>
-                            <td style="vertical-align: middle!important"><c:out value="${cartItem.phone.model}"/></td>
-                            <td style="vertical-align: middle!important"><c:forEach items="${cartItem.phone.colors}" var="color" varStatus="loop"><c:out value="${color.code}"/><c:if test="${not loop.last}">, </c:if></c:forEach></td>
-                            <td style="vertical-align: middle!important"><c:out value="${cartItem.phone.displaySizeInches}''"/></td>
-                            <td style="vertical-align: middle!important"><c:out value="${cartItem.quantity}"/></td>
-                            <td style="vertical-align: middle!important"><c:out value="$${cartItem.phone.price}"/></td>
+                            <td style="vertical-align: middle!important"><c:out value="${orderItem.phone.brand}"/></td>
+                            <td style="vertical-align: middle!important"><c:out value="${orderItem.phone.model}"/></td>
+                            <td style="vertical-align: middle!important"><c:forEach items="${orderItem.phone.colors}" var="color" varStatus="loop"><c:out value="${color.code}"/><c:if test="${not loop.last}">, </c:if></c:forEach></td>
+                            <td style="vertical-align: middle!important"><c:out value="${orderItem.phone.displaySizeInches}''"/></td>
+                            <td style="vertical-align: middle!important"><c:out value="${orderItem.quantity}"/></td>
+                            <td style="vertical-align: middle!important"><c:out value="$${orderItem.phone.price}"/></td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -80,5 +80,4 @@
             </form:form>
         </div>
     </div>
-
 </template:page>

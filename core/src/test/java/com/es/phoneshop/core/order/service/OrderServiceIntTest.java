@@ -6,6 +6,7 @@ import com.es.phoneshop.core.cart.throwable.NoStockFoundException;
 import com.es.phoneshop.core.order.dao.OrderDao;
 import com.es.phoneshop.core.order.model.Order;
 import com.es.phoneshop.core.order.model.OrderItem;
+import com.es.phoneshop.core.order.model.OrderStatus;
 import com.es.phoneshop.core.order.throwable.EmptyCartPlacingOrderException;
 import com.es.phoneshop.core.phone.model.Phone;
 import com.es.phoneshop.testutils.PhoneComparator;
@@ -163,5 +164,42 @@ public class OrderServiceIntTest {
         order.setContactPhoneNo(CONTACT_PHONE_NUMBER);
         orderService.placeOrder(order);
         orderDao.save(order);
+    }
+
+    @Test
+    public void testGetAllOrders() {
+        cartService.add(EXISTING_PHONE_IDS[0], PHONE_ACCEPTABLE_QUANTITITES[0]);
+        cartService.add(EXISTING_PHONE_IDS[1], PHONE_ACCEPTABLE_QUANTITITES[1]);
+        cartService.add(EXISTING_PHONE_IDS[2], PHONE_ACCEPTABLE_QUANTITITES[2]);
+        Order order = orderService.createOrder(cartService.getCart());
+        order.setFirstName(FIRST_NAME);
+        order.setLastName(LAST_NAME);
+        order.setDeliveryAddress(DELIVERY_ADDRESS);
+        order.setContactPhoneNo(CONTACT_PHONE_NUMBER);
+        orderService.placeOrder(order);
+        List<Order> orders = orderService.getAllOrders();
+        assertEquals(1, orders.size());
+        Order actual = orders.get(0);
+        assertEquals(order.getFirstName(), actual.getFirstName());
+        assertEquals(order.getDeliveryAddress(), actual.getDeliveryAddress());
+        assertEquals(order.getContactPhoneNo(), actual.getContactPhoneNo());
+        assertSame(order.getStatus(), actual.getStatus());
+    }
+
+    @Test
+    public void testSetOrderStatus() {
+        cartService.add(EXISTING_PHONE_IDS[0], PHONE_ACCEPTABLE_QUANTITITES[0]);
+        cartService.add(EXISTING_PHONE_IDS[1], PHONE_ACCEPTABLE_QUANTITITES[1]);
+        cartService.add(EXISTING_PHONE_IDS[2], PHONE_ACCEPTABLE_QUANTITITES[2]);
+        Order order = orderService.createOrder(cartService.getCart());
+        order.setFirstName(FIRST_NAME);
+        order.setLastName(LAST_NAME);
+        order.setDeliveryAddress(DELIVERY_ADDRESS);
+        order.setContactPhoneNo(CONTACT_PHONE_NUMBER);
+        orderService.placeOrder(order);
+        orderService.setOrderStatus(order.getId(), OrderStatus.REJECTED);
+        Optional<Order> orderOptional = orderService.getOrder(order.getId());
+        assertTrue(orderOptional.isPresent());
+        assertSame(OrderStatus.REJECTED, orderOptional.get().getStatus());
     }
 }

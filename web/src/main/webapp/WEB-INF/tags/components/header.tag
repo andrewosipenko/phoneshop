@@ -20,14 +20,18 @@
 </c:if>
 
 <div class="bg-light w-100">
-    <div class="container p-3">
+    <div class="container pb-4 pt-3">
         <div class="page-header text-primary">
             <a style="text-decoration: none; color: inherit;" href="${pageContext.request.contextPath}"><h1 class="d-inline">Phone Shop</h1></a>
-            <c:if test="${cartShown}">
-                <a class="btn btn-primary d-inline-block float-right mt-2" href="${pageContext.request.contextPath}/cart">
-                    My cart: <span id="phonesTotal"></span> items $<span id="costTotal"></span>
-                </a>
-            </c:if>
+            <div class="float-right mt-0">
+                <a class="mt-1" href="${pageContext.request.contextPath}/admin/orders">Admin</a>
+                <a class="mt-1 ml-2" href="#">Logout</a> <br/>
+                <c:if test="${cartShown}">
+                    <a class="btn btn-primary d-block" href="${pageContext.request.contextPath}/cart">
+                        My cart: <span id="phonesTotal"></span> items $<span id="costTotal"></span>
+                    </a>
+                </c:if>
+            </div>
         </div>
     </div>
 </div>
@@ -39,7 +43,7 @@
     </div>
 </c:if>
 <c:if test="${productListButtonEnabled}">
-    <div class="container mt-1">
+    <div class="container mt-3">
         <a class="btn btn-secondary" href="${pageContext.request.contextPath}/productList">Back to product list</a>
     </div>
 </c:if>
