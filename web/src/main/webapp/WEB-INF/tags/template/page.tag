@@ -1,5 +1,6 @@
 <%@ tag body-content="scriptless" trimDirectiveWhitespaces="true" pageEncoding="UTF-8" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html lang="en" >
 <head>
@@ -17,6 +18,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.3/js/mdb.min.js"></script>
 </head>
 <body>
+<security:csrfMetaTags />
 <div class="container">
     <div class="row">
         <div class="col-16 col-md-12 ">
@@ -38,7 +40,14 @@
                         </ul>
                     </div>
                     <div>
-                        <a class ="btn btn-success" href="<c:url value="/admin/orders"/>">Log in</a>
+                        <security:authorize url="/admin/**">
+                            <security:authentication property="principal.username"/>
+                            <a class ="btn btn-success" href="<c:url value="/admin/orders"/>">Admin</a>
+                            <a class ="btn btn-success" href="<c:url value="/logout"/>">Log out</a>
+                        </security:authorize>
+                        <security:authorize access="not isAuthenticated()">
+                        <a class ="btn btn-success" href="<c:url value="/login"/>">Log in</a>
+                        </security:authorize>
                     </div>
             </nav>
             <jsp:doBody/>
