@@ -6,7 +6,7 @@
   <script> <%@ include file="js/addToCart.js" %> </script>
   <c:choose>
   <c:when test="${productPage.totalCount ne 0}">
-    <div class="container">
+    <div class="lead">
       <table class="table table-hover">
         <thead>
         <tr>

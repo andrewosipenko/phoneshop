@@ -9,10 +9,9 @@
                 <div class="row">
                     <div class="col-md-auto">
                         <div class="display-4">Orders</div>
-                        <hr>
                     </div>
             </div>
-            <div class="container">
+            <div class="lead">
                 <table class="table table-hover">
                     <thead>
                     <tr>
@@ -42,7 +41,7 @@
             </div>
         </c:when>
         <c:otherwise>
-            <div class="container">
+            <div class="lead">
                 <div class="jumbotron">
                     <h3>No orders found</h3>
                     <a href="<c:url value="/productList"/>">

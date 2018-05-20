@@ -97,7 +97,7 @@
             </div>
         </c:when>
         <c:otherwise>
-            <div class="container">
+            <div class="lead">
                 <div class="jumbotron">
                     <p class="lead">Your cart is empty</p>
                     <a href="<c:url value="/productList"/>">

@@ -6,22 +6,24 @@
 <template:page>
     <c:choose>
         <c:when test="${order ne null and order.orderItems.size() ne 0}">
-            <div class="container">
+            <div class="lead">
                 <div class="row">
                     <div class="col-md-auto">
-                        <div class="display-4">Order ID ${order.id}  Status :  ${order.status}</div>
+                        <div class="lead" style="padding-top: 14px">
+                            <h2>Order ID ${order.id}  Status :  ${order.status}
+                            </h2>
+                        </div>
                     </div>
                     <div class="col-md-auto">
-                        <div class="container" style="padding-top: 10px">
+                        <div class="container"style="padding-bottom: 10px; padding-top: 10px">
                             <a href="<c:url value="/admin/orders"/>">
-                                <button class="btn btn-dark btn-lg">Back to orders</button>
+                                <button class="btn btn-dark btn-lg" >Back to orders</button>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="container">
-                <div class="container">
+            <div class="lead">
                     <table class="table table-hover">
                         <thead>
                         <tr>
@@ -85,8 +87,7 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-            <div class="jumbotron">
+            <div class="container">
                 <div class="lead">
                     <div class="row">
                         <div class="col-6">
@@ -96,12 +97,12 @@
                             <p>Delivery Address :  ${order.deliveryAddress}</p>
                             <p>Additional Information :  ${order.additionalInfo}</p>
                             <c:if test="${order.status eq 'NEW'}">
-                                <div class="container">
+                                <div class="lead">
                                 <form:form method="post">
-                                    <button type="submit" name="orderStatus" value="DELIVERED" class="btn btn-success">
+                                    <button type="submit" name="orderStatus" value="DELIVERED" class="btn btn-success btn-lg">
                                         Delivered
                                     </button>
-                                    <button type="submit" name="orderStatus" value="REJECTED" class="btn btn-danger">
+                                    <button type="submit" name="orderStatus" value="REJECTED" class="btn btn-danger btn-lg">
                                         Rejected
                                     </button>
                                 </form:form>
@@ -113,7 +114,7 @@
             </div>
         </c:when>
         <c:otherwise>
-            <div class="container">
+            <div class="lead">
                 <div class="jumbotron">
                     <p class="lead">No order found</p>
                     <a href="<c:url value="/admin/orders"/>">

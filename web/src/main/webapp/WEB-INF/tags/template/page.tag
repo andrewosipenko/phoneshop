@@ -35,6 +35,20 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                                <c:choose>
+                                    <c:when test="${pageContext.request.userPrincipal.name != null}">
+                                    <a class="nav-link"  href="<c:url value="/security_logout" />">
+                                        <u>Logout</u>
+                                    </a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a class="nav-link" href="<c:url value="/login"/>">
+                                            <u>Login</u>
+                                        </a>
+                                    </c:otherwise>
+                                </c:choose>
+                        </li>
                         <li class="nav-item">
                             <form class="form-inline my-2 my-lg-0" action="<c:url value="/productList"/>">
                                 <input class="form-control mr-sm-2"  placeholder="Search..." aria-label="Search" name="query">
