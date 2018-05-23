@@ -1,6 +1,7 @@
 <%@ tag body-content="scriptless" trimDirectiveWhitespaces="true" pageEncoding="UTF-8" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="en" >
 <head>
@@ -43,7 +44,10 @@
                         <security:authorize url="/admin/**">
                             <security:authentication property="principal.username"/>
                             <a class ="btn btn-success" href="<c:url value="/admin/orders"/>">Admin</a>
-                            <a class ="btn btn-success" href="<c:url value="/logout"/>">Log out</a>
+                            <c:url var="logoutUrl" value="/logout"/>
+                            <sf:form action="${logoutUrl}" >
+                                <button type="submit" class ="btn btn-success">Log out</button>
+                            </sf:form>
                         </security:authorize>
                         <security:authorize access="not isAuthenticated()">
                         <a class ="btn btn-success" href="<c:url value="/login"/>">Log in</a>
