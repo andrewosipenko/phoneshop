@@ -1,34 +1,32 @@
 package com.es.core.model.order;
 
+import com.es.core.cart.Cart;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Order
-{
-    private Long id;
-    private List<OrderItem> orderItems;
-    /**
-     *  A sum of order item prices;
-     */
-    private BigDecimal subtotal;
-    private BigDecimal deliveryPrice;
-    /**
-     * <code>subtotal</code> + <code>deliveryPrice</code>
-     */
-    private BigDecimal totalPrice;
+public class Order extends Cart {
 
+    private String id;
+    private List<OrderItem> orderItems = new ArrayList<>();
     private String firstName;
     private String lastName;
     private String deliveryAddress;
     private String contactPhoneNo;
+    private BigDecimal subtotal;
+    private BigDecimal totalPrice;
+
+    private String additionalInfo;
 
     private OrderStatus status;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -38,30 +36,6 @@ public class Order
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
-    }
-
-    public BigDecimal getSubtotal() {
-        return subtotal;
-    }
-
-    public void setSubtotal(BigDecimal subtotal) {
-        this.subtotal = subtotal;
-    }
-
-    public BigDecimal getDeliveryPrice() {
-        return deliveryPrice;
-    }
-
-    public void setDeliveryPrice(BigDecimal deliveryPrice) {
-        this.deliveryPrice = deliveryPrice;
-    }
-
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
     }
 
     public String getFirstName() {
@@ -102,5 +76,29 @@ public class Order
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public String getAdditionalInfo() {
+        return additionalInfo;
+    }
+
+    public void setAdditionalInfo(String additionalInformation) {
+        this.additionalInfo = additionalInformation;
+    }
+
+    public BigDecimal getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(BigDecimal subtotal) {
+        this.subtotal = subtotal;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }
