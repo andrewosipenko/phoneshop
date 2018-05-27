@@ -4,7 +4,7 @@
 <%@ taglib prefix="components" tagdir="/WEB-INF/tags/components" %>
 
 <template:page title="Orders">
-    <components:header cartShown="false" titleEnabled="true" title="Orders"/>
+    <components:header cartShown="false" titleEnabled="true" title="Orders" productListButtonEnabled="true"/>
 
     <div class="container mt-3">
         <c:choose>

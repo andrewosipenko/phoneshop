@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 import java.util.Optional;
 
 @Controller
-@RequestMapping(value = "/admin/orders/{orderId:[0-9a-zA-Z]{10}}")
+@RequestMapping("/admin/orders/{orderId:[0-9a-zA-Z]{10}}")
 public class OrderManagementPageController {
     @Resource
     private OrderService orderService;

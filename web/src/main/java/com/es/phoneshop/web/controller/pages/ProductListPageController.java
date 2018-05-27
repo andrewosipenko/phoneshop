@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.annotation.Resource;
 
 @Controller
-@RequestMapping (value = "/productList")
+@RequestMapping ("/productList")
 public class ProductListPageController {
     @Resource
     private PhonePageService phonePageService;

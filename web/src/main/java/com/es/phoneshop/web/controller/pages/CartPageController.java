@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping(value = "/cart")
+@RequestMapping("/cart")
 public class CartPageController {
     @Resource
     private CartService cartService;

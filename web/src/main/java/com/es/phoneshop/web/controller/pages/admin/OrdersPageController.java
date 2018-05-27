@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/admin/orders")
+@RequestMapping("/admin/orders")
 public class OrdersPageController {
     @Resource
     private OrderService orderService;

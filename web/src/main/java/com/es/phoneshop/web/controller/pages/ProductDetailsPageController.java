@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.annotation.Resource;
 
 @Controller
-@RequestMapping(value = "/productDetails/{phoneId:[1-9][\\d]{0,17}}")
+@RequestMapping("/productDetails/{phoneId:[1-9][\\d]{0,17}}")
 public class ProductDetailsPageController {
     @Resource
     private PhoneService phoneService;

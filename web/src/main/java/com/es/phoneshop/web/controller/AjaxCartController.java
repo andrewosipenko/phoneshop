@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping(value = "/ajaxCart")
+@RequestMapping("/ajaxCart")
 public class AjaxCartController {
     @Resource
     private CartService cartService;
