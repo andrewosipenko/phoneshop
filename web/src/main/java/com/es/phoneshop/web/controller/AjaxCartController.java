@@ -47,9 +47,8 @@ public class AjaxCartController {
         Map<String, String> properties = new HashMap<>();
         properties.put("message", message);
 
-        Cart cart = cartService.getCart();
-        properties.put("cartBill", cart.getBill().toPlainString());
-        properties.put("cartQuantity", cart.getQuantity().toString());
+        properties.put("cartBill", cartService.getCartBill().toPlainString());
+        properties.put("cartQuantity", cartService.getProductsQuantity().toString());
 
         return getJsonEntity(properties);
     }
