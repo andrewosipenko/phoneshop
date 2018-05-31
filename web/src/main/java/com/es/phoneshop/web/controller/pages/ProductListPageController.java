@@ -50,7 +50,7 @@ public class ProductListPageController {
 
     @ModelAttribute
     public void addCart(Model model){
-        model.addAttribute("cartBill", cartService.getCart().getBill());
-        model.addAttribute("cartQuantity", cartService.getCart().getQuantity());
+        model.addAttribute("cartBill", cartService.getCartBill());
+        model.addAttribute("cartQuantity", cartService.getProductsQuantity());
     }
 }

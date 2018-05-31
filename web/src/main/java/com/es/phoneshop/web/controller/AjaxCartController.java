@@ -2,6 +2,7 @@ package com.es.phoneshop.web.controller;
 
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartService;
+import com.es.phoneshop.web.controller.beans.QuantityWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
@@ -14,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Digits;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,15 +40,14 @@ public class AjaxCartController {
         if(bindingResult.hasErrors()){
             message = bindingResult.getFieldError().getDefaultMessage();
         } else {
-            cartService.addPhone(phoneId, quantity.getLong());
+            cartService.addPhone(phoneId, quantity.getValue());
             message = "success";
         }
         Map<String, String> properties = new HashMap<>();
         properties.put("message", message);
 
-        Cart cart = cartService.getCart();
-        properties.put("cartBill", cart.getBill().toPlainString());
-        properties.put("cartQuantity", cart.getQuantity().toString());
+        properties.put("cartBill", cartService.getCartBill().toPlainString());
+        properties.put("cartQuantity", cartService.getProductsQuantity().toString());
 
         return getJsonEntity(properties);
     }
@@ -64,32 +62,5 @@ public class AjaxCartController {
             json = "";
         }
         return new ResponseEntity<>(json, status);
-    }
-
-
-    public static class QuantityWrapper{
-
-        private final static String CONSTRAINT_VIOLATION_MESSAGE = "Wrong format";
-
-        @DecimalMin(value = "1", message = CONSTRAINT_VIOLATION_MESSAGE)
-        @Digits(integer = 3, fraction = 0, message = CONSTRAINT_VIOLATION_MESSAGE)
-        private String quantity;
-
-        public void setQuantity(String quantity) {
-            this.quantity = quantity;
-        }
-
-        public String getQuantity() {
-            return quantity;
-        }
-
-        public long getLong(){
-            return Long.valueOf(quantity);
-        }
-
-        @Override
-        public String toString() {
-            return quantity;
-        }
     }
 }
