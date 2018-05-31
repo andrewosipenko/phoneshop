@@ -10,4 +10,6 @@ public interface PhoneService {
     List<Phone> searchByModel(String keyString, int limit, int offset, String sortBy);
 
     int countSearchResult(String keyString);
+
+    Phone getById(Long id);
 }

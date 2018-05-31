@@ -30,4 +30,9 @@ public class PhoneServiceImpl implements PhoneService{
     public int countSearchResult(String keyString) {
         return phoneDao.countSearchResult(keyString);
     }
+
+    @Override
+    public Phone getById(Long id) {
+        return phoneDao.get(id).orElseThrow(()->new IllegalArgumentException("phoneId doesn't exist"));
+    }
 }

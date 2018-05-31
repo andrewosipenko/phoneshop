@@ -59,7 +59,7 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public BigDecimal getCartBill() {
+    public BigDecimal getCartSubTotal() {
         return cart.getProducts().values().stream()
                 .map(CartEntry::obtainCost)
                 .reduce(BigDecimal::add)
