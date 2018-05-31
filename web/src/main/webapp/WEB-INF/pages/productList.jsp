@@ -4,23 +4,12 @@
 <%@ taglib prefix="specific" tagdir="/WEB-INF/tags/template/productList" %>
 <template:page>
   <jsp:attribute name="scripts">
-    <script src="<c:url value="/resources/jquery.twbsPagination.min.js"/>"></script>
-    <script src="<c:url value="/resources/productList.js"/>"></script>
+    <script src="<c:url value="/resources/js/jquery.twbsPagination.min.js"/>"></script>
+    <script src="<c:url value="/resources/js/productList.js"/>"></script>
+    <script src="<c:url value="/resources/js/addToCartForm.js"/>"></script>
   </jsp:attribute>
   <jsp:body>
-    <nav class="navbar navbar-dark bg-dark pr-5 pl-5 pd-5">
-      <div>
-        <a class="navbar-brand" href="#"><h2>Phoneshop</h2></a>
-      </div>
-      <div>
-        <div class="float-right" >
-          <a href="#">Login</a>
-        </div>
-        <div>
-          <button class="btn btn-warning">My cart: <span id="cart-amount">${cartQuantity}</span> items <span id="cart-price">${cartBill}</span>$</button>
-        </div>
-      </div>
-    </nav>
+    <template:header cartQuantity="${cartQuantity}" cartSubTotal="${cartSubTotal}"/>
 
     <div class="mt-5 mr-5 ml-5">
       <nav class="navbar navbar-light bg-light justify-content-between">
@@ -48,15 +37,17 @@
         <c:forEach var="phone" items="${phones}">
           <tr>
             <td class="align-middle">
-              <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}"
-                   height="80">
+              <a href="${pageContext.servletContext.contextPath}/productDetails/${phone.id}">
+                <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}"
+                     height="80">
+              </a>
             </td>
             <td class="align-middle">${phone.brand}</td>
-            <td class="align-middle">${phone.model}</td>
             <td class="align-middle">
-              <c:forEach var="color" items="${phone.colors}">
-                <template:color size="15" color="${color.getCode()}"/>
-              </c:forEach>
+              <a href="${pageContext.servletContext.contextPath}/productDetails/${phone.id}">${phone.model}</a>
+            </td>
+            <td class="align-middle">
+              <template:colors colors="${phone.colors}"/>
             </td>
             <td class="align-middle">${phone.displaySizeInches}"</td>
             <td class="align-middle">
