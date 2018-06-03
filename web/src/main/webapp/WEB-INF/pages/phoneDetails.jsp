@@ -40,13 +40,10 @@
           <div id="quantity-input-div" class="mt-5">
             <h3>Price: ${phone.price}$</h3>
             <div class="row">
-              <div class="input-group col-3">
-                <input type="text" class="form-control quantity-input" id="validationCustomUsername" value="1">
-                <div class="invalid-tooltip">
-                </div>
+              <div class="col-3">
+                <template:add-to-cart-form phoneId="${phone.id}" value="1"/>
               </div>
-              <button id="add-to-cart-btn" class="btn btn-primary col-2" data-price="${phone.price}" data-id="${phone.id}">Add to
-              </button>
+              <button class="add-to-cart-btn btn btn-primary col-2" data-id="${phone.id}">Add to</button>
             </div>
           </div>
         </div>
