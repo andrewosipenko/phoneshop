@@ -11,7 +11,7 @@
       <a href="#">Login</a>
     </div>
     <div>
-      <button class="btn btn-warning">My cart: <span id="cart-amount">${cartQuantity}</span> items <span id="cart-price">${cartSubTotal}</span>$</button>
+      <a href="${pageContext.servletContext.contextPath}/cart" class="btn btn-warning">My cart: <span id="cart-amount">${cartQuantity}</span> items <span id="cart-price">${cartSubTotal}</span>$</a>
     </div>
   </div>
 </nav>

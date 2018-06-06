@@ -50,7 +50,14 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void update(Map<Long, Long> items) {
-        throw new UnsupportedOperationException("TODO");
+        final Map<Long, CartEntry> products = cart.getProducts();
+        items.forEach((key, value)->{
+            if(value > 0){
+                products.get(key).setQuantity(value);
+            } else {
+                products.remove(key);
+            }
+        });
     }
 
     @Override
