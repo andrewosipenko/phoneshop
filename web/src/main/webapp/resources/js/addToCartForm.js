@@ -1,10 +1,10 @@
 "use strict";
 
-function addToCard(phoneId, quantity, onSuccess){
+function addToCard(data, onSuccess){
     $.ajax({
         type: "POST",
-        contentType: "application/json;charset=utf-8",
-        url: "/phoneshop-web/ajaxCart?phoneId="+phoneId+"&quantity="+quantity,
+        data: data,
+        url: "/phoneshop-web/ajaxCart",
         dataType: "json",
         success: onSuccess
     });
@@ -15,39 +15,31 @@ function updateCart(cartQuantity, cartSubTotal){
     $("#cart-price").text(cartSubTotal);
 }
 
-$(".quantity-input").on("keyup", function(){
+function onAddPhone(form, data){
+    if(data.message !== "success"){
+        form.find("input[name=quantity]").addClass("is-invalid");
+        form.find(".invalid-tooltip").text(data.message);
+    } else {
+        updateCart(data.cartQuantity, data.cartSubTotal);
+    }
+}
+
+
+$(".quantity-input").on("keydown", function(){
     $(this).parents(":eq(1)").find(".invalid-feedback").text("");
     $(this).removeClass("is-invalid");
 });
 
-$(".add-to-cart-btn").on("click", function(){
-    var inputGroup = $(this).parents(":eq(1)").find(".input-group");
-    var input = inputGroup.find("input");
-    var quantity = input.val();
-    var phoneId = $(this).data("id");
 
-    addToCard(phoneId, quantity, function(result){
-        if(result.message!=="success"){
-            input.addClass("is-invalid");
-            inputGroup.find(".invalid-tooltip").text(result.message);
-        } else {
-            updateCart(result.cartQuantity, result.cartSubTotal);
-        }
-    });
+$(".add-to-cart-btn").on("click", function(){
+    var phoneId = $(this).data("id");
+    var form = $("form[name="+phoneId+"]");
+
+    form.submit();
 });
 
-$("#add-to-cart-btn").on("click", function () {
-    var inputGroup = $("#quantity-input-div").find(".input-group");
-    var input = inputGroup.find("input");
-    var quantity = input.val();
-    var phoneId = $(this).data("id");
+$(".quantity-form").on("submit", function(e){
+    e.preventDefault();
 
-    addToCard(phoneId, quantity, function (result) {
-        if (result.message !== "success") {
-            input.addClass("is-invalid");
-            inputGroup.find(".invalid-tooltip").text(result.message);
-        } else {
-            updateCart(result.cartQuantity, result.cartSubTotal);
-        }
-    });
+    addToCard($(this).serialize(), onAddPhone.bind(null, $(this)));
 });

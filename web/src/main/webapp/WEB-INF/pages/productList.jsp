@@ -57,14 +57,10 @@
               </c:choose>
             </td>
             <td class="align-middle">
-              <div class="input-group">
-                <input type="text" class="form-control quantity-input" id="validationCustomUsername" value="1">
-                <div class="invalid-tooltip">
-                </div>
-              </div>
+              <template:add-to-cart-form phoneId="${phone.id}" value="1"/>
             </td>
             <td class="align-middle">
-              <button class="add-to-cart-btn btn btn-primary" data-price="${phone.price}" data-id="${phone.id}">Add to</button>
+              <button class="add-to-cart-btn btn btn-primary" data-id="${phone.id}">Add to</button>
             </td>
           </tr>
         </c:forEach>
