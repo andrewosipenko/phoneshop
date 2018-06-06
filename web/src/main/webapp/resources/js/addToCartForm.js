@@ -16,17 +16,21 @@ function updateCart(cartQuantity, cartSubTotal){
 }
 
 function onAddPhone(form, data){
-    if(data.message !== "success"){
-        form.find("input[name=quantity]").addClass("is-invalid");
-        form.find(".invalid-tooltip").text(data.message);
-    } else {
+    if(data.valid){
         updateCart(data.cartQuantity, data.cartSubTotal);
+    } else {
+        form.find("input[name=quantity]").addClass("is-invalid");
+        var tooltip = form.find(".invalid-tooltip");
+        tooltip.empty();
+        data.errors.forEach(function(message){
+            tooltip.append("<p class=\"mb-0\">"+message+"</p>");
+        });
     }
 }
 
 
 $(".quantity-input").on("keydown", function(){
-    $(this).parents(":eq(1)").find(".invalid-feedback").text("");
+    $(this).parents(":eq(1)").find(".invalid-feedback").empty();
     $(this).removeClass("is-invalid");
 });
 

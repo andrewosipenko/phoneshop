@@ -1,6 +1,7 @@
 package com.es.phoneshop.web.controller.beans;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class AddPhoneResponse {
 
@@ -8,7 +9,9 @@ public class AddPhoneResponse {
 
     private Long cartQuantity;
 
-    private String message;
+    private Boolean valid;
+
+    private List<String> errors;
 
     public BigDecimal getCartSubTotal() {
         return cartSubTotal;
@@ -26,11 +29,19 @@ public class AddPhoneResponse {
         this.cartQuantity = cartQuantity;
     }
 
-    public String getMessage() {
-        return message;
+    public Boolean getValid() {
+        return valid;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setValid(Boolean valid) {
+        this.valid = valid;
+    }
+
+    public List<String> getErrors() {
+        return errors;
+    }
+
+    public void setErrors(List<String> errors) {
+        this.errors = errors;
     }
 }

@@ -5,12 +5,13 @@ import javax.validation.constraints.Digits;
 
 public class QuantityForm {
 
-    private final static String CONSTRAINT_VIOLATION_MESSAGE = "Wrong format";
+    private final static String DECIMAL_MIN_VIOLATION_MESSAGE = "Quantity should be >1";
+    private final static String DIGITS_VIOLATION_MESSAGE = "Integer expected";
 
     private Long phoneId;
 
-    @DecimalMin(value = "1", message = CONSTRAINT_VIOLATION_MESSAGE)
-    @Digits(integer = 3, fraction = 0, message = CONSTRAINT_VIOLATION_MESSAGE)
+    @DecimalMin(value = "1", message = DECIMAL_MIN_VIOLATION_MESSAGE)
+    @Digits(integer = 3, fraction = 0, message = DIGITS_VIOLATION_MESSAGE)
     private String quantity;
 
 
