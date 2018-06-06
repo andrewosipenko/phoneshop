@@ -16,6 +16,10 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <org.springframework-version>4.3.10.RELEASE</org.springframework-version>
     <jackson.version>2.9.5</jackson.version>
+    <font-awesome.version>5.0.13</font-awesome.version>
+    <bootstrap.version>4.0.0</bootstrap.version>
+    <jquery.version>3.2.1</jquery.version>
+
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -67,6 +71,23 @@
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
         <version>1.4.196</version>
+      </dependency>
+
+      <!--webjars-->
+      <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>bootstrap</artifactId>
+        <version>${bootstrap.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>jquery</artifactId>
+        <version>${jquery.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>font-awesome</artifactId>
+        <version>${font-awesome.version}</version>
       </dependency>
 
       <dependency>

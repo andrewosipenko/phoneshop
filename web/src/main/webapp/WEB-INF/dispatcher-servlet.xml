@@ -13,6 +13,7 @@
     </bean>
 
     <mvc:annotation-driven validator="validator"/>
+    <mvc:resources mapping="/webjars/**" location="/webjars/"/>
     <mvc:resources mapping="/resources/**" location="/resources/"/>
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
 
