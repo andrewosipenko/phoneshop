@@ -5,13 +5,10 @@ import javax.validation.constraints.Digits;
 
 public class QuantityForm {
 
-    private final static String DECIMAL_MIN_VIOLATION_MESSAGE = "Quantity should be >1";
-    private final static String DIGITS_VIOLATION_MESSAGE = "Integer expected";
-
     private Long phoneId;
 
-    @DecimalMin(value = "1", message = DECIMAL_MIN_VIOLATION_MESSAGE)
-    @Digits(integer = 3, fraction = 0, message = DIGITS_VIOLATION_MESSAGE)
+    @DecimalMin(value = "1", message = "{quantityForm.quantity.positiveExpected}")
+    @Digits(integer = 3, fraction = 0, message = "{quantityForm.quantity.integerExpected}")
     private String quantity;
 
 
