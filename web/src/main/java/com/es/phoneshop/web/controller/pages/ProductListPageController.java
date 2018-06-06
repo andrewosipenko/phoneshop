@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.*;
 public class ProductListPageController {
 
     @Resource
-    private CartService cartService;
-
-    @Resource
     private PhoneService phoneService;
 
     private final static String DEFAULT_LIMIT = "10";
@@ -46,11 +43,5 @@ public class ProductListPageController {
         model.addAttribute("phonesAmount", phoneService.countSearchResult(search));
 
         return "productList";
-    }
-
-    @ModelAttribute
-    public void addCart(Model model){
-        model.addAttribute("cartSubTotal", cartService.getCartSubTotal());
-        model.addAttribute("cartQuantity", cartService.getProductsQuantity());
     }
 }

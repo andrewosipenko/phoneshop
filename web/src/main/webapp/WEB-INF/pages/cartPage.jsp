@@ -62,21 +62,22 @@
                     </td>
                     <td class="align-middle">
                       <div class="input-group">
-                        <form:input path="quantities[${cartEntry.phone.id}].phoneId"
-                                    value="${updateCartForm.quantities[cartEntry.phone.id].phoneId}"
+                        <form:input path="formData[${cartEntry.phone.id}].phoneId"
+                                    value="${updateCartForm.formData[cartEntry.phone.id].phoneId}"
                                     hidden="hidden"/>
-                        <form:input path="quantities[${cartEntry.phone.id}].quantity"
-                                           cssClass="form-control quantity-input ${not empty errors['quantities['.concat(cartEntry.phone.id).concat('].quantity')]?'is-invalid':''}"
-                                           value="${updateCartForm.quantities[cartEntry.phone.id].quantity}"/>
+                        <form:input path="formData[${cartEntry.phone.id}].quantity"
+                                    cssClass="form-control quantity-input"
+                                    cssErrorClass="form-control quantity-input is-invalid"
+                                    autocomplete="off"/>
                         <div class="invalid-tooltip">
-                          <c:forEach items="${errors['quantities['.concat(cartEntry.phone.id).concat('].quantity')]}" var="message"><p class="mb-0">${message}</p></c:forEach>
+                          <form:errors path="formData[${cartEntry.phone.id}].quantity"/>
                         </div>
                       </div>
                     </td>
                     <td class="align-middle">
                       <div class="btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-light ${updateCartForm.quantities[cartEntry.phone.id].toDelete? 'active':''}">
-                          <form:checkbox path="quantities[${cartEntry.phone.id}].toDelete" value="${updateCartForm.quantities[cartEntry.phone.id].toDelete}"/>Delete
+                        <label class="btn btn-light ${updateCartForm.formData[cartEntry.phone.id].toDelete? 'active':''}">
+                          <form:checkbox path="formData[${cartEntry.phone.id}].toDelete" value="${updateCartForm.formData[cartEntry.phone.id].toDelete}"/>Delete
                         </label>
                       </div>
                     </td>
