@@ -11,7 +11,7 @@ import java.util.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class HttpSessionCartServiceUnitText {
+public class HttpSessionCartServiceUnitTest {
 
     @Test
     public void getCartSubTotalTest(){
