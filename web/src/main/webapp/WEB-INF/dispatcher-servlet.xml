@@ -19,7 +19,7 @@
     <mvc:resources mapping="/webjars/**" location="/webjars/"/>
     <mvc:resources mapping="/resources/**" location="/resources/"/>
 
-    <mvc:annotation-driven validator="validator"/>
+    <mvc:annotation-driven validator="validator" ignore-default-model-on-redirect="true" />
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
         <property name="validationMessageSource" ref="messageSource"/>
     </bean>

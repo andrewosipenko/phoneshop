@@ -11,14 +11,14 @@
 
     <div class="mt-5 mr-5 ml-5">
       <nav class="navbar navbar-light bg-light justify-content-between">
-        <h4>Phone</h4>
+        <h4>Cart</h4>
       </nav>
 
       <div class="row justify-content-between mt-3 mb-3">
           <a class="btn btn-primary col-2" href="${pageContext.servletContext.contextPath}/productList">Back to product
             list</a>
 
-        <a class="btn btn-primary col-1" href="${pageContext.servletContext.contextPath}/productList">Order</a>
+        <a class="btn btn-primary col-1" href="${pageContext.servletContext.contextPath}/order">Order</a>
       </div>
 
       <c:choose>
@@ -87,7 +87,7 @@
 
               <div class="row justify-content-end mt-3 mb-3">
                 <input type="submit" class="btn btn-primary col-1" value="Update"/>
-                <a href="#" class="btn btn-primary col-1 ml-3">Order</a>
+                <a class="btn btn-primary col-1 ml-3" href="${pageContext.servletContext.contextPath}/order">Order</a>
               </div>
             </form:form>
 

@@ -30,6 +30,7 @@ public class StocksResultSetExtractor implements ResultSetExtractor<List<Stock>>
             stock.setPhone(phonesToMap.get(rs.getLong("phoneId")));
             stock.setReserved(rs.getInt("reserved"));
             stock.setStock(rs.getInt("stock"));
+            stocks.add(stock);
         }
 
         return stocks;
