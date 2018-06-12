@@ -9,7 +9,7 @@ import org.springframework.web.context.annotation.SessionScope;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -20,6 +20,10 @@ public class HttpSessionCartService implements CartService {
 
     @Resource
     private PhoneDao phoneDao;
+
+    @Resource
+    private PriceService priceService;
+
 
     @PostConstruct
     private void init(){
@@ -66,12 +70,14 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
+    public void removeEntries(List<Long> phoneIds) {
+        Map<Long, CartEntry> products = cart.getProducts();
+        phoneIds.forEach(products::remove);
+    }
+
+    @Override
     public BigDecimal getCartSubTotal() {
-        return cart.getProducts().values().stream()
-                .map(CartEntry::obtainCost)
-                .reduce(BigDecimal::add)
-                .orElse(BigDecimal.ZERO)
-                .setScale(2, RoundingMode.HALF_EVEN);
+        return priceService.obtainCartSubtotal(cart);
     }
 
     @Override

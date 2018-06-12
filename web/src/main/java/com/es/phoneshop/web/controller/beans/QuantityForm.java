@@ -1,25 +1,22 @@
 package com.es.phoneshop.web.controller.beans;
 
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
 
 public class QuantityForm {
 
-    private final static String DECIMAL_MIN_VIOLATION_MESSAGE = "Quantity should be >1";
-    private final static String DIGITS_VIOLATION_MESSAGE = "Integer expected";
-
     private Long phoneId;
 
-    @DecimalMin(value = "1", message = DECIMAL_MIN_VIOLATION_MESSAGE)
-    @Digits(integer = 3, fraction = 0, message = DIGITS_VIOLATION_MESSAGE)
-    private String quantity;
+    @DecimalMin(value = "1", message = "{quantityForm.quantity.positiveExpected}")
+    @NotNull(message = "{quantityForm.quantity.integerExpected}")
+    private Long quantity;
 
 
     public Long getPhoneId() {
         return phoneId;
     }
 
-    public String getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
@@ -27,7 +24,7 @@ public class QuantityForm {
         this.phoneId = phoneId;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 

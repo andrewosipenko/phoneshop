@@ -1,11 +1,16 @@
 package com.es.core.model.order;
 
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 public class Order
 {
     private Long id;
+    private UUID orderUUID;
+
+    @ValidStocks
     private List<OrderItem> orderItems;
     /**
      *  A sum of order item prices;
@@ -17,10 +22,19 @@ public class Order
      */
     private BigDecimal totalPrice;
 
+    @Size(min = 1, message = "{orderForm.valueRequired.firstName}")
     private String firstName;
+
+    @Size(min = 1, message = "{orderForm.valueRequired.lastName}")
     private String lastName;
+
+    @Size(min = 1, message = "{orderForm.valueRequired.address}")
     private String deliveryAddress;
+
+    @Size(min = 1, message = "{orderForm.valueRequired.phone}")
     private String contactPhoneNo;
+
+    private String additionalInfo;
 
     private OrderStatus status;
 
@@ -30,6 +44,14 @@ public class Order
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public UUID getUUID() {
+        return orderUUID;
+    }
+
+    public void setUUID(UUID uuid) {
+        this.orderUUID = uuid;
     }
 
     public List<OrderItem> getOrderItems() {
@@ -94,6 +116,14 @@ public class Order
 
     public void setContactPhoneNo(String contactPhoneNo) {
         this.contactPhoneNo = contactPhoneNo;
+    }
+
+    public String getAdditionalInfo() {
+        return additionalInfo;
+    }
+
+    public void setAdditionalInfo(String additionalInfo) {
+        this.additionalInfo = additionalInfo;
     }
 
     public OrderStatus getStatus() {

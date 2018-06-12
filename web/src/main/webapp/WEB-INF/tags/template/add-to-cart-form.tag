@@ -7,7 +7,7 @@
   <div class="input-group">
     <input type="number" hidden name="phoneId" value="${phoneId}">
     <input type="text" class="form-control quantity-input ${not empty errors? "is-invalid" : ""}"
-           name="quantity" value="${value}">
+           name="quantity" value="${value}" autocomplete="off">
     <div class="invalid-tooltip">
       <c:forEach items="${errors}" var="message"><p class="mb-0">${message}</p></c:forEach>
     </div>
