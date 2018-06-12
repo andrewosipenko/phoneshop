@@ -9,6 +9,7 @@ import org.springframework.web.context.annotation.SessionScope;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -66,6 +67,12 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void remove(Long phoneId) {
         cart.getProducts().remove(phoneId);
+    }
+
+    @Override
+    public void removeEntries(List<Long> phoneIds) {
+        Map<Long, CartEntry> products = cart.getProducts();
+        phoneIds.forEach(products::remove);
     }
 
     @Override

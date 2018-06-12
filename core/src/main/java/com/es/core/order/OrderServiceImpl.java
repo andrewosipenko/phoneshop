@@ -4,8 +4,8 @@ import com.es.core.cart.Cart;
 import com.es.core.cart.PriceService;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
+import com.es.core.model.order.OrderStatus;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.stock.Stock;
 import com.es.core.model.stock.StockDao;
 import org.springframework.stereotype.Service;
 
@@ -49,12 +49,11 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
-    private boolean isOutOfStock(OrderItem item, Stock stock){
-         return stock.getStock() - stock.getReserved() - item.getQuantity() <= 0;
-    }
-
-    private List<Phone> obtainPhones(Order order){
-        return order.getOrderItems().stream().map(OrderItem::getPhone).collect(Collectors.toList());
+    @Override
+    public void removeItems(Order order, List<OrderItem> itemsToDelete){
+        List<OrderItem> orderItems = order.getOrderItems();
+        itemsToDelete.forEach(orderItems::remove);
+        priceService.updateOrderPrice(order);
     }
 
     @Override
@@ -72,7 +71,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void placeOrder(Order order) throws OutOfStockException {
         order.setUUID(UUID.randomUUID());
+        order.setStatus(OrderStatus.NEW);
         orders.add(order);
+        stockDao.decreaseStocks(order);
     }
 
     @Override

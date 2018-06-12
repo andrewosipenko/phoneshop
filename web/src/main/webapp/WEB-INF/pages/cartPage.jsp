@@ -15,10 +15,11 @@
       </nav>
 
       <div class="row justify-content-between mt-3 mb-3">
-          <a class="btn btn-primary col-2" href="${pageContext.servletContext.contextPath}/productList">Back to product
-            list</a>
-
-        <a class="btn btn-primary col-1" href="${pageContext.servletContext.contextPath}/order">Order</a>
+        <a class="btn btn-primary" href="${pageContext.servletContext.contextPath}/productList">Back to product
+          list</a>
+        <c:if test="${not empty cart.products}">
+          <a class="btn btn-primary col-1" href="${pageContext.servletContext.contextPath}/order">Order</a>
+        </c:if>
       </div>
 
       <c:choose>
@@ -38,46 +39,46 @@
                   <td scope="col">Action</td>
                 </tr>
                 </thead>
-                <c:forEach var="cartEntry" items="${cart.products.values()}">
+                <c:forEach var="item" items="${cart.products.values()}">
                   <tr>
                     <td class="align-middle">
-                      <a href="${pageContext.servletContext.contextPath}/productDetails/${cartEntry.phone.id}">
-                        <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${cartEntry.phone.imageUrl}"
+                      <a href="${pageContext.servletContext.contextPath}/productDetails/${item.phone.id}">
+                        <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${item.phone.imageUrl}"
                              height="80">
                       </a>
                     </td>
-                    <td class="align-middle">${cartEntry.phone.brand}</td>
+                    <td class="align-middle">${item.phone.brand}</td>
                     <td class="align-middle">
-                      <a href="${pageContext.servletContext.contextPath}/productDetails/${cartEntry.phone.id}">${cartEntry.phone.model}</a>
+                      <a href="${pageContext.servletContext.contextPath}/productDetails/${item.phone.id}">${item.phone.model}</a>
                     </td>
                     <td class="align-middle">
-                      <template:colors colors="${cartEntry.phone.colors}"/>
+                      <template:colors colors="${item.phone.colors}"/>
                     </td>
-                    <td class="align-middle">${cartEntry.phone.displaySizeInches}"</td>
+                    <td class="align-middle">${item.phone.displaySizeInches}"</td>
                     <td class="align-middle">
                       <c:choose>
-                        <c:when test="${not empty cartEntry.phone.price}">$${cartEntry.phone.price}</c:when>
+                        <c:when test="${not empty item.phone.price}">$${item.phone.price}</c:when>
                         <c:otherwise>unknown</c:otherwise>
                       </c:choose>
                     </td>
                     <td class="align-middle">
                       <div class="input-group">
-                        <form:input path="formData[${cartEntry.phone.id}].phoneId"
-                                    value="${updateCartForm.formData[cartEntry.phone.id].phoneId}"
+                        <form:input path="formData[${item.phone.id}].phoneId"
+                                    value="${updateCartForm.formData[item.phone.id].phoneId}"
                                     hidden="hidden"/>
-                        <form:input path="formData[${cartEntry.phone.id}].quantity"
+                        <form:input path="formData[${item.phone.id}].quantity"
                                     cssClass="form-control quantity-input"
                                     cssErrorClass="form-control quantity-input is-invalid"
                                     autocomplete="off"/>
                         <div class="invalid-tooltip">
-                          <form:errors path="formData[${cartEntry.phone.id}].quantity"/>
+                          <form:errors path="formData[${item.phone.id}].quantity"/>
                         </div>
                       </div>
                     </td>
                     <td class="align-middle">
                       <div class="btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-light ${updateCartForm.formData[cartEntry.phone.id].toDelete? 'active':''}">
-                          <form:checkbox path="formData[${cartEntry.phone.id}].toDelete" value="${updateCartForm.formData[cartEntry.phone.id].toDelete}"/>Delete
+                        <label class="btn btn-light ${updateCartForm.formData[item.phone.id].toDelete? 'active':''}">
+                          <form:checkbox path="formData[${item.phone.id}].toDelete" value="${updateCartForm.formData[item.phone.id].toDelete}"/>Delete
                         </label>
                       </div>
                     </td>
