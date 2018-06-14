@@ -54,20 +54,21 @@ public class JdbcPhoneDao implements PhoneDao{
             "description=? " +
             "WHERE id=?";
 
+    private final static String WHERE_FILTER =
+            "WHERE phones.id=s.phoneId and s.stock-s.reserved>0 " +
+            "      and NOT phones.price IS NULL "+
+            "      and LOWER(phones.model) LIKE LOWER(?) ";
+
     private final static String SQL_COUNT_SEARCH_QUERY =
             "SELECT COUNT(*) " +
             "FROM phones, stocks s " +
-            "WHERE phones.id=s.phoneId and s.stock>0 " +
-            "      and NOT phones.price IS NULL "+
-            "      and LOWER(phones.model) LIKE LOWER(?) ";
+            WHERE_FILTER;
 
     private final static String SQL_PHONES_QUERY =
             "SELECT p.id, p.imageUrl, p.brand, p.model, c.code as colorCode, c.id as colorId, p.displaySizeInches, p.price " +
             "FROM (SELECT * " +
             "      FROM phones, stocks s " +
-            "      WHERE phones.id=s.phoneId and s.stock>0 " +
-            "            and NOT phones.price IS NULL " +
-            "            and LOWER(phones.model) LIKE LOWER(?) " +
+            WHERE_FILTER +
             "      ORDER BY %s " +
             "      LIMIT ? OFFSET ?) p " +
             "LEFT JOIN phone2color p2c ON p2c.phoneId = p.id " +

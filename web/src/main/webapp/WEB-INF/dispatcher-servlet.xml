@@ -16,6 +16,8 @@
         <property name="basename" value="WEB-INF/messages/validation"/>
     </bean>
 
+
+
     <mvc:resources mapping="/webjars/**" location="/webjars/"/>
     <mvc:resources mapping="/resources/**" location="/resources/"/>
 

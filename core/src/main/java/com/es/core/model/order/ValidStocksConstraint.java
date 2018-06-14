@@ -26,28 +26,27 @@ public class ValidStocksConstraint implements ConstraintValidator<ValidStocks, L
         Map<Phone, Stock> stocks = stockDao.getStocksForPhones(value.stream().map(OrderItem::getPhone).collect(Collectors.toList()));
 
         OrderItem item;
-        boolean isListValid = true;
-        boolean isValid;
+        boolean isValid = true;
         for(int i = 0 ; i < value.size(); i++){
             item = value.get(i);
-            isValid = isOutOfStock(i, item, stocks.get(item.getPhone()), context);
-            isListValid = isListValid && isValid;
+            if(isOutOfStock(item, stocks.get(item.getPhone()))) {
+                addConstraintViolation(i, context);
+                isValid = false;
+            }
         }
-        return isListValid;
+        return isValid;
     }
 
-    private boolean isOutOfStock(int index, OrderItem orderItem, Stock stock, ConstraintValidatorContext context){
-        boolean isValid = stock.getStock() - stock.getReserved() - orderItem.getQuantity() > 0;
+    private void addConstraintViolation(int index, ConstraintValidatorContext context){
+        context.buildConstraintViolationWithTemplate(message)
+                .addBeanNode()
+                    .inIterable()
+                    .atIndex(index)
+                .addConstraintViolation();
+    }
 
-        if(!isValid){
-            context.buildConstraintViolationWithTemplate(message)
-                    .addBeanNode()
-                        .inIterable()
-                        .atIndex(index)
-                    .addConstraintViolation();
-        }
-
-        return isValid;
+    private boolean isOutOfStock(OrderItem orderItem, Stock stock){
+        return stock.getStock() - stock.getReserved() - orderItem.getQuantity() < 0;
     }
 
 }

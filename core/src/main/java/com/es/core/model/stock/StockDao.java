@@ -10,5 +10,9 @@ public interface StockDao {
 
     Map<Phone, Stock> getStocksForPhones(List<Phone> phones);
 
-    void decreaseStocks(Order order);
+    void reserveStocks(Order order);
+
+    void applyReserved(Order order);
+
+    void rejectReserved(Order order);
 }

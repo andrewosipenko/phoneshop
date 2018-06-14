@@ -7,10 +7,11 @@
   <jsp:body>
     <template:header/>
     <div class="m-5">
-      <nav class="navbar navbar-light bg-light mb-3">
-        <h2>Thank you for your order</h2>
-        <h4>Order number: ${order.id}</h4>
-      </nav>
+      <template:nav pageName="Order number: ${order.id}">
+        <jsp:attribute name="content">
+          <span class="h4"><small class="text-success">Thank you for your order</small></span>
+        </jsp:attribute>
+      </template:nav>
 
       <order:order-table order="${order}"/>
 

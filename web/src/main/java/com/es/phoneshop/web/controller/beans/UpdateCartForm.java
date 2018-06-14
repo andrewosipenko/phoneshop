@@ -6,13 +6,13 @@ import java.util.Map;
 public class UpdateCartForm {
 
     @Valid
-    private Map<Long, CartFormData> formData;
+    private Map<Long, QuantityForm> formData;
 
-    public void setFormData(Map<Long, CartFormData> formData) {
+    public void setFormData(Map<Long, QuantityForm> formData) {
         this.formData = formData;
     }
 
-    public Map<Long, CartFormData> getFormData() {
+    public Map<Long, QuantityForm> getFormData() {
         return formData;
     }
 }

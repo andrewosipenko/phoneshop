@@ -9,10 +9,8 @@
   <jsp:body>
     <template:header cartQuantity="${cartQuantity}" cartSubTotal="${cartSubTotal}"/>
 
-    <div class="mt-5 mr-5 ml-5">
-      <nav class="navbar navbar-light bg-light justify-content-between">
-        <h4>Cart</h4>
-      </nav>
+    <div class="m-5">
+      <template:nav pageName="Cart"/>
 
       <div class="row justify-content-between mt-3 mb-3">
         <a class="btn btn-primary" href="${pageContext.servletContext.contextPath}/productList">Back to product
@@ -76,11 +74,7 @@
                       </div>
                     </td>
                     <td class="align-middle">
-                      <div class="btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-light ${updateCartForm.formData[item.phone.id].toDelete? 'active':''}">
-                          <form:checkbox path="formData[${item.phone.id}].toDelete" value="${updateCartForm.formData[item.phone.id].toDelete}"/>Delete
-                        </label>
-                      </div>
+                        <a href="<c:url value="/cart/delete?phoneId=${item.phone.id}"/>" class="btn btn-primary">Delete</a>
                     </td>
                   </tr>
                 </c:forEach>

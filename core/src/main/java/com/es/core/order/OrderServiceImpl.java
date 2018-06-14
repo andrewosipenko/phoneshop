@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,7 +60,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order createOrder(Cart cart) {
         Order order = new Order();
-        order.setId(lastId++);
         order.setOrderItems(generateOrderItemsList(cart, order));
         order.setSubtotal(priceService.obtainCartSubtotal(cart));
         order.setTotalPrice(priceService.obtainCartTotal(cart));
@@ -70,16 +70,30 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void placeOrder(Order order) throws OutOfStockException {
-        order.setUUID(UUID.randomUUID());
+        order.setId(lastId++);
+        order.setOrderUUID(UUID.randomUUID());
         order.setStatus(OrderStatus.NEW);
+        order.setOrderDate(Date.from(Instant.now()));
         orders.add(order);
-        stockDao.decreaseStocks(order);
+        stockDao.reserveStocks(order);
+    }
+
+    @Override
+    public void rejectOrder(Order order) {
+        stockDao.rejectReserved(order);
+        order.setStatus(OrderStatus.REJECTED);
+    }
+
+    @Override
+    public void deliverOrder(Order order) {
+        stockDao.applyReserved(order);
+        order.setStatus(OrderStatus.DELIVERED);
     }
 
     @Override
     public Order getOrderByUUID(UUID uuid){
         return orders.stream()
-                .filter((o)-> o.getUUID().equals(uuid))
+                .filter((o)-> o.getOrderUUID().equals(uuid))
                 .findFirst()
                 .orElseThrow(()->new IllegalArgumentException("Order doesn't exist"));
     }
@@ -92,4 +106,8 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(()->new IllegalArgumentException("Order doesn't exist"));
     }
 
+    @Override
+    public List<Order> getOrders() {
+        return orders;
+    }
 }

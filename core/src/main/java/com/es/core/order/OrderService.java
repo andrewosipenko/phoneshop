@@ -13,9 +13,15 @@ public interface OrderService {
 
     void placeOrder(Order order) throws OutOfStockException;
 
+    void rejectOrder(Order order);
+
+    void deliverOrder(Order order);
+
     Order getOrderById(Long id);
 
     Order getOrderByUUID(UUID uuid);
 
     void removeItems(Order order, List<OrderItem> items);
+
+    List<Order> getOrders();
 }
