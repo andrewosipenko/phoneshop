@@ -53,7 +53,7 @@ public class OrderPageController {
             return "orderPage";
         } else {
             orderService.placeOrder(order);
-            return "redirect:orderOverview/"+order.getUUID();
+            return "redirect:orderOverview/"+order.getOrderUUID();
         }
     }
 

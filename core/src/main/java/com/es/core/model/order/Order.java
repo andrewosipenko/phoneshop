@@ -2,6 +2,7 @@ package com.es.core.model.order;
 
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,6 +39,8 @@ public class Order
 
     private OrderStatus status;
 
+    private Date orderDate;
+
     public Long getId() {
         return id;
     }
@@ -46,11 +49,11 @@ public class Order
         this.id = id;
     }
 
-    public UUID getUUID() {
+    public UUID getOrderUUID() {
         return orderUUID;
     }
 
-    public void setUUID(UUID uuid) {
+    public void setOrderUUID(UUID uuid) {
         this.orderUUID = uuid;
     }
 
@@ -132,5 +135,13 @@ public class Order
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public Date getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
     }
 }

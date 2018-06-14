@@ -9,12 +9,10 @@
   <jsp:body>
     <template:header/>
 
-    <div class="mt-5 mr-5 ml-5">
-      <nav class="navbar navbar-light bg-light">
-        <h4>Order</h4>
-      </nav>
+    <div class="m-5">
+      <template:nav pageName="Order"/>
 
-      <div class="row mt-3 mb-3">
+      <div class="row mt-3">
         <a class="btn btn-primary col-2" href="${pageContext.servletContext.contextPath}/cart">Back to cart</a>
       </div>
 

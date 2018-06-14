@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -70,8 +71,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void placeOrder(Order order) throws OutOfStockException {
-        order.setUUID(UUID.randomUUID());
+        order.setOrderUUID(UUID.randomUUID());
         order.setStatus(OrderStatus.NEW);
+        order.setOrderDate(Date.from(Instant.now()));
         orders.add(order);
         stockDao.decreaseStocks(order);
     }
@@ -79,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order getOrderByUUID(UUID uuid){
         return orders.stream()
-                .filter((o)-> o.getUUID().equals(uuid))
+                .filter((o)-> o.getOrderUUID().equals(uuid))
                 .findFirst()
                 .orElseThrow(()->new IllegalArgumentException("Order doesn't exist"));
     }
@@ -92,4 +94,8 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(()->new IllegalArgumentException("Order doesn't exist"));
     }
 
+    @Override
+    public List<Order> getOrders() {
+        return orders;
+    }
 }

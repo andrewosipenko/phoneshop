@@ -11,15 +11,20 @@
   <jsp:body>
     <template:header cartQuantity="${cartQuantity}" cartSubTotal="${cartSubTotal}"/>
 
-    <div class="mt-5 mr-5 ml-5">
-      <nav class="navbar navbar-light bg-light justify-content-between">
-        <h4>Phone</h4>
-        <form class="form-inline mr-4 mt-3">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" value="${param['search']}">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-      </nav>
-      <p class="float-right">Found <c:out value="${phonesAmount}"/> phones</p>
+    <div class="m-5">
+      <template:nav pageName="Phones">
+        <jsp:attribute name="content">
+          <div>
+            <form class="form-inline mr-4 mt-3 mb-0">
+              <div class="form-group">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" aria-describedby="search-count" value="${param['search']}">
+                <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Search"/>
+              </div>
+            </form>
+            <small id="search-count" class="form-text text-muted">Found <c:out value="${phonesAmount}"/> phones</small>
+          </div>
+        </jsp:attribute>
+      </template:nav>
 
       <table class="table">
         <thead>

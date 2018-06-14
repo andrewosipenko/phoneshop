@@ -18,4 +18,6 @@ public interface OrderService {
     Order getOrderByUUID(UUID uuid);
 
     void removeItems(Order order, List<OrderItem> items);
+
+    List<Order> getOrders();
 }

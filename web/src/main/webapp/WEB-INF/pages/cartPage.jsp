@@ -9,10 +9,8 @@
   <jsp:body>
     <template:header cartQuantity="${cartQuantity}" cartSubTotal="${cartSubTotal}"/>
 
-    <div class="mt-5 mr-5 ml-5">
-      <nav class="navbar navbar-light bg-light justify-content-between">
-        <h4>Cart</h4>
-      </nav>
+    <div class="m-5">
+      <template:nav pageName="Cart"/>
 
       <div class="row justify-content-between mt-3 mb-3">
         <a class="btn btn-primary" href="${pageContext.servletContext.contextPath}/productList">Back to product
