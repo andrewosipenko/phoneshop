@@ -3,6 +3,7 @@
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/template/order" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <template:page>
   <template:header/>
@@ -43,6 +44,7 @@
       <a href="${pageContext.servletContext.contextPath}/admin/orders" class="btn btn-primary">Back</a>
       <c:if test="${order.status.isNew()}">
         <form action="${pageContext.servletContext.contextPath}/admin/orders/${order.id}" method="post" class="form-inline mb-0">
+          <sec:csrfInput/>
           <button name="status" value="DELIVERED" class="btn btn-success ml-2" type="submit">Delivered</button>
           <button name="status" value="REJECTED" class="btn btn-danger ml-2" type="submit">Rejected</button>
         </form>
