@@ -74,11 +74,7 @@
                       </div>
                     </td>
                     <td class="align-middle">
-                      <div class="btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-light ${updateCartForm.formData[item.phone.id].toDelete? 'active':''}">
-                          <form:checkbox path="formData[${item.phone.id}].toDelete" value="${updateCartForm.formData[item.phone.id].toDelete}"/>Delete
-                        </label>
-                      </div>
+                        <a href="<c:url value="/cart/delete?phoneId=${item.phone.id}"/>" class="btn btn-primary">Delete</a>
                     </td>
                   </tr>
                 </c:forEach>
