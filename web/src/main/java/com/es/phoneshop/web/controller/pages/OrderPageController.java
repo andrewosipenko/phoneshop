@@ -29,7 +29,7 @@ public class OrderPageController {
     private CartService cartService;
 
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String getOrder(Model model) throws OutOfStockException {
         Cart cart = cartService.getCart();
         if(cart.getProducts().isEmpty()){
@@ -41,13 +41,12 @@ public class OrderPageController {
         return "orderPage";
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public String placeOrder(
             @ModelAttribute @Valid Order order,
             BindingResult bindingResult) throws OutOfStockException {
-
         if(bindingResult.hasErrors()){
-            if(bindingResult.hasFieldErrors("orderItems")) {
+            if(bindingResult.hasFieldErrors("orderItems[*")) {
                 processOutOfStockErrors(order, bindingResult);
             }
             return "orderPage";

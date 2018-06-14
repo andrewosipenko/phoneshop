@@ -1,5 +1,7 @@
 package com.es.core.model.order;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -11,6 +13,7 @@ public class Order
     private Long id;
     private UUID orderUUID;
 
+    @NotEmpty(message = "order.empty")
     @ValidStocks
     private List<OrderItem> orderItems;
     /**

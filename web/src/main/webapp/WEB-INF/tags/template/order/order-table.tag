@@ -1,5 +1,6 @@
 <%@ tag pageEncoding="utf-8" trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="template" tagdir="/WEB-INF/tags/template" %>
 <%@ attribute name="errorBlock" fragment="true" %>
 <%@ attribute name="order" type="com.es.core.model.order.Order" %>
 
