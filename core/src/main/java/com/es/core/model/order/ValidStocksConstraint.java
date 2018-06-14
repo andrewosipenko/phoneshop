@@ -46,7 +46,7 @@ public class ValidStocksConstraint implements ConstraintValidator<ValidStocks, L
     }
 
     private boolean isOutOfStock(OrderItem orderItem, Stock stock){
-        return stock.getStock() - stock.getReserved() - orderItem.getQuantity() <= 0;
+        return stock.getStock() - stock.getReserved() - orderItem.getQuantity() < 0;
     }
 
 }

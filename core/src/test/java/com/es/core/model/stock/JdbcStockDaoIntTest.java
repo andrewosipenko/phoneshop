@@ -3,15 +3,12 @@ package com.es.core.model.stock;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.phone.Phone;
-import jdk.nashorn.api.scripting.ScriptUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -77,7 +74,7 @@ public class JdbcStockDaoIntTest {
 
         Order order = createMockOrder(phoneIds, quantities);
 
-        jdbcStockDao.decreaseStocks(order);
+        jdbcStockDao.reserveStocks(order);
 
         List<Phone> phones = order.getOrderItems().stream().map(OrderItem::getPhone).collect(Collectors.toList());
         Map<Phone, Stock> stocks = jdbcStockDao.getStocksForPhones(phones);

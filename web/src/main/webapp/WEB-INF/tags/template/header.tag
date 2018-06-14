@@ -5,7 +5,7 @@
 
 <nav class="navbar navbar-dark bg-dark pr-5 pl-5 pd-5">
   <div>
-    <a class="navbar-brand" href="#"><h2>Phoneshop</h2></a>
+    <a class="navbar-brand" href="<c:url value="/"/>"><h2>Phoneshop</h2></a>
   </div>
   <div>
     <div class="text-right mb-1">

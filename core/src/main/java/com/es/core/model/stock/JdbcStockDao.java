@@ -18,10 +18,20 @@ public class JdbcStockDao implements StockDao {
     @Resource
     private JdbcTemplate jdbcTemplate;
 
-    private final String SQL_STOCKS_QUERY = "SELECT * FROM stocks WHERE stocks.phoneId IN (%s)";
+    
+    private final static String SQL_STOCKS_QUERY = "SELECT * FROM stocks WHERE stocks.phoneId IN (%s)";
 
-    private final String SQL_DECREASE_STOCK_QUERY = "UPDATE stocks SET stocks.stock = stocks.stock-? WHERE stocks.phoneId = ?";
+    private final static String SQL_CHANGE_STOCK_RESERVED =
+            "UPDATE stocks " + 
+            "SET stocks.reserved = stocks.reserved+? " +
+            "WHERE stocks.phoneId = ?";
 
+    private final static String SQL_APPLY_RESERVE =
+            "UPDATE stocks " +
+            "SET stocks.stock = stocks.stock - ?, stocks.reserved = stocks.reserved - ? " +
+            "WHERE stocks.phoneId = ?";
+
+    
     private List<Stock> queryStocks(List<Phone> phones){
         String inParameter = String.join(
                 ", ",
@@ -33,14 +43,9 @@ public class JdbcStockDao implements StockDao {
         );
     }
 
-    private int[] updateStock(List<Object[]> batchArgs){
-        return jdbcTemplate.batchUpdate(SQL_DECREASE_STOCK_QUERY, batchArgs);
-    }
-
-
-    private List<Object[]> obtainBatchArgs(List<OrderItem> items){
-        return items.stream()
-                .map((item)->new Object[]{item.getQuantity(), item.getPhone().getId()})
+    private List<Object[]> obtainBatchArgs(Order order, BatchArgsFormatter formatter){
+        return order.getOrderItems().stream()
+                .map(formatter::format)
                 .collect(Collectors.toList());
     }
 
@@ -52,7 +57,50 @@ public class JdbcStockDao implements StockDao {
     }
 
     @Override
-    public void decreaseStocks(Order order) {
-        updateStock(obtainBatchArgs(order.getOrderItems()));
+    public void reserveStocks(Order order) {
+        jdbcTemplate.batchUpdate(
+                SQL_CHANGE_STOCK_RESERVED,
+                obtainBatchArgs(order, BatchArgsFormatter.RESERVE)
+        );
+    }
+
+    @Override
+    public void rejectReserved(Order order) {
+        jdbcTemplate.batchUpdate(
+                SQL_CHANGE_STOCK_RESERVED,
+                obtainBatchArgs(order, BatchArgsFormatter.REJECT)
+        );
+    }
+
+    @Override
+    public void applyReserved(Order order) {
+        jdbcTemplate.batchUpdate(
+                SQL_APPLY_RESERVE,
+                obtainBatchArgs(order, BatchArgsFormatter.APPLY)
+        );
+    }
+
+
+    private enum BatchArgsFormatter{
+        RESERVE{
+            @Override
+            Object[] format(OrderItem item) {
+                return new Object[]{item.getQuantity(), item.getPhone().getId()};
+            }
+        },
+        APPLY{
+            @Override
+            Object[] format(OrderItem item) {
+                return new Object[]{item.getQuantity(), item.getQuantity(), item.getPhone().getId()};
+            }
+        },
+        REJECT{
+            @Override
+            Object[] format(OrderItem item) {
+                return new Object[]{-item.getQuantity(), item.getPhone().getId()};
+            }
+        };
+
+        abstract Object[] format(OrderItem item);
     }
 }

@@ -29,7 +29,12 @@ public class OrdersPageController {
 
     @PostMapping("/{orderId}")
     public String setStatus(@PathVariable Long orderId, @RequestParam OrderStatus status){
-        orderService.getOrderById(orderId).setStatus(status);
+        if(status == OrderStatus.REJECTED){
+            orderService.rejectOrder(orderService.getOrderById(orderId));
+        }
+        if(status == OrderStatus.DELIVERED){
+            orderService.deliverOrder(orderService.getOrderById(orderId));
+        }
         return "redirect:"+String.valueOf(orderId);
     }
 }
