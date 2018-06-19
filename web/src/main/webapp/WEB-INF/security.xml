@@ -8,13 +8,17 @@
                            http://www.springframework.org/schema/security/spring-security.xsd">
 
   <http>
-    <intercept-url pattern="/admin/*" access="hasRole('ROLE_ADMIN')"/>
-    <form-login/>
+    <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
+    <form-login  authentication-success-handler-ref="authSuccessHandler"/>
     <logout logout-url="/logout" logout-success-url="/"/>
+    <custom-filter ref="refererSavingFilter" after="EXCEPTION_TRANSLATION_FILTER"/>
   </http>
 
   <user-service>
     <user name="admin" password="{noop}admin" authorities="ROLE_ADMIN"/>
   </user-service>
+
+  <b:bean id="refererSavingFilter" class="com.es.phoneshop.web.controller.filters.RefererSavingFilter"/>
+  <b:bean id="authSuccessHandler" class="com.es.phoneshop.web.controller.filters.RedirectAwareAuthenticationSuccessHandler"/>
 
 </b:beans>
