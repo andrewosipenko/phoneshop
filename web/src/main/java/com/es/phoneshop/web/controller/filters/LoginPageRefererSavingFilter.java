@@ -1,7 +1,5 @@
 package com.es.phoneshop.web.controller.filters;
 
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -13,30 +11,31 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-public class RefererSavingFilter extends GenericFilterBean {
+public class LoginPageRefererSavingFilter extends GenericFilterBean {
 
-    public final static String REFERER_URL_KEY = "RefererSavingFilter.referer";
+    public final static String REFERER_URL_KEY = "LoginPageRefererSavingFilter.referer";
 
-    private RequestCache requestCache = new HttpSessionRequestCache();
+    private String loginUrl = "/login";
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse res = (HttpServletResponse) servletResponse;
 
-        if(requestCache.getRequest(req, res) == null){
-            saveReferer(req);
+        String referer = req.getHeader("Referer");
+        if(referer != null && !isLoginPageUrl(referer)){
+            HttpSession session = req.getSession();
+                session.setAttribute(REFERER_URL_KEY, referer);
         }
+
         filterChain.doFilter(req, res);
     }
 
-    private void saveReferer(HttpServletRequest req){
-        String referer = req.getHeader("Referer");
-        if(referer != null){
-            HttpSession session = req.getSession();
-            if(session != null){
-                session.setAttribute(REFERER_URL_KEY, referer);
-            }
-        }
+    private boolean isLoginPageUrl(String referer){
+        return referer.split("\\?")[0].contains(getServletContext().getContextPath()+loginUrl);
+    }
+
+    public void setLoginUrl(String loginUrl) {
+        this.loginUrl = loginUrl;
     }
 }
