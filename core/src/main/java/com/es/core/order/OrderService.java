@@ -11,7 +11,7 @@ public interface OrderService {
 
     Order createOrder(Cart cart);
 
-    void placeOrder(Order order) throws OutOfStockException;
+    void placeOrder(Order order);
 
     void rejectOrder(Order order);
 

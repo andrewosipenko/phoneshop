@@ -28,7 +28,7 @@
             <td>${order.firstName} ${order.lastName}</td>
             <td>${order.contactPhoneNo}</td>
             <td>${order.deliveryAddress}</td>
-            <td>${order.orderDate}</td>
+            <td>${order.placementDate}</td>
             <td>${order.totalPrice}$</td>
             <td><span class="badge badge-info">${order.status}</span></td>
           </tr>
