@@ -42,7 +42,7 @@ public class Order
 
     private OrderStatus status;
 
-    private Date orderDate;
+    private Date placementDate;
 
     public Long getId() {
         return id;
@@ -140,11 +140,11 @@ public class Order
         this.status = status;
     }
 
-    public Date getOrderDate() {
-        return orderDate;
+    public Date getPlacementDate() {
+        return placementDate;
     }
 
-    public void setOrderDate(Date orderDate) {
-        this.orderDate = orderDate;
+    public void setPlacementDate(Date placementDate) {
+        this.placementDate = placementDate;
     }
 }

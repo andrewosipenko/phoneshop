@@ -30,7 +30,7 @@ public class OrderPageController {
 
 
     @GetMapping
-    public String getOrder(Model model) throws OutOfStockException {
+    public String getOrder(Model model){
         Cart cart = cartService.getCart();
         if(cart.getProducts().isEmpty()){
             return "redirect:cart";
@@ -44,7 +44,7 @@ public class OrderPageController {
     @PostMapping
     public String placeOrder(
             @ModelAttribute @Valid Order order,
-            BindingResult bindingResult) throws OutOfStockException {
+            BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             if(bindingResult.hasFieldErrors("orderItems[*")) {
                 processOutOfStockErrors(order, bindingResult);

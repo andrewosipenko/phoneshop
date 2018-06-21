@@ -8,6 +8,7 @@ import com.es.core.model.order.OrderStatus;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.stock.StockDao;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -22,18 +23,11 @@ public class OrderServiceImpl implements OrderService {
     private StockDao stockDao;
 
     @Resource
+    private OrderDao orderDao;
+
+    @Resource
     private PriceService priceService;
 
-    private List<Order> orders;
-
-    private Long lastId;
-
-
-    @PostConstruct
-    public void init(){
-        orders = new LinkedList<>();
-        lastId = (long) orders.size();
-    }
 
     private OrderItem createOrderItem(Order order, Phone phone, Long quantity){
         OrderItem orderItem = new OrderItem();
@@ -69,45 +63,41 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void placeOrder(Order order) throws OutOfStockException {
-        order.setId(lastId++);
+    @Transactional
+    public void placeOrder(Order order){
         order.setOrderUUID(UUID.randomUUID());
         order.setStatus(OrderStatus.NEW);
-        order.setOrderDate(Date.from(Instant.now()));
-        orders.add(order);
+        order.setPlacementDate(Date.from(Instant.now()));
+        orderDao.placeOrder(order);
         stockDao.reserveStocks(order);
     }
 
     @Override
+    @Transactional
     public void rejectOrder(Order order) {
         stockDao.rejectReserved(order);
-        order.setStatus(OrderStatus.REJECTED);
+        orderDao.rejectOrder(order);
     }
 
     @Override
+    @Transactional
     public void deliverOrder(Order order) {
         stockDao.applyReserved(order);
-        order.setStatus(OrderStatus.DELIVERED);
+        orderDao.deliverOrder(order);
     }
 
     @Override
     public Order getOrderByUUID(UUID uuid){
-        return orders.stream()
-                .filter((o)-> o.getOrderUUID().equals(uuid))
-                .findFirst()
-                .orElseThrow(()->new IllegalArgumentException("Order doesn't exist"));
+        return orderDao.getOrderByUUID(uuid).orElseThrow(()->new IllegalArgumentException("Order not found"));
     }
 
     @Override
     public Order getOrderById(Long id){
-        return orders.stream()
-                .filter((o)-> o.getId().equals(id))
-                .findFirst()
-                .orElseThrow(()->new IllegalArgumentException("Order doesn't exist"));
+        return orderDao.getOrderById(id).orElseThrow(()->new IllegalArgumentException("Order not found"));
     }
 
     @Override
     public List<Order> getOrders() {
-        return orders;
+        return orderDao.getOrders();
     }
 }
