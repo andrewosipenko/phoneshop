@@ -12,4 +12,19 @@
         <property name="suffix" value=".jsp" />
     </bean>
 
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource" >
+        <property name="basename" value="WEB-INF/messages/validation"/>
+    </bean>
+
+
+
+    <mvc:resources mapping="/webjars/**" location="/webjars/"/>
+    <mvc:resources mapping="/resources/**" location="/resources/"/>
+
+    <mvc:annotation-driven validator="validator" ignore-default-model-on-redirect="true" />
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="validationMessageSource" ref="messageSource"/>
+    </bean>
+
+
 </beans>

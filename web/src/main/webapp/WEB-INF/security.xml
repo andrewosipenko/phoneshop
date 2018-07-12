@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns:="http://www.springframework.org/schema/security"
+         xmlns:b="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/security
+                           http://www.springframework.org/schema/security/spring-security.xsd">
+
+  <http pattern="/login">
+    <custom-filter ref="refererSavingFilter" before="LOGIN_PAGE_FILTER"/>
+    <form-login authentication-success-handler-ref="authSuccessHandler"/>
+  </http>
+
+  <http>
+    <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
+    <form-login/>
+    <logout logout-url="/logout" success-handler-ref="logoutSuccessHandler"/>
+  </http>
+
+  <user-service>
+    <user name="admin" password="{noop}admin" authorities="ROLE_ADMIN"/>
+  </user-service>
+
+  <b:bean id="refererSavingFilter" class="com.es.phoneshop.web.controller.filters.LoginPageRefererSavingFilter"/>
+  <b:bean id="authSuccessHandler" class="com.es.phoneshop.web.controller.filters.RedirectAwareAuthenticationSuccessHandler"/>
+  <b:bean id="logoutSuccessHandler" class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
+    <b:property name="useReferer" value="true"/>
+  </b:bean>
+
+</b:beans>

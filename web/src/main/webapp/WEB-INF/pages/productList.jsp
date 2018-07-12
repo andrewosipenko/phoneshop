@@ -1,29 +1,82 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="template" tagdir="/WEB-INF/tags/template" %>
+<%@ taglib prefix="specific" tagdir="/WEB-INF/tags/template/productList" %>
+<template:page>
+  <jsp:attribute name="scripts">
+    <script src="<c:url value="/resources/js/jquery.twbsPagination.min.js"/>"></script>
+    <script src="<c:url value="/resources/js/productList.js"/>"></script>
+    <script src="<c:url value="/resources/js/addToCartForm.js"/>"></script>
+  </jsp:attribute>
+  <jsp:body>
+    <template:header cartQuantity="${cartQuantity}" cartSubTotal="${cartSubTotal}"/>
 
-<p>
-  Hello from product list!
-</p>
-<p>
-  Found <c:out value="${phones.size()}"/> phones.
-  <table border="1px">
-    <thead>
-      <tr>
-        <td>Image</td>
-        <td>Brand</td>
-        <td>Model</td>
-        <td>Price</td>
-      </tr>
-    </thead>
-    <c:forEach var="phone" items="${phones}">
-      <tr>
-        <td>
-          <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
-        </td>
-        <td>${phone.brand}</td>
-        <td>${phone.model}</td>
-        <td>$ ${phone.price}</td>
-      </tr>
-    </c:forEach>
-  </table>
-</p>
+    <div class="m-5">
+      <template:nav pageName="Phones">
+        <jsp:attribute name="content">
+          <div>
+            <form class="form-inline mr-4 mt-3 mb-0">
+              <div class="form-group">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" aria-describedby="search-count" value="${param['search']}">
+                <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Search"/>
+              </div>
+            </form>
+            <small id="search-count" class="form-text text-muted">Found <c:out value="${phonesAmount}"/> phones</small>
+          </div>
+        </jsp:attribute>
+      </template:nav>
+
+      <table class="table">
+        <thead>
+        <tr>
+          <td scope="col">Image</td>
+          <td scope="col">Brand <specific:sorter sortBy="brand"/></td>
+          <td scope="col">Model <specific:sorter sortBy="model"/></td>
+          <td scope="col">Color</td>
+          <td scope="col">Display size <specific:sorter sortBy="display"/></td>
+          <td scope="col">Price <specific:sorter sortBy="price"/></td>
+          <td scope="col">Quantity</td>
+          <td scope="col">Action</td>
+        </tr>
+        </thead>
+        <c:forEach var="phone" items="${phones}">
+          <tr>
+            <td class="align-middle">
+              <a href="${pageContext.servletContext.contextPath}/productDetails/${phone.id}">
+                <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}"
+                     height="80">
+              </a>
+            </td>
+            <td class="align-middle">${phone.brand}</td>
+            <td class="align-middle">
+              <a href="${pageContext.servletContext.contextPath}/productDetails/${phone.id}">${phone.model}</a>
+            </td>
+            <td class="align-middle">
+              <template:colors colors="${phone.colors}"/>
+            </td>
+            <td class="align-middle">${phone.displaySizeInches}"</td>
+            <td class="align-middle">
+              <c:choose>
+              <c:when test="${not empty phone.price}">$${phone.price}</c:when>
+              <c:otherwise>unknown</c:otherwise>
+              </c:choose>
+            </td>
+            <td class="align-middle">
+              <template:add-to-cart-form phoneId="${phone.id}" value="1"/>
+            </td>
+            <td class="align-middle">
+              <button class="add-to-cart-btn btn btn-primary" data-id="${phone.id}">Add to</button>
+            </td>
+          </tr>
+        </c:forEach>
+      </table>
+      <nav class="float-right" id="pagination"
+           data-amount="${phonesAmount}"
+           data-page="${not empty param['page'] ? param['page'] : 1}"
+           data-limit="${param['limit']}"
+           data-sortby="${param['sortBy']}"
+           data-search="${param['search']}">
+      </nav>
+    </div>
+  </jsp:body>
+</template:page>
