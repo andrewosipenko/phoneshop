@@ -1,8 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
+    <mvc:annotation-driven conversion-service="conversionService" validator="validator" />
+    <context:component-scan base-package="com.es.phoneshop.web.controller"/>
+    <context:property-placeholder location="WEB-INF/conf/application.properties" ignore-unresolvable="true"/>
+    <context:property-placeholder location="WEB-INF/conf/validation.properties" ignore-unresolvable="true"/>
     <import resource="classpath:context/applicationContext-core.xml"/>
-    <import resource="classpath:context/applicationContext-demoda.xml"/>
+    <import resource="classpath:context/applicationContext-demodata.xml"/>
+    <import resource="security/security.xml"/>
+
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <list merge="true">
+                <bean class="com.es.phoneshop.web.controller.util.StringToSortByConverter"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="WEB-INF/conf/validation"/>
+    </bean>
+
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="validationMessageSource" ref="messageSource"/>
+    </bean>
+
+    <bean id="webSecurityExpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
 </beans>

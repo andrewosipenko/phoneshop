@@ -25,6 +25,8 @@ target
 # Intellij Idea
 .idea
 *.iml
+.css
+.img
 
 # Eclipse
 *.classpath
