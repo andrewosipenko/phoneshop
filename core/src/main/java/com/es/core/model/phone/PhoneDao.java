@@ -7,4 +7,5 @@ public interface PhoneDao {
     Optional<Phone> get(Long key);
     void save(Phone phone);
     List<Phone> findAll(int offset, int limit);
+    List<Color> getPhoneColors(Long key);
 }

@@ -13,6 +13,7 @@
         <td>Brand</td>
         <td>Model</td>
         <td>Price</td>
+        <td></td>
       </tr>
     </thead>
     <c:forEach var="phone" items="${phones}">
@@ -23,6 +24,11 @@
         <td>${phone.brand}</td>
         <td>${phone.model}</td>
         <td>$ ${phone.price}</td>
+        <td>
+        <form action = "productDetails/${phone.id}" method="GET">
+        <input type = "submit" value = "Details"/>
+        </form>
+        </td>
       </tr>
     </c:forEach>
   </table>
