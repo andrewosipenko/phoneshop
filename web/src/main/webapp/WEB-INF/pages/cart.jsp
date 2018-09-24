@@ -6,7 +6,7 @@
 <html>
 <head>
   <title>My cart</title>
-  <%@ include file = "header.jsp" %>
+  <jsp:include page="header.jsp"/>
 </head>
 <body>
 <h2>Cart</h2>

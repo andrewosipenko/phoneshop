@@ -5,7 +5,7 @@
 <html>
   <head>
     <title>${phone.model}</title>
-    <%@ include file = "header.jsp" %>
+    <jsp:include page="header.jsp"/>
     <style>
     table, th, td {
         border: 1px solid black;

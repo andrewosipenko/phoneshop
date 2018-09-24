@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
   <title>Phone shop</title>
-  <%@ include file = "header.jsp" %>
+  <jsp:include page="header.jsp"/>
 </head>
 <body>
   <c:choose>

@@ -1,11 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page session="true"%>
 
 <html>
 <head>
   <title>Orders</title>
-  <%@ include file = "header.jsp" %>
+  <jsp:include page="header.jsp"/>
 </head>
 <body>
 <h2>Admin page</h2>

@@ -1,10 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <html>
 <head>
   <title>Order ${order.id}</title>
-  <%@ include file = "header.jsp" %>
+  <jsp:include page="header.jsp"/>
 </head>
 <body>
 <h3>Order number: <c:out value="${order.id}"/></h3>
@@ -61,11 +62,11 @@ Additional information: <c:out value="${order.additionalInfo}"/>
 <input type="submit" value="Back"/>
 </form>
 <form action="${contextUrl}admin/orders/${order.id}?setStatus=2" method="post" style="display:inline">
-<input type="hidden"  name="${_csrf.parameterName}"   value="${_csrf.token}"/>
+<sec:csrfInput/>
 <input type="submit" value="Delivered"/>
 </form>
 <form action="${contextUrl}admin/orders/${order.id}?setStatus=3" method="post" style="display:inline">
-<input type="hidden"  name="${_csrf.parameterName}"   value="${_csrf.token}"/>
+<sec:csrfInput/>
 <input type="submit" value="Rejected"/>
 </form>
 </body>
