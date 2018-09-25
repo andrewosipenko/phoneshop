@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
-<html lang="en">
+<html>
 <head>
   <title>Phone shop</title>
   <jsp:include page="header.jsp"/>
@@ -21,7 +21,7 @@
     <input type = "text" name = "search"/>
     <input type = "submit" value = "Search!" />
   </form>
-  <table border="1px">
+  <table border="1px" class="table">
     <thead>
       <tr>
         <td>Image</td>

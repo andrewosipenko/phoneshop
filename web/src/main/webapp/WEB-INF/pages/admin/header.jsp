@@ -3,8 +3,8 @@
 
 <meta charset="utf-8">
 <sec:csrfMetaTags />
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <c:url var="contextUrl" value = "/" scope="request"/>
 <c:url value="/j_spring_security_logout" var="logoutUrl" />
 <div style="display:inline"> ${pageContext.request.userPrincipal.name} | </div>

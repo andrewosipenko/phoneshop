@@ -13,7 +13,7 @@
 <p>
   <a href="${contextUrl}productList"> Back to product list</a>
 </p>
-<table border="1px">
+<table class="table" border="1px">
     <thead>
       <tr>
         <td>Brand</td>

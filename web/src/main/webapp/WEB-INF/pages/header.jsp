@@ -5,8 +5,8 @@
  <sec:csrfMetaTags />
  <c:url var="contextUrl" value = "/" scope="request"/>
  <c:url value="/j_spring_security_logout" var="logoutUrl" />
- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
  <script>var ctx = "${contextUrl}"</script>
  <script language="javascript" type="text/javascript" src="<c:url value="/resources/js/submitForm.js" />"></script>
