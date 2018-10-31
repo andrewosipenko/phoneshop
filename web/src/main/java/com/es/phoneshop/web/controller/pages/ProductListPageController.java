@@ -12,7 +12,7 @@ import com.es.core.model.phone.PhoneDao;
 @Controller
 @RequestMapping (value = "/productList")
 public class ProductListPageController {
-    @Resource
+    @Resource(name = "JDBCProductDao")
     private PhoneDao phoneDao;
 
     @RequestMapping(method = RequestMethod.GET)
