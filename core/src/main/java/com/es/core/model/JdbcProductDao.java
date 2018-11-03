@@ -14,20 +14,20 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Repository("JDBCProductDao")
-public class JDBCProductDao implements PhoneDao, InitializingBean {
+@Repository("JdbcProductDao")
+public class JdbcProductDao implements PhoneDao, InitializingBean {
     @Resource
-    private JdbcTemplate phone2colorJdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
     private Map<Long, Color> colors;
 
     @Override
     public void afterPropertiesSet() {
-        colors = phone2colorJdbcTemplate.query("select * from colors", new BeanPropertyRowMapper<>(Color.class)).stream()
+        colors = jdbcTemplate.query("select * from colors", new BeanPropertyRowMapper<>(Color.class)).stream()
                 .collect(Collectors.toMap((c) -> (c).getId(), (c) -> c));
     }
 
     public Optional<Phone> get(final Long key) {
-        Optional<Phone> phone = Optional.ofNullable(phone2colorJdbcTemplate.queryForObject("select * from phones where phones.id"+key, new BeanPropertyRowMapper<>(Phone.class)));
+        Optional<Phone> phone = Optional.ofNullable(jdbcTemplate.queryForObject("select * from phones where phones.id="+key, new BeanPropertyRowMapper<>(Phone.class)));
         if (phone.isPresent()) {
             setColorsForPhone(phone.get());
         }
@@ -41,10 +41,10 @@ public class JDBCProductDao implements PhoneDao, InitializingBean {
                     .map((s) -> s != null ? "String Date Long".contains(s.getClass().getSimpleName()) ? "'" + s + "', " : s + ", " : s + ", ")
                     .collect(Collectors.joining())
                     .concat(phone.getDescription() + ");");
-            phone2colorJdbcTemplate.execute(sqlInsertion);
+            jdbcTemplate.execute(sqlInsertion);
             if (!phone.getColors().equals(Collections.EMPTY_SET)) {
                 for (Color color : phone.getColors()) {
-                    phone2colorJdbcTemplate.update("insert into phone2color values (?,?)", phone.getId(), color.getId());
+                    jdbcTemplate.update("insert into phone2color values (?,?)", phone.getId(), color.getId());
                 }
             }
         } else {
@@ -53,7 +53,7 @@ public class JDBCProductDao implements PhoneDao, InitializingBean {
     }
 
     public List<Phone> findAll(int offset, int limit) {
-        List<Phone> phones = phone2colorJdbcTemplate.query("select * from phones offset " + offset + " limit " + limit, new BeanPropertyRowMapper<>(Phone.class));
+        List<Phone> phones = jdbcTemplate.query("select * from phones offset " + offset + " limit " + limit, new BeanPropertyRowMapper<>(Phone.class));
         for (Phone phone : phones) {
             setColorsForPhone(phone);
         }
@@ -61,12 +61,12 @@ public class JDBCProductDao implements PhoneDao, InitializingBean {
     }
 
     public void delete(final Long key) {
-        phone2colorJdbcTemplate.update("delete from phones where id = ?", key);
+        jdbcTemplate.update("delete from phones where id = ?", key);
     }
 
     private void setColorsForPhone(Phone phone) {
         phone.setColors(new HashSet<>());
-        phone2colorJdbcTemplate.query("select * from phone2color where phone2color.phoneId = "+phone.getId(), new RowCallbackHandler() {
+        jdbcTemplate.query("select * from phone2color where phone2color.phoneId = "+phone.getId(), new RowCallbackHandler() {
             @Override
             public void processRow(ResultSet resultSet) throws SQLException {
                 phone.getColors().add(colors.get(resultSet.getLong("colorId")));
