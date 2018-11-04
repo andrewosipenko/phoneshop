@@ -4,6 +4,7 @@ import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;
 import org.junit.*;
 import org.junit.runner.RunWith;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.*;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -45,7 +46,6 @@ public class JdbcProductDaoIntTest {
         jdbcTemplate.update("insert into phone2color values (?,?)", phone.getId(), black.getId());
         jdbcTemplate.update("insert into phone2color values (?,?)", phone.getId(), white.getId());
         productDao.afterPropertiesSet();
-        System.out.println("Initializing is complete");
     }
 
     @After
@@ -76,6 +76,59 @@ public class JdbcProductDaoIntTest {
         jdbcTemplate.update("insert into phones (id, brand, model) values (?, ?, ?)", phone2.getId(), phone2.getBrand(), phone2.getModel());
         List<Phone> phones = productDao.findAll(0,2);
         Assert.assertTrue(phones.size()==2 && phone2.getBrand().equals(phones.get(0).getBrand()));
+    }
+
+    @Test
+    public void testSave() {
+        Phone phone2 = new Phone();
+        phone2.setId(998L);
+        phone2.setBrand("TestBrandSave");
+        phone2.setModel("testModelSave");
+        productDao.save(phone2);
+        Assert.assertEquals(jdbcTemplate.queryForObject("select * from phones where id="+phone2.getId(), new BeanPropertyRowMapper<>(Phone.class)).getBrand(),phone2.getBrand());
+    }
+
+    @Test
+    public void testSaveWithWrongExpect() {
+        Phone phone2 = new Phone();
+        phone2.setId(998L);
+        phone2.setBrand("TestBrandSave");
+        phone2.setModel("testModelSave");
+        productDao.save(phone2);
+        Assert.assertNotEquals(jdbcTemplate.queryForObject("select * from phones where id="+phone2.getId(), new BeanPropertyRowMapper<>(Phone.class)).getBrand(),"WrongBrand");
+    }
+
+    @Test
+    public void testRewriteSave() {
+        Phone phone2 = new Phone();
+        phone2.setId(phone.getId());
+        phone2.setBrand("TestBrandSave");
+        phone2.setModel("testModelSave");
+        productDao.save(phone2);
+        List<Phone> phones = jdbcTemplate.query("select * from phones", new BeanPropertyRowMapper<>(Phone.class));
+        Assert.assertTrue(phones.size()==1 && phones.get(0).getBrand().equals(phone2.getBrand()));
+    }
+
+    @Test
+    public void testSaveWithoutId() {
+        Phone phone2 = new Phone();
+        phone2.setBrand("TestBrandSave");
+        phone2.setModel("testModelSave");
+        productDao.save(phone2);
+        List<Phone> phones = jdbcTemplate.query("select * from phones", new BeanPropertyRowMapper<>(Phone.class));
+        Assert.assertTrue(phones.size()==2 && phones.get(1).getBrand().equals(phone2.getBrand()));
+    }
+
+    @Test
+    public void testDelete() {
+        Phone phone2 = new Phone();
+        phone2.setId(998L);
+        phone2.setBrand("TestBrandDelete");
+        phone2.setModel("testModelDelete");
+        productDao.delete(phone.getId());
+        jdbcTemplate.update("insert into phones (id, brand, model) values (?, ?, ?)", phone2.getId(), phone2.getBrand(), phone2.getModel());
+        List<Phone> phones = jdbcTemplate.query("select * from phones", new BeanPropertyRowMapper<>(Phone.class));
+        Assert.assertTrue(phones.size()==1 && phones.get(0).getBrand().equals(phone2.getBrand()));
     }
 
     public static void setInternalState(Object c, String field, Object value) {

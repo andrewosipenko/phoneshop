@@ -35,20 +35,27 @@ public class JdbcProductDao implements PhoneDao, InitializingBean {
     }
 
     public void save(final Phone phone) {
-        if (phone.getId() != null) {
-            delete(phone.getId());
-            String sqlInsertion = "insert into phones values (" + Stream.of(phone.getId(), phone.getBrand(), phone.getModel(), phone.getPrice(), phone.getDisplaySizeInches(), phone.getWeightGr(), phone.getLengthMm(), phone.getWidthMm(), phone.getHeightMm(), phone.getAnnounced(), phone.getDeviceType(), phone.getOs(), phone.getDisplayResolution(), phone.getPixelDensity(), phone.getDisplayTechnology(), phone.getBackCameraMegapixels(), phone.getFrontCameraMegapixels(), phone.getRamGb(), phone.getInternalStorageGb(), phone.getBatteryCapacityMah(), phone.getTalkTimeHours(), phone.getStandByTimeHours(), phone.getBluetooth(), phone.getPositioning(), phone.getImageUrl())
-                    .map((s) -> s != null ? "String Date Long".contains(s.getClass().getSimpleName()) ? "'" + s + "', " : s + ", " : s + ", ")
-                    .collect(Collectors.joining())
-                    .concat(phone.getDescription() + ");");
-            jdbcTemplate.execute(sqlInsertion);
-            if (!phone.getColors().equals(Collections.EMPTY_SET)) {
-                for (Color color : phone.getColors()) {
-                    jdbcTemplate.update("insert into phone2color values (?,?)", phone.getId(), color.getId());
+        if (phone.getId() == null) {
+            phone.setId(jdbcTemplate.queryForObject("select MAX(id) as lastId from phones", new RowMapper<Long>() {
+                @Override
+                public Long mapRow(ResultSet resultSet, int i) throws SQLException {
+                    return new Long(resultSet.getLong("lastId")+1);
                 }
-            }
+            }));
         } else {
-            //TODO
+            delete(phone.getId());
+        }
+        String sqlInsertion = "insert into phones values (" + Stream.of(phone.getId(), phone.getBrand(), phone.getModel(), phone.getPrice(), phone.getDisplaySizeInches(), phone.getWeightGr(), phone.getLengthMm(), phone.getWidthMm(), phone.getHeightMm(),
+                phone.getAnnounced(), phone.getDeviceType(), phone.getOs(), phone.getDisplayResolution(), phone.getPixelDensity(), phone.getDisplayTechnology(), phone.getBackCameraMegapixels(), phone.getFrontCameraMegapixels(), phone.getRamGb(),
+                phone.getInternalStorageGb(), phone.getBatteryCapacityMah(), phone.getTalkTimeHours(), phone.getStandByTimeHours(), phone.getBluetooth(), phone.getPositioning(), phone.getImageUrl())
+                .map((s) -> s != null ? "String Date Long".contains(s.getClass().getSimpleName()) ? "'" + s + "', " : s + ", " : s + ", ")
+                .collect(Collectors.joining())
+                .concat(phone.getDescription() + ");");
+        jdbcTemplate.execute(sqlInsertion);
+        if (!phone.getColors().equals(Collections.EMPTY_SET)) {
+            for (Color color : phone.getColors()) {
+                jdbcTemplate.update("insert into phone2color values (?,?)", phone.getId(), color.getId());
+            }
         }
     }
 
