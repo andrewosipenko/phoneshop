@@ -57,14 +57,14 @@ public class JdbcProductDaoIntTest {
     }
 
     @Test
-    public void testGet() {
+    public void shouldGet() {
         Phone testPhone = productDao.get(phone.getId()).get();
         Assert.assertEquals(phone.getBrand(), testPhone.getBrand());
         Assert.assertEquals(phone.getColors(), testPhone.getColors());
     }
 
     @Test
-    public void testFindOne() {
+    public void shouldFindOne() {
         List<Phone> phones = productDao.findAll(0,1);
         Assert.assertEquals(1, phones.size());
         Assert.assertEquals(phone.getBrand(), phones.get(0).getBrand());
@@ -72,7 +72,7 @@ public class JdbcProductDaoIntTest {
     }
 
     @Test
-    public void testFindTwo() {
+    public void shouldFindTwo() {
         Phone phone2 = new Phone();
         phone2.setId(998L);
         phone2.setBrand("TestBrand2");
@@ -84,7 +84,7 @@ public class JdbcProductDaoIntTest {
     }
 
     @Test
-    public void testSave() {
+    public void shouldSave() {
         Phone phone2 = new Phone();
         phone2.setId(998L);
         phone2.setBrand("TestBrandSave");
@@ -94,7 +94,7 @@ public class JdbcProductDaoIntTest {
     }
 
     @Test
-    public void testSaveWithWrongExpect() {
+    public void shouldSaveWithWrongExpect() {
         Phone phone2 = new Phone();
         phone2.setId(998L);
         phone2.setBrand("TestBrandSave");
@@ -104,7 +104,7 @@ public class JdbcProductDaoIntTest {
     }
 
     @Test
-    public void testRewriteSave() {
+    public void shouldRewriteSave() {
         Phone phone2 = new Phone();
         phone2.setId(phone.getId());
         phone2.setBrand("TestBrandSave");
@@ -116,7 +116,7 @@ public class JdbcProductDaoIntTest {
     }
 
     @Test
-    public void testSaveWithoutId() {
+    public void shouldSaveWithoutId() {
         Phone phone2 = new Phone();
         phone2.setBrand("TestBrandSave");
         phone2.setModel("testModelSave");
@@ -127,7 +127,7 @@ public class JdbcProductDaoIntTest {
     }
 
     @Test
-    public void testDelete() {
+    public void shouldDelete() {
         Phone phone2 = new Phone();
         phone2.setId(998L);
         phone2.setBrand("TestBrandDelete");
