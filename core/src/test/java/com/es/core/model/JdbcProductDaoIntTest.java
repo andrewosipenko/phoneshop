@@ -1,6 +1,7 @@
 package com.es.core.model;
 
 import com.es.core.model.phone.Color;
+import com.es.core.model.phone.JdbcProductDao;
 import com.es.core.model.phone.Phone;
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -58,13 +59,16 @@ public class JdbcProductDaoIntTest {
     @Test
     public void testGet() {
         Phone testPhone = productDao.get(phone.getId()).get();
-        Assert.assertTrue(phone.getBrand().equals(testPhone.getBrand()) && testPhone.getColors().equals(phone.getColors()));
+        Assert.assertEquals(phone.getBrand(), testPhone.getBrand());
+        Assert.assertEquals(phone.getColors(), testPhone.getColors());
     }
 
     @Test
     public void testFindOne() {
         List<Phone> phones = productDao.findAll(0,1);
-        Assert.assertTrue(phones.size()==1 && phone.getBrand().equals(phones.get(0).getBrand()) && phones.get(0).getColors().equals(phone.getColors()));
+        Assert.assertEquals(1, phones.size());
+        Assert.assertEquals(phone.getBrand(), phones.get(0).getBrand());
+        Assert.assertEquals(phone.getColors(), phones.get(0).getColors());
     }
 
     @Test
@@ -75,7 +79,8 @@ public class JdbcProductDaoIntTest {
         phone2.setModel("testModel2");
         jdbcTemplate.update("insert into phones (id, brand, model) values (?, ?, ?)", phone2.getId(), phone2.getBrand(), phone2.getModel());
         List<Phone> phones = productDao.findAll(0,2);
-        Assert.assertTrue(phones.size()==2 && phone2.getBrand().equals(phones.get(0).getBrand()));
+        Assert.assertEquals(2, phones.size());
+        Assert.assertEquals(phone2.getBrand(), phones.get(0).getBrand());
     }
 
     @Test
@@ -106,7 +111,8 @@ public class JdbcProductDaoIntTest {
         phone2.setModel("testModelSave");
         productDao.save(phone2);
         List<Phone> phones = jdbcTemplate.query("select * from phones", new BeanPropertyRowMapper<>(Phone.class));
-        Assert.assertTrue(phones.size()==1 && phones.get(0).getBrand().equals(phone2.getBrand()));
+        Assert.assertEquals(1, phones.size());
+        Assert.assertEquals(phone2.getBrand(), phones.get(0).getBrand());
     }
 
     @Test
@@ -116,7 +122,8 @@ public class JdbcProductDaoIntTest {
         phone2.setModel("testModelSave");
         productDao.save(phone2);
         List<Phone> phones = jdbcTemplate.query("select * from phones", new BeanPropertyRowMapper<>(Phone.class));
-        Assert.assertTrue(phones.size()==2 && phones.get(1).getBrand().equals(phone2.getBrand()));
+        Assert.assertEquals(2, phones.size());
+        Assert.assertEquals(phone2.getBrand(), phones.get(1).getBrand());
     }
 
     @Test
@@ -128,7 +135,8 @@ public class JdbcProductDaoIntTest {
         productDao.delete(phone.getId());
         jdbcTemplate.update("insert into phones (id, brand, model) values (?, ?, ?)", phone2.getId(), phone2.getBrand(), phone2.getModel());
         List<Phone> phones = jdbcTemplate.query("select * from phones", new BeanPropertyRowMapper<>(Phone.class));
-        Assert.assertTrue(phones.size()==1 && phones.get(0).getBrand().equals(phone2.getBrand()));
+        Assert.assertEquals(1, phones.size());
+        Assert.assertEquals(phone2.getBrand(), phones.get(0).getBrand());
     }
 
     public static void setInternalState(Object c, String field, Object value) {
