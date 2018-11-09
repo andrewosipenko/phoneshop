@@ -3,6 +3,7 @@ package com.es.core.model;
 import com.es.core.model.phone.Color;
 import com.es.core.model.phone.JdbcProductDao;
 import com.es.core.model.phone.Phone;
+import com.es.core.model.phone.PhoneDao;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -11,7 +12,11 @@ import org.springframework.test.context.*;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
-import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -20,16 +25,25 @@ import java.util.List;
 public class JdbcProductDaoIntTest {
     @Resource
     private JdbcTemplate jdbcTemplate;
-    private JdbcProductDao productDao = new JdbcProductDao();
+    @Resource
+    private PhoneDao productDao;
     private Phone phone;
     private Color black;
     private Color white;
+    private BeanPropertyRowMapper<Phone> phoneBeanPropertyRowMapper;
     private boolean isInit = false;
+    private PreparedStatement statementForInsertColor;
+    private PreparedStatement statementForInsertPhone;
+    private PreparedStatement statementForBindingPhoneAndColor;
+    private PreparedStatement statementForClearColors;
+    private PreparedStatement statementForClearPhones;
+    private PreparedStatement statementForClearPhone2Color;
+    private PreparedStatement statementForGettingOnePhone;
+    private PreparedStatement statementForGettingPhones;
 
     @Before
     public void init() {
         if (!isInit) {
-            setInternalState(productDao, "jdbcTemplate", jdbcTemplate);
             black = new Color(800L, "black");
             white = new Color(900L, "white");
             phone = new Phone();
@@ -39,26 +53,44 @@ public class JdbcProductDaoIntTest {
             phone.setColors(new HashSet<>());
             phone.getColors().add(black);
             phone.getColors().add(white);
+            try {
+                setValuesForStatements();
+            } catch (SQLException exception) {
+                exception.printStackTrace();
+            }
+            phoneBeanPropertyRowMapper = new BeanPropertyRowMapper<>(Phone.class);
             isInit = true;
         }
-        jdbcTemplate.update("insert into colors values (?,?)", black.getId(), black.getCode());
-        jdbcTemplate.update("insert into colors values (?,?)", white.getId(), white.getCode());
-        jdbcTemplate.update("insert into phones (id, brand, model) values (?, ?, ?)", phone.getId(), phone.getBrand(), phone.getModel());
-        jdbcTemplate.update("insert into phone2color values (?,?)", phone.getId(), black.getId());
-        jdbcTemplate.update("insert into phone2color values (?,?)", phone.getId(), white.getId());
-        productDao.afterPropertiesSet();
+        try {
+            setParametersForStatementForInsertColorAndExecute(black);
+            setParametersForStatementForInsertColorAndExecute(white);
+            setParameterForStatementForInsertPhoneAndExecute(phone);
+            statementForBindingPhoneAndColor.setLong(1, phone.getId());
+            statementForBindingPhoneAndColor.setLong(2, black.getId());
+            statementForBindingPhoneAndColor.executeUpdate();
+            statementForBindingPhoneAndColor.setLong(2, white.getId());
+            statementForBindingPhoneAndColor.executeUpdate();
+            ((JdbcProductDao) productDao).afterPropertiesSet();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
     }
 
     @After
     public void clear() {
-        jdbcTemplate.update("delete from colors");
-        jdbcTemplate.update("delete from phones");
-        jdbcTemplate.update("delete from phone2color");
+        try {
+            statementForClearColors.executeUpdate();
+            statementForClearPhones.executeUpdate();
+            statementForClearPhone2Color.executeUpdate();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
     }
 
     @Test
     public void shouldGet() {
         Phone testPhone = productDao.get(phone.getId()).get();
+
         Assert.assertEquals(phone.getBrand(), testPhone.getBrand());
         Assert.assertEquals(phone.getColors(), testPhone.getColors());
     }
@@ -77,8 +109,14 @@ public class JdbcProductDaoIntTest {
         phone2.setId(998L);
         phone2.setBrand("TestBrand2");
         phone2.setModel("testModel2");
-        jdbcTemplate.update("insert into phones (id, brand, model) values (?, ?, ?)", phone2.getId(), phone2.getBrand(), phone2.getModel());
+        try {
+            setParameterForStatementForInsertPhoneAndExecute(phone2);
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+
         List<Phone> phones = productDao.findAll(0,2);
+
         Assert.assertEquals(2, phones.size());
         Assert.assertEquals(phone2.getBrand(), phones.get(0).getBrand());
     }
@@ -89,8 +127,17 @@ public class JdbcProductDaoIntTest {
         phone2.setId(998L);
         phone2.setBrand("TestBrandSave");
         phone2.setModel("testModelSave");
-        productDao.save(phone2);
-        Assert.assertEquals(jdbcTemplate.queryForObject("select * from phones where id="+phone2.getId(), new BeanPropertyRowMapper<>(Phone.class)).getBrand(),phone2.getBrand());
+        try {
+            statementForGettingOnePhone.setLong(1, phone2.getId());
+
+            productDao.save(phone2);
+
+            ResultSet resultSet = statementForGettingOnePhone.executeQuery();
+            resultSet.next();
+            Assert.assertEquals(phoneBeanPropertyRowMapper.mapRow(resultSet, 0).getBrand(), phone2.getBrand());
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
     }
 
     @Test
@@ -99,8 +146,17 @@ public class JdbcProductDaoIntTest {
         phone2.setId(998L);
         phone2.setBrand("TestBrandSave");
         phone2.setModel("testModelSave");
-        productDao.save(phone2);
-        Assert.assertNotEquals(jdbcTemplate.queryForObject("select * from phones where id="+phone2.getId(), new BeanPropertyRowMapper<>(Phone.class)).getBrand(),"WrongBrand");
+        try {
+            statementForGettingOnePhone.setLong(1, phone2.getId());
+
+            productDao.save(phone2);
+
+            ResultSet resultSet = statementForGettingOnePhone.executeQuery();
+            resultSet.next();
+            Assert.assertNotEquals(phoneBeanPropertyRowMapper.mapRow(resultSet, 0).getBrand(), "WrongBrand");
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
     }
 
     @Test
@@ -109,10 +165,21 @@ public class JdbcProductDaoIntTest {
         phone2.setId(phone.getId());
         phone2.setBrand("TestBrandSave");
         phone2.setModel("testModelSave");
+        List<Phone> phones = new ArrayList<>();
+
         productDao.save(phone2);
-        List<Phone> phones = jdbcTemplate.query("select * from phones", new BeanPropertyRowMapper<>(Phone.class));
-        Assert.assertEquals(1, phones.size());
-        Assert.assertEquals(phone2.getBrand(), phones.get(0).getBrand());
+
+        try {
+            ResultSet resultSet = statementForGettingPhones.executeQuery();
+            int i = 0;
+            while (resultSet.next()) {
+                phones.add(phoneBeanPropertyRowMapper.mapRow(resultSet, i++));
+            }
+            Assert.assertEquals(1, phones.size());
+            Assert.assertEquals(phone2.getBrand(), phones.get(0).getBrand());
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
     }
 
     @Test
@@ -120,48 +187,45 @@ public class JdbcProductDaoIntTest {
         Phone phone2 = new Phone();
         phone2.setBrand("TestBrandSave");
         phone2.setModel("testModelSave");
+        List<Phone> phones = new ArrayList<>();
+
         productDao.save(phone2);
-        List<Phone> phones = jdbcTemplate.query("select * from phones", new BeanPropertyRowMapper<>(Phone.class));
-        Assert.assertEquals(2, phones.size());
-        Assert.assertEquals(phone2.getBrand(), phones.get(1).getBrand());
-    }
 
-    @Test
-    public void shouldDelete() {
-        Phone phone2 = new Phone();
-        phone2.setId(998L);
-        phone2.setBrand("TestBrandDelete");
-        phone2.setModel("testModelDelete");
-        productDao.delete(phone.getId());
-        jdbcTemplate.update("insert into phones (id, brand, model) values (?, ?, ?)", phone2.getId(), phone2.getBrand(), phone2.getModel());
-        List<Phone> phones = jdbcTemplate.query("select * from phones", new BeanPropertyRowMapper<>(Phone.class));
-        Assert.assertEquals(1, phones.size());
-        Assert.assertEquals(phone2.getBrand(), phones.get(0).getBrand());
-    }
-
-    public static void setInternalState(Object c, String field, Object value) {
         try {
-            Field f = c.getClass().getDeclaredField(field);
-            f.setAccessible(true);
-            f.set(c, value);
-        } catch (NoSuchFieldException ex) {
-            ex.printStackTrace();
-        } catch (IllegalAccessException er) {
-            er.printStackTrace();
+            ResultSet resultSet = statementForGettingPhones.executeQuery();
+            int i = 0;
+            while (resultSet.next()) {
+                phones.add(phoneBeanPropertyRowMapper.mapRow(resultSet, i++));
+            }
+            Assert.assertEquals(2, phones.size());
+            Assert.assertEquals(phone2.getBrand(), phones.get(1).getBrand());
+        } catch (SQLException exception) {
+            exception.printStackTrace();
         }
     }
 
-    public static Object getInternalState(Object c, String field) {
-        try {
-            Field f = c.getClass().getDeclaredField(field);
-            f.setAccessible(true);
-            return f.get(c);
-        } catch (NoSuchFieldException ex) {
-            ex.printStackTrace();
-            return null;
-        } catch (IllegalAccessException er) {
-            er.printStackTrace();
-            return null;
-        }
+    private void setValuesForStatements() throws SQLException {
+    Connection connection = jdbcTemplate.getDataSource().getConnection();
+    statementForInsertColor = connection.prepareStatement("insert into colors values (?,?)");
+    statementForInsertPhone = connection.prepareStatement("insert into phones (id, brand, model) values (?, ?, ?)");
+    statementForBindingPhoneAndColor = connection.prepareStatement("insert into phone2color values (?,?)");
+    statementForClearColors = connection.prepareStatement("delete from colors");
+    statementForClearPhones = connection.prepareStatement("delete from phones");
+    statementForClearPhone2Color = connection.prepareStatement("delete from phone2color");
+    statementForGettingOnePhone = connection.prepareStatement("select * from phones where id=?");
+    statementForGettingPhones = connection.prepareStatement("select * from phones");
+    }
+
+    private void setParametersForStatementForInsertColorAndExecute(Color color) throws SQLException {
+        statementForInsertColor.setLong(1, color.getId());
+        statementForInsertColor.setString(2, color.getCode());
+        statementForInsertColor.executeUpdate();
+    }
+
+    private void setParameterForStatementForInsertPhoneAndExecute(Phone phone) throws SQLException {
+        statementForInsertPhone.setLong(1, phone.getId());
+        statementForInsertPhone.setString(2, phone.getBrand());
+        statementForInsertPhone.setString(3, phone.getModel());
+        statementForInsertPhone.executeUpdate();
     }
 }

@@ -18,6 +18,8 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
 
+    <bean id="PhoneDao" class="com.es.core.model.phone.JdbcProductDao"></bean>
+
     <jdbc:initialize-database data-source="dataSource">
         <jdbc:script location="classpath:db/schema.sql" />
         <!--<jdbc:script location="classpath:db/testdata.sql" />-->

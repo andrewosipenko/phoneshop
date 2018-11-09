@@ -35,13 +35,12 @@ public class Color {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Color color = (Color) o;
-        return Objects.equals(id, color.id) &&
-                Objects.equals(code, color.code);
+        return Objects.equals(id, color.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, code);
+        return Objects.hash(id);
     }
 
     @Override
