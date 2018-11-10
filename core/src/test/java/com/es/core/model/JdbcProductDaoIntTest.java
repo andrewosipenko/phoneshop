@@ -97,7 +97,8 @@ public class JdbcProductDaoIntTest {
 
     @Test
     public void shouldFindOne() {
-        List<Phone> phones = productDao.findAll(0,1);
+        List<Phone> phones = productDao.findAll(0, 1);
+
         Assert.assertEquals(1, phones.size());
         Assert.assertEquals(phone.getBrand(), phones.get(0).getBrand());
         Assert.assertEquals(phone.getColors(), phones.get(0).getColors());
@@ -105,29 +106,29 @@ public class JdbcProductDaoIntTest {
 
     @Test
     public void shouldFindTwo() {
-        Phone phone2 = new Phone();
-        phone2.setId(998L);
-        phone2.setBrand("TestBrand2");
-        phone2.setModel("testModel2");
         try {
+            Phone phone2 = new Phone();
+            phone2.setId(998L);
+            phone2.setBrand("TestBrand2");
+            phone2.setModel("testModel2");
             setParameterForStatementForInsertPhoneAndExecute(phone2);
+
+            List<Phone> phones = productDao.findAll(0, 2);
+
+            Assert.assertEquals(2, phones.size());
+            Assert.assertEquals(phone2.getBrand(), phones.get(0).getBrand());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
-
-        List<Phone> phones = productDao.findAll(0,2);
-
-        Assert.assertEquals(2, phones.size());
-        Assert.assertEquals(phone2.getBrand(), phones.get(0).getBrand());
     }
 
     @Test
     public void shouldSave() {
-        Phone phone2 = new Phone();
-        phone2.setId(998L);
-        phone2.setBrand("TestBrandSave");
-        phone2.setModel("testModelSave");
         try {
+            Phone phone2 = new Phone();
+            phone2.setId(998L);
+            phone2.setBrand("TestBrandSave");
+            phone2.setModel("testModelSave");
             statementForGettingOnePhone.setLong(1, phone2.getId());
 
             productDao.save(phone2);
@@ -142,11 +143,11 @@ public class JdbcProductDaoIntTest {
 
     @Test
     public void shouldSaveWithWrongExpect() {
-        Phone phone2 = new Phone();
-        phone2.setId(998L);
-        phone2.setBrand("TestBrandSave");
-        phone2.setModel("testModelSave");
         try {
+            Phone phone2 = new Phone();
+            phone2.setId(998L);
+            phone2.setBrand("TestBrandSave");
+            phone2.setModel("testModelSave");
             statementForGettingOnePhone.setLong(1, phone2.getId());
 
             productDao.save(phone2);
@@ -161,15 +162,15 @@ public class JdbcProductDaoIntTest {
 
     @Test
     public void shouldRewriteSave() {
-        Phone phone2 = new Phone();
-        phone2.setId(phone.getId());
-        phone2.setBrand("TestBrandSave");
-        phone2.setModel("testModelSave");
-        List<Phone> phones = new ArrayList<>();
-
-        productDao.save(phone2);
-
         try {
+            Phone phone2 = new Phone();
+            phone2.setId(phone.getId());
+            phone2.setBrand("TestBrandSave");
+            phone2.setModel("testModelSave");
+            List<Phone> phones = new ArrayList<>();
+
+            productDao.save(phone2);
+
             ResultSet resultSet = statementForGettingPhones.executeQuery();
             int i = 0;
             while (resultSet.next()) {
@@ -184,14 +185,14 @@ public class JdbcProductDaoIntTest {
 
     @Test
     public void shouldSaveWithoutId() {
-        Phone phone2 = new Phone();
-        phone2.setBrand("TestBrandSave");
-        phone2.setModel("testModelSave");
-        List<Phone> phones = new ArrayList<>();
-
-        productDao.save(phone2);
-
         try {
+            Phone phone2 = new Phone();
+            phone2.setBrand("TestBrandSave");
+            phone2.setModel("testModelSave");
+            List<Phone> phones = new ArrayList<>();
+
+            productDao.save(phone2);
+
             ResultSet resultSet = statementForGettingPhones.executeQuery();
             int i = 0;
             while (resultSet.next()) {
@@ -205,15 +206,15 @@ public class JdbcProductDaoIntTest {
     }
 
     private void setValuesForStatements() throws SQLException {
-    Connection connection = jdbcTemplate.getDataSource().getConnection();
-    statementForInsertColor = connection.prepareStatement("insert into colors values (?,?)");
-    statementForInsertPhone = connection.prepareStatement("insert into phones (id, brand, model) values (?, ?, ?)");
-    statementForBindingPhoneAndColor = connection.prepareStatement("insert into phone2color values (?,?)");
-    statementForClearColors = connection.prepareStatement("delete from colors");
-    statementForClearPhones = connection.prepareStatement("delete from phones");
-    statementForClearPhone2Color = connection.prepareStatement("delete from phone2color");
-    statementForGettingOnePhone = connection.prepareStatement("select * from phones where id=?");
-    statementForGettingPhones = connection.prepareStatement("select * from phones");
+        Connection connection = jdbcTemplate.getDataSource().getConnection();
+        statementForInsertColor = connection.prepareStatement("insert into colors values (?,?)");
+        statementForInsertPhone = connection.prepareStatement("insert into phones (id, brand, model) values (?, ?, ?)");
+        statementForBindingPhoneAndColor = connection.prepareStatement("insert into phone2color values (?,?)");
+        statementForClearColors = connection.prepareStatement("delete from colors");
+        statementForClearPhones = connection.prepareStatement("delete from phones");
+        statementForClearPhone2Color = connection.prepareStatement("delete from phone2color");
+        statementForGettingOnePhone = connection.prepareStatement("select * from phones where id=?");
+        statementForGettingPhones = connection.prepareStatement("select * from phones");
     }
 
     private void setParametersForStatementForInsertColorAndExecute(Color color) throws SQLException {

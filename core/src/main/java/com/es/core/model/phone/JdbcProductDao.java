@@ -5,13 +5,12 @@ import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Repository
 public class JdbcProductDao implements PhoneDao, InitializingBean {
@@ -51,9 +50,7 @@ public class JdbcProductDao implements PhoneDao, InitializingBean {
             ResultSet resultSet = statementForGettingPhoneById.executeQuery();
             resultSet.next();
             Optional<Phone> phone = Optional.ofNullable(phoneBeanPropertyRowMapper.mapRow(resultSet, 0));
-            if (phone.isPresent()) {
-                setColorsForPhone(phone.get());
-            }
+            phone.ifPresent(this::setColorsForPhone);
             return phone;
         } catch (SQLException exception) {
             exception.printStackTrace();
@@ -62,17 +59,13 @@ public class JdbcProductDao implements PhoneDao, InitializingBean {
     }
 
     public void save(Phone phone) {
-        checkPhoneIdAndSetIfNeeded(phone);
-        String sqlInsertion = "insert into phones values (" + Stream.of(phone.getId(), phone.getBrand(), phone.getModel(), phone.getPrice(), phone.getDisplaySizeInches(), phone.getWeightGr(), phone.getLengthMm(), phone.getWidthMm(), phone.getHeightMm(),
-                phone.getAnnounced(), phone.getDeviceType(), phone.getOs(), phone.getDisplayResolution(), phone.getPixelDensity(), phone.getDisplayTechnology(), phone.getBackCameraMegapixels(), phone.getFrontCameraMegapixels(), phone.getRamGb(),
-                phone.getInternalStorageGb(), phone.getBatteryCapacityMah(), phone.getTalkTimeHours(), phone.getStandByTimeHours(), phone.getBluetooth(), phone.getPositioning(), phone.getImageUrl())
-                .map((s) -> s != null ? "String Date Long".contains(s.getClass().getSimpleName()) ? "'" + s + "', " : s + ", " : s + ", ")
-                .collect(Collectors.joining())
-                .concat(phone.getDescription() + ");");
-        //TODO: Rewrite THIS with reflection
-        jdbcTemplate.execute(sqlInsertion);
-
-        bindPhoneAndColor(phone);
+        try {
+            checkPhoneIdAndSetIfNeeded(phone);
+            setParametersForStatementAddingPhoneAndExecute(phone);
+            bindPhoneAndColor(phone);
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
     }
 
     public List<Phone> findAll(int offset, int limit) {
@@ -112,7 +105,7 @@ public class JdbcProductDao implements PhoneDao, InitializingBean {
         statementForDeletingPhoneById = connection.prepareStatement("delete from phones where id = ?");
         statementForGettingColorsByPhoneId = connection.prepareStatement("select * from phone2color where phone2color.phoneId = ?");
         statementForGettingPhonesByOffsetAndLimit = connection.prepareStatement("select * from phones offset ? limit ?");
-        //statementForAddingPhone = connection.prepareStatement("insert into phones values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        statementForAddingPhone = connection.prepareStatement("insert into phones values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
     }
 
     private void setColorsForPhone(Phone phone) {
@@ -128,31 +121,54 @@ public class JdbcProductDao implements PhoneDao, InitializingBean {
         }
     }
 
-    private void checkPhoneIdAndSetIfNeeded(Phone phone) {
+    private void checkPhoneIdAndSetIfNeeded(Phone phone) throws SQLException {
         if (phone.getId() == null) {
-            try {
-                ResultSet resultSet = statementForGettingLastPhoneId.executeQuery();
-                resultSet.next();
-                phone.setId(resultSet.getLong("lastId") + 1);
-            } catch (SQLException exception) {
-                exception.printStackTrace();
-            }
+            ResultSet resultSet = statementForGettingLastPhoneId.executeQuery();
+            resultSet.next();
+            phone.setId(resultSet.getLong("lastId") + 1);
         } else {
             delete(phone.getId());
         }
     }
 
-    private void bindPhoneAndColor(Phone phone) {
+    private void bindPhoneAndColor(Phone phone) throws SQLException {
         if (!phone.getColors().equals(Collections.EMPTY_SET)) {
-            try {
-                for (Color color : phone.getColors()) {
-                    statementForBindingPhoneAndColor.setLong(1, phone.getId());
-                    statementForBindingPhoneAndColor.setLong(2, color.getId());
-                    statementForBindingPhoneAndColor.executeUpdate();
-                }
-            } catch (SQLException exception) {
-                exception.printStackTrace();
+            for (Color color : phone.getColors()) {
+                statementForBindingPhoneAndColor.setLong(1, phone.getId());
+                statementForBindingPhoneAndColor.setLong(2, color.getId());
+                statementForBindingPhoneAndColor.executeUpdate();
             }
+        }
+    }
+
+    private void setParametersForStatementAddingPhoneAndExecute(Phone phone) throws SQLException {
+        Object[] phoneParameters = getPhoneFieldsValues(phone);
+        for (int i = 0; i < phoneParameters.length; i++) {
+            statementForAddingPhone.setObject(i + 1, phoneParameters[i]);
+        }
+        statementForAddingPhone.executeUpdate();
+    }
+
+    private Object[] getPhoneFieldsValues(Phone phone) {
+        try {
+            Field[] fields = phone.getClass().getDeclaredFields();
+            List<Field> fieldsList = new ArrayList<>(Arrays.asList(fields));
+            for (Field field : fields) {
+                if (field.getName().equals("colors")) {
+                    fieldsList.remove(field);
+                    break;
+                }
+            }
+            Object[] values = new Object[fieldsList.size()];
+            for (int i = 0; i < fieldsList.size(); i++) {
+                Field field = phone.getClass().getDeclaredField(fieldsList.get(i).getName());
+                field.setAccessible(true);
+                values[i] = field.get(phone);
+            }
+            return values;
+        } catch (ReflectiveOperationException exception) {
+            exception.printStackTrace();
+            return null;
         }
     }
 }
