@@ -22,15 +22,6 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/test-config.xml")
 public class JdbcProductDaoTest {
-    @Resource
-    private JdbcTemplate jdbcTemplate;
-    @Resource
-    private PhoneDao productDao;
-    private Phone initialPhone;
-    private Phone expectedPhone;
-    private Color black;
-    private Color white;
-    private BeanPropertyRowMapper<Phone> phoneBeanPropertyRowMapper;
     private static final String SQL_QUERY_FOR_INSERT_COLOR = "insert into colors values (?,?)";
     private static final String SQL_QUERY_FOR_INSERT_PHONE = "insert into phones (id, brand, model) values (?, ?, ?)";
     private static final String SQL_QUERY_FOR_BINDING_PHONE_AND_COLOR = "insert into phone2color values (?,?)";
@@ -39,19 +30,24 @@ public class JdbcProductDaoTest {
     private static final String SQL_QUERY_FOR_CLEAR_PHONE2COLOR = "delete from phone2color";
     private static final String SQL_QUERY_FOR_GETTING_ONE_PHONE = "select * from phones where id=?";
     private static final String SQL_QUERY_FOR_GETTING_PHONES = "select * from phones";
+    @Resource
+    private JdbcTemplate jdbcTemplate;
+    @Resource
+    private PhoneDao productDao;
+    private Phone initialPhone = new Phone();
+    private Phone expectedPhone;
+    private Color black = new Color(800L, "black");
+    private Color white = new Color(900L, "white");
+    private BeanPropertyRowMapper<Phone> phoneBeanPropertyRowMapper = new BeanPropertyRowMapper<>(Phone.class);
 
     @PostConstruct
     private void init() {
-        black = new Color(800L, "black");
-        white = new Color(900L, "white");
-        initialPhone = new Phone();
         initialPhone.setId(999L);
         initialPhone.setBrand("TestBrand");
         initialPhone.setModel("testModel");
         initialPhone.setColors(new HashSet<>());
         initialPhone.getColors().add(black);
         initialPhone.getColors().add(white);
-        phoneBeanPropertyRowMapper = new BeanPropertyRowMapper<>(Phone.class);
     }
 
     @Before
@@ -64,7 +60,8 @@ public class JdbcProductDaoTest {
         expectedPhone.setModel("testModelSave");
         jdbcTemplate.update(SQL_QUERY_FOR_INSERT_COLOR, black.getId(), black.getCode());
         jdbcTemplate.update(SQL_QUERY_FOR_INSERT_COLOR, white.getId(), white.getCode());
-        jdbcTemplate.update(SQL_QUERY_FOR_INSERT_PHONE, initialPhone.getId(), initialPhone.getBrand(), initialPhone.getModel());
+        jdbcTemplate.update(SQL_QUERY_FOR_INSERT_PHONE, initialPhone.getId(),
+                        initialPhone.getBrand(), initialPhone.getModel());
         jdbcTemplate.update(SQL_QUERY_FOR_BINDING_PHONE_AND_COLOR, initialPhone.getId(), black.getId());
         jdbcTemplate.update(SQL_QUERY_FOR_BINDING_PHONE_AND_COLOR, initialPhone.getId(), white.getId());
         ((JdbcProductDao)productDao).init();
@@ -107,7 +104,9 @@ public class JdbcProductDaoTest {
 
         productDao.save(expectedPhone);
 
-        Phone actualPhone = jdbcTemplate.queryForObject(SQL_QUERY_FOR_GETTING_ONE_PHONE, ((resultSet, i) -> phoneBeanPropertyRowMapper.mapRow(resultSet, 0)), expectedPhone.getId());
+        Phone actualPhone = jdbcTemplate.queryForObject(SQL_QUERY_FOR_GETTING_ONE_PHONE,
+                        ((resultSet, i) -> phoneBeanPropertyRowMapper.mapRow(resultSet, 0)),
+                                expectedPhone.getId());
         assertEquals(actualPhone.getBrand(), expectedPhone.getBrand());
     }
 
