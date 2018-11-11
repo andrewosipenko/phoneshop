@@ -9,7 +9,6 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 import org.junit.runner.RunWith;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.*;
