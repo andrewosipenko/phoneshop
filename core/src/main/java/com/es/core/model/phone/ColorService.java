@@ -1,6 +1,5 @@
-package com.es.core.services;
+package com.es.core.model.phone;
 
-import com.es.core.model.phone.Color;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;

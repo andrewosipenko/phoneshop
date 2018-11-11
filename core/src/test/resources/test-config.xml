@@ -7,14 +7,14 @@
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="org.h2.Driver" />
-        <property name="url" value="jdbc:h2:~/phoneshop/db-test/h2" />
+        <property name="url" value="jdbc:h2:mem:dbtest;DB_CLOSE_DELAY=-1" />
     </bean>
 
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="dataSource" />
     </bean>
 
-    <bean id="PhoneDao" class="com.es.core.model.phone.JdbcProductDao"></bean>
+    <bean id="PhoneDao" class="com.es.core.model.phone.JdbcProductDao" lazy-init="true"></bean>
 
     <jdbc:initialize-database data-source="dataSource">
         <jdbc:script location="classpath:db/schema.sql" />

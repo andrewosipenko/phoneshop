@@ -1,6 +1,6 @@
 package com.es.core.model.phone;
 
-import com.es.core.services.ColorService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.util.*;
 
+@Lazy
 @Repository
 public class JdbcProductDao implements PhoneDao {
     @Resource
