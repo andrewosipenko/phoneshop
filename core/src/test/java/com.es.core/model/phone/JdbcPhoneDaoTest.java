@@ -18,7 +18,7 @@ import java.util.List;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "")
+@ContextConfiguration(locations = "/context/test-config.xml")
 @SpringBootTest
 public class JdbcPhoneDaoTest {
     @Resource
