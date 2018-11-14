@@ -2,10 +2,10 @@ package com.es.core.model.phone;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
-import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,7 +16,6 @@ public class JdbcProductDao implements PhoneDao {
     private static final String SQL_QUERY_FOR_GETTING_ALL_COLORS = "select * from colors";
     private static final String SQL_FOR_GETTING_PHONE_BY_ID = "select * from phones where phones.id=?";
     private static final String SQL_FOR_GETTING_LAST_PHONE_ID = "select MAX(id) as lastId from phones";
-    private static final String SQL_FOR_ADDING_PHONE = "insert into phones values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static final String SQL_FOR_BINDING_PHONE_AND_COLOR = "insert into phone2color values (?,?)";
     private static final String SQL_FOR_GETTING_PHONES_BY_OFFSET_AND_LIMIT = "select * from phones offset ? limit ?";
     private static final String SQL_FOR_DELETING_PHONE_BY_ID = "delete from phones where id = ?";
@@ -27,8 +26,7 @@ public class JdbcProductDao implements PhoneDao {
 
     public void save(Phone phone) {
         checkPhoneIdAndSetIfNeeded(phone);
-        Object[] phoneParameters = getPhoneFieldsValues(phone);
-        jdbcTemplate.update(SQL_FOR_ADDING_PHONE, phoneParameters);
+        insertPhone(phone);
         bindPhoneAndColor(phone);
     }
 
@@ -43,6 +41,12 @@ public class JdbcProductDao implements PhoneDao {
 
     private void delete(Long key) {
         jdbcTemplate.update(SQL_FOR_DELETING_PHONE_BY_ID, key);
+    }
+
+    private void insertPhone(Phone phone) {
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        simpleJdbcInsert.withTableName("phones");
+        simpleJdbcInsert.execute(getPhoneValues(phone));
     }
 
     private void bindPhoneAndColor(Phone phone) {
@@ -82,26 +86,34 @@ public class JdbcProductDao implements PhoneDao {
                         (resultSet, i) -> phone.getColors().add(colors.get(resultSet.getLong("colorId"))), phone.getId());
     }
 
-    private Object[] getPhoneFieldsValues(Phone phone) {
-        try {
-            Field[] fields = phone.getClass().getDeclaredFields();
-            List<Field> fieldsList = new ArrayList<>(Arrays.asList(fields));
-            for (Field field : fields) {
-                if (field.getName().equals("colors")) {
-                    fieldsList.remove(field);
-                    break;
-                }
-            }
-            Object[] values = new Object[fieldsList.size()];
-            for (int i = 0; i < fieldsList.size(); i++) {
-                Field field = phone.getClass().getDeclaredField(fieldsList.get(i).getName());
-                field.setAccessible(true);
-                values[i] = field.get(phone);
-            }
-            return values;
-        } catch (ReflectiveOperationException exception) {
-            exception.printStackTrace();
-            return null;
-        }
+    private Map<String, Object> getPhoneValues(Phone phone) {
+        Map<String, Object> values = new HashMap<>();
+        values.put("id", phone.getId());
+        values.put("brand", phone.getBrand());
+        values.put("model", phone.getModel());
+        values.put("price", phone.getPrice());
+        values.put("displaySizeInches", phone.getDisplaySizeInches());
+        values.put("weightGr", phone.getWeightGr());
+        values.put("lengthMm", phone.getLengthMm());
+        values.put("widthMm", phone.getWidthMm());
+        values.put("heightMm", phone.getHeightMm());
+        values.put("announced", phone.getAnnounced());
+        values.put("deviceType", phone.getDeviceType());
+        values.put("os", phone.getOs());
+        values.put("displayResolution", phone.getDisplayResolution());
+        values.put("pixelDensity", phone.getPixelDensity());
+        values.put("displayTechnology", phone.getDisplayTechnology());
+        values.put("backCameraMegapixels", phone.getBackCameraMegapixels());
+        values.put("frontCameraMegapixels", phone.getFrontCameraMegapixels());
+        values.put("ramGb", phone.getRamGb());
+        values.put("internalStorageGb", phone.getInternalStorageGb());
+        values.put("batteryCapacityMah", phone.getBatteryCapacityMah());
+        values.put("talkTimeHours", phone.getTalkTimeHours());
+        values.put("standByTimeHours", phone.getStandByTimeHours());
+        values.put("bluetooth", phone.getBluetooth());
+        values.put("positioning", phone.getPositioning());
+        values.put("imageUrl", phone.getImageUrl());
+        values.put("description", phone.getDescription());
+        return values;
     }
 }
