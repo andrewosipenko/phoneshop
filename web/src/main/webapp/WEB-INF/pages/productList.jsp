@@ -3,7 +3,7 @@
 <!doctype html>
 <html>
 <head>
-    <link rel="stylesheet" href="webjars/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="webjars/bootstrap/3.2.0/css/bootstrap.min.css"/>
     <title>Product list</title>
 </head>
 <body>
@@ -13,7 +13,8 @@
 <p>
     Found
     <c:out value="${phones.size()}"/> phones.
-<table border="1px">
+<div class="table-responsive">
+    <table class="table table-bordered">
     <thead>
     <tr>
         <td>Image</td>
@@ -23,6 +24,7 @@
         <td>Colors</td>
     </tr>
     </thead>
+        <tbody>
     <c:forEach var="phone" items="${phones}">
         <tr>
             <td>
@@ -34,7 +36,9 @@
             <td>${phone.colors}</td>
         </tr>
     </c:forEach>
+        </tbody>
 </table>
+</div>
 </p>
 </body>
 </html>
