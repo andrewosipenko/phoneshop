@@ -13,6 +13,7 @@
 <p>
     Found
     <c:out value="${phones.size()}"/> phones.
+<form action="/ajaxCart" method="post">
 <div class="table-responsive">
     <table class="table table-bordered">
     <thead>
@@ -20,8 +21,11 @@
         <td>Image</td>
         <td>Brand</td>
         <td>Model</td>
+        <td>Color</td>
+        <td>Display size</td>
         <td>Price</td>
-        <td>Colors</td>
+        <td>Quantity</td>
+        <td>Action</td>
     </tr>
     </thead>
         <tbody>
@@ -32,13 +36,25 @@
             </td>
             <td>${phone.brand}</td>
             <td>${phone.model}</td>
+            <td>
+                <c:forEach var="color" items="${phone.colors}">
+                    ${color}
+                </c:forEach>
+            </td>
+            <td>${phone.displaySizeInches}"</td>
             <td>$ ${phone.price}</td>
-            <td>${phone.colors}</td>
+            <td>
+                <input type = "text" name = "quantity" id = quantity style = "text-align: right" value = "1"/>
+            </td>
+            <td>
+                <button id = "button">Add to</button>
+            </td>
         </tr>
     </c:forEach>
         </tbody>
 </table>
 </div>
+</form>
 </p>
 </body>
 </html>

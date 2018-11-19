@@ -15,7 +15,7 @@ public class JdbcProductDao implements PhoneDao {
     private static final String SQL_FOR_GETTING_PHONE_BY_ID = "select * from phones where phones.id=?";
     private static final String SQL_FOR_GETTING_LAST_PHONE_ID = "select MAX(id) as lastId from phones";
     private static final String SQL_FOR_BINDING_PHONE_AND_COLOR = "insert into phone2color values (?,?)";
-    private static final String SQL_FOR_GETTING_PHONES_BY_OFFSET_AND_LIMIT = "select * from phones offset ? limit ?";
+    private static final String SQL_FOR_GETTING_PHONES_BY_OFFSET_AND_LIMIT_WITH_POSITIVE_STOCK = "select * from phones join stocks on phones.id=stocks.phoneId where stocks.stock > 0 offset ? limit ?";
     private static final String SQL_FOR_DELETING_PHONE_BY_ID = "delete from phones where id = ?";
     private static final String SQL_FOR_GETTING_COLORS_BY_PHONE_ID = "select * from phone2color where phone2color.phoneId = ?";
     @Resource
@@ -68,9 +68,9 @@ public class JdbcProductDao implements PhoneDao {
                 new BeanPropertyRowMapper<>(Color.class)).stream().collect(Collectors.toMap(Color::getId, (c) -> c));
     }
 
-    public List<Phone> findAll(int offset, int limit) {
+    public List<Phone> findAllWithPositiveStock(int offset, int limit) {
         Map<Long, Color> colors = getColors();
-        List<Phone> phones = jdbcTemplate.query(SQL_FOR_GETTING_PHONES_BY_OFFSET_AND_LIMIT,
+        List<Phone> phones = jdbcTemplate.query(SQL_FOR_GETTING_PHONES_BY_OFFSET_AND_LIMIT_WITH_POSITIVE_STOCK,
                         phoneBeanPropertyRowMapper, offset, limit);
         for (Phone phone : phones) {
             setColorsForPhone(phone, colors);

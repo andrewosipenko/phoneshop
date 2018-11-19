@@ -29,6 +29,8 @@ public class JdbcProductDaoTest {
     private static final String SQL_QUERY_FOR_CLEAR_PHONE2COLOR = "delete from phone2color";
     private static final String SQL_QUERY_FOR_GETTING_ONE_PHONE = "select * from phones where id=?";
     private static final String SQL_QUERY_FOR_GETTING_PHONES = "select * from phones";
+    private static final String SQL_QUERY_FOR_SETTING_STOCK = "insert into stocks (phoneId, stock, reserved) values (?,?,?)";
+    private static final String SQL_QUERY_FOR_UPDATING_STOCK = "update stocks set stock=?, reserved=? where phoneId=?";
     @Resource
     private JdbcTemplate jdbcTemplate;
     @Resource
@@ -58,6 +60,7 @@ public class JdbcProductDaoTest {
         jdbcTemplate.update(SQL_QUERY_FOR_INSERT_PHONE, initialPhone.getId(), initialPhone.getBrand(), initialPhone.getModel());
         jdbcTemplate.update(SQL_QUERY_FOR_BINDING_PHONE_AND_COLOR, initialPhone.getId(), black.getId());
         jdbcTemplate.update(SQL_QUERY_FOR_BINDING_PHONE_AND_COLOR, initialPhone.getId(), white.getId());
+        jdbcTemplate.update(SQL_QUERY_FOR_SETTING_STOCK, initialPhone.getId(), 5, 1);
     }
 
     @Test
@@ -70,11 +73,34 @@ public class JdbcProductDaoTest {
 
     @Test
     public void shouldFindOne() {
-        List<Phone> phones = productDao.findAll(0, 1);
+        List<Phone> phones = productDao.findAllWithPositiveStock(0, 5);
 
         assertEquals(1, phones.size());
         assertEquals(initialPhone.getBrand(), phones.get(0).getBrand());
         assertEquals(initialPhone.getColors(), phones.get(0).getColors());
+    }
+
+    @Test
+    public void shouldFindOnlyWithPositiveStock() {
+        Phone phoneWithNullStock = new Phone();
+        phoneWithNullStock.setId(998L);
+        phoneWithNullStock.setBrand("NullStockBrand");
+        phoneWithNullStock.setModel("NullStockModel");
+        jdbcTemplate.update(SQL_QUERY_FOR_INSERT_PHONE, phoneWithNullStock.getId(), phoneWithNullStock.getBrand(), phoneWithNullStock.getModel());
+
+        List<Phone> phones = productDao.findAllWithPositiveStock(0, 5);
+
+        assertEquals(1, phones.size());
+        assertNotEquals(phoneWithNullStock.getBrand(), phones.get(0).getBrand());
+    }
+
+    @Test
+    public void shouldFindNothing() {
+        jdbcTemplate.update(SQL_QUERY_FOR_UPDATING_STOCK, 0, 0, initialPhone.getId());
+
+        List<Phone> phones = productDao.findAllWithPositiveStock(0, 5);
+
+        assertEquals(0, phones.size());
     }
 
     @Test
@@ -84,11 +110,12 @@ public class JdbcProductDaoTest {
         phone2.setBrand("TestBrand2");
         phone2.setModel("testModel2");
         jdbcTemplate.update(SQL_QUERY_FOR_INSERT_PHONE, phone2.getId(), phone2.getBrand(), phone2.getModel());
+        jdbcTemplate.update(SQL_QUERY_FOR_SETTING_STOCK, phone2.getId(), 5, 1);
 
-        List<Phone> phones = productDao.findAll(0, 2);
+        List<Phone> phones = productDao.findAllWithPositiveStock(0, 5);
 
         assertEquals(2, phones.size());
-        assertEquals(phone2.getBrand(), phones.get(0).getBrand());
+        assertEquals(phone2.getBrand(), phones.get(1).getBrand());
     }
 
     @Test
