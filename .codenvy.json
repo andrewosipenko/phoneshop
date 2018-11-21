@@ -1,0 +1,163 @@
+{
+  "v": "4.0",
+  "name": "phoneshop",
+  "workspace": {
+    "defaultEnv": "phoneshop",
+    "environments": [{
+      "name": "phoneshop",
+      "machineConfigs": [
+         {
+            "limits":{
+              "ram":1000
+            },
+            "name":"ws-machine",
+            "type":"docker",
+            "source":{
+              "content":"FROM codenvy/debian_jdk8\nEXPOSE 9966",
+              "type":"dockerfile"
+            },
+            "dev":true,
+            "servers":[
+
+            ],
+            "envVariables":{
+
+            },
+            "links":[
+
+            ]
+          }
+      ]
+    }],
+    "projects": [
+      {
+        "links": [],
+        "name": "phoneshop",
+        "attributes": {
+          "maven.artifactId":[
+            "phoneshop"
+          ],
+          "maven.test.source.folder":[
+            "src/test/java"
+          ],
+          "maven.parent.version":[
+            ""
+          ],
+          "maven.parent.groupId":[
+            ""
+          ],
+          "maven.version":[
+            "1.0.0-SNAPSHOT"
+          ],
+          "languageVersion": [
+            "1.8.0_45"
+          ],
+          "language": [
+            "java"
+          ],
+          "contribute_to_branch":[
+            "master"
+          ],
+          "maven.source.folder":[
+            "src/main/java"
+          ],
+          "git.repository.remotes":[
+            "https://github.com/andrewosipenko/phoneshop"
+          ],
+          "maven.groupId":[
+            "com.es"
+          ],
+          "containsJavaFiles":[
+            "true"
+          ],
+          "maven.packaging":[
+            "war"
+          ],
+          "vcs.provider.name":[
+            "git"
+          ],
+          "git.current.branch.name":[
+            "master"
+          ],
+          "maven.parent.artifactId":[
+            ""
+          ]
+        },
+        "type": "maven",
+        "path":"/phoneshop",
+        "description":"A hello world Java application.",
+        "problems":[
+
+        ],
+        "mixins": [
+          "pullrequest",
+          "git"
+        ]
+      }
+    ],
+    "name":"phoneshop",
+    "commands":[
+      {
+        "commandLine":"$TOMCAT_HOME/bin/catalina.sh run",
+        "name":"run tomcat",
+        "attributes":{
+          "previewUrl":"http://${server.port.8080}"
+        },
+        "type":"custom"
+      },
+      {
+        "commandLine":"$TOMCAT_HOME/bin/catalina.sh stop",
+        "name":"stop tomcat",
+        "attributes":{
+          "previewUrl":""
+        },
+        "type":"custom"
+      },
+      {
+        "commandLine":"mvn -f ${current.project.path} clean install && cp ${current.project.path}/target/*.war $TOMCAT_HOME/webapps/ROOT.war",
+        "name":"build",
+        "attributes":{
+          "previewUrl":""
+        },
+        "type":"mvn"
+      },
+      {
+        "commandLine":"mvn -f ${current.project.path} clean install && cp ${current.project.path}/target/*.war $TOMCAT_HOME/webapps/ROOT.war && $TOMCAT_HOME/bin/catalina.sh run",
+        "name":"build and run",
+        "attributes":{
+          "previewUrl":"http://${server.port.8080}"
+        },
+        "type":"mvn"
+      },
+      {
+        "commandLine":"mvn -f ${current.project.path} clean install && cp ${current.project.path}/target/*.war $TOMCAT_HOME/webapps/ROOT.war && $TOMCAT_HOME/bin/catalina.sh jpda run",
+        "name":"debug",
+        "attributes":{
+          "previewUrl":"http://${server.port.8080}"
+        },
+        "type":"mvn"
+      }
+    ],
+    "links":[
+
+    ]
+  },
+  "ide":{
+    "onProjectsLoaded":{
+      "actions":[
+        {
+          "properties":{
+            "file":"/phoneshop/src/main/webapp/index.jsp"
+  },
+          "id":"openFile"
+        },
+        {
+          "properties":{
+            "name":"build and run"
+  },
+          "id":"runCommand"
+        }
+      ]
+    }
+  }
+}
