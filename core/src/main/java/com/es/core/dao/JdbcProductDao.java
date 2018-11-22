@@ -1,5 +1,8 @@
-package com.es.core.model.phone;
+package com.es.core.dao;
 
+import com.es.core.model.phone.Color;
+import com.es.core.model.phone.Phone;
+import com.es.core.model.phone.Stock;
 import org.springframework.jdbc.core.*;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -18,6 +21,7 @@ public class JdbcProductDao implements PhoneDao {
     private static final String SQL_FOR_GETTING_PHONES_BY_OFFSET_AND_LIMIT_WITH_POSITIVE_STOCK = "select * from phones join stocks on phones.id=stocks.phoneId where stocks.stock > 0 offset ? limit ?";
     private static final String SQL_FOR_DELETING_PHONE_BY_ID = "delete from phones where id = ?";
     private static final String SQL_FOR_GETTING_COLORS_BY_PHONE_ID = "select * from phone2color where phone2color.phoneId = ?";
+    private static final String SQL_FOR_GETTING_STOCK_BY_PHONE_ID = "select * from stocks where stocks.phoneId = ?";
     @Resource
     private JdbcTemplate jdbcTemplate;
     private BeanPropertyRowMapper<Phone> phoneBeanPropertyRowMapper = new BeanPropertyRowMapper<>(Phone.class);
@@ -82,6 +86,15 @@ public class JdbcProductDao implements PhoneDao {
         phone.setColors(new HashSet<>());
         jdbcTemplate.query(SQL_FOR_GETTING_COLORS_BY_PHONE_ID,
                         (resultSet, i) -> phone.getColors().add(colors.get(resultSet.getLong("colorId"))), phone.getId());
+    }
+
+    @Override
+    public Stock getStockFor(Long key) {
+        Stock stock = new Stock();
+        jdbcTemplate.query(SQL_FOR_GETTING_STOCK_BY_PHONE_ID, (resultSet) -> {stock.setStock(resultSet.getInt("stock"));
+                                                                                stock.setReserved(resultSet.getInt("reserved"));
+                                                                                stock.setPhone(get(key).get());}, key);
+        return stock;
     }
 
     private Map<String, Object> getPhoneValues(Phone phone) {

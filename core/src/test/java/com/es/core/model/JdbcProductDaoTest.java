@@ -2,7 +2,7 @@ package com.es.core.model;
 
 import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.PhoneDao;
+import com.es.core.dao.PhoneDao;
 import org.junit.*;
 
 import static org.junit.Assert.*;
