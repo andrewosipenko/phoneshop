@@ -36,6 +36,15 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
+    public Integer getQuantityOfProducts() {
+        Integer quantity = 0;
+        for (CartItem cartItem : cart.getCartItems()) {
+            quantity += cartItem.getQuantity();
+        }
+        return quantity;
+    }
+
+    @Override
     public synchronized void addPhone(Long phoneId, Integer quantity) throws OutOfStockException{
         CartItem newCartItem = new CartItem(phoneId, quantity);
         if (cart.getCartItems().contains(newCartItem)) {

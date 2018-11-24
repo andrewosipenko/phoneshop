@@ -23,6 +23,9 @@
                 .done(function (data, textStatus, jqXHR) {
                     $('#result').text(data.message);
                     setLabel(phoneId, quantity, data.message);
+                    if (data.hasOwnProperty('cartItemsAmount')) {
+                        $('#cart').text("My cart: " + data.cartItemsAmount + " items");
+                    }
                 })
                 .fail(function (jqXHR, textStatus, errorThrown) {
                     $('#result').text("Something is wrong: " + textStatus + " " + errorThrown);
@@ -40,6 +43,7 @@
     </script>
 </head>
 <body>
+<div id="cart" style="text-align: right"></div>
 <p>
     Hello from product list!
 </p>

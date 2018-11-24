@@ -19,4 +19,6 @@ public interface CartService {
     void update(Map<Long, Integer> items);
 
     void remove(Long phoneId);
+
+    Integer getQuantityOfProducts();
 }
