@@ -15,7 +15,11 @@ public class CartItemValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "quantity", "quantity.empty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "quantity", "field.required");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "phoneId", "field.required");
+        if (errors.hasErrors()) {
+            return;
+        }
         CartItem cartItem = (CartItem) target;
         if (cartItem.getQuantity() < 1) {
             errors.rejectValue("quantity", "quantity.negativeOrZero");
