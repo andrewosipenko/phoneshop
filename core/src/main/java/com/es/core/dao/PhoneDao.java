@@ -11,4 +11,5 @@ public interface PhoneDao {
     Stock getStockFor(Long key);
     void save(Phone phone);
     List<Phone> findAllWithPositiveStock(int offset, int limit);
+    Long getTotalAmountOfPhonesWithPositiveStock();
 }

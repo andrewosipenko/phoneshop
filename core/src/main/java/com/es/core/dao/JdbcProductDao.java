@@ -22,6 +22,7 @@ public class JdbcProductDao implements PhoneDao {
     private static final String SQL_FOR_DELETING_PHONE_BY_ID = "delete from phones where id = ?";
     private static final String SQL_FOR_GETTING_COLORS_BY_PHONE_ID = "select * from phone2color where phone2color.phoneId = ?";
     private static final String SQL_FOR_GETTING_STOCK_BY_PHONE_ID = "select * from stocks where stocks.phoneId = ?";
+    private static final String SQL_FOR_GETTING_TOTAL_AMOUNT_WITH_POSITIVE_STOCK = "select count(*) from stocks where stocks.stock > 0";
     @Resource
     private JdbcTemplate jdbcTemplate;
     private BeanPropertyRowMapper<Phone> phoneBeanPropertyRowMapper = new BeanPropertyRowMapper<>(Phone.class);
@@ -95,6 +96,11 @@ public class JdbcProductDao implements PhoneDao {
                                                                                 stock.setReserved(resultSet.getInt("reserved"));
                                                                                 stock.setPhone(get(key).get());}, key);
         return stock;
+    }
+
+    @Override
+    public Long getTotalAmountOfPhonesWithPositiveStock() {
+        return jdbcTemplate.queryForObject(SQL_FOR_GETTING_TOTAL_AMOUNT_WITH_POSITIVE_STOCK, Long.class);
     }
 
     private Map<String, Object> getPhoneValues(Phone phone) {
