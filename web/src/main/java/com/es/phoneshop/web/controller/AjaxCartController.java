@@ -1,7 +1,7 @@
 package com.es.phoneshop.web.controller;
 
 import com.es.core.exceptions.OutOfStockException;
-import com.es.core.services.CartService;
+import com.es.core.services.cart.CartService;
 import com.es.core.model.cart.CartItem;
 import com.es.phoneshop.web.services.CartItemValidator;
 import org.springframework.context.annotation.Lazy;
@@ -37,7 +37,7 @@ public class AjaxCartController {
     public String addPhone(@RequestBody @Validated CartItem cartItem, Errors errors) {
         String response = makeJsonStringToResponse("cartItemsAmount", cartService.getQuantityOfProducts()+"");
         if (errors.hasErrors()) {
-            return makeJsonStringToResponse("message", errors.getAllErrors().get(0).getCode(), response);
+            return makeJsonStringToResponse("message", errors.getAllErrors().get(0).getDefaultMessage(), response);
         }
         try {
             cartService.addPhone(cartItem.getPhoneId(), cartItem.getQuantity());
@@ -54,7 +54,7 @@ public class AjaxCartController {
         return makeJsonStringToResponse("message", INVALID_INPUT_MESSAGE);
     }
 
-    private synchronized String makeJsonStringToResponse(String key, String value, String jsonString) {
+    private String makeJsonStringToResponse(String key, String value, String jsonString) {
         StringBuilder stringBuilder = new StringBuilder(jsonString);
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         stringBuilder.append(", \"");
@@ -65,12 +65,12 @@ public class AjaxCartController {
         return stringBuilder.toString();
     }
 
-    private synchronized String makeJsonStringToResponse(String key, String value) {
+    private String makeJsonStringToResponse(String key, String value) {
         String result = makeJsonStringToResponse(key, value, "{}");
         return result.replace(",", "");
     }
 
-    private synchronized String rewriteKeyOfJsonString(String key, String value, String jsonString) {
+    private String rewriteKeyOfJsonString(String key, String value, String jsonString) {
         StringBuilder stringBuilder = new StringBuilder(jsonString);
         int indexOfKey = jsonString.indexOf("{ \""+key);
         if (indexOfKey < 0) {
