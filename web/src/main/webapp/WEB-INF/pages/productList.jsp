@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="webjars/bootstrap/3.2.0/css/bootstrap.min.css"/>
     <script src="webjars/jquery/1.11.1/jquery.min.js"></script>
     <script src="webjars/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <c:set var="cartItemsAmount" scope="session" value="'My cart: 0 items'" />
+    <c:set var="cartItemsAmount" scope="session" value="'My cart: 0 items'"/>
     <title>Product list</title>
     <script type="text/javascript">
         function addToCart(phoneId, quantity) {
@@ -36,9 +36,9 @@
     <script type="text/javascript">
         function setLabel(phoneId, quantity, message) {
             if (message === 'success') {
-                document.getElementById("label"+phoneId).innerHTML = '<p style="color: green">Successfully adding ' + quantity + ' products to cart</p>';
+                document.getElementById("label" + phoneId).innerHTML = '<p style="color: green">Successfully adding ' + quantity + ' products to cart</p>';
             } else {
-                document.getElementById("label"+phoneId).innerHTML = '<p style="color: red">' + message + '</p>';
+                document.getElementById("label" + phoneId).innerHTML = '<p style="color: red">' + message + '</p>';
             }
         }
     </script>
@@ -52,10 +52,25 @@
 <p>
     Found
     <c:out value="${phones.size()}"/> phones.
-
+<div class="row">
+    <div class="col-md-2 col-md-offset-9">
+        <form method="post" class="search-form">
+            <div class="form-group has-feedback">
+                <label for="search" class="sr-only">Search</label>
+                <input type="text" class="form-control" name="search" id="search" placeholder="search">
+                <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                <button type="button" style="alignment: right"
+                        onclick="location.href='?search='+document.getElementById('search').value">Search!
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 <form method="post">
     <ul class="pagination pager">
-        <li><a href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&previousPage=true">Previous</a></li>
+        <li>
+            <a href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&previousPage=true">Previous</a>
+        </li>
         <li><a href="?pageNumber=1">1</a></li>
         <li><a href="?pageNumber=2">2</a></li>
         <li><a href="?pageNumber=3">3</a></li>
@@ -65,7 +80,9 @@
         <li><a href="?pageNumber=7">7</a></li>
         <li><a href="?pageNumber=8">8</a></li>
         <li><a href="?pageNumber=9">9</a></li>
-        <li><a href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&nextPage=true">Next</a></li>
+        <li>
+            <a href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&nextPage=true">Next</a>
+        </li>
     </ul>
     <div class="table-responsive">
         <table class="table table-bordered">
@@ -103,7 +120,8 @@
                     </td>
                     <td>
                         <button type="button"
-                                onclick="addToCart(${phone.id}, document.getElementById('quantity${phone.id}').value)">Add
+                                onclick="addToCart(${phone.id}, document.getElementById('quantity${phone.id}').value)">
+                            Add
                             to
                         </button>
                     </td>
@@ -112,7 +130,8 @@
             </tbody>
         </table>
         <ul class="pagination pager">
-            <li><a href="?pageNumber=${pageContext.request.getParameter("pageNumber")}&previousPage=true">Previous</a></li>
+            <li><a href="?pageNumber=${pageContext.request.getParameter("pageNumber")}&previousPage=true">Previous</a>
+            </li>
             <li><a href="?pageNumber=1">1</a></li>
             <li><a href="?pageNumber=2">2</a></li>
             <li><a href="?pageNumber=3">3</a></li>

@@ -27,27 +27,22 @@ public class ProductListPageController {
         this.cartService = cartService;
     }
 
-    //TODO:change pagination with params
     @GetMapping()
-    public String showProductList(Integer pageNumber, Boolean previousPage, Boolean nextPage, Model model) {
-        pageNumber = resolveParamsAndGetPage(pageNumber, previousPage, nextPage);
-        model.addAttribute("phones", findPhonesForCurrentPage(pageNumber));
+    public String showProductList(Integer pageNumber, Boolean previousPage, Boolean nextPage, String search, Model model) {
+        if (search != null) {
+            model.addAttribute("phones", findPhonesBySearch(search));
+        } else {
+            pageNumber = resolveParamsAndGetPage(pageNumber, previousPage, nextPage);
+            model.addAttribute("phones", findPhonesForCurrentPage(pageNumber));
+        }
         model.addAttribute("cartItemsAmount", cartService.getQuantityOfProducts());
         model.addAttribute("pageNumber", pageNumber);
         return "productList";
     }
 
     @PostMapping()
-    public String doPost(@RequestParam(value = "pageNumber", required = false) Integer pageNumber, Model model) {
-        return "redirect:/productList?pageNumber="+pageNumber;
-    }
-
-    private List<Phone> findPhonesForCurrentPage(Integer pageNumber) {
-        Long totalAmountOfProductsOnStock = phoneService.getTotalAmountOfPhonesWithPositiveStock();
-        if (AMOUNT_OF_SHOWED_PRODUCTS * (pageNumber - 1) > totalAmountOfProductsOnStock) {
-            pageNumber = ((Long) (totalAmountOfProductsOnStock / AMOUNT_OF_SHOWED_PRODUCTS)).intValue();
-        }
-        return phoneService.getPhonesWithPositiveStock(AMOUNT_OF_SHOWED_PRODUCTS * (pageNumber - 1), AMOUNT_OF_SHOWED_PRODUCTS);
+    public String doPost(@RequestParam(value = "pageNumber", required = false) Integer pageNumber, String search) {
+        return search == null ? "redirect:/productList?pageNumber="+pageNumber : "redirect:/productList?search="+search;
     }
 
     private Integer resolveParamsAndGetPage(Integer pageNumber, Boolean previousPage, Boolean nextPage) {
@@ -61,4 +56,17 @@ public class ProductListPageController {
         }
         return pageNumber;
     }
+
+    private List<Phone> findPhonesForCurrentPage(Integer pageNumber) {
+        Long totalAmountOfProductsOnStock = phoneService.getTotalAmountOfPhonesWithPositiveStock();
+        if (AMOUNT_OF_SHOWED_PRODUCTS * (pageNumber - 1) > totalAmountOfProductsOnStock) {
+            pageNumber = ((Long) (totalAmountOfProductsOnStock / AMOUNT_OF_SHOWED_PRODUCTS)).intValue();
+        }
+        return phoneService.getPhonesWithPositiveStock(AMOUNT_OF_SHOWED_PRODUCTS * (pageNumber - 1), AMOUNT_OF_SHOWED_PRODUCTS);
+    }
+
+    private List<Phone> findPhonesBySearch(String search) {
+        return phoneService.getPhonesByKeyword(search);
+    }
+
 }

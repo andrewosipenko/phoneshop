@@ -15,4 +15,5 @@ public interface PhoneDao {
     Long getTotalAmountOfPhonesWithPositiveStock();
     void makeReservationFor(Long key, Integer quantity);
     void removeReservationFor(Long key, Integer quantity);
+    List<Phone> findAllByKeyword(String keyword);
 }
