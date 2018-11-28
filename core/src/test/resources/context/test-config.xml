@@ -9,23 +9,24 @@
 
     <context:component-scan base-package="com.es.core"/>
 
-    <bean name="dataSourceTest" class="org.apache.commons.dbcp.BasicDataSource">
-        <property name="driverClassName" value="org.h2.Driver"/>
-        <property name="url" value="jdbc:h2:mem:schema"/>
-    </bean>
+    <context:property-placeholder location="classpath:context/application-test.properties"/>
 
-    <bean id="phoneDao" class="com.es.core.model.phone.JdbcPhoneDao"></bean>
-    <bean id="jdbcPhoneDao" class="com.es.core.model.phone.JdbcPhoneDao"></bean>
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${db.driver}"/>
+        <property name="url" value="${db.url};DB_CLOSE_DELAY=-1"/>
+    </bean>
 
     <bean id="jdbcTemplateTest" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource" ref="dataSourceTest"/>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
 
-    <jdbc:initialize-database data-source="dataSourceTest">
+    <bean id="phoneDao" class="com.es.core.model.phone.JdbcPhoneDao"/>
+
+    <jdbc:initialize-database data-source="dataSource">
         <jdbc:script location="classpath:db/schema.sql"/>
     </jdbc:initialize-database>
 
-    <jdbc:initialize-database>
+    <jdbc:initialize-database data-source="dataSource">
         <jdbc:script location="classpath:db/phoneData.sql"/>
     </jdbc:initialize-database>
 

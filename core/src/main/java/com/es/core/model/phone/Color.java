@@ -47,4 +47,9 @@ public class Color {
     public int hashCode() {
         return code.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "Color: " + code;
+    }
 }

@@ -30,13 +30,10 @@ public class JdbcPhoneDaoTest {
     private final long newPhoneId = 999L;
     private final long idForDelete = 1000L;
 
-
     @Resource
     private JdbcTemplate jdbcTemplateTest;
     @Resource
     private PhoneDao phoneDao;
-    @Resource
-    private JdbcPhoneDao jdbcPhoneDao;
 
     private Phone phone;
     private Phone newPhone;
@@ -96,7 +93,7 @@ public class JdbcPhoneDaoTest {
 
         Assert.assertEquals(1, phones.size());
         Assert.assertEquals(newPhone.getBrand(), phones.get(0).getBrand());
-        Assert.assertEquals(newPhone.getBrand(), phones.get(0).getModel());
+        Assert.assertEquals(newPhone.getModel(), phones.get(0).getModel());
     }
 
     @Test
@@ -113,7 +110,7 @@ public class JdbcPhoneDaoTest {
         long oldCount = this.jdbcTemplateTest.queryForObject(SQL_SELECT_COUNT_FROM_PHONES, long.class);
         phone.setId(idForDelete);
 
-        this.jdbcPhoneDao.delete(phone);
+        this.phoneDao.delete(phone);
         long newCount = this.jdbcTemplateTest.queryForObject(SQL_SELECT_COUNT_FROM_PHONES, long.class);
 
         Assert.assertEquals(oldCount - 1, newCount);

@@ -33,7 +33,11 @@
                         <td>${phone.brand}</td>
                         <td>${phone.model}</td>
                         <td>$ ${phone.price}</td>
-                        <td>${phone.colors}</td>
+                        <td>
+                            <c:forEach var="color" items="${phone.colors}">
+                                ${color.code}
+                            </c:forEach>
+                        </td>
                     </tr>
                 </c:forEach>
             </table>
