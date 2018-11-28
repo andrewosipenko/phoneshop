@@ -15,12 +15,12 @@ import java.util.Map;
 public class HttpSessionCartService implements CartService {
     @Resource
     private PhoneDao phoneDao;
-    @Lazy
+
     @Resource
     private Cart cart;
 
     @Override
-    public synchronized Cart getCart() {
+    public Cart getCart() {
         return cart;
     }
 
@@ -32,6 +32,7 @@ public class HttpSessionCartService implements CartService {
     @Override
     public synchronized void remove(Long phoneId) {
         CartItem cartItem = new CartItem(phoneId, 0);
+        phoneDao.removeReservationFor(phoneId, cart.getCartItems().get(cart.getCartItems().indexOf(cartItem)).getQuantity());
         cart.getCartItems().remove(cartItem);
     }
 
@@ -49,8 +50,9 @@ public class HttpSessionCartService implements CartService {
         CartItem newCartItem = new CartItem(phoneId, quantity);
         if (cart.getCartItems().contains(newCartItem)) {
             increasePhoneQuantity(cart, phoneId, quantity);
-        } else if(isAvailability(newCartItem.getPhoneId(), newCartItem.getQuantity())) {
+        } else if(isAvailability(phoneId, quantity)) {
             cart.getCartItems().add(newCartItem);
+            phoneDao.makeReservationFor(phoneId, quantity);
         } else {
             throw new OutOfStockException();
         }
@@ -58,8 +60,9 @@ public class HttpSessionCartService implements CartService {
 
     private void increasePhoneQuantity(Cart cart, Long phoneId, Integer quantity) throws OutOfStockException {
         CartItem cartItem = cart.getCartItems().get(cart.getCartItems().indexOf(new CartItem(phoneId, quantity)));
-        if(isAvailability(phoneId, cartItem.getQuantity()+quantity)) {
+        if(isAvailability(phoneId, quantity)) {
             cartItem.setQuantity(cartItem.getQuantity()+quantity);
+            phoneDao.makeReservationFor(phoneId, quantity);
         } else {
             throw new OutOfStockException();
         }

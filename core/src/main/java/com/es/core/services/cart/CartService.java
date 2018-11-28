@@ -6,7 +6,7 @@ import com.es.core.model.cart.Cart;
 import java.util.Map;
 
 public interface CartService {
-
+    //TODO: ADD TESTS
     Cart getCart();
 
     void addPhone(Long phoneId, Integer quantity) throws OutOfStockException;

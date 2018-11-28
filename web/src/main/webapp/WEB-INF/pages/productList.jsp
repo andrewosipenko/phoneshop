@@ -3,9 +3,9 @@
 <!doctype html>
 <html>
 <head>
-    <link rel="stylesheet" href="../webjars/bootstrap/3.2.0/css/bootstrap.min.css"/>
-    <script src="../webjars/jquery/1.11.1/jquery.min.js"></script>
-    <script src="../webjars/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="webjars/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <script src="webjars/jquery/1.11.1/jquery.min.js"></script>
+    <script src="webjars/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <c:set var="cartItemsAmount" scope="session" value="'My cart: 0 items'" />
     <title>Product list</title>
     <script type="text/javascript">
@@ -16,13 +16,12 @@
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                url: "../ajaxCart",
+                url: "ajaxCart",
                 method: "POST",
                 dataType: 'json',
                 data: JSON.stringify(data)
             })
                 .done(function (data, textStatus, jqXHR) {
-                    $('#result').text(data.message);
                     setLabel(phoneId, quantity, data.message);
                     if (data.hasOwnProperty('cartItemsAmount')) {
                         var cartInfo = "My cart: " + data.cartItemsAmount + " items";
@@ -43,12 +42,9 @@
             }
         }
     </script>
-    <script>
-        $('#cart').text(${sessionScope.get("cartItemsAmount")});
-    </script>
 </head>
 <body>
-<div id="cart" style="text-align: right"></div>
+<div id="cart" style="text-align: right">My cart: ${cartItemsAmount} items</div>
 <p>
     Hello from product list!
 </p>
@@ -59,15 +55,17 @@
 
 <form method="post">
     <ul class="pagination pager">
-        <li><a href="1">1</a></li>
-        <li><a href="2">2</a></li>
-        <li><a href="3">3</a></li>
-        <li><a href="4">4</a></li>
-        <li><a href="5">5</a></li>
-        <li><a href="6">6</a></li>
-        <li><a href="7">7</a></li>
-        <li><a href="8">8</a></li>
-        <li><a href="9">9</a></li>
+        <li><a href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&previousPage=true">Previous</a></li>
+        <li><a href="?pageNumber=1">1</a></li>
+        <li><a href="?pageNumber=2">2</a></li>
+        <li><a href="?pageNumber=3">3</a></li>
+        <li><a href="?pageNumber=4">4</a></li>
+        <li><a href="?pageNumber=5">5</a></li>
+        <li><a href="?pageNumber=6">6</a></li>
+        <li><a href="?pageNumber=7">7</a></li>
+        <li><a href="?pageNumber=8">8</a></li>
+        <li><a href="?pageNumber=9">9</a></li>
+        <li><a href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&nextPage=true">Next</a></li>
     </ul>
     <div class="table-responsive">
         <table class="table table-bordered">
@@ -114,15 +112,17 @@
             </tbody>
         </table>
         <ul class="pagination pager">
-            <li><a href="1">1</a></li>
-            <li><a href="2">2</a></li>
-            <li><a href="3">3</a></li>
-            <li><a href="4">4</a></li>
-            <li><a href="5">5</a></li>
-            <li><a href="6">6</a></li>
-            <li><a href="7">7</a></li>
-            <li><a href="8">8</a></li>
-            <li><a href="9">9</a></li>
+            <li><a href="?pageNumber=${pageContext.request.getParameter("pageNumber")}&previousPage=true">Previous</a></li>
+            <li><a href="?pageNumber=1">1</a></li>
+            <li><a href="?pageNumber=2">2</a></li>
+            <li><a href="?pageNumber=3">3</a></li>
+            <li><a href="?pageNumber=4">4</a></li>
+            <li><a href="?pageNumber=5">5</a></li>
+            <li><a href="?pageNumber=6">6</a></li>
+            <li><a href="?pageNumber=7">7</a></li>
+            <li><a href="?pageNumber=8">8</a></li>
+            <li><a href="?pageNumber=9">9</a></li>
+            <li><a href="?pageNumber=${pageContext.request.getParameter("pageNumber")}&nextPage=true">Next</a></li>
         </ul>
 
     </div>
