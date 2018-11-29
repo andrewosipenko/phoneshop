@@ -11,7 +11,6 @@ public interface PhoneDao {
     Stock getStockFor(Long key);
     void save(Phone phone);
     List<Phone> findAllWithPositiveStock(int offset, int limit);
-    //TODO: ADD TEST
     Long getTotalAmountOfPhonesWithPositiveStock();
     void makeReservationFor(Long key, Integer quantity);
     void removeReservationFor(Long key, Integer quantity);

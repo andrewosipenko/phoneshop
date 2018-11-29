@@ -3,6 +3,7 @@ package com.es.core.model;
 import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;
 import com.es.core.dao.PhoneDao;
+import com.es.core.model.phone.Stock;
 import org.junit.*;
 
 import static org.junit.Assert.*;
@@ -31,6 +32,9 @@ public class JdbcProductDaoTest {
     private static final String SQL_QUERY_FOR_GETTING_PHONES = "select * from phones";
     private static final String SQL_QUERY_FOR_SETTING_STOCK = "insert into stocks (phoneId, stock, reserved) values (?,?,?)";
     private static final String SQL_QUERY_FOR_UPDATING_STOCK = "update stocks set stock=?, reserved=? where phoneId=?";
+    private static final String SQL_QUERY_FOR_GETTING_RESERVED_QUANTITY = "select reserved from stocks where phoneId=?";
+    private static final Integer INITIAL_PHONE_STOCK_VALUE = 5;
+    private static final Integer INITIAL_PHONE_RESERVED_VALUE = 1;
     @Resource
     private JdbcTemplate jdbcTemplate;
     @Resource
@@ -60,7 +64,7 @@ public class JdbcProductDaoTest {
         jdbcTemplate.update(SQL_QUERY_FOR_INSERT_PHONE, initialPhone.getId(), initialPhone.getBrand(), initialPhone.getModel());
         jdbcTemplate.update(SQL_QUERY_FOR_BINDING_PHONE_AND_COLOR, initialPhone.getId(), black.getId());
         jdbcTemplate.update(SQL_QUERY_FOR_BINDING_PHONE_AND_COLOR, initialPhone.getId(), white.getId());
-        jdbcTemplate.update(SQL_QUERY_FOR_SETTING_STOCK, initialPhone.getId(), 5, 1);
+        jdbcTemplate.update(SQL_QUERY_FOR_SETTING_STOCK, initialPhone.getId(), INITIAL_PHONE_STOCK_VALUE, INITIAL_PHONE_RESERVED_VALUE);
     }
 
     @Test
@@ -147,5 +151,56 @@ public class JdbcProductDaoTest {
 
         assertEquals(2, phones.size());
         assertEquals(expectedPhone.getBrand(), phones.get(1).getBrand());
+    }
+
+    @Test
+    public void shouldReturnCorrectStock() {
+        Stock stock = productDao.getStockFor(initialPhone.getId());
+
+        assertEquals(INITIAL_PHONE_STOCK_VALUE, stock.getStock());
+        assertEquals(INITIAL_PHONE_RESERVED_VALUE, stock.getReserved());
+    }
+
+    @Test
+    public void shouldReturnCorrectAmountWithPositiveStock() {
+        long amountOfPhones = productDao.getTotalAmountOfPhonesWithPositiveStock();
+
+        assertEquals(amountOfPhones, 1L);
+    }
+
+    @Test
+    public void shouldReserve() {
+        int quantityToReserved = 2;
+
+        productDao.makeReservationFor(initialPhone.getId(), quantityToReserved);
+        int actualReserved = jdbcTemplate.queryForObject(SQL_QUERY_FOR_GETTING_RESERVED_QUANTITY, Integer.class, initialPhone.getId());
+
+        assertEquals(quantityToReserved+INITIAL_PHONE_RESERVED_VALUE, actualReserved);
+    }
+
+    @Test
+    public void shouldRemoveReservation() {
+        productDao.removeReservationFor(initialPhone.getId(), INITIAL_PHONE_RESERVED_VALUE);
+        int actualReserved = jdbcTemplate.queryForObject(SQL_QUERY_FOR_GETTING_RESERVED_QUANTITY, Integer.class, initialPhone.getId());
+        assertEquals(0, actualReserved);
+    }
+
+    @Test
+    public void shouldFindByBrand() {
+        String keyword = "TestBrand";
+
+        List<Phone> phones = productDao.findAllByKeyword(keyword);
+
+        assertEquals(1, phones.size());
+        assertEquals(initialPhone.getId(), phones.get(0).getId());
+    }
+
+    @Test
+    public void shouldNotFindByBrand() {
+        String keyword = "NonExistedBrand";
+
+        List<Phone> phones = productDao.findAllByKeyword(keyword);
+
+        assertEquals(0, phones.size());
     }
 }
