@@ -3,9 +3,11 @@
 <!doctype html>
 <html>
 <head>
-    <link rel="stylesheet" href="webjars/bootstrap/3.2.0/css/bootstrap.min.css"/>
-    <script src="webjars/jquery/1.11.1/jquery.min.js"></script>
-    <script src="webjars/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="webjars/bootstrap/4.1.3/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="webjars/bootstrap-sortable/1.11.1/Contents/bootstrap-sortable.css">
+    <script src="webjars/jquery/3.0.0/jquery.min.js"></script>
+    <script src="webjars/bootstrap-sortable/1.11.1/Scripts/bootstrap-sortable.js"></script>
+    <script src="webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <c:set var="cartItemsAmount" scope="session" value="'My cart: 0 items'"/>
     <title>Product list</title>
     <script type="text/javascript">
@@ -52,8 +54,8 @@
 <p>
     Found
     <c:out value="${phones.size()}"/> phones.
-<div class="row">
-    <div class="col-md-2 col-md-offset-9">
+<div class="row justify-content-end">
+    <div class="col-md-2">
         <form method="post" class="search-form">
             <div class="form-group has-feedback">
                 <label for="search" class="sr-only">Search</label>
@@ -67,35 +69,39 @@
     </div>
 </div>
 <form method="post">
-    <ul class="pagination pager">
-        <li>
-            <a href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&previousPage=true">Previous</a>
-        </li>
-        <li><a href="?pageNumber=1">1</a></li>
-        <li><a href="?pageNumber=2">2</a></li>
-        <li><a href="?pageNumber=3">3</a></li>
-        <li><a href="?pageNumber=4">4</a></li>
-        <li><a href="?pageNumber=5">5</a></li>
-        <li><a href="?pageNumber=6">6</a></li>
-        <li><a href="?pageNumber=7">7</a></li>
-        <li><a href="?pageNumber=8">8</a></li>
-        <li><a href="?pageNumber=9">9</a></li>
-        <li>
-            <a href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&nextPage=true">Next</a>
-        </li>
-    </ul>
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-end">
+            <li class="page-item">
+                <a class="page-link"
+                   href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&previousPage=true">Previous</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=1">1</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=2">2</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=3">3</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=4">4</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=5">5</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=6">6</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=7">7</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=8">8</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=9">9</a></li>
+            <li class="page-item">
+                <a class="page-link"
+                   href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&nextPage=true">Next</a>
+            </li>
+        </ul>
+    </nav>
     <div class="table-responsive">
-        <table class="table table-bordered">
+        <table id="table" class="table table-striped table-bordered table-hover table-sm sortable" cellspacing="0" width="100%">
             <thead>
             <tr>
-                <td>Image</td>
-                <td>Brand</td>
-                <td>Model</td>
-                <td>Color</td>
-                <td>Display size</td>
-                <td>Price</td>
-                <td>Quantity</td>
-                <td>Action</td>
+                <th>Image</th>
+                <th data-defaultsign="reversed">Brand</th>
+                <th>Model</th>
+                <th>Color</th>
+                <th>Display size</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Action</th>
             </tr>
             </thead>
             <tbody>
@@ -129,22 +135,28 @@
             </c:forEach>
             </tbody>
         </table>
-        <ul class="pagination pager">
-            <li><a href="?pageNumber=${pageContext.request.getParameter("pageNumber")}&previousPage=true">Previous</a>
-            </li>
-            <li><a href="?pageNumber=1">1</a></li>
-            <li><a href="?pageNumber=2">2</a></li>
-            <li><a href="?pageNumber=3">3</a></li>
-            <li><a href="?pageNumber=4">4</a></li>
-            <li><a href="?pageNumber=5">5</a></li>
-            <li><a href="?pageNumber=6">6</a></li>
-            <li><a href="?pageNumber=7">7</a></li>
-            <li><a href="?pageNumber=8">8</a></li>
-            <li><a href="?pageNumber=9">9</a></li>
-            <li><a href="?pageNumber=${pageContext.request.getParameter("pageNumber")}&nextPage=true">Next</a></li>
-        </ul>
-
     </div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-end">
+            <li class="page-item">
+                <a class="page-link"
+                   href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&previousPage=true">Previous</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=1">1</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=2">2</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=3">3</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=4">4</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=5">5</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=6">6</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=7">7</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=8">8</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=9">9</a></li>
+            <li class="page-item">
+                <a class="page-link"
+                   href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&nextPage=true">Next</a>
+            </li>
+        </ul>
+    </nav>
 </form>
 </p>
 </body>
