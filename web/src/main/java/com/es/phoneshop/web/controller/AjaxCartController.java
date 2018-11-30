@@ -37,7 +37,6 @@ public class AjaxCartController {
     @ResponseBody
     public Map<String, Object> addPhone(@RequestBody @Validated CartItem cartItem, Errors errors) {
         Map<String, Object> response = new HashMap<>();
-        response.put("cartItemsAmount", cartService.getQuantityOfProducts()+"");
         if (errors.hasErrors()) {
             response.put("message", errors.getAllErrors().get(0).getDefaultMessage());
             return response;
@@ -45,6 +44,7 @@ public class AjaxCartController {
         try {
             cartService.addPhone(cartItem.getPhoneId(), cartItem.getQuantity());
             response.put("cartItemsAmount", cartService.getQuantityOfProducts());
+            response.put("cartItemsPrice", cartService.getTotalPriceOfProducts());
             response.put("message", SUCCESS_MESSAGE);
             return response;
         } catch (OutOfStockException exception) {

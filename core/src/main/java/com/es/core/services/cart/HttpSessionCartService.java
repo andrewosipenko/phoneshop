@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Map;
 
 @Service
@@ -43,6 +44,15 @@ public class HttpSessionCartService implements CartService {
             quantity += cartItem.getQuantity();
         }
         return quantity;
+    }
+
+    @Override
+    public BigDecimal getTotalPriceOfProducts() {
+        BigDecimal totalCartPrice = BigDecimal.ZERO;
+        for (CartItem cartItem : cart.getCartItems()) {
+            totalCartPrice = totalCartPrice.add(phoneDao.get(cartItem.getPhoneId()).get().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
+        }
+        return totalCartPrice;
     }
 
     @Override

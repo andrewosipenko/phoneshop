@@ -36,6 +36,7 @@ public class ProductListPageController {
             model.addAttribute("phones", findPhonesForCurrentPage(pageNumber));
         }
         model.addAttribute("cartItemsAmount", cartService.getQuantityOfProducts());
+        model.addAttribute("cartItemsPrice", cartService.getTotalPriceOfProducts());
         model.addAttribute("pageNumber", pageNumber);
         return "productList";
     }

@@ -26,7 +26,7 @@
                 .done(function (data, textStatus, jqXHR) {
                     setLabel(phoneId, quantity, data.message);
                     if (data.hasOwnProperty('cartItemsAmount')) {
-                        var cartInfo = "My cart: " + data.cartItemsAmount + " items";
+                        var cartInfo = "My cart: " + data.cartItemsAmount + " items $" + data.cartItemsPrice;
                         $('#cart').text(cartInfo);
                     }
                 })
@@ -46,7 +46,7 @@
     </script>
 </head>
 <body>
-<div id="cart" style="text-align: right">My cart: ${cartItemsAmount} items</div>
+<div id="cart" style="text-align: right">My cart: ${cartItemsAmount} items $${cartItemsPrice}</div>
 <p>
     Hello from product list!
 </p>

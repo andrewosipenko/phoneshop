@@ -3,10 +3,10 @@ package com.es.core.services.cart;
 import com.es.core.exceptions.OutOfStockException;
 import com.es.core.model.cart.Cart;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 public interface CartService {
-    //TODO: ADD TESTS
     Cart getCart();
 
     void addPhone(Long phoneId, Integer quantity) throws OutOfStockException;
@@ -21,4 +21,6 @@ public interface CartService {
     void remove(Long phoneId);
 
     Integer getQuantityOfProducts();
+
+    BigDecimal getTotalPriceOfProducts();
 }

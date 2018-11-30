@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 
@@ -23,7 +24,7 @@ import java.util.List;
 @ContextConfiguration("/test-config.xml")
 public class JdbcProductDaoTest {
     private static final String SQL_QUERY_FOR_INSERT_COLOR = "insert into colors values (?,?)";
-    private static final String SQL_QUERY_FOR_INSERT_PHONE = "insert into phones (id, brand, model) values (?, ?, ?)";
+    private static final String SQL_QUERY_FOR_INSERT_PHONE = "insert into phones (id, brand, model, price) values (?, ?, ?, ?)";
     private static final String SQL_QUERY_FOR_BINDING_PHONE_AND_COLOR = "insert into phone2color values (?,?)";
     private static final String SQL_QUERY_FOR_CLEAR_COLORS = "delete from colors";
     private static final String SQL_QUERY_FOR_CLEAR_PHONES = "delete from phones";
@@ -50,6 +51,7 @@ public class JdbcProductDaoTest {
         initialPhone.setId(999L);
         initialPhone.setBrand("TestBrand");
         initialPhone.setModel("testModel");
+        initialPhone.setPrice(BigDecimal.ONE);
         initialPhone.setColors(new HashSet<>());
         initialPhone.getColors().add(black);
         initialPhone.getColors().add(white);
@@ -59,9 +61,10 @@ public class JdbcProductDaoTest {
         expectedPhone = new Phone();
         expectedPhone.setBrand("TestBrandSave");
         expectedPhone.setModel("testModelSave");
+        expectedPhone.setPrice(BigDecimal.ONE);
         jdbcTemplate.update(SQL_QUERY_FOR_INSERT_COLOR, black.getId(), black.getCode());
         jdbcTemplate.update(SQL_QUERY_FOR_INSERT_COLOR, white.getId(), white.getCode());
-        jdbcTemplate.update(SQL_QUERY_FOR_INSERT_PHONE, initialPhone.getId(), initialPhone.getBrand(), initialPhone.getModel());
+        jdbcTemplate.update(SQL_QUERY_FOR_INSERT_PHONE, initialPhone.getId(), initialPhone.getBrand(), initialPhone.getModel(), initialPhone.getPrice());
         jdbcTemplate.update(SQL_QUERY_FOR_BINDING_PHONE_AND_COLOR, initialPhone.getId(), black.getId());
         jdbcTemplate.update(SQL_QUERY_FOR_BINDING_PHONE_AND_COLOR, initialPhone.getId(), white.getId());
         jdbcTemplate.update(SQL_QUERY_FOR_SETTING_STOCK, initialPhone.getId(), INITIAL_PHONE_STOCK_VALUE, INITIAL_PHONE_RESERVED_VALUE);
@@ -90,7 +93,8 @@ public class JdbcProductDaoTest {
         phoneWithNullStock.setId(998L);
         phoneWithNullStock.setBrand("NullStockBrand");
         phoneWithNullStock.setModel("NullStockModel");
-        jdbcTemplate.update(SQL_QUERY_FOR_INSERT_PHONE, phoneWithNullStock.getId(), phoneWithNullStock.getBrand(), phoneWithNullStock.getModel());
+        phoneWithNullStock.setPrice(BigDecimal.ONE);
+        jdbcTemplate.update(SQL_QUERY_FOR_INSERT_PHONE, phoneWithNullStock.getId(), phoneWithNullStock.getBrand(), phoneWithNullStock.getModel(), phoneWithNullStock.getPrice());
 
         List<Phone> phones = productDao.findAllWithPositiveStock(0, 5);
 
@@ -113,7 +117,8 @@ public class JdbcProductDaoTest {
         phone2.setId(998L);
         phone2.setBrand("TestBrand2");
         phone2.setModel("testModel2");
-        jdbcTemplate.update(SQL_QUERY_FOR_INSERT_PHONE, phone2.getId(), phone2.getBrand(), phone2.getModel());
+        phone2.setPrice(BigDecimal.ONE);
+        jdbcTemplate.update(SQL_QUERY_FOR_INSERT_PHONE, phone2.getId(), phone2.getBrand(), phone2.getModel(), phone2.getPrice());
         jdbcTemplate.update(SQL_QUERY_FOR_SETTING_STOCK, phone2.getId(), 5, 1);
 
         List<Phone> phones = productDao.findAllWithPositiveStock(0, 5);
@@ -162,10 +167,10 @@ public class JdbcProductDaoTest {
     }
 
     @Test
-    public void shouldReturnCorrectAmountWithPositiveStock() {
-        long amountOfPhones = productDao.getTotalAmountOfPhonesWithPositiveStock();
+    public void shouldReturnCorrectAmountOfAvailable() {
+        long amountOfPhones = productDao.getTotalAmountOfAvailablePhones();
 
-        assertEquals(amountOfPhones, 1L);
+        assertEquals(1L, amountOfPhones);
     }
 
     @Test

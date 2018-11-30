@@ -24,6 +24,6 @@ public class PhoneServiceImpl implements PhoneService {
 
     @Override
     public Long getTotalAmountOfPhonesWithPositiveStock() {
-        return phoneDao.getTotalAmountOfPhonesWithPositiveStock();
+        return phoneDao.getTotalAmountOfAvailablePhones();
     }
 }
