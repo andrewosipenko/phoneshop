@@ -74,24 +74,17 @@ public class CartServiceImplTest {
     }
 
     @Test
-    public void shouldAddNewCartItem() {
+    public void shouldAddNewCartItem() throws OutOfStockException {
         phoneDao.save(secondPhone);
         jdbcTemplate.update(SQL_QUERY_FOR_SETTING_STOCK, secondPhone.getId(), SECOND_STOCK, SECOND_RESERVED);
 
-        try {
-            cartService.addPhone(secondPhone.getId(), SECOND_STOCK - SECOND_RESERVED);
-        } catch (OutOfStockException exception) {
-            fail();
-        }
+        cartService.addPhone(secondPhone.getId(), SECOND_STOCK - SECOND_RESERVED);
+
     }
 
     @Test
-    public void shouldIncreaseQuantityOfExistedCartItem() {
-        try {
-            cartService.addPhone(INITIAL_CART_ITEM_PHONE_ID, INITIAL_STOCK - INITIAL_RESERVED);
-        } catch (OutOfStockException exception) {
-            fail();
-        }
+    public void shouldIncreaseQuantityOfExistedCartItem() throws OutOfStockException {
+        cartService.addPhone(INITIAL_CART_ITEM_PHONE_ID, INITIAL_STOCK - INITIAL_RESERVED);
     }
 
     @Test(expected = OutOfStockException.class)
