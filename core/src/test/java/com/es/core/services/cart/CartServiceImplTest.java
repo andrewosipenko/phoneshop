@@ -1,12 +1,10 @@
 package com.es.core.services.cart;
 
-import static org.junit.Assert.*;
 import com.es.core.dao.PhoneDao;
 import com.es.core.exceptions.OutOfStockException;
 import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.Stock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,9 +14,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 
+import static org.junit.Assert.*;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/test-config.xml")
-public class HttpSessionCartServiceTest {
+public class CartServiceImplTest {
     private static final String SQL_QUERY_FOR_SETTING_STOCK = "insert into stocks (phoneId, stock, reserved) values (?,?,?)";
     private static final Long INITIAL_CART_ITEM_PHONE_ID = 42L;
     private static final Integer INITIAL_STOCK = 10;
@@ -110,9 +110,7 @@ public class HttpSessionCartServiceTest {
     @Test
     public void shouldRemove() {
         cartService.remove(INITIAL_CART_ITEM_PHONE_ID);
-        Stock stock = phoneDao.getStockFor(INITIAL_CART_ITEM_PHONE_ID);
 
         assertEquals(0, cart.getCartItems().size());
-        assertEquals(0, (int)stock.getReserved());
     }
 }

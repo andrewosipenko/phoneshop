@@ -14,7 +14,7 @@ public class PhoneServiceImpl implements PhoneService {
 
     @Override
     public List<Phone> getPhonesWithPositiveStock(int offset, int limit) {
-        return phoneDao.findAllWithPositiveStock(offset, limit);
+        return phoneDao.findAllAvailable(offset, limit);
     }
 
     @Override

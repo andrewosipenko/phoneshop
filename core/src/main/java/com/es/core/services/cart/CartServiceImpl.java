@@ -1,11 +1,10 @@
 package com.es.core.services.cart;
 
 import com.es.core.dao.PhoneDao;
+import com.es.core.dao.StockDao;
 import com.es.core.exceptions.OutOfStockException;
 import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
-import com.es.core.model.phone.Stock;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -13,7 +12,9 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 @Service
-public class HttpSessionCartService implements CartService {
+public class CartServiceImpl implements CartService {
+    @Resource
+    private StockDao stockDao;
     @Resource
     private PhoneDao phoneDao;
 
@@ -33,7 +34,6 @@ public class HttpSessionCartService implements CartService {
     @Override
     public synchronized void remove(Long phoneId) {
         CartItem cartItem = new CartItem(phoneId, 0);
-        phoneDao.removeReservationFor(phoneId, cart.getCartItems().get(cart.getCartItems().indexOf(cartItem)).getQuantity());
         cart.getCartItems().remove(cartItem);
     }
 
@@ -62,24 +62,32 @@ public class HttpSessionCartService implements CartService {
             increasePhoneQuantity(cart, phoneId, quantity);
         } else if(isAvailability(phoneId, quantity)) {
             cart.getCartItems().add(newCartItem);
-            phoneDao.makeReservationFor(phoneId, quantity);
         } else {
             throw new OutOfStockException();
         }
     }
 
     private void increasePhoneQuantity(Cart cart, Long phoneId, Integer quantity) throws OutOfStockException {
-        CartItem cartItem = cart.getCartItems().get(cart.getCartItems().indexOf(new CartItem(phoneId, quantity)));
+        CartItem cartItem = cart.getCartItems().get(getIndexOf(phoneId, quantity));
         if(isAvailability(phoneId, quantity)) {
             cartItem.setQuantity(cartItem.getQuantity()+quantity);
-            phoneDao.makeReservationFor(phoneId, quantity);
         } else {
             throw new OutOfStockException();
         }
     }
 
+    private int getIndexOf(long phoneId, int quantity) {
+        return cart.getCartItems().indexOf(new CartItem(phoneId, quantity));
+    }
+
     private boolean isAvailability(Long phoneId, Integer quantity) {
-        Stock stock = phoneDao.getStockFor(phoneId);
-        return (stock.getStock() - stock.getReserved() >= quantity);
+        int stock = stockDao.getStockFor(phoneId);
+        int indexOfOldCartItem = getIndexOf(phoneId, quantity);
+        if (indexOfOldCartItem >= 0) {
+            CartItem oldCartItem = cart.getCartItems().get(indexOfOldCartItem);
+            return stock - oldCartItem.getQuantity() >= quantity;
+        } else {
+            return stock >= quantity;
+        }
     }
 }
