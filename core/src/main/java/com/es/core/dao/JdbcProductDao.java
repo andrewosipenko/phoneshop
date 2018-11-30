@@ -76,9 +76,7 @@ public class JdbcProductDao implements PhoneDao {
         Map<Long, Color> colors = getColors();
         List<Phone> phones = jdbcTemplate.query(SQL_FOR_GETTING_AVAILABLE_PHONES_BY_OFFSET_AND_LIMIT,
                         phoneBeanPropertyRowMapper, offset, limit);
-        for (Phone phone : phones) {
-            setColorsForPhone(phone, colors);
-        }
+        phones.forEach(phone -> setColorsForPhone(phone, colors));
         return phones;
     }
 
@@ -88,9 +86,7 @@ public class JdbcProductDao implements PhoneDao {
         Map<Long, Color> colors = getColors();
         List<Phone> phones = jdbcTemplate.query(SQL_FOR_GETTING_PHONES_BY_KEYWORD,
                 phoneBeanPropertyRowMapper, keyword, keyword);
-        for (Phone phone : phones) {
-            setColorsForPhone(phone, colors);
-        }
+        phones.forEach(phone -> setColorsForPhone(phone, colors));
         return phones;
     }
 

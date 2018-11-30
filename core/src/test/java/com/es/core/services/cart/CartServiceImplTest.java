@@ -60,7 +60,7 @@ public class CartServiceImplTest {
     }
 
     @Test
-    public void ShouldReturnCart() {
+    public void shouldReturnCart() {
         Cart actualCart = cartService.getCart();
 
         assertEquals(cart.getCartItems(), actualCart.getCartItems());

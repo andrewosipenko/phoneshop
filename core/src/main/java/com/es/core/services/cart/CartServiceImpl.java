@@ -32,7 +32,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public synchronized void remove(Long phoneId) {
+    public void remove(Long phoneId) {
         CartItem cartItem = new CartItem(phoneId, 0);
         cart.getCartItems().remove(cartItem);
     }
@@ -56,7 +56,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public synchronized void addPhone(Long phoneId, Integer quantity) throws OutOfStockException{
+    public void addPhone(Long phoneId, Integer quantity) throws OutOfStockException{
         CartItem newCartItem = new CartItem(phoneId, quantity);
         if (cart.getCartItems().contains(newCartItem)) {
             increasePhoneQuantity(cart, phoneId, quantity);
