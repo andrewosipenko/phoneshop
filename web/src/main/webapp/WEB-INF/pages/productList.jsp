@@ -51,6 +51,8 @@
             <li class="page-item"><a class="page-link" href="?pageNumber=7">7</a></li>
             <li class="page-item"><a class="page-link" href="?pageNumber=8">8</a></li>
             <li class="page-item"><a class="page-link" href="?pageNumber=9">9</a></li>
+            <li class="page-item"><a class="page-link disabled">...</a></li>
+            <li class="page-item"><a class="page-link" href="?pageNumber=${maxPageNumber}">${maxPageNumber}</a></li>
             <li class="page-item">
                 <a class="page-link"
                    href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&nextPage=true">Next</a>
