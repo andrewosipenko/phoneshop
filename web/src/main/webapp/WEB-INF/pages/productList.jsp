@@ -8,42 +8,9 @@
     <script src="webjars/jquery/3.0.0/jquery.min.js"></script>
     <script src="webjars/bootstrap-sortable/1.11.1/Scripts/bootstrap-sortable.js"></script>
     <script src="webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="<c:url value="/resources/PLP_scripts.js"/>"></script>
     <c:set var="cartItemsAmount" scope="session" value="'My cart: 0 items'"/>
     <title>Product list</title>
-    <script type="text/javascript">
-        function addToCart(phoneId, quantity) {
-            var data = {phoneId: phoneId, quantity: quantity};
-            $.ajax({
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                url: "ajaxCart",
-                method: "POST",
-                dataType: 'json',
-                data: JSON.stringify(data)
-            })
-                .done(function (data, textStatus, jqXHR) {
-                    setLabel(phoneId, quantity, data.message);
-                    if (data.hasOwnProperty('cartItemsAmount')) {
-                        var cartInfo = "My cart: " + data.cartItemsAmount + " items $" + data.cartItemsPrice;
-                        $('#cart').text(cartInfo);
-                    }
-                })
-                .fail(function (jqXHR, textStatus, errorThrown) {
-                    $('#result').text("Something is wrong: " + textStatus + " " + errorThrown);
-                });
-        }
-    </script>
-    <script type="text/javascript">
-        function setLabel(phoneId, quantity, message) {
-            if (message === 'success') {
-                document.getElementById("label" + phoneId).innerHTML = '<p style="color: green">Successfully adding ' + quantity + ' products to cart</p>';
-            } else {
-                document.getElementById("label" + phoneId).innerHTML = '<p style="color: red">' + message + '</p>';
-            }
-        }
-    </script>
 </head>
 <body>
 <div id="cart" style="text-align: right">My cart: ${cartItemsAmount} items $${cartItemsPrice}</div>

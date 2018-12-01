@@ -7,9 +7,14 @@ import java.util.Optional;
 
 public interface PhoneDao {
     Optional<Phone> get(Long key);
+
     void save(Phone phone);
+
     List<Phone> findAllAvailable(int offset, int limit);
+
     Long getTotalAmountOfAvailablePhones();
+
     void updateReservationFor(Long key, Integer quantity);
+
     List<Phone> findAllByKeyword(String keyword);
 }

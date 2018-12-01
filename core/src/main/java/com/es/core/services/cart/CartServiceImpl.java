@@ -1,6 +1,5 @@
 package com.es.core.services.cart;
 
-import com.es.core.dao.PhoneDao;
 import com.es.core.dao.StockDao;
 import com.es.core.exceptions.OutOfStockException;
 import com.es.core.model.cart.Cart;
@@ -8,16 +7,12 @@ import com.es.core.model.cart.CartItem;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.Map;
 
 @Service
 public class CartServiceImpl implements CartService {
     @Resource
     private StockDao stockDao;
-    @Resource
-    private PhoneDao phoneDao;
-
     @Resource
     private Cart cart;
 
@@ -44,15 +39,6 @@ public class CartServiceImpl implements CartService {
             quantity += cartItem.getQuantity();
         }
         return quantity;
-    }
-
-    @Override
-    public BigDecimal getTotalPriceOfProducts() {
-        BigDecimal totalCartPrice = BigDecimal.ZERO;
-        for (CartItem cartItem : cart.getCartItems()) {
-            totalCartPrice = totalCartPrice.add(phoneDao.get(cartItem.getPhoneId()).get().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
-        }
-        return totalCartPrice;
     }
 
     @Override

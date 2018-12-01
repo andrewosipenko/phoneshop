@@ -20,7 +20,9 @@
 
     <bean id="cartService" class="com.es.core.services.cart.CartServiceImpl"/>
 
-    <bean id="cart" class="com.es.core.model.cart.Cart"></bean>
+    <bean id="totalPriceService" class="com.es.core.services.cart.TotalPriceServiceImpl"/>
+
+    <bean id="cart" class="com.es.core.model.cart.Cart"/>
 
     <jdbc:initialize-database data-source="dataSource">
         <jdbc:script location="classpath:db/schema.sql" />
