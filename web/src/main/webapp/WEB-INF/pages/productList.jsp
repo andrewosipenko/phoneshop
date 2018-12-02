@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!doctype html>
 <html>
 <head>
@@ -67,7 +68,7 @@
             <thead>
             <tr>
                 <th>Image</th>
-                <th data-defaultsign="reversed">Brand</th>
+                <th>Brand</th>
                 <th>Model</th>
                 <th>Color</th>
                 <th>Display size</th>
@@ -98,7 +99,7 @@
                     </td>
                     <td>
                         <button type="button"
-                                onclick="addToCart(${phone.id}, document.getElementById('quantity${phone.id}').value)">
+                                onclick="addToCart(${phone.id}, document.getElementById('quantity${phone.id}').value, '${pageContext.request.locale.toString()}')">
                             Add
                             to
                         </button>

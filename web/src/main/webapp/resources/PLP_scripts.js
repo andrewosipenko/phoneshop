@@ -1,9 +1,10 @@
-function addToCart(phoneId, quantity) {
+function addToCart(phoneId, quantity, locale) {
     var data = {phoneId: phoneId, quantity: quantity};
     $.ajax({
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Locale': locale
         },
         url: "ajaxCart",
         method: "POST",
