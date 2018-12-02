@@ -24,11 +24,6 @@ public class ProductListPageController {
     @Resource
     private TotalPriceService totalPriceService;
 
-    public ProductListPageController(PhoneService phoneService, CartService cartService) {
-        this.phoneService = phoneService;
-        this.cartService = cartService;
-    }
-
     @GetMapping()
     public String showProductList(Integer pageNumber, Boolean previousPage, Boolean nextPage, String search, Model model) {
         if (search != null) {

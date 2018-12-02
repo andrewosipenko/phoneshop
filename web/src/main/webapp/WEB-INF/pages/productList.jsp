@@ -10,7 +10,6 @@
     <script src="webjars/bootstrap-sortable/1.11.1/Scripts/bootstrap-sortable.js"></script>
     <script src="webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src="<c:url value="/resources/PLP_scripts.js"/>"></script>
-    <c:set var="cartItemsAmount" scope="session" value="'My cart: 0 items'"/>
     <title>Product list</title>
 </head>
 <body>
@@ -18,6 +17,9 @@
 <p>
     Hello from product list!
 </p>
+<form action="<c:url value="cart"/>">
+    <button>to Cart</button>
+</form>
 <div id="result"></div>
 <p>
     Found
@@ -84,7 +86,11 @@
                         <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
                     </td>
                     <td>${phone.brand}</td>
-                    <td>${phone.model}</td>
+                    <td>
+                            ${phone.model}
+                        <br>
+                        <a href="productDetails?phoneId=${phone.id}">More...</a>
+                    </td>
                     <td>
                         <c:forEach var="color" items="${phone.colors}">
                             ${color}
