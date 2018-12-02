@@ -36,31 +36,34 @@
     </div>
 </div>
 <form method="post">
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-end">
-            <li class="page-item">
-                <a class="page-link"
-                   href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&previousPage=true">Previous</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=1">1</a></li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=2">2</a></li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=3">3</a></li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=4">4</a></li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=5">5</a></li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=6">6</a></li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=7">7</a></li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=8">8</a></li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=9">9</a></li>
-            <li class="page-item"><a class="page-link disabled">...</a></li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=${maxPageNumber}">${maxPageNumber}</a></li>
-            <li class="page-item">
-                <a class="page-link"
-                   href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&nextPage=true">Next</a>
-            </li>
-        </ul>
-    </nav>
+    <div id="myPaginationHead">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-end">
+                <li class="page-item">
+                    <a class="page-link"
+                       href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&previousPage=true">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="?pageNumber=1">1</a></li>
+                <li class="page-item"><a class="page-link" href="?pageNumber=2">2</a></li>
+                <li class="page-item"><a class="page-link" href="?pageNumber=3">3</a></li>
+                <li class="page-item"><a class="page-link" href="?pageNumber=4">4</a></li>
+                <li class="page-item"><a class="page-link" href="?pageNumber=5">5</a></li>
+                <li class="page-item"><a class="page-link" href="?pageNumber=6">6</a></li>
+                <li class="page-item"><a class="page-link" href="?pageNumber=7">7</a></li>
+                <li class="page-item"><a class="page-link" href="?pageNumber=8">8</a></li>
+                <li class="page-item"><a class="page-link" href="?pageNumber=9">9</a></li>
+                <li class="page-item"><a class="page-link disabled">...</a></li>
+                <li class="page-item"><a class="page-link" href="?pageNumber=${maxPageNumber}">${maxPageNumber}</a></li>
+                <li class="page-item">
+                    <a class="page-link"
+                       href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&nextPage=true">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
     <div class="table-responsive">
-        <table id="table" class="table table-striped table-bordered table-hover table-sm sortable" cellspacing="0" width="100%">
+        <table id="table" class="table table-striped table-bordered table-hover table-sm sortable" cellspacing="0"
+               width="100%">
             <thead>
             <tr>
                 <th>Image</th>
@@ -105,27 +108,10 @@
             </tbody>
         </table>
     </div>
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-end">
-            <li class="page-item">
-                <a class="page-link"
-                   href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&previousPage=true">Previous</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=1">1</a></li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=2">2</a></li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=3">3</a></li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=4">4</a></li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=5">5</a></li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=6">6</a></li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=7">7</a></li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=8">8</a></li>
-            <li class="page-item"><a class="page-link" href="?pageNumber=9">9</a></li>
-            <li class="page-item">
-                <a class="page-link"
-                   href="?pageNumber=${empty pageNumber ? pageContext.request.getParameter("pageNumber") : pageNumber}&nextPage=true">Next</a>
-            </li>
-        </ul>
-    </nav>
+    <div id="myPaginationFoot"></div>
+    <script>
+        document.getElementById("myPaginationFoot").appendChild(document.getElementById("myPaginationHead").cloneNode(true));
+    </script>
 </form>
 </p>
 </body>
