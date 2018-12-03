@@ -5,6 +5,7 @@ import com.es.core.services.cart.CartService;
 import com.es.core.model.cart.CartItem;
 import com.es.core.services.cart.TotalPriceService;
 import com.es.phoneshop.web.services.CartItemValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.MediaType;
@@ -14,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -23,14 +23,18 @@ import java.util.Map;
 @RequestMapping(value = "/ajaxCart")
 public class AjaxCartController {
     private static final String SUCCESS_MESSAGE = "success";
-    @Resource
     private CartService cartService;
-    @Resource
     private TotalPriceService totalPriceService;
-    @Resource
     private CartItemValidator cartItemValidator;
-    @Resource
     private MessageSource messageSource;
+
+    @Autowired
+    public AjaxCartController(CartService cartService, TotalPriceService totalPriceService, CartItemValidator cartItemValidator, MessageSource messageSource) {
+        this.cartService = cartService;
+        this.totalPriceService = totalPriceService;
+        this.cartItemValidator = cartItemValidator;
+        this.messageSource = messageSource;
+    }
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {

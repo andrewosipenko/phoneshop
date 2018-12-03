@@ -4,6 +4,7 @@ import com.es.core.dao.StockDao;
 import com.es.core.exceptions.OutOfStockException;
 import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -11,10 +12,14 @@ import java.util.Map;
 
 @Service
 public class CartServiceImpl implements CartService {
-    @Resource
     private StockDao stockDao;
-    @Resource
     private Cart cart;
+
+    @Autowired
+    public CartServiceImpl(StockDao stockDao, Cart cart) {
+        this.stockDao = stockDao;
+        this.cart = cart;
+    }
 
     @Override
     public Cart getCart() {
@@ -28,8 +33,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void remove(Long phoneId) {
-        CartItem cartItem = new CartItem(phoneId, 0);
-        cart.getCartItems().remove(cartItem);
+        CartItem removableCartItem = cart.getCartItems().stream().filter(cartItem -> cartItem.getPhoneId().equals(phoneId)).findFirst().get();
+        cart.getCartItems().remove(removableCartItem);
     }
 
     @Override

@@ -2,15 +2,19 @@ package com.es.core.services.phone;
 
 import com.es.core.dao.PhoneDao;
 import com.es.core.model.phone.Phone;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Service
 public class PhoneServiceImpl implements PhoneService {
-    @Resource
-    private PhoneDao phoneDao;
+    private final PhoneDao phoneDao;
+
+    @Autowired
+    public PhoneServiceImpl(PhoneDao phoneDao) {
+        this.phoneDao = phoneDao;
+    }
 
     @Override
     public List<Phone> getPhonesWithPositiveStock(int offset, int limit) {

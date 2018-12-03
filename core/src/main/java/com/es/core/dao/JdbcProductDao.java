@@ -2,12 +2,11 @@ package com.es.core.dao;
 
 import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.Stock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.*;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
 import java.sql.ResultSet;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,9 +23,13 @@ public class JdbcProductDao implements PhoneDao {
     private static final String SQL_FOR_GETTING_TOTAL_AMOUNT_OF_AVAILABLE = "select count(*) from phones join stocks on phones.id=stocks.phoneId where stocks.stock> 0 and phones.price is not null";
     private static final String SQL_FOR_CHANGE_RESERVED_QUANTITY = "update stocks set reserved = reserved + ? where phoneId = ?";
     private static final String SQL_FOR_GETTING_PHONES_BY_KEYWORD = "select * from phones where brand=? or model=?";
-    @Resource
     private JdbcTemplate jdbcTemplate;
     private BeanPropertyRowMapper<Phone> phoneBeanPropertyRowMapper = new BeanPropertyRowMapper<>(Phone.class);
+
+    @Autowired
+    public JdbcProductDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public void save(Phone phone) {
         checkPhoneIdAndSetIfNeeded(phone);
