@@ -1,6 +1,7 @@
 package com.es.phoneshop.web.controller;
 
 import com.es.core.cart.CartService;
+import com.es.core.order.OutOfStockException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,7 +15,7 @@ public class AjaxCartController {
     private CartService cartService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public void addPhone(Long phoneId, Long quantity) {
+    public void addPhone(Long phoneId, Long quantity) throws OutOfStockException {
         cartService.addPhone(phoneId, quantity);
     }
 }

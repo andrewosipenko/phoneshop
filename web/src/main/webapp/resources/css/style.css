@@ -3,6 +3,14 @@ th:hover{
     background:#AAA;
 }
 
+th{
+    cursor: pointer;
+}
+
+.table td{
+    vertical-align: middle !important;
+}
+
 #headerTable{
     background: gray;
 }
