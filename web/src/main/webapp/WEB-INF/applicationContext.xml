@@ -12,8 +12,8 @@
         <aop:scoped-proxy/>
     </bean>
 
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-        <property name="basename" value="messages.messages"/>
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="/WEB-INF/resources/i18n/messages"/>
         <property name="defaultEncoding" value="UTF-8"/>
     </bean>
 
