@@ -1,5 +1,6 @@
 package com.es.core.dao;
 
+import com.es.core.dao.mappers.PhoneRowMapper;
 import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -79,7 +79,7 @@ public class JdbcProductDao implements PhoneDao {
     public List<Phone> findAllAvailable(int offset, int limit) {
         List<Phone> phones = new ArrayList<>();
         jdbcTemplate.query(SQL_FOR_GETTING_AVAILABLE_PHONES_BY_OFFSET_AND_LIMIT,
-                new PhoneRowMapper(phones), offset, limit);
+                new PhoneRowMapper(phones, getColors()), offset, limit);
         return phones;
     }
 
@@ -87,7 +87,7 @@ public class JdbcProductDao implements PhoneDao {
     public List<Phone> findAllByKeyword(String keyword) {
         List<Phone> phones = new ArrayList<>();
         jdbcTemplate.query(SQL_FOR_GETTING_PHONES_BY_KEYWORD,
-                new PhoneRowMapper(phones), keyword, keyword);
+                new PhoneRowMapper(phones, getColors()), keyword, keyword);
         return phones;
     }
 
@@ -136,28 +136,5 @@ public class JdbcProductDao implements PhoneDao {
         values.put("imageUrl", phone.getImageUrl());
         values.put("description", phone.getDescription());
         return values;
-    }
-
-    class PhoneRowMapper extends RowCountCallbackHandler {
-        private List<Phone> phones;
-        private Map<Long, Color> colors;
-
-        public PhoneRowMapper(List<Phone> phones) {
-            this.phones = phones;
-            colors = getColors();
-        }
-
-        @Override
-        protected void processRow(ResultSet resultSet, int rowNum) throws SQLException {
-            long phoneId = resultSet.getLong("id");
-            Phone phone = phones.stream().filter(p -> p.getId().equals(phoneId)).findFirst().orElse(phoneBeanPropertyRowMapper.mapRow(resultSet, rowNum));
-            if (phone.getColors().isEmpty()) {
-                phone.setColors(new HashSet<>());
-            }
-            phone.getColors().add(colors.get(resultSet.getLong("colorId")));
-            if (!phones.contains(phone)) {
-                phones.add(phone);
-            }
-        }
     }
 }
