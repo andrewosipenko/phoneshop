@@ -30,3 +30,7 @@ function setLabel(phoneId, quantity, message) {
         document.getElementById("label" + phoneId).innerHTML = '<p style="color: red">' + message + '</p>';
     }
 }
+
+function doSearch(searchText) {
+    location.href='?search='+searchText
+}

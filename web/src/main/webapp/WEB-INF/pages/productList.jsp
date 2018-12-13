@@ -31,7 +31,7 @@
                 <input type="text" class="form-control" name="search" id="search" placeholder="search">
                 <span class="glyphicon glyphicon-search form-control-feedback"></span>
                 <button type="button"
-                        onclick="location.href='?search='+document.getElementById('search').value">Search!
+                        onclick="doSearch(document.getElementById('search').value)">Search!
                 </button>
             </div>
         </form>
