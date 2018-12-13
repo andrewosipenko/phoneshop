@@ -49,7 +49,7 @@ public class ProductListPageController {
         return search == null ? REDIRECTING_ADDRESS + pageNumber : REDIRECTING_ADDRESS + search;
     }
 
-    public Integer resolveParamsAndGetPage(Integer pageNumber, Boolean previousPage, Boolean nextPage) {
+    Integer resolveParamsAndGetPage(Integer pageNumber, Boolean previousPage, Boolean nextPage) {
         if (pageNumber == null) {
             pageNumber = 1;
         }
@@ -61,7 +61,7 @@ public class ProductListPageController {
         return pageNumber;
     }
 
-    public List<Phone> findPhonesForCurrentPage(Integer pageNumber) {
+    List<Phone> findPhonesForCurrentPage(Integer pageNumber) {
         Long totalAmountOfProductsOnStock = phoneService.getTotalAmountOfPhonesWithPositiveStock();
         if (AMOUNT_OF_SHOWED_PRODUCTS * (pageNumber - 1) > totalAmountOfProductsOnStock) {
             pageNumber = ((Long) (totalAmountOfProductsOnStock / AMOUNT_OF_SHOWED_PRODUCTS)).intValue();
@@ -69,7 +69,7 @@ public class ProductListPageController {
         return phoneService.getPhonesWithPositiveStock(AMOUNT_OF_SHOWED_PRODUCTS * (pageNumber - 1), AMOUNT_OF_SHOWED_PRODUCTS);
     }
 
-    public List<Phone> findPhonesBySearch(String search) {
+    List<Phone> findPhonesBySearch(String search) {
         return phoneService.getPhonesByKeyword(search);
     }
 

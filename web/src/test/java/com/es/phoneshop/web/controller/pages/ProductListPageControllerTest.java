@@ -47,4 +47,14 @@ public class ProductListPageControllerTest {
         assertEquals(LIMIT, actualPhoneList.size());
         assertArrayEquals(phones.subList(FIRST_PAGE_NUMBER-1, LIMIT).toArray(), actualPhoneList.toArray());
     }
+
+    @Test
+    public void shouldResolveAsFirstPage() {
+        assertEquals(1, (int) controller.resolveParamsAndGetPage(1, true, null));
+    }
+
+    @Test
+    public void shouldResolveAsSecondPage() {
+        assertEquals(2, (int) controller.resolveParamsAndGetPage(1, null, true));
+    }
 }
