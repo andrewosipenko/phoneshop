@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,12 +18,12 @@ public class JdbcProductDao implements PhoneDao {
     private static final String SQL_FOR_GETTING_PHONE_BY_ID = "select * from phones where phones.id=?";
     private static final String SQL_FOR_GETTING_LAST_PHONE_ID = "select MAX(id) as lastId from phones";
     private static final String SQL_FOR_BINDING_PHONE_AND_COLOR = "insert into phone2color values (?,?)";
-    private static final String SQL_FOR_GETTING_AVAILABLE_PHONES_BY_OFFSET_AND_LIMIT = "select * from phones join stocks on phones.id=stocks.phoneId where stocks.stock > 0 and phones.price is not null offset ? limit ?";
+    private static final String SQL_FOR_GETTING_AVAILABLE_PHONES_BY_OFFSET_AND_LIMIT = "select * from phones left join phone2color on phones.id = phone2color.phoneId where phones.id in (select phones.id from phones join stocks on phones.id=stocks.phoneId where stocks.stock > 0 and phones.price is not null offset ? limit ?)";
     private static final String SQL_FOR_DELETING_PHONE_BY_ID = "delete from phones where id = ?";
     private static final String SQL_FOR_GETTING_COLORS_BY_PHONE_ID = "select * from phone2color where phone2color.phoneId = ?";
     private static final String SQL_FOR_GETTING_TOTAL_AMOUNT_OF_AVAILABLE = "select count(*) from phones join stocks on phones.id=stocks.phoneId where stocks.stock> 0 and phones.price is not null";
     private static final String SQL_FOR_CHANGE_RESERVED_QUANTITY = "update stocks set reserved = reserved + ? where phoneId = ?";
-    private static final String SQL_FOR_GETTING_PHONES_BY_KEYWORD = "select * from phones where brand=? or model=?";
+    private static final String SQL_FOR_GETTING_PHONES_BY_KEYWORD = "select * from phones left join phone2color on phones.id = phone2color.phoneId where phones.id in (select phones.id from phones where brand=? or model=?)";
     private JdbcTemplate jdbcTemplate;
     private BeanPropertyRowMapper<Phone> phoneBeanPropertyRowMapper = new BeanPropertyRowMapper<>(Phone.class);
 
@@ -76,20 +77,17 @@ public class JdbcProductDao implements PhoneDao {
     }
 
     public List<Phone> findAllAvailable(int offset, int limit) {
-        Map<Long, Color> colors = getColors();
-        List<Phone> phones = jdbcTemplate.query(SQL_FOR_GETTING_AVAILABLE_PHONES_BY_OFFSET_AND_LIMIT,
-                        phoneBeanPropertyRowMapper, offset, limit);
-        phones.forEach(phone -> setColorsForPhone(phone, colors));
+        List<Phone> phones = new ArrayList<>();
+        jdbcTemplate.query(SQL_FOR_GETTING_AVAILABLE_PHONES_BY_OFFSET_AND_LIMIT,
+                new PhoneRowMapper(phones), offset, limit);
         return phones;
     }
 
-
     @Override
     public List<Phone> findAllByKeyword(String keyword) {
-        Map<Long, Color> colors = getColors();
-        List<Phone> phones = jdbcTemplate.query(SQL_FOR_GETTING_PHONES_BY_KEYWORD,
-                phoneBeanPropertyRowMapper, keyword, keyword);
-        phones.forEach(phone -> setColorsForPhone(phone, colors));
+        List<Phone> phones = new ArrayList<>();
+        jdbcTemplate.query(SQL_FOR_GETTING_PHONES_BY_KEYWORD,
+                new PhoneRowMapper(phones), keyword, keyword);
         return phones;
     }
 
@@ -138,5 +136,28 @@ public class JdbcProductDao implements PhoneDao {
         values.put("imageUrl", phone.getImageUrl());
         values.put("description", phone.getDescription());
         return values;
+    }
+
+    class PhoneRowMapper extends RowCountCallbackHandler {
+        private List<Phone> phones;
+        private Map<Long, Color> colors;
+
+        public PhoneRowMapper(List<Phone> phones) {
+            this.phones = phones;
+            colors = getColors();
+        }
+
+        @Override
+        protected void processRow(ResultSet resultSet, int rowNum) throws SQLException {
+            long phoneId = resultSet.getLong("id");
+            Phone phone = phones.stream().filter(p -> p.getId().equals(phoneId)).findFirst().orElse(phoneBeanPropertyRowMapper.mapRow(resultSet, rowNum));
+            if (phone.getColors().isEmpty()) {
+                phone.setColors(new HashSet<>());
+            }
+            phone.getColors().add(colors.get(resultSet.getLong("colorId")));
+            if (!phones.contains(phone)) {
+                phones.add(phone);
+            }
+        }
     }
 }
