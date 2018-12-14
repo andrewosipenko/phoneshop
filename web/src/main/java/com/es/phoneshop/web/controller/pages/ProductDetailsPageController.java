@@ -23,7 +23,7 @@ public class ProductDetailsPageController {
     private TotalPriceService totalPriceService;
 
     @GetMapping()
-    public String showProductList(Long phoneId, Model model) {
+    public String showProduct(Long phoneId, Model model) {
         model.addAttribute("cartItemsAmount", cartService.getQuantityOfProducts());
         model.addAttribute("cartItemsPrice", totalPriceService.getTotalPriceOfProducts());
         if (phoneId != null) {

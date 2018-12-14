@@ -29,6 +29,7 @@ public class CartServiceImplTest {
     private static final String PHONE_BRAND = "brand";
     private static final String INITIAL_PHONE_MODEL = "model";
     private static final String SECOND_PHONE_MODEL = "anotherModel";
+
     private CartItem initialCartItem = new CartItem();
     private Phone initialPhone = new Phone();
     private Phone secondPhone = new Phone();
