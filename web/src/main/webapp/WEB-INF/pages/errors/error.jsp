@@ -1,16 +1,25 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: normalfrezy
-  Date: 12.12.18
-  Time: 22:47
-  To change this template use File | Settings | File Templates.
---%>
+<!doctype html>
+<html lang="en">
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://java.sun.com/jsp/jstl/core" %>
 <head>
-    <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Product list</title>
 </head>
 <body>
-$END$
+    <div class = "container">
+        <h3>
+            Seems you've done something illegal.
+        </h3>
+        <p class="error">
+            <c:if test="${errorMessage ne null}">
+                Error message: ${errorMessage}
+            </c:if>
+        </p>
+        <p>
+            Go back to <a class="hyperlink" href="/productList"> product list</a> page.
+        </p>
+    </div>
 </body>
 </html>
