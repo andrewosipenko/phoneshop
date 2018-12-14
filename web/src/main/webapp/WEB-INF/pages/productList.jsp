@@ -6,14 +6,16 @@
 <head>
     <link rel="stylesheet" href="webjars/bootstrap/4.1.3/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="webjars/bootstrap-sortable/1.11.1/Contents/bootstrap-sortable.css">
+    <link rel="stylesheet" href="<c:url value="/resources/styles/PLP_styles.css"/>">
     <script src="webjars/jquery/3.0.0/jquery.min.js"></script>
     <script src="webjars/bootstrap-sortable/1.11.1/Scripts/bootstrap-sortable.js"></script>
     <script src="webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script src="<c:url value="/resources/PLP_scripts.js"/>"></script>
+    <script src="<c:url value="/resources/scripts/PLP_scripts.js"/>"></script>
+    <c:set var="cartItemsAmount" scope="session" value="'My cart: 0 items'"/>
     <title>Product list</title>
 </head>
 <body>
-<div id="cart" style="text-align: right">My cart: ${cartItemsAmount} items $${cartItemsPrice}</div>
+<div id="cart" class="minicart">My cart: ${cartItemsAmount} items $${cartItemsPrice}</div>
 <p>
     Hello from product list!
 </p>
@@ -31,8 +33,8 @@
                 <label for="search" class="sr-only">Search</label>
                 <input type="text" class="form-control" name="search" id="search" placeholder="search">
                 <span class="glyphicon glyphicon-search form-control-feedback"></span>
-                <button type="button" style="alignment: right"
-                        onclick="location.href='?search='+document.getElementById('search').value">Search!
+                <button type="button"
+                        onclick="doSearch(document.getElementById('search').value)">Search!
                 </button>
             </div>
         </form>
@@ -99,7 +101,7 @@
                     <td>${phone.displaySizeInches}"</td>
                     <td>$ ${phone.price}</td>
                     <td>
-                        <input type="text" id=quantity${phone.id} style="text-align: right" value="1"/>
+                        <input type="text" id=quantity${phone.id} class="quantity-area" value="1"/>
                         <br>
                         <label for=quantity${phone.id} id=label${phone.id}></label>
                     </td>

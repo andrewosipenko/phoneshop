@@ -8,11 +8,12 @@ import com.es.core.model.phone.Phone;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -20,6 +21,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration("/test-config.xml")
 public class CartServiceImplTest {
     private static final String SQL_QUERY_FOR_SETTING_STOCK = "insert into stocks (phoneId, stock, reserved) values (?,?,?)";
+    private static final String SQL_QUERY_FOR_CLEAR_PHONES = "delete from phones";
     private static final Long INITIAL_CART_ITEM_PHONE_ID = 42L;
     private static final Integer INITIAL_STOCK = 10;
     private static final Integer INITIAL_RESERVED = 3;
@@ -33,21 +35,23 @@ public class CartServiceImplTest {
     private CartItem initialCartItem = new CartItem();
     private Phone initialPhone = new Phone();
     private Phone secondPhone = new Phone();
-    @Resource
+    @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Resource
+    @Autowired
     private PhoneDao phoneDao;
-    @Resource
+    @Autowired
     private Cart cart;
-    @Resource
+    @Autowired
     private CartService cartService;
 
     @Before
     public void clear() {
+        jdbcTemplate.update(SQL_QUERY_FOR_CLEAR_PHONES);
         setPhoneParameters(initialPhone, INITIAL_CART_ITEM_PHONE_ID, INITIAL_PHONE_MODEL);
         setPhoneParameters(secondPhone, SECOND_CART_ITEM_PHONE_ID, SECOND_PHONE_MODEL);
-        jdbcTemplate.update(SQL_QUERY_FOR_SETTING_STOCK, INITIAL_CART_ITEM_PHONE_ID, INITIAL_STOCK, INITIAL_RESERVED);
-        initialCartItem.setPhoneId(INITIAL_CART_ITEM_PHONE_ID);
+        List<Phone> list = phoneDao.findAllAvailable(0, 5);
+        jdbcTemplate.update(SQL_QUERY_FOR_SETTING_STOCK, initialPhone.getId(), INITIAL_STOCK, INITIAL_RESERVED);
+        initialCartItem.setPhoneId(initialPhone.getId());
         initialCartItem.setQuantity(INITIAL_RESERVED);
         cart.getCartItems().clear();
         cart.getCartItems().add(initialCartItem);
@@ -76,7 +80,6 @@ public class CartServiceImplTest {
 
     @Test
     public void shouldAddNewCartItem() throws OutOfStockException {
-        phoneDao.save(secondPhone);
         jdbcTemplate.update(SQL_QUERY_FOR_SETTING_STOCK, secondPhone.getId(), SECOND_STOCK, SECOND_RESERVED);
 
         cartService.addPhone(secondPhone.getId(), SECOND_STOCK - SECOND_RESERVED);
@@ -85,12 +88,11 @@ public class CartServiceImplTest {
 
     @Test
     public void shouldIncreaseQuantityOfExistedCartItem() throws OutOfStockException {
-        cartService.addPhone(INITIAL_CART_ITEM_PHONE_ID, INITIAL_STOCK - INITIAL_RESERVED);
+        cartService.addPhone(initialPhone.getId(), INITIAL_STOCK - INITIAL_RESERVED);
     }
 
     @Test(expected = OutOfStockException.class)
     public void shouldNotAddNewCartItem() throws OutOfStockException{
-        phoneDao.save(secondPhone);
         jdbcTemplate.update(SQL_QUERY_FOR_SETTING_STOCK, secondPhone.getId(), SECOND_STOCK, SECOND_RESERVED);
 
         cartService.addPhone(secondPhone.getId(), SECOND_STOCK + SECOND_RESERVED);
@@ -98,12 +100,12 @@ public class CartServiceImplTest {
 
     @Test(expected = OutOfStockException.class)
     public void shouldNotIncreaseQuantityOfExistedCartItem() throws OutOfStockException{
-        cartService.addPhone(INITIAL_CART_ITEM_PHONE_ID, INITIAL_STOCK + INITIAL_RESERVED);
+        cartService.addPhone(initialPhone.getId(), INITIAL_STOCK + INITIAL_RESERVED);
     }
 
     @Test
     public void shouldRemove() {
-        cartService.remove(INITIAL_CART_ITEM_PHONE_ID);
+        cartService.remove(initialPhone.getId());
 
         assertEquals(0, cart.getCartItems().size());
     }

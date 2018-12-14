@@ -14,7 +14,5 @@ public interface PhoneDao {
 
     Long getTotalAmountOfAvailablePhones();
 
-    void updateReservationFor(Long key, Integer quantity);
-
     List<Phone> findAllByKeyword(String keyword);
 }
