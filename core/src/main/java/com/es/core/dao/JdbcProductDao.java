@@ -1,26 +1,37 @@
-package com.es.core.model.phone;
+package com.es.core.dao;
 
+import com.es.core.dao.mappers.PhoneRowMapper;
+import com.es.core.model.phone.Color;
+import com.es.core.model.phone.Phone;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.*;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
 import java.sql.ResultSet;
 import java.util.*;
 import java.util.stream.Collectors;
 
+//TODO: change color setting logic: replace getColors() with join
 @Repository
 public class JdbcProductDao implements PhoneDao {
     private static final String SQL_QUERY_FOR_GETTING_ALL_COLORS = "select * from colors";
     private static final String SQL_FOR_GETTING_PHONE_BY_ID = "select * from phones where phones.id=?";
     private static final String SQL_FOR_GETTING_LAST_PHONE_ID = "select MAX(id) as lastId from phones";
     private static final String SQL_FOR_BINDING_PHONE_AND_COLOR = "insert into phone2color values (?,?)";
-    private static final String SQL_FOR_GETTING_PHONES_BY_OFFSET_AND_LIMIT = "select * from phones offset ? limit ?";
+    private static final String SQL_FOR_GETTING_AVAILABLE_PHONES_BY_OFFSET_AND_LIMIT = "select * from phones left join phone2color on phones.id = phone2color.phoneId where phones.id in (select phones.id from phones join stocks on phones.id=stocks.phoneId where stocks.stock > 0 and phones.price is not null offset ? limit ?)";
     private static final String SQL_FOR_DELETING_PHONE_BY_ID = "delete from phones where id = ?";
     private static final String SQL_FOR_GETTING_COLORS_BY_PHONE_ID = "select * from phone2color where phone2color.phoneId = ?";
-    @Resource
+    private static final String SQL_FOR_GETTING_TOTAL_AMOUNT_OF_AVAILABLE = "select count(*) from phones join stocks on phones.id=stocks.phoneId where stocks.stock> 0 and phones.price is not null";
+    private static final String SQL_FOR_GETTING_PHONES_BY_KEYWORD = "select * from phones left join phone2color on phones.id = phone2color.phoneId where phones.id in (select phones.id from phones where brand=? or model=?)";
+
     private JdbcTemplate jdbcTemplate;
     private BeanPropertyRowMapper<Phone> phoneBeanPropertyRowMapper = new BeanPropertyRowMapper<>(Phone.class);
+
+    @Autowired
+    public JdbcProductDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public void save(Phone phone) {
         checkPhoneIdAndSetIfNeeded(phone);
@@ -29,16 +40,8 @@ public class JdbcProductDao implements PhoneDao {
     }
 
     private void checkPhoneIdAndSetIfNeeded(Phone phone) {
-        if (phone.getId() == null) {
-            jdbcTemplate.query(SQL_FOR_GETTING_LAST_PHONE_ID,
-                    (ResultSet resultSet) -> phone.setId(resultSet.getLong("lastId") + 1));
-        } else {
-            delete(phone.getId());
-        }
-    }
-
-    private void delete(Long key) {
-        jdbcTemplate.update(SQL_FOR_DELETING_PHONE_BY_ID, key);
+        jdbcTemplate.query(SQL_FOR_GETTING_LAST_PHONE_ID,
+                (ResultSet resultSet) -> phone.setId(resultSet.getLong("lastId") + 1));
     }
 
     private void insertPhone(Phone phone) {
@@ -49,9 +52,7 @@ public class JdbcProductDao implements PhoneDao {
 
     private void bindPhoneAndColor(Phone phone) {
         if (!phone.getColors().equals(Collections.EMPTY_SET)) {
-            for (Color color : phone.getColors()) {
-                jdbcTemplate.update(SQL_FOR_BINDING_PHONE_AND_COLOR, phone.getId(), color.getId());
-            }
+            phone.getColors().forEach(color -> jdbcTemplate.update(SQL_FOR_BINDING_PHONE_AND_COLOR, phone.getId(), color.getId()));
         }
     }
 
@@ -68,20 +69,30 @@ public class JdbcProductDao implements PhoneDao {
                 new BeanPropertyRowMapper<>(Color.class)).stream().collect(Collectors.toMap(Color::getId, (c) -> c));
     }
 
-    public List<Phone> findAll(int offset, int limit) {
-        Map<Long, Color> colors = getColors();
-        List<Phone> phones = jdbcTemplate.query(SQL_FOR_GETTING_PHONES_BY_OFFSET_AND_LIMIT,
-                        phoneBeanPropertyRowMapper, offset, limit);
-        for (Phone phone : phones) {
-            setColorsForPhone(phone, colors);
-        }
+    public List<Phone> findAllAvailable(int offset, int limit) {
+        List<Phone> phones = new ArrayList<>();
+        jdbcTemplate.query(SQL_FOR_GETTING_AVAILABLE_PHONES_BY_OFFSET_AND_LIMIT,
+                new PhoneRowMapper(phones, getColors()), offset, limit);
+        return phones;
+    }
+
+    @Override
+    public List<Phone> findAllByKeyword(String keyword) {
+        List<Phone> phones = new ArrayList<>();
+        jdbcTemplate.query(SQL_FOR_GETTING_PHONES_BY_KEYWORD,
+                new PhoneRowMapper(phones, getColors()), keyword, keyword);
         return phones;
     }
 
     private void setColorsForPhone(Phone phone, Map<Long, Color> colors) {
         phone.setColors(new HashSet<>());
         jdbcTemplate.query(SQL_FOR_GETTING_COLORS_BY_PHONE_ID,
-                        (resultSet, i) -> phone.getColors().add(colors.get(resultSet.getLong("colorId"))), phone.getId());
+                (resultSet, i) -> phone.getColors().add(colors.get(resultSet.getLong("colorId"))), phone.getId());
+    }
+
+    @Override
+    public Long getTotalAmountOfAvailablePhones() {
+        return jdbcTemplate.queryForObject(SQL_FOR_GETTING_TOTAL_AMOUNT_OF_AVAILABLE, Long.class);
     }
 
     private Map<String, Object> getPhoneValues(Phone phone) {

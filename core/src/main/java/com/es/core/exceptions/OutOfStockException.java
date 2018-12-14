@@ -1,4 +1,4 @@
-package com.es.core.order;
+package com.es.core.exceptions;
 
 public class OutOfStockException extends Exception {
 }
