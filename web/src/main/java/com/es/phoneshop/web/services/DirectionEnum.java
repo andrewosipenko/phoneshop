@@ -1,4 +1,15 @@
 package com.es.phoneshop.web.services;
 
-public class DirectionEnum {
+public enum  DirectionEnum {
+    ASC("asc"), DESC("desc");
+
+    private String direction;
+
+    DirectionEnum(String direction) {
+        this.direction = direction;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
 }
