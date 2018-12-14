@@ -1,4 +1,4 @@
-package com.es.phoneshop.web.services;
+package com.es.phoneshop.web.validators;
 
 import com.es.core.model.cart.CartItem;
 import org.springframework.stereotype.Service;

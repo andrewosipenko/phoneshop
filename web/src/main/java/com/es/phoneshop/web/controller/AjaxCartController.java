@@ -4,7 +4,7 @@ import com.es.core.exceptions.OutOfStockException;
 import com.es.core.services.cart.CartService;
 import com.es.core.model.cart.CartItem;
 import com.es.core.services.cart.TotalPriceService;
-import com.es.phoneshop.web.services.CartItemValidator;
+import com.es.phoneshop.web.validators.CartItemValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -41,7 +41,7 @@ public class AjaxCartController {
         binder.setValidator(cartItemValidator);
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> addPhone(@RequestBody @Validated CartItem cartItem, Errors errors) {
         Locale locale = LocaleContextHolder.getLocale();
         Map<String, Object> response = new HashMap<>();

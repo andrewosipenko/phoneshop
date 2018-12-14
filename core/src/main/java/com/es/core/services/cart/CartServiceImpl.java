@@ -48,19 +48,21 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addPhone(Long phoneId, Integer quantity) throws OutOfStockException{
-        CartItem newCartItem = new CartItem(phoneId, quantity);
-        if (cart.getCartItems().contains(newCartItem)) {
-            increasePhoneQuantity(cart, phoneId, quantity);
-        } else if(isAvailability(phoneId, quantity)) {
-            cart.getCartItems().add(newCartItem);
+        if(isAvailability(phoneId, quantity)) {
+            if (cart.getCartItems().stream().anyMatch(cartItem -> cartItem.getPhoneId().equals(phoneId))) {
+                increasePhoneQuantity(cart, phoneId, quantity);
+            } else {
+                CartItem newCartItem = new CartItem(phoneId, quantity);
+                cart.getCartItems().add(newCartItem);
+            }
         } else {
             throw new OutOfStockException();
         }
     }
 
     private void increasePhoneQuantity(Cart cart, Long phoneId, Integer quantity) throws OutOfStockException {
-        CartItem cartItem = cart.getCartItems().get(getIndexOf(phoneId, quantity));
         if(isAvailability(phoneId, quantity)) {
+            CartItem cartItem = cart.getCartItems().get(getIndexOf(phoneId, quantity));
             cartItem.setQuantity(cartItem.getQuantity()+quantity);
         } else {
             throw new OutOfStockException();

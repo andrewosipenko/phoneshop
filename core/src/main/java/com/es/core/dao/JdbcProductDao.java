@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.util.*;
 import java.util.stream.Collectors;
 
+//TODO: change color setting logic: replace getColors() with join
 @Repository
 public class JdbcProductDao implements PhoneDao {
     private static final String SQL_QUERY_FOR_GETTING_ALL_COLORS = "select * from colors";
@@ -22,8 +23,8 @@ public class JdbcProductDao implements PhoneDao {
     private static final String SQL_FOR_DELETING_PHONE_BY_ID = "delete from phones where id = ?";
     private static final String SQL_FOR_GETTING_COLORS_BY_PHONE_ID = "select * from phone2color where phone2color.phoneId = ?";
     private static final String SQL_FOR_GETTING_TOTAL_AMOUNT_OF_AVAILABLE = "select count(*) from phones join stocks on phones.id=stocks.phoneId where stocks.stock> 0 and phones.price is not null";
-    private static final String SQL_FOR_CHANGE_RESERVED_QUANTITY = "update stocks set reserved = reserved + ? where phoneId = ?";
     private static final String SQL_FOR_GETTING_PHONES_BY_KEYWORD = "select * from phones left join phone2color on phones.id = phone2color.phoneId where phones.id in (select phones.id from phones where brand=? or model=?)";
+
     private JdbcTemplate jdbcTemplate;
     private BeanPropertyRowMapper<Phone> phoneBeanPropertyRowMapper = new BeanPropertyRowMapper<>(Phone.class);
 
@@ -39,16 +40,8 @@ public class JdbcProductDao implements PhoneDao {
     }
 
     private void checkPhoneIdAndSetIfNeeded(Phone phone) {
-        if (phone.getId() == null) {
-            jdbcTemplate.query(SQL_FOR_GETTING_LAST_PHONE_ID,
-                    (ResultSet resultSet) -> phone.setId(resultSet.getLong("lastId") + 1));
-        } else {
-            delete(phone.getId());
-        }
-    }
-
-    private void delete(Long key) {
-        jdbcTemplate.update(SQL_FOR_DELETING_PHONE_BY_ID, key);
+        jdbcTemplate.query(SQL_FOR_GETTING_LAST_PHONE_ID,
+                (ResultSet resultSet) -> phone.setId(resultSet.getLong("lastId") + 1));
     }
 
     private void insertPhone(Phone phone) {
@@ -94,17 +87,12 @@ public class JdbcProductDao implements PhoneDao {
     private void setColorsForPhone(Phone phone, Map<Long, Color> colors) {
         phone.setColors(new HashSet<>());
         jdbcTemplate.query(SQL_FOR_GETTING_COLORS_BY_PHONE_ID,
-                        (resultSet, i) -> phone.getColors().add(colors.get(resultSet.getLong("colorId"))), phone.getId());
+                (resultSet, i) -> phone.getColors().add(colors.get(resultSet.getLong("colorId"))), phone.getId());
     }
 
     @Override
     public Long getTotalAmountOfAvailablePhones() {
         return jdbcTemplate.queryForObject(SQL_FOR_GETTING_TOTAL_AMOUNT_OF_AVAILABLE, Long.class);
-    }
-
-    @Override
-    public void updateReservationFor(Long key, Integer quantity) {
-        jdbcTemplate.update(SQL_FOR_CHANGE_RESERVED_QUANTITY, quantity, key);
     }
 
     private Map<String, Object> getPhoneValues(Phone phone) {

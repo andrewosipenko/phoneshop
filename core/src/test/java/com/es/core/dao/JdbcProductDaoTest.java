@@ -7,13 +7,12 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
@@ -31,12 +30,12 @@ public class JdbcProductDaoTest {
     private static final String SQL_QUERY_FOR_GETTING_PHONES = "select * from phones";
     private static final String SQL_QUERY_FOR_SETTING_STOCK = "insert into stocks (phoneId, stock, reserved) values (?,?,?)";
     private static final String SQL_QUERY_FOR_UPDATING_STOCK = "update stocks set stock=?, reserved=? where phoneId=?";
-    private static final String SQL_QUERY_FOR_GETTING_RESERVED_QUANTITY = "select reserved from stocks where phoneId=?";
     private static final Integer INITIAL_PHONE_STOCK_VALUE = 5;
     private static final Integer INITIAL_PHONE_RESERVED_VALUE = 1;
-    @Resource
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Resource
+    @Autowired
     private PhoneDao productDao;
     private Phone initialPhone = new Phone();
     private Phone expectedPhone;
@@ -137,17 +136,6 @@ public class JdbcProductDaoTest {
     }
 
     @Test
-    public void shouldRewriteSave() {
-        expectedPhone.setId(initialPhone.getId());
-
-        productDao.save(expectedPhone);
-        List<Phone> phones = jdbcTemplate.query(SQL_QUERY_FOR_GETTING_PHONES, phoneBeanPropertyRowMapper);
-
-        assertEquals(1, phones.size());
-        assertEquals(expectedPhone.getBrand(), phones.get(0).getBrand());
-    }
-
-    @Test
     public void shouldSaveWithoutId() {
         productDao.save(expectedPhone);
         List<Phone> phones = jdbcTemplate.query(SQL_QUERY_FOR_GETTING_PHONES, phoneBeanPropertyRowMapper);
@@ -161,16 +149,6 @@ public class JdbcProductDaoTest {
         long amountOfPhones = productDao.getTotalAmountOfAvailablePhones();
 
         assertEquals(1L, amountOfPhones);
-    }
-
-    @Test
-    public void shouldReserve() {
-        int quantityToReserved = 2;
-
-        productDao.updateReservationFor(initialPhone.getId(), quantityToReserved);
-        int actualReserved = jdbcTemplate.queryForObject(SQL_QUERY_FOR_GETTING_RESERVED_QUANTITY, Integer.class, initialPhone.getId());
-
-        assertEquals(quantityToReserved+INITIAL_PHONE_RESERVED_VALUE, actualReserved);
     }
 
     @Test
