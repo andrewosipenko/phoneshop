@@ -17,7 +17,7 @@ public class JdbcStockDao implements StockDao {
     @Resource
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    SqlParameterSource sqlParameterSource;
+    private SqlParameterSource sqlParameterSource;
     private BeanPropertyRowMapper<Stock> stockBeanPropertyRowMapper = new BeanPropertyRowMapper<>(Stock.class);
 
     @Override
