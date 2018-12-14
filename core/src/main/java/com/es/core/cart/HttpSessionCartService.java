@@ -10,10 +10,9 @@ import java.util.Map;
 
 @Service
 public class HttpSessionCartService implements CartService {
-
-    //@Resource
+    @Resource
     private Cart cart;
-    //@Resource
+    @Resource
     private StockDao stockDao;
 
     @Override
@@ -22,12 +21,13 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void addPhone(Long phoneId, Long quantity) throws OutOfStockException {
+    public void addPhone(Long phoneId, Long quantity) {
         CartItem cartItem = new CartItem(phoneId, quantity);
         if (isPossible(phoneId, quantity)) {
             if (cart.getCartItems().contains(cartItem)) {
-                long oldCount = cart.getCartItems().get(cart.getCartItems().indexOf(cartItem)).getPhoneQuantity();
-                cart.getCartItems().get(cart.getCartItems().indexOf(cartItem)).setPhoneQuantity(oldCount + quantity);
+                int indexCartItem = cart.getCartItems().indexOf(cartItem);
+                long oldCount = cart.getCartItems().get(indexCartItem).getPhoneQuantity();
+                cart.getCartItems().get(indexCartItem).setPhoneQuantity(oldCount + quantity);
             } else {
                 cart.getCartItems().add(cartItem);
             }
@@ -37,12 +37,13 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void update(Map<Long, Long> items) throws OutOfStockException {
+    public void update(Map<Long, Long> items) {
         for (Map.Entry<Long, Long> item : items.entrySet()) {
             CartItem cartItem = new CartItem(item.getKey(), item.getValue());
             if (isPossible(cartItem.getPhoneId(), cartItem.getPhoneQuantity())) {
                 if (cart.getCartItems().contains(cartItem)) {
-                    cart.getCartItems().set(cart.getCartItems().indexOf(cartItem), cartItem);
+                    int indexCartItem = cart.getCartItems().indexOf(cartItem);
+                    cart.getCartItems().set(indexCartItem, cartItem);
                 } else {
                     cart.getCartItems().add(cartItem);
                 }
@@ -61,7 +62,8 @@ public class HttpSessionCartService implements CartService {
     private boolean isPossible(Long phoneId, Long quantity) {
         Stock stock = stockDao.get(phoneId).get();
         int stockCount = stock.getStock();
-        CartItem cartItem = cart.getCartItems().get(cart.getCartItems().indexOf(new CartItem(phoneId, quantity)));
+        int indexCartItem = cart.getCartItems().indexOf(new CartItem(phoneId, quantity));
+        CartItem cartItem = cart.getCartItems().get(indexCartItem);
         return stockCount - cartItem.getPhoneQuantity() >= quantity;
     }
 }
