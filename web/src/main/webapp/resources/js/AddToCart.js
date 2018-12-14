@@ -1,25 +1,26 @@
-$("#addToCart").click(function(event) {
-
-    var data = {}
-    data["productId"] = $("#jsonProductId").val();
-    data["quantity"] = $("#quantity").val();
-
-    $.ajax({
-        type: "POST",
-        contentType: "application/json",
-        url: "addToCart",
-        data: JSON.stringify(data),
-        dataType: 'json',
-        timeout: 600000,
-        success: function (data) {
-
-            //...
+function addToCart(phoneId, quantity) {
+    var request = $.ajax({
+        url: '${pageContext.request.contextPath}/ajaxCart',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Locale': locale
         },
-        error: function (e) {
-
-            //...
-        }
+        type: 'POST',
+        data: 'phoneId=' + phoneId + '&quantity=' + quantity
     });
-    event.preventDefault();
 
-});
+    request.done(function (data) {
+        $("#quantity" + phoneId).val("0");
+        $("#itemsAmount").text(data.cartItemsAmount);
+        $("#subtotal").text(data.cartItemsPrice);
+
+        var selector = '#errorMessage' + phoneId;
+        $(selector).html("");
+    });
+
+    request.fail(function (errorMessage) {
+        var selector = '#errorMessage' + phoneId;
+        $(selector).html(errorMessage.responseText);
+    });
+}
