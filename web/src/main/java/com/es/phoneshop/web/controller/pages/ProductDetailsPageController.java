@@ -4,23 +4,27 @@ import com.es.core.model.phone.Phone;
 import com.es.core.services.cart.CartService;
 import com.es.core.services.cart.TotalPriceService;
 import com.es.core.services.phone.PhoneService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.annotation.Resource;
 import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/productDetails")
 public class ProductDetailsPageController {
-    @Resource
-    private PhoneService phoneService;
-    @Resource
-    private CartService cartService;
-    @Resource
-    private TotalPriceService totalPriceService;
+    private final PhoneService phoneService;
+    private final CartService cartService;
+    private final TotalPriceService totalPriceService;
+
+    @Autowired
+    public ProductDetailsPageController(PhoneService phoneService, CartService cartService, TotalPriceService totalPriceService) {
+        this.phoneService = phoneService;
+        this.cartService = cartService;
+        this.totalPriceService = totalPriceService;
+    }
 
     @GetMapping()
     public String showProduct(Long phoneId, Model model) {

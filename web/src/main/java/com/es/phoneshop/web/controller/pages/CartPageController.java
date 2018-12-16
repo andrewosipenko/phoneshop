@@ -1,6 +1,5 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
 import com.es.core.model.phone.Phone;
 import com.es.core.services.cart.CartService;
@@ -8,17 +7,16 @@ import com.es.core.services.cart.TotalPriceService;
 import com.es.core.services.phone.PhoneService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/cart")
 public class CartPageController {
+    private static final String REDIRECTING_ADDRESS = "redirect:/cart";
     @Resource
     private CartService cartService;
     @Resource
@@ -38,8 +36,15 @@ public class CartPageController {
         return "cart";
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
+    @PutMapping
     public void updateCart() {
-        cartService.update(null);
+        //cartService.update(null);
+        System.out.println("PUT is work!!!!!!!!");
+    }
+
+    @PostMapping
+    public String deleteItem(@RequestParam(value = "delete") Long phoneIdForDelete) {
+        cartService.remove(phoneIdForDelete);
+        return REDIRECTING_ADDRESS;
     }
 }

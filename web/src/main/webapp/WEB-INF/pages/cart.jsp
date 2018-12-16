@@ -1,12 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!doctype html>
 <html>
 <head>
     <link rel="stylesheet" href="webjars/bootstrap/4.1.3/css/bootstrap.min.css"/>
     <script src="webjars/jquery/3.0.0/jquery.min.js"></script>
     <script src="webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="<c:url value="/resources/scripts/CartPage_scripts.js"/>"></script>
     <title>Product list</title>
 </head>
 <body>
@@ -18,7 +20,7 @@
     <button>Back to Product List</button>
 </form>
 <p>
-<form method="post">
+<form method="POST">
     <div class="table-responsive">
         <table id="table" class="table table-striped table-bordered table-hover table-sm sortable" cellspacing="0"
                width="100%">
@@ -55,7 +57,9 @@
                         <label for=quantity${phone.id} id=label${phone.id}></label>
                     </td>
                     <td>
-                        <button type="button">Delete</button>
+                        <input type="hidden" disabled id="delete${phone.id}" name="delete">
+                        <!--<button type="button" onclick="location.href='?deleteItem=${phone.id}'" value="Delete">Delete</button> -->
+                        <input type="submit" onclick="deleteItem(${phone.id})" value="Delete"/>
                     </td>
                 </tr>
             </c:forEach>
@@ -63,6 +67,9 @@
         </table>
     </div>
 </form>
+<form:form method="PUT">
+    <input type="submit" value="update"/>
+</form:form>
 </p>
 </body>
 </html>
