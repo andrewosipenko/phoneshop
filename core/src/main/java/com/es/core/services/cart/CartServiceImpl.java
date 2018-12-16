@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -28,8 +29,13 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void update(Map<Long, Integer> items) {
-        throw new UnsupportedOperationException("TODO");
-    }
+        List<CartItem> cartItems = cart.getCartItems();
+        items.forEach(((phoneId, quantity) -> {
+            if (isAvailability(phoneId, quantity)) {
+                cartItems.stream().filter(cartItem -> cartItem.getPhoneId().equals(phoneId)).findFirst().get().setQuantity(quantity);
+        }
+    }));
+}
 
     @Override
     public void remove(Long phoneId) {
@@ -47,8 +53,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void addPhone(Long phoneId, Integer quantity) throws OutOfStockException{
-        if(isAvailability(phoneId, quantity)) {
+    public void addPhone(Long phoneId, Integer quantity) throws OutOfStockException {
+        if (isAvailability(phoneId, quantity)) {
             if (cart.getCartItems().stream().anyMatch(cartItem -> cartItem.getPhoneId().equals(phoneId))) {
                 increasePhoneQuantity(cart, phoneId, quantity);
             } else {
@@ -61,9 +67,9 @@ public class CartServiceImpl implements CartService {
     }
 
     private void increasePhoneQuantity(Cart cart, Long phoneId, Integer quantity) throws OutOfStockException {
-        if(isAvailability(phoneId, quantity)) {
+        if (isAvailability(phoneId, quantity)) {
             CartItem cartItem = cart.getCartItems().get(getIndexOf(phoneId, quantity));
-            cartItem.setQuantity(cartItem.getQuantity()+quantity);
+            cartItem.setQuantity(cartItem.getQuantity() + quantity);
         } else {
             throw new OutOfStockException();
         }

@@ -20,6 +20,7 @@
     <button>Back to Product List</button>
 </form>
 <p>
+
 <form method="POST">
     <div class="table-responsive">
         <table id="table" class="table table-striped table-bordered table-hover table-sm sortable" cellspacing="0"
@@ -52,13 +53,12 @@
                     <td>${phone.displaySizeInches}"</td>
                     <td>$ ${phone.price}</td>
                     <td>
-                        <input type="text" id=quantity${phone.id} style="text-align: right" value="${cartItems.get(status.index).quantity}"/>
+                        <input type="text" class="quantityField" id=quantity${phone.id} name="quantity${phone.id}" style="text-align: right" value="${cartItems.get(status.index).quantity}"/>
                         <br>
                         <label for=quantity${phone.id} id=label${phone.id}></label>
                     </td>
                     <td>
                         <input type="hidden" disabled id="delete${phone.id}" name="delete">
-                        <!--<button type="button" onclick="location.href='?deleteItem=${phone.id}'" value="Delete">Delete</button> -->
                         <input type="submit" onclick="deleteItem(${phone.id})" value="Delete"/>
                     </td>
                 </tr>
@@ -68,7 +68,15 @@
     </div>
 </form>
 <form:form method="PUT">
-    <input type="submit" value="update"/>
+    <input type="submit" id="updateSubmit" onclick="update()" value="update"/>
+    <script>
+        function update() {
+            [].forEach.call(document.getElementsByClassName("quantityField"), function (element) {
+
+                document.getElementById("updateSubmit").appendChild(element.cloneNode());
+            });
+        }
+    </script>
 </form:form>
 </p>
 </body>

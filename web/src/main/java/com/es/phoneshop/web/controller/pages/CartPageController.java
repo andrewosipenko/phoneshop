@@ -10,8 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/cart")
@@ -37,14 +40,25 @@ public class CartPageController {
     }
 
     @PutMapping
-    public void updateCart() {
-        //cartService.update(null);
-        System.out.println("PUT is work!!!!!!!!");
+    public String updateCart(HttpServletRequest request) {
+        cartService.update(resolveFormData(request));
+        return REDIRECTING_ADDRESS;
     }
 
     @PostMapping
     public String deleteItem(@RequestParam(value = "delete") Long phoneIdForDelete) {
         cartService.remove(phoneIdForDelete);
         return REDIRECTING_ADDRESS;
+    }
+
+    Map<Long, Integer> resolveFormData(HttpServletRequest request) {
+        Map<Long, Integer> result = new HashMap<>();
+        Map<String, String[]> params = request.getParameterMap();
+        params.forEach((paramName, values) -> {
+            if (paramName.contains("quantity")) {
+                result.put(Long.parseLong(paramName.substring("quantity".length())), Integer.parseInt(values[0]));
+            }
+        });
+        return result;
     }
 }
