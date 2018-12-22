@@ -5,11 +5,12 @@ import com.es.core.model.phone.Phone;
 import com.es.core.services.cart.CartService;
 import com.es.core.services.cart.TotalPriceService;
 import com.es.core.services.phone.PhoneService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,12 +21,16 @@ import java.util.Map;
 @RequestMapping(value = "/cart")
 public class CartPageController {
     private static final String REDIRECTING_ADDRESS = "redirect:/cart";
-    @Resource
-    private CartService cartService;
-    @Resource
-    private TotalPriceService totalPriceService;
-    @Resource
-    private PhoneService phoneService;
+    private final CartService cartService;
+    private final TotalPriceService totalPriceService;
+    private final PhoneService phoneService;
+
+    @Autowired
+    public CartPageController(CartService cartService, TotalPriceService totalPriceService, PhoneService phoneService) {
+        this.cartService = cartService;
+        this.totalPriceService = totalPriceService;
+        this.phoneService = phoneService;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public String getCart(Model model) {
@@ -41,7 +46,8 @@ public class CartPageController {
 
     @PutMapping
     public String updateCart(HttpServletRequest request) {
-        cartService.update(resolveFormData(request));
+        Errors errors = null;
+        cartService.update(resolveFormData(request, errors));
         return REDIRECTING_ADDRESS;
     }
 
@@ -51,7 +57,7 @@ public class CartPageController {
         return REDIRECTING_ADDRESS;
     }
 
-    Map<Long, Integer> resolveFormData(HttpServletRequest request) {
+    Map<Long, Integer> resolveFormData(HttpServletRequest request, Errors errors) {
         Map<Long, Integer> result = new HashMap<>();
         Map<String, String[]> params = request.getParameterMap();
         params.forEach((paramName, values) -> {

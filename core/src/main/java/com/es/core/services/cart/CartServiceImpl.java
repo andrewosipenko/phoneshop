@@ -31,11 +31,14 @@ public class CartServiceImpl implements CartService {
     public void update(Map<Long, Integer> items) {
         List<CartItem> cartItems = cart.getCartItems();
         items.forEach(((phoneId, quantity) -> {
+            CartItem currentItem = cartItems.stream().filter(cartItem -> cartItem.getPhoneId().equals(phoneId)).findFirst().get();
             if (isAvailability(phoneId, quantity)) {
-                cartItems.stream().filter(cartItem -> cartItem.getPhoneId().equals(phoneId)).findFirst().get().setQuantity(quantity);
-        }
-    }));
-}
+                currentItem.setQuantity(quantity);
+            } else {
+                currentItem.setQuantity(stockDao.getStockFor(phoneId));
+            }
+        }));
+    }
 
     @Override
     public void remove(Long phoneId) {

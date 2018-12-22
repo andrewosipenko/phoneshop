@@ -69,14 +69,6 @@
 </form>
 <form:form method="PUT">
     <input type="submit" id="updateSubmit" onclick="update()" value="update"/>
-    <script>
-        function update() {
-            [].forEach.call(document.getElementsByClassName("quantityField"), function (element) {
-
-                document.getElementById("updateSubmit").appendChild(element.cloneNode());
-            });
-        }
-    </script>
 </form:form>
 </p>
 </body>

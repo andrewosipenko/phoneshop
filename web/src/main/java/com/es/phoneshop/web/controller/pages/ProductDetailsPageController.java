@@ -32,7 +32,7 @@ public class ProductDetailsPageController {
         model.addAttribute("cartItemsPrice", totalPriceService.getTotalPriceOfProducts());
         if (phoneId != null) {
             Optional<Phone> phone = phoneService.get(phoneId);
-            phone.ifPresent(phone1 -> model.addAttribute("phone", phone1));
+            phone.ifPresent(p -> model.addAttribute("phone", p));
         } else {
             return "redirect:/404page";
         }
