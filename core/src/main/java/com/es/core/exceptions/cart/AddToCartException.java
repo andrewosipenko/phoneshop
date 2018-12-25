@@ -1,4 +1,4 @@
-package com.es.core.exceptions;
+package com.es.core.exceptions.cart;
 
 public class AddToCartException extends RuntimeException {
     public AddToCartException() {
