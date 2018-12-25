@@ -1,8 +1,6 @@
 package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.PhoneDao;
-import com.es.phoneshop.web.controller.exceptions.InvalidUrlException;
 import com.es.phoneshop.web.services.PaginationService;
 import com.es.phoneshop.web.services.PhoneWebService;
 import org.springframework.stereotype.Controller;
@@ -13,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping (value = "/productList")
@@ -28,7 +27,7 @@ public class ProductListPageController {
                                   @RequestParam(name = "sort", required = false, defaultValue = "brand") String sort,
                                   @RequestParam(name = "direction", required = false, defaultValue = "asc") String direction,
                                   @RequestParam(name = "search", required = false, defaultValue = "") String search,
-                                  Model model) throws InvalidUrlException {
+                                  Model model) {
 
         Integer pageStartNumber = paginationService.getPageStartNumber(page, search);
         model.addAttribute("pageStartNumber", pageStartNumber);
@@ -43,5 +42,20 @@ public class ProductListPageController {
         List<Phone> phones = phoneWebService.getPhoneList(offset, sort, direction, search);
         model.addAttribute("phones", phones);
         return "productList";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, params = {"page", "action", "search"})
+    public String changePage(@RequestParam  Map<String, String> params){
+        Integer currentPage = Integer.parseInt(params.get("page"));
+        String currentAction = params.get("action");
+        String currentSearch = params.get("search");
+        String otherParams = new String();
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            if (!entry.getKey().equals("page") && !entry.getKey().equals("action")){
+                otherParams = otherParams.concat("&").concat(entry.getKey()).concat("=").concat(entry.getValue());
+            }
+        }
+        Integer newPage = paginationService.getNewPage(currentPage, currentAction, currentSearch);
+        return "redirect:/productList?page=" + newPage + otherParams;
     }
 }
