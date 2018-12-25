@@ -1,43 +1,64 @@
 package com.es.core.model.cart;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import com.es.core.exceptions.phone.PhoneException;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.SessionScope;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+
+@SessionScope(proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Component
 public class Cart {
-    private List<CartItem> cartItems;
-    private BigDecimal cartItemsPrice;
-    private Long cartItemsAmount;
+    private Map<Long, Long> cartItems;
+    private BigDecimal subtotal;
+    private Long amount;
 
     public Cart() {
-        cartItems = new ArrayList<>();
+        cartItems = new HashMap<>();
+        subtotal = BigDecimal.ZERO;
+        amount = 0L;
     }
 
-    public Cart(List<CartItem> cartItems) {
-        this.cartItems = cartItems;
+    public void addPhone(Long id, Long quantity) {
+        if (cartItems.containsKey(id)){
+            Long oldQuantity = cartItems.get(id);
+            cartItems.put(id, oldQuantity + quantity);
+        } else{
+            cartItems.put(id, quantity);
+        }
     }
 
-    public List<CartItem> getCartItems() {
+    public Long getItemQuantity(Long phoneId) {
+        if (!cartItems.containsKey(phoneId)) {
+            throw new PhoneException();
+        }
+        return cartItems.get(phoneId);
+    }
+
+    public Map<Long, Long> getCartItems() {
         return cartItems;
     }
 
-    public void setCartItems(List<CartItem> cartItems) {
+    public void setCartItems(Map<Long, Long> cartItems) {
         this.cartItems = cartItems;
     }
 
-    public BigDecimal getCartItemsPrice() {
-        return cartItemsPrice;
+    public BigDecimal getSubtotal() {
+        return subtotal;
     }
 
-    public void setCartItemsPrice(BigDecimal cartItemsPrice) {
-        this.cartItemsPrice = cartItemsPrice;
+    public void setSubtotal(BigDecimal subtotal) {
+        this.subtotal = subtotal;
     }
 
-    public Long getCartItemsAmount() {
-        return cartItemsAmount;
+    public Long getAmount() {
+        return amount;
     }
 
-    public void setCartItemsAmount(Long cartItemsAmount) {
-        this.cartItemsAmount = cartItemsAmount;
+    public void setAmount(Long amount) {
+        this.amount = amount;
     }
 }
