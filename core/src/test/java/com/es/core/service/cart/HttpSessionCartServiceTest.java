@@ -1,5 +1,6 @@
-package com.es.core.service;
+package com.es.core.service.cart;
 
+import com.es.core.exceptions.phone.PhoneException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -14,13 +15,28 @@ public class HttpSessionCartServiceTest {
 
     }
 
+    @Test(expected = PhoneException.class)
+    public void shouldThrowPhoneExceptionAddPhone(){
+
+    }
+
     @Test
     public void shouldUpdateItems(){
 
     }
 
+    @Test(expected = PhoneException.class)
+    public void shouldThrowPhoneExceptionUpdateItems(){
+
+    }
+
     @Test
     public void shouldRemovePhone(){
+
+    }
+
+    @Test(expected = PhoneException.class)
+    public void shouldThrowPhoneExceptionRemovePhone(){
 
     }
 }

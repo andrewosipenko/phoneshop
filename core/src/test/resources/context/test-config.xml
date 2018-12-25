@@ -20,7 +20,9 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-    <bean id="phoneDao" class="com.es.core.model.phone.JdbcPhoneDao"/>
+    <bean id="phoneDao" class="com.es.core.dao.phone.JdbcPhoneDao"/>
+
+    <bean id="stockDao" class="com.es.core.dao.stock.JdbcStockDao"/>
 
     <jdbc:initialize-database data-source="dataSource">
         <jdbc:script location="classpath:db/schema.sql"/>

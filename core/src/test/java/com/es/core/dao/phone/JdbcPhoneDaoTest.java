@@ -1,7 +1,7 @@
-package com.es.core.model.phone;
+package com.es.core.dao.phone;
 
-import com.es.core.dao.phone.PhoneDao;
 import com.es.core.model.color.Color;
+import com.es.core.model.phone.Phone;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/context/test-config.xml")
@@ -80,14 +81,14 @@ public class JdbcPhoneDaoTest {
     }
 
 
-//    @Test
-//    public void shouldFindFirstPhone() {
-//        List<Phone> phones = this.phoneDao.findAll(0, 1);
-//
-//        Assert.assertEquals(1, phones.size());
-//        Assert.assertEquals(newPhone.getBrand(), phones.get(0).getBrand());
-//        Assert.assertEquals(newPhone.getModel(), phones.get(0).getModel());
-//    }
+    @Test
+    public void shouldFindFirstPhone() {
+        List<Phone> phones = this.phoneDao.findAll(0, 1, "");
+
+        Assert.assertEquals(1, phones.size());
+        Assert.assertEquals(newPhone.getBrand(), phones.get(0).getBrand());
+        Assert.assertEquals(newPhone.getModel(), phones.get(0).getModel());
+    }
 
     @Test
     public void shouldGetPhoneById() {
