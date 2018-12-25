@@ -1,6 +1,6 @@
 package com.es.core.validator;
 
-import com.es.core.form.CartForm;
+import com.es.core.form.AddCartForm;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -9,12 +9,12 @@ import org.springframework.validation.Validator;
 public class AddCartValidator implements Validator {
     @Override
     public boolean supports(Class<?> aClass) {
-        return CartForm.class.equals(aClass);
+        return AddCartForm.class.equals(aClass);
     }
 
     @Override
     public void validate(Object o, Errors errors) {
-        CartForm cartForm = (CartForm) o;
+        AddCartForm cartForm = (AddCartForm) o;
         Long phoneId = cartForm.getPhoneId();
         Long quantity = cartForm.getQuantity();
         if (phoneId == null){
