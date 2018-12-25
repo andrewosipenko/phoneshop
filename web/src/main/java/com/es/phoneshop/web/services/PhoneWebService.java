@@ -1,8 +1,8 @@
 package com.es.phoneshop.web.services;
 
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.PhoneServiceImpl;
-import com.es.phoneshop.web.controller.exceptions.InvalidUrlException;
+import com.es.core.service.phone.PhoneServiceImpl;
+import com.es.phoneshop.web.controller.exceptions.InvalidParametersInUrlException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -10,12 +10,12 @@ import java.util.List;
 @Component
 public class PhoneWebService extends PhoneServiceImpl {
 
-    public List<Phone> getPhoneList(int offset, String sort, String direction, String search) throws InvalidUrlException {
+    public List<Phone> getPhoneList(int offset, String sort, String direction, String search) throws InvalidParametersInUrlException {
         if (!isAvailableSort(sort)){
-            throw new InvalidUrlException("Invalid name of sort: " + sort);
+            throw new InvalidParametersInUrlException("Invalid name of sort: " + sort);
         }
         if (!isAvailableDirection(direction)){
-            throw new InvalidUrlException("Invalid name of direction: " + direction);
+            throw new InvalidParametersInUrlException("Invalid name of direction: " + direction);
         }
         return phoneDao.findAllSorted(offset, PaginationService.PHONES_TO_DISPLAY, search, sort, direction);
     }

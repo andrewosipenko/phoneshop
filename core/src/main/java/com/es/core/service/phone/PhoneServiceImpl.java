@@ -1,16 +1,18 @@
-package com.es.core.model.phone;
+package com.es.core.service.phone;
 
 import com.es.core.model.cart.Cart;
-import com.es.core.model.cart.CartItem;
 import com.es.core.dao.phone.PhoneDao;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
+import com.es.core.model.phone.Phone;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class PhoneServiceImpl implements PhoneService {
     @Resource
     protected PhoneDao phoneDao;
@@ -33,8 +35,8 @@ public class PhoneServiceImpl implements PhoneService {
     @Override
     public List<Phone> getPhoneListFromCart(Cart cart){
         List<Phone> phones = new ArrayList<>();
-        for (CartItem cartItem : cart.getCartItems()) {
-            phones.add(phoneDao.get(cartItem.getPhoneId()).get());
+        for (Long phoneId : cart.getCartItems().keySet()) {
+            phones.add(phoneDao.get(phoneId).get());
         }
         return phones;
     }
