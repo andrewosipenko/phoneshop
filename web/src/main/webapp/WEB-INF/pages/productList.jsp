@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/template" %>
 <template:page>
-    <script> <%@ include file="js/addToCart.js" %> </script>
+    <script> <%@ include file="/resources/js/addToCart.js"%> </script>
     <div class="container">
     <div id="search" style="alignment: right; text-align: right">
         <form action="<c:url value="/productList"/>" method="get">

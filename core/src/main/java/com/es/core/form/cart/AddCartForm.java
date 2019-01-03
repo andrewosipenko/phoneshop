@@ -1,5 +1,8 @@
 package com.es.core.form;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class AddCartForm {
     private Long phoneId;
     private Long quantity;

@@ -109,4 +109,31 @@ public class JdbcPhoneDaoTest {
 
         Assert.assertEquals(oldCount - 1, newCount);
     }
+
+    @Test
+    public void shouldGetMaxPhoneId(){
+        long realMaxId = 8251L;
+
+        long maxId = this.phoneDao.getMaxPhoneId();
+
+        Assert.assertEquals(realMaxId, maxId);
+    }
+
+    @Test
+    public void shouldGetCountPhones(){
+        long realCount = 16L;
+
+        long count = this.phoneDao.getCountPhones();
+
+        Assert.assertEquals(realCount, count);
+    }
+
+    @Test
+    public void shouldGetNumberAvailablePhones(){
+        long realNumberAvailablePhones = 2L;
+
+        long numberAvailablePhones = this.phoneDao.getNumberAvailablePhones("");
+
+        Assert.assertEquals(realNumberAvailablePhones, numberAvailablePhones);
+    }
 }

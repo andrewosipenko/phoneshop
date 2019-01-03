@@ -52,6 +52,7 @@ public class JdbcPhoneDao implements PhoneDao {
         this.sqlParameterSource = new MapSqlParameterSource("id", key);
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         Phone phone = this.namedParameterJdbcTemplate.queryForObject(SQL_SELECT_PHONE_BY_ID, sqlParameterSource, phoneBeanPropertyRowMapper);
+        setColor(phone);
         return Optional.ofNullable(phone);
     }
 

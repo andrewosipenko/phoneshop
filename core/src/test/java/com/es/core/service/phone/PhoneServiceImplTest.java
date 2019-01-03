@@ -2,8 +2,6 @@ package com.es.core.service.phone;
 
 import com.es.core.dao.phone.PhoneDao;
 import com.es.core.model.cart.Cart;
-import com.es.core.model.order.Order;
-import com.es.core.model.order.OrderItem;
 import com.es.core.model.phone.Phone;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,7 +10,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
