@@ -1,16 +1,9 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: normalfrezy
-  Date: 03.01.19
-  Time: 00:22
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="template" tagdir="/WEB-INF/tags/template" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<template:page>
+    <div class="container">
+
+    </div>
+</template:page>

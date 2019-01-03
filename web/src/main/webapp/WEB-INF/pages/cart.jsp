@@ -6,9 +6,10 @@
     <div class="container">
         <h4>Cart</h4>
         <a class ="btn" href="<c:url value="/productList"/>"><h4>Back to product list</h4></a>
-        <c:when test="${not empty updateCart.cartItems}">
-            <form:form method="post" action="${pageContext.request.contextPath}/cart/update" modelAttribute="updateCart">
-                <c:set var="cartItems" value="${updateCart.cartItems}"/>
+        <c:choose>
+        <c:when test="${not empty updateCartForm.cartFormList}">
+            <form:form method="post" action="${pageContext.request.contextPath}/cart/update" modelAttribute="updateCartForm">
+                <c:set var="cartFormList" value="${updateCartForm.cartFormList}"/>
                 <div class="table-responsive" id="tablePhonesCart">
                     <table id="tableProductsCart" border="1px" width="100%" cellspacing="0" class="table table-striped table-bordered table-hover">
                         <thead>
@@ -23,7 +24,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                        <c:forEach begin="0" end="${cartItems.size() - 1}" var="index">
+                        <c:forEach begin="0" end="${cartFormList.size() - 1}" var="index">
+                            <form:hidden path="cartFormList['${index}'].phoneId" value="${cartFormList[index].phoneId}"/>
                             <tr>
                                 <td>${phones[index].brand}</td>
                                 <td>
@@ -40,8 +42,10 @@
                                 <td>${phones[index].displaySizeInches}"</td>
                                 <td>${phones[index].price}.00$</td>
                                 <td style="text-align: center; width: 100px">
-                                    <input class="text-input" name="quantityCart" id="quantityCart${phone.id}" style="text-align: right; width: 90px; margin-top: 18px !important;" value="${cartItems[index].quantity}"><br>
-                                    <p class="text-danger" id="errorMessage${phone.id}"></p>
+                                    <label>
+                                        <form:input class="text-input" path="cartFormList['${index}'].quantity" value="${cartFormList[index].quantity}"/><br>
+                                        <form:errors path="cartFormList['${index}'].quantity" cssClass="text-danger"/>
+                                    </label>
                                 </td>
                                 <td>
                                     <input formmethod="post" formaction="<c:url value="/cart/delete"/>?phoneId=${phones[index].id}" type="submit" value="Delete">
@@ -51,12 +55,17 @@
                         </tbody>
                     </table>
                 </div>
-            <input type="submit" class="btn" value="Update">
+            <input type="submit" value="Update">
             </form:form>
-            <a class ="btn" href="<c:url value="/order"/>">Order</a>
+            <form>
+                <input type="button" value="Order" onClick='location.href="<c:url value="/order"/>"'>
+            </form>
         </c:when>
         <c:otherwise>
-            <h3>Cart is empty</h3>
+            <div id="emptyCart" style="text-align: center">
+                <h3>Cart is empty</h3>
+            </div>
         </c:otherwise>
+        </c:choose>
     </div>
 </template:page>
