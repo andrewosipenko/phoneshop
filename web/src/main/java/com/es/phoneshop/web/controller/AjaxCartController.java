@@ -1,17 +1,18 @@
 package com.es.phoneshop.web.controller;
 
 import com.es.core.exceptions.cart.AddToCartException;
-import com.es.core.form.AddCartForm;
+import com.es.core.form.cart.AddCartForm;
 import com.es.core.service.cart.CartService;
 import com.es.core.validator.AddCartValidator;
+import com.es.phoneshop.web.services.MessageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,7 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @Controller
 @RequestMapping(value = "/ajaxCart")
@@ -29,6 +29,8 @@ public class AjaxCartController {
     private CartService cartService;
     @Resource
     private AddCartValidator cartValidator;
+    @Resource
+    private MessageService messageService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -37,19 +39,15 @@ public class AjaxCartController {
 
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody
-    ModelAndView addPhone(@Validated AddCartForm cartForm, BindingResult bindingResult) {
+    ModelAndView addPhone(@Validated @RequestBody AddCartForm cartForm, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView(new MappingJackson2JsonView());
         if (bindingResult.hasErrors()) {
-            StringBuilder errorMessage = new StringBuilder();
-            List<ObjectError> objectErrorList = bindingResult.getAllErrors();
-            for (ObjectError objectError : objectErrorList) {
-                errorMessage.append(objectError.getObjectName().concat("<br>"));
-            }
-            throw new AddToCartException(errorMessage.toString());
+            String errorMessage = messageService.getErrorMessage(bindingResult);
+            throw new AddToCartException(errorMessage);
         } else {
             cartService.addPhone(cartForm.getPhoneId(), cartForm.getQuantity());
-            modelAndView.addObject("cartItemsPrice", cartService.getCart().getSubtotal());
-            modelAndView.addObject("cartItemsAmount", cartService.getCart().getAmount());
+            modelAndView.addObject("subtotal", cartService.getCart().getSubtotal());
+            modelAndView.addObject("cartAmount", cartService.getCart().getCartAmount());
             modelAndView.setStatus(HttpStatus.OK);
         }
         return modelAndView;
