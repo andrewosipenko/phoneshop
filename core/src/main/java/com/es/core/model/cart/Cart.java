@@ -14,19 +14,19 @@ import java.util.Map;
 public class Cart {
     private Map<Long, Long> cartItems;
     private BigDecimal subtotal;
-    private Long amount;
+    private Long cartAmount;
 
     public Cart() {
         cartItems = new HashMap<>();
         subtotal = BigDecimal.ZERO;
-        amount = 0L;
+        cartAmount = 0L;
     }
 
     public void addPhone(Long id, Long quantity) {
-        if (cartItems.containsKey(id)){
+        if (cartItems.containsKey(id)) {
             Long oldQuantity = cartItems.get(id);
             cartItems.put(id, oldQuantity + quantity);
-        } else{
+        } else {
             cartItems.put(id, quantity);
         }
     }
@@ -54,11 +54,11 @@ public class Cart {
         this.subtotal = subtotal;
     }
 
-    public Long getAmount() {
-        return amount;
+    public Long getCartAmount() {
+        return cartAmount;
     }
 
-    public void setAmount(Long amount) {
-        this.amount = amount;
+    public void setCartAmount(Long cartAmount) {
+        this.cartAmount = cartAmount;
     }
 }
