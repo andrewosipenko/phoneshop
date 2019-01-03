@@ -1,5 +1,6 @@
 package com.es.phoneshop.web.controller.pages;
 
+import com.es.core.model.phone.Phone;
 import com.es.core.service.phone.PhoneService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +19,8 @@ public class ProductDetailsPageController {
 
     @GetMapping(value = "/phoneId={phoneId}")
     public String showProductDetails(@PathVariable Long phoneId, Model model){
-        model.addAttribute("phone", phoneService.getPhone(phoneId).get());
+        Phone phone = phoneService.getPhone(phoneId).get();
+        model.addAttribute("phone", phone);
         return "productDetails";
     }
 }

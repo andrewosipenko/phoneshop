@@ -26,12 +26,8 @@
             </p>
             <form action="<c:url value="/cart"/>">
                 <button id="buttonCart" type="submit" value="buttonCart">
-                    My cart: <a
-                        id="cartItemsAmount">${empty sessionScope.get("scopedTarget.cart") ? '0' : sessionScope.get("scopedTarget.cart").cartItemsAmount}</a>
-                    items,
-                    price: <a
-                        id="cartItemsPrice">${empty sessionScope.get("scopedTarget.cart").cartItemsPrice ? '0' : sessionScope.get("scopedTarget.cart").cartItemsPrice}</a>
-                    $
+                    My cart: <a id="cartAmount">${empty sessionScope.get("scopedTarget.cart").cartAmount ? '0' : sessionScope.get("scopedTarget.cart").cartAmount}</a>
+                    items, price: <a id="subtotal">${empty sessionScope.get("scopedTarget.cart").subtotal ? '0' : sessionScope.get("scopedTarget.cart").subtotal}</a>$
                 </button>
             </form>
         </div>
