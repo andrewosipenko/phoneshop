@@ -64,6 +64,6 @@ public class HttpSessionCartService implements CartService {
             newAmount += quantity;
         }
         cart.setSubtotal(newSubtotal);
-        cart.setAmount(newAmount);
+        cart.setCartAmount(newAmount);
     }
 }
