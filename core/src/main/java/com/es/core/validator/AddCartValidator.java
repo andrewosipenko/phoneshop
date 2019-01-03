@@ -1,6 +1,6 @@
 package com.es.core.validator;
 
-import com.es.core.form.AddCartForm;
+import com.es.core.form.cart.AddCartForm;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -18,10 +18,10 @@ public class AddCartValidator implements Validator {
         Long phoneId = cartForm.getPhoneId();
         Long quantity = cartForm.getQuantity();
         if (phoneId == null){
-            errors.reject("phoneId", "phoneId.invalid");
+            errors.rejectValue("phoneId", "phoneId.invalid");
         }
         if (quantity == null || quantity < 1L){
-            errors.reject("quantity", "quantity.invalid");
+            errors.rejectValue("quantity", "quantity.invalid");
         }
     }
 }
