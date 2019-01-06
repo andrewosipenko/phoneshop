@@ -53,7 +53,8 @@
                     <td>${phone.displaySizeInches}"</td>
                     <td>$ ${phone.price}</td>
                     <td>
-                        <input type="text" class="quantityField" id=quantity${phone.id} name="quantity${phone.id}" style="text-align: right" value="${cartItems.get(status.index).quantity}"/>
+                        <input type="text" class="quantityField" id=quantity${phone.id} name="quantity${phone.id}"
+                               style="text-align: right" value="${cartItems.get(status.index).quantity}"/>
                         <br>
                         <label for=quantity${phone.id} id=label${phone.id}></label>
                     </td>
@@ -67,9 +68,17 @@
         </table>
     </div>
 </form>
-<form:form method="PUT">
-    <input type="submit" id="updateSubmit" onclick="update()" value="update"/>
-</form:form>
+<div class="row">
+    <div class="col-md-11"></div>
+    <div class="col-md-1">
+        <form:form method="PUT">
+            <input type="submit" id="updateSubmit" onclick="update()" value="update"/>
+        </form:form>
+        <form action="<c:url value="order"/>">
+            <button>To Order!</button>
+        </form>
+    </div>
+</div>
 </p>
 </body>
 </html>

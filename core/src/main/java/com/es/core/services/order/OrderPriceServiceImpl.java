@@ -2,12 +2,20 @@ package com.es.core.services.order;
 
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
 @Service
 public class OrderPriceServiceImpl implements OrderPriceService {
+    private final BigDecimal deliveryPrice;
+
+    @Autowired
+    public OrderPriceServiceImpl(BigDecimal deliveryPrice) {
+        this.deliveryPrice = deliveryPrice;
+    }
+
     @Override
     public BigDecimal getSubtotalOf(Order order) {
         BigDecimal subtotalPrice = BigDecimal.ZERO;
@@ -19,7 +27,7 @@ public class OrderPriceServiceImpl implements OrderPriceService {
 
     @Override
     public BigDecimal getDeliveryPrice() {
-        return BigDecimal.ZERO;
+        return deliveryPrice;
     }
 
     @Override
