@@ -1,6 +1,7 @@
 package com.es.core.services.order;
 
 import com.es.core.dao.OrderDao;
+import com.es.core.dao.StockDao;
 import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
 import com.es.core.model.order.Order;
@@ -18,13 +19,15 @@ public class OrderServiceImpl implements OrderService {
     private final PhoneService phoneService;
     private final OrderPriceService orderPriceService;
     private final OrderDao orderDao;
+    private final StockDao stockDao;
     private long ordersCount = 0;
 
     @Autowired
-    public OrderServiceImpl(PhoneService phoneService, OrderPriceService orderPriceService, OrderDao orderDao) {
+    public OrderServiceImpl(PhoneService phoneService, OrderPriceService orderPriceService, OrderDao orderDao, StockDao stockDao) {
         this.phoneService = phoneService;
         this.orderPriceService = orderPriceService;
         this.orderDao = orderDao;
+        this.stockDao = stockDao;
     }
 
     @Override
@@ -48,6 +51,8 @@ public class OrderServiceImpl implements OrderService {
             order.setId(ordersCount++);
         }
         orderDao.addOrder(order);
+        stockDao.decreaseStockForOrderItems(order.getOrderItems());
+        stockDao.increaseReservationForOrderItems(order.getOrderItems());
     }
 
     List<OrderItem> convertCartItemsToOrderItems(List<CartItem> cartItems, Order order) {

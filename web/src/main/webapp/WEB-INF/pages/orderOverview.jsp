@@ -17,8 +17,8 @@
 <p>
     Order number: ${order.id}
 </p>
-<form action="<c:url value="cart"/>">
-    <button>Back to Cart</button>
+<form action="<c:url value="productList"/>">
+    <button>Back to Product list</button>
 </form>
 <p>
 

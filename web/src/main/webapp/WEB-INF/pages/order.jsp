@@ -6,6 +6,7 @@
 <html>
 <head>
     <link rel="stylesheet" href="webjars/bootstrap/4.1.3/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="<c:url value="/resources/styles/orderPage_styles.css"/>">
     <script src="webjars/jquery/3.0.0/jquery.min.js"></script>
     <script src="webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <title>Product list</title>
@@ -80,19 +81,23 @@
         <tr>
             <td><form:label path="firstName">First name*</form:label></td>
             <td><form:input path="firstName"/></td>
+            <td><c:if test='${errors.hasFieldErrors("firstName")}'><span class="error-message">${errors.getFieldError("firstName").code}</span></c:if></td>
         </tr>
         <tr>
             <td><form:label path="lastName">Second name*</form:label></td>
             <td><form:input path="lastName"/></td>
+            <td><c:if test='${errors.hasFieldErrors("lastName")}'><span class="error-message">${errors.getFieldError("lastName").code}</span></c:if></td>
         </tr>
         <tr>
             <td><form:label path="address">Address*</form:label></td>
             <td><form:input path="address"/></td>
+            <td><c:if test='${errors.hasFieldErrors("address")}'><span class="error-message">${errors.getFieldError("address").code}</span></c:if></td>
         </tr>
         <tr>
             <td><form:label path="contactNumber">
                 Contact Number*</form:label></td>
             <td><form:input path="contactNumber"/></td>
+            <td><c:if test='${errors.hasFieldErrors("contactNumber")}'><span class="error-message">${errors.getFieldError("contactNumber").code}</span></c:if></td>
         </tr>
         <tr>
             <td><form:label path="additionalInformation">

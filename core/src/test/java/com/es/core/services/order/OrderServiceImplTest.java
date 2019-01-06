@@ -1,6 +1,7 @@
 package com.es.core.services.order;
 
 import com.es.core.dao.OrderDao;
+import com.es.core.dao.StockDao;
 import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
 import com.es.core.model.order.Order;
@@ -28,7 +29,8 @@ public class OrderServiceImplTest {
     private PhoneService phoneService = mock(PhoneService.class);
     private OrderPriceService orderPriceService = mock(OrderPriceService.class);
     private OrderDao orderDao = mock(OrderDao.class);
-    private OrderServiceImpl orderService = new OrderServiceImpl(phoneService, orderPriceService, orderDao);
+    private StockDao stockDao = mock(StockDao.class);
+    private OrderServiceImpl orderService = new OrderServiceImpl(phoneService, orderPriceService, orderDao, stockDao);
     private Cart cart = new Cart();
 
     @Before
@@ -41,6 +43,7 @@ public class OrderServiceImplTest {
         cart.setCartItems(cartItems);
         when(phoneService.get(FIRST_PHONE_ID)).thenReturn(Optional.of(firstPhone));
         when(phoneService.get(SECOND_PHONE_ID)).thenReturn(Optional.of(secondPhone));
+        //stockDao when()
     }
 
     @Test

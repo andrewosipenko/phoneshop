@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.util.*;
 import java.util.stream.Collectors;
 
-//TODO: change color setting logic: replace getColors() with join
 @Repository
 public class JdbcProductDao implements PhoneDao {
     private static final String SQL_QUERY_FOR_GETTING_ALL_COLORS = "select * from colors";

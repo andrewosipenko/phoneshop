@@ -38,7 +38,7 @@ public class AjaxCartController {
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
-        binder.setValidator(cartItemValidator);
+        binder.addValidators(cartItemValidator);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
