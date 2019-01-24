@@ -1,6 +1,8 @@
 package com.es.core.model.phone;
 
 import com.es.core.model.phone.mappers.ColorExtractor;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -9,12 +11,16 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
+@Repository("jdbcPhoneDao")
 public class JdbcPhoneDao implements PhoneDao{
+
+    private static final Log LOG = LogFactory.getLog(JdbcPhoneDao.class);
+
     private final String SQL_GET_PHONE_BY_ID_QUERY = "select * from phones where id = ?";
 
     private final String SQL_GET_COLORS_QUERY = "select * from colors " +
@@ -107,8 +113,10 @@ public class JdbcPhoneDao implements PhoneDao{
                 .ifPresent(count -> {
                     if (count > 0) {
                         update(phone);
+                        LOG.info("Contact updated with id: " + phone.getId());
                     } else {
                         addPhone(phone);
+                        LOG.info("New contact inserted with id: " + phone.getId());
                     }
                 } );
     }
@@ -172,6 +180,8 @@ public class JdbcPhoneDao implements PhoneDao{
                 .map(color -> new Object[]{phoneId, color.getId()})
                 .collect(Collectors.toList());
         jdbcTemplate.batchUpdate(SQL_ADD_COLORS_TO_PHONE_QUERY, insertParams);
+
+        LOG.info(String.format("Colors of the phone with id: %s successfully updated", phoneId));
     }
 
     /**
@@ -180,6 +190,7 @@ public class JdbcPhoneDao implements PhoneDao{
      * @return
      */
     private Long getAmountOfPhoneInDatabase(final Long id) {
+        LOG.info("Checking existing phone in database with id: " + id);
         return jdbcTemplate.queryForObject(SQL_COUNT_OF_PHONE_QUERY,
                 new Object[]{ id }, Long.class);
     }
