@@ -17,8 +17,8 @@ public class ColorExtractor implements ResultSetExtractor<Set<Color>> {
 
         while (resultSet.next()){
             Color newColor = new Color();
-            newColor.setCode(resultSet.getString("colorCode"));
-            newColor.setId(resultSet.getLong("colorId"));
+            newColor.setCode(resultSet.getString("code"));
+            newColor.setId(resultSet.getLong("id"));
             colors.add(newColor);
         }
 

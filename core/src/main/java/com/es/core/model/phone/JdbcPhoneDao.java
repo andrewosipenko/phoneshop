@@ -33,10 +33,7 @@ public class JdbcPhoneDao implements PhoneDao{
     private final String SQL_COUNT_OF_PHONE_QUERY = "select count(*) from phones where phones.id = ?;";
 
     private final String SQL_ADD_COLORS_TO_PHONE_QUERY = "INSERT INTO phone2color (phoneId, colorId) " +
-            "    SELECT phoneId, colorId " +
-            "    FROM (SELECT ? as phoneId, ? as colorId) t " +
-            "    WHERE NOT EXISTS (SELECT * FROM phone2color u WHERE " +
-            "u.phoneId = t.phoneId and u.colorId = t.colorId);";
+            "values (?, ?)";
     private final String SQL_UPDATE_PHONE_QUERY = "update phones set" +
             " brand = ?," +
             " model = ?," +
@@ -107,18 +104,24 @@ public class JdbcPhoneDao implements PhoneDao{
      * @param phone a phone entity that we want to save
      */
     public void save(final Phone phone) {
-        Optional.of(phone)
-                .map(item -> phone.getId())
-                .map(this::getAmountOfPhoneInDatabase)
-                .ifPresent(count -> {
-                    if (count > 0) {
-                        update(phone);
-                        LOG.info("Contact updated with id: " + phone.getId());
-                    } else {
-                        addPhone(phone);
-                        LOG.info("New contact inserted with id: " + phone.getId());
-                    }
-                } );
+        Optional<Long> id = Optional.of(phone).map(item -> phone.getId());
+        if(id.isPresent()) {
+            id.map(this::getAmountOfPhoneInDatabase)
+            .ifPresent(count -> {
+                if (count > 0) {
+                    update(phone);
+                    LOG.info("Contact updated with id: " + phone.getId());
+                } else {
+                    LOG.info("Adding new phone");
+                    addPhone(phone);
+                    LOG.info("New contact inserted with id: " + phone.getId());
+                }
+            } );
+        }
+        else {
+            addPhone(phone);
+        }
+
     }
 
     /**
@@ -147,9 +150,12 @@ public class JdbcPhoneDao implements PhoneDao{
      */
     private void addPhone(final Phone phone) {
         final Long id = simpleJdbcInsert
+                .withTableName("phones")
+                .usingGeneratedKeyColumns("id")
                 .executeAndReturnKey(new BeanPropertySqlParameterSource(phone))
                 .longValue();
         addColorsToPhone(phone.getColors(), id);
+        phone.setId(id);
     }
 
     /**
@@ -158,14 +164,14 @@ public class JdbcPhoneDao implements PhoneDao{
      */
     private void update(final Phone phone) {
 
-        jdbcTemplate.update(SQL_UPDATE_PHONE_QUERY, new Object[]{ phone.getId() },
+        jdbcTemplate.update(SQL_UPDATE_PHONE_QUERY,
                 phone.getBrand(), phone.getModel(), phone.getPrice(), phone.getDisplaySizeInches(),
                 phone.getWeightGr(), phone.getLengthMm(), phone.getWidthMm(), phone.getHeightMm(),
                 phone.getAnnounced(), phone.getDeviceType(), phone.getOs(), phone.getDisplayResolution(),
                 phone.getPixelDensity(), phone.getDisplayTechnology(), phone.getBackCameraMegapixels(),
                 phone.getFrontCameraMegapixels(), phone.getRamGb(), phone.getInternalStorageGb(), phone.getBatteryCapacityMah(),
                 phone.getTalkTimeHours(), phone.getStandByTimeHours(), phone.getBluetooth(), phone.getPositioning(),
-                phone.getImageUrl(), phone.getDescription());
+                phone.getImageUrl(), phone.getDescription(), phone.getId());
         addColorsToPhone(phone.getColors(), phone.getId());
 
     }
@@ -176,9 +182,12 @@ public class JdbcPhoneDao implements PhoneDao{
      * @param phoneId id of the phone where we want to add colors
      */
     private void addColorsToPhone(final Set<Color> colors, final Long phoneId) {
+        Set<Color> existingColors = getColors(phoneId);
         List<Object[]> insertParams = colors.parallelStream()
+                .filter(item -> !existingColors.contains(item))
                 .map(color -> new Object[]{phoneId, color.getId()})
                 .collect(Collectors.toList());
+
         jdbcTemplate.batchUpdate(SQL_ADD_COLORS_TO_PHONE_QUERY, insertParams);
 
         LOG.info(String.format("Colors of the phone with id: %s successfully updated", phoneId));
@@ -191,6 +200,7 @@ public class JdbcPhoneDao implements PhoneDao{
      */
     private Long getAmountOfPhoneInDatabase(final Long id) {
         LOG.info("Checking existing phone in database with id: " + id);
+        if(id == null) return 0L;
         return jdbcTemplate.queryForObject(SQL_COUNT_OF_PHONE_QUERY,
                 new Object[]{ id }, Long.class);
     }
