@@ -4,7 +4,7 @@
 <template:page>
     <script> <%@ include file="/resources/js/addToCart.js"%> </script>
     <div class="container">
-    <div id="search" style="alignment: right; text-align: right">
+    <div id="search">
         <form action="<c:url value="/productList"/>" method="get">
             <input type="search" name="search" placeholder="Search" value="${searchText}">
             <button id="buttonSearch" type="submit">Search</button>
@@ -53,11 +53,11 @@
                     </td>
                     <td>${phone.displaySizeInches}"</td>
                     <td>${phone.price}.00$</td>
-                    <td style="text-align: center; width: 100px">
-                        <input class="text-input" name="quantity" id="quantity${phone.id}" style="text-align: right; width: 90px; margin-top: 18px !important;" value="1"><br>
+                    <td id="quantityArea">
+                        <input class="text-input" name="quantity" id="quantity${phone.id}" value="1"><br>
                         <p class="text-danger" id="errorMessage${phone.id}"></p>
                     </td>
-                    <td style="width: 100px; text-align: center; vertical-align: center">
+                    <td id="buttonAdd">
                         <input type="button" onclick="addToCart(${phone.id}, $('#quantity${phone.id}').val())" value="Add to">
                     </td>
                 </tr>
@@ -67,7 +67,7 @@
     </div>
     </p>
     <div>
-        <ul class="pagination" style="float: right">
+        <ul class="pagination">
             <li class="page-item">
                 <a class="page-link" href="<c:url value="/productList"/>?page=${page}&action=prev&sort=${sort}<c:if test="${not empty direction}">&direction=${direction}</c:if>&search=${searchText}">Previous</a>
             </li>

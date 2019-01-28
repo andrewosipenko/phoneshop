@@ -5,7 +5,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <link href="<c:url value="/resources/css/style.css" />" rel="stylesheet">
     <link rel="stylesheet" href="/resources/bootstrap-4.1.3/css/bootstrap.min.css">
     <script src="/resources/bootstrap-4.1.3/js/bootstrap.min.js"></script>
@@ -14,13 +13,13 @@
 </head>
 <body>
 <div class="container">
-    <div id="cartAndHeader" style="column-count: 2">
+    <div id="cartAndHeader">
         <div>
             <a href="<c:url value="/productList"/>">
                 <img src="/resources/images/logo.jpg" width="250px" height="150px">
             </a>
         </div>
-        <div style="text-align: right">
+        <div id="login">
             <p>
                 <a href="#">Login</a>
             </p>

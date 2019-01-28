@@ -17,7 +17,7 @@ public class PhoneWebService extends PhoneServiceImpl {
         if (!isAvailableDirection(direction)){
             throw new InvalidParametersInUrlException("Invalid name of direction: " + direction);
         }
-        return phoneDao.findAllSorted(offset, PaginationService.PHONES_TO_DISPLAY, search, sort, direction);
+        return phoneDao.findAll(offset, PaginationService.PHONES_TO_DISPLAY, search, sort, direction);
     }
 
     private boolean isAvailableSort(String sort){

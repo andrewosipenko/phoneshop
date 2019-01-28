@@ -1,16 +1,58 @@
-th:hover{
-    cursor:pointer;
-    background:#AAA;
+th:hover {
+    cursor: pointer;
+    background: #AAA;
 }
 
-th{
+th {
     cursor: pointer;
 }
 
-.table td{
+.table td {
     vertical-align: middle !important;
+    text-align: center !important;
 }
 
-#headerTable{
+#headerTable {
     background: gray;
 }
+
+#login {
+    text-align: right;
+}
+
+#cartAndHeader {
+    column-count: 2;
+}
+
+#search {
+    alignment: right;
+    text-align: right;
+}
+
+#quantityArea {
+    text-align: center;
+    width: 100px;
+}
+
+.text-input {
+    text-align: right;
+    width: 90px;
+    margin-top: 18px !important;
+}
+
+#buttonAdd {
+    width: 100px;
+    text-align: center;
+    vertical-align: center;
+}
+
+.pagination{
+    float: right;
+}
+
+#emptyCart{
+    text-align: center;
+}
+
+
+
