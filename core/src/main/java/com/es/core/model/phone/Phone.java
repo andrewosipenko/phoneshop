@@ -311,6 +311,13 @@ public class Phone {
     @Override
     public int hashCode() {
 
-        return Objects.hash(getId(), getBrand(), getModel(), getPrice(), getDisplaySizeInches(), getWeightGr(), getLengthMm(), getWidthMm(), getHeightMm(), getAnnounced(), getDeviceType(), getOs(), getColors(), getDisplayResolution(), getPixelDensity(), getDisplayTechnology(), getBackCameraMegapixels(), getFrontCameraMegapixels(), getRamGb(), getInternalStorageGb(), getBatteryCapacityMah(), getTalkTimeHours(), getStandByTimeHours(), getBluetooth(), getPositioning(), getImageUrl(), getDescription());
+        return Objects.hash(getId(), getBrand(), getModel(),
+                getPrice(), getDisplaySizeInches(), getWeightGr(),
+                getLengthMm(), getWidthMm(), getHeightMm(), getAnnounced(),
+                getDeviceType(), getOs(), getColors(), getDisplayResolution(),
+                getPixelDensity(), getDisplayTechnology(), getBackCameraMegapixels(),
+                getFrontCameraMegapixels(), getRamGb(), getInternalStorageGb(),
+                getBatteryCapacityMah(), getTalkTimeHours(), getStandByTimeHours(),
+                getBluetooth(), getPositioning(), getImageUrl(), getDescription());
     }
 }
