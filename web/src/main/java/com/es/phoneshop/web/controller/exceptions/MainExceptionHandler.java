@@ -9,7 +9,7 @@ public class MainExceptionHandler {
     private final String ERROR_MESSAGE_ATTRIBUTE = "errorMessage";
 
     @ExceptionHandler(InvalidParametersInUrlException.class)
-    public ModelAndView handleInvalidParametersInUrlException(InvalidParametersInUrlException exception){
+    public ModelAndView handleInvalidParametersInUrlException(Exception exception){
         ModelAndView modelAndView = new ModelAndView("/error/error");
         modelAndView.addObject(ERROR_MESSAGE_ATTRIBUTE, exception.getLocalizedMessage());
         return modelAndView;
