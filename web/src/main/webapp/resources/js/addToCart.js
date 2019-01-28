@@ -12,16 +12,15 @@ function addToCart(phoneId, quantity) {
     });
 
     request.done(function (data) {
-        $("#quantity" + phoneId).val("1");
         $("#cartAmount").text(data.cartAmount);
         $("#subtotal").text(data.subtotal);
 
         var selector = '#errorMessage' + phoneId;
-        $(selector).html("");
+        $(selector).text("");
     });
 
     request.fail(function (errorMessage) {
         var selector = '#errorMessage' + phoneId;
-        $(selector).html(errorMessage.responseText);
+        $(selector).text(errorMessage.responseText);
     });
 }

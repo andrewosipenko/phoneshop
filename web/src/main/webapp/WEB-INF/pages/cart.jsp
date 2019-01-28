@@ -41,10 +41,11 @@
                                 </td>
                                 <td>${phones[index].displaySizeInches}"</td>
                                 <td>${phones[index].price}.00$</td>
-                                <td style="text-align: center; width: 100px">
+                                <td id="quantityArea">
                                     <label>
-                                        <form:input class="text-input" path="cartFormList['${index}'].quantity" value="${cartFormList[index].quantity}"/><br>
-                                        <form:errors path="cartFormList['${index}'].quantity" cssClass="text-danger"/>
+                                        <form:input class="text-input" cssStyle="margin-top: 9px !important;" path="cartFormList['${index}'].quantity" value="${cartFormList[index].quantity}"/><br>
+                                        <%--<form:errors path="cartFormList['${index}'].quantity" cssClass="text-danger"/>--%>
+                                        <p class="text-danger" id=error${index}></p>
                                     </label>
                                 </td>
                                 <td>
@@ -55,14 +56,15 @@
                         </tbody>
                     </table>
                 </div>
-            <input type="submit" value="Update">
+                <input type="submit" value="Update" style="width: 100px;">
             </form:form>
+            <br>
             <form>
-                <input type="button" value="Order" onClick='location.href="<c:url value="/order"/>"'>
+                <input type="button" value="Order" onClick='location.href="<c:url value="/order"/>"' style="width: 100px">
             </form>
         </c:when>
         <c:otherwise>
-            <div id="emptyCart" style="text-align: center">
+            <div id="emptyCart">
                 <h3>Cart is empty</h3>
             </div>
         </c:otherwise>

@@ -23,10 +23,10 @@ public class UpdateCartValidator implements Validator {
             Long phoneId = cartFormList.get(i).getPhoneId();
             Long quantity = cartFormList.get(i).getQuantity();
             if (phoneId == null) {
-                errors.rejectValue("cartForm[" + i + "].phoneId", "phoneId.invalid");
+                errors.rejectValue("cartFormList[" + i + "].phoneId", "phoneId.invalid");
             }
             if (quantity == null || quantity < 1L) {
-                errors.rejectValue("cartForm[" + i + "].quantity", "quantity.invalid");
+                errors.rejectValue("cartFormList[" + i + "].quantity", "quantity.invalid");
             }
         }
     }

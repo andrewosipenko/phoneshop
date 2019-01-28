@@ -6,6 +6,7 @@ import com.es.core.service.cart.CartService;
 import com.es.core.validator.AddCartValidator;
 import com.es.phoneshop.web.services.MessageService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -25,6 +26,8 @@ import javax.annotation.Resource;
 @Controller
 @RequestMapping(value = "/ajaxCart")
 public class AjaxCartController {
+    private final String MESSAGE_WRONG_FORMAT = "Wrong format";
+
     @Resource
     private CartService cartService;
     @Resource
@@ -38,8 +41,8 @@ public class AjaxCartController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody
-    ModelAndView addPhone(@Validated @RequestBody AddCartForm cartForm, BindingResult bindingResult) {
+    @ResponseBody
+    public ModelAndView addPhone(@Validated @RequestBody AddCartForm cartForm, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView(new MappingJackson2JsonView());
         if (bindingResult.hasErrors()) {
             String errorMessage = messageService.getErrorMessage(bindingResult);
@@ -54,9 +57,16 @@ public class AjaxCartController {
     }
 
     @ExceptionHandler(AddToCartException.class)
-    public @ResponseBody
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "Add to cart error")
-    String handleAddToCartException(AddToCartException ex) {
+    @ResponseBody
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public String handleAddToCartException(AddToCartException ex) {
         return ex.getMessage();
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseBody
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public String handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        return MESSAGE_WRONG_FORMAT;
     }
 }
