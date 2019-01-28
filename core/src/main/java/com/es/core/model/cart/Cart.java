@@ -22,15 +22,6 @@ public class Cart {
         cartAmount = 0L;
     }
 
-    public void addPhone(Long id, Long quantity) {
-        if (cartItems.containsKey(id)) {
-            Long oldQuantity = cartItems.get(id);
-            cartItems.put(id, oldQuantity + quantity);
-        } else {
-            cartItems.put(id, quantity);
-        }
-    }
-
     public Long getItemQuantity(Long phoneId) {
         if (!cartItems.containsKey(phoneId)) {
             throw new PhoneException();

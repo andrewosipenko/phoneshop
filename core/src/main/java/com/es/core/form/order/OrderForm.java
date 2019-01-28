@@ -2,15 +2,26 @@ package com.es.core.form.order;
 
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.List;
 
 @Component
 public class OrderForm {
     private List<OrderFormItem> orderFormItems;
+    @NotNull
+    @Size(min = 1, max = 35, message = "First name's size should be between 1 and 35")
     private String firstName;
+    @NotNull
+    @Size(min = 1, max = 35, message = "Last name's size should be between 1 and 35")
     private String lastName;
+    @NotNull
+    @Size(min = 1, message = "Delivery address is a required field")
     private String deliveryAddress;
+    @NotNull
+    @Pattern(regexp = "^\\+375(17|29|33|44)[0-9]{7}$")
     private String contactPhoneNo;
     private String additionalInformation;
     private BigDecimal subtotal;
