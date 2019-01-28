@@ -65,7 +65,7 @@ public class PhoneServiceImplTest {
         phone.setId(PHONE_ID);
 
         Cart cart = new Cart();
-        cart.addPhone(PHONE_ID, QUANTITY);
+        //cart.addPhone(PHONE_ID, QUANTITY);
         List<Phone> phones = phoneService.getPhoneListFromCart(cart);
 
         phone = phones.get(0);

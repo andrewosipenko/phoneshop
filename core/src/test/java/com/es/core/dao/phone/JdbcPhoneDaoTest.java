@@ -19,18 +19,27 @@ public class JdbcPhoneDaoTest {
     private final String SQL_INSERT_INTO_PHONES = "insert into phones (id, brand, model) values (?, ?, ?)";
     private final String SQL_SELECT_COUNT_FROM_PHONES = "select count(*) from phones";
     private final String SQL_SELECT_MAX_ID_FROM_PHONES = "select max(id) from phones";
-    private final String codeRedColor = "Red";
-    private final long idRedColor = 1004L;
-    private final String codeGreenColor = "Green";
-    private final long idGreenColor = 1007L;
-    private final String codeBlueColor = "Blue";
-    private final long idBlueColor = 1003L;
-    private final String phoneBrand = "Brand";
-    private final String phoneModel = "Model";
-    private final String newPhoneBrand = "New Brand";
-    private final String newPhoneModel = "New Model";
-    private final long newPhoneId = 999L;
-    private final long idForDelete = 1000L;
+    private final String CODE_RED_COLOR = "Red";
+    private final long ID_RED_COLOR = 1004L;
+    private final String CODE_GREEN_COLOR = "Green";
+    private final long ID_GREEN_COLOR = 1007L;
+    private final String CODE_BLUE_COLOR = "Blue";
+    private final long ID_BLUE_COLOR = 1003L;
+    private final String PHONE_BRAND = "Brand";
+    private final String PHONE_MODEL = "Model";
+    private final String NEW_PHONE_BRAND = "New Brand";
+    private final String NEW_PHONE_MODEL = "New Model";
+    private final long NEW_PHONE_ID = 999L;
+    private final long ID_FOR_DELETE = 1000L;
+    private final long REAL_MAX_ID = 8251L;
+    private final long REAL_COUNT_PHONES = 16L;
+    private final long REAL_NUMBER_AVAILABLE_PHONES = 2L;
+    private final String DEFAULT_SEARCH = "";
+    private final String DEFAULT_SORT = "brand";
+    private final String DEFAULT_DIRECTION = "asc";
+    private final long FIRST_AVAILABLE_PHONE_ID = 1003L;
+    private final String FIRST_AVAILABLE_PHONE_BRAND = "ARCHOS";
+    private final String FIRST_AVAILABLE_PHONE_MODEL = "ARCHOS 101 Oxygen";
 
     @Resource
     private JdbcTemplate jdbcTemplateTest;
@@ -39,21 +48,20 @@ public class JdbcPhoneDaoTest {
 
     private Phone phone;
     private Phone newPhone;
-    private Color red = new Color(idRedColor, codeRedColor);
-    private Color green = new Color(idGreenColor, codeGreenColor);
-    private Color blue = new Color(idBlueColor, codeBlueColor);
+    private Color red = new Color(ID_RED_COLOR, CODE_RED_COLOR);
+    private Color green = new Color(ID_GREEN_COLOR, CODE_GREEN_COLOR);
+    private Color blue = new Color(ID_BLUE_COLOR, CODE_BLUE_COLOR);
 
     @Before
     public void init() {
         phone = new Phone();
-        phone.setId(newPhoneId);
-        phone.setBrand(phoneBrand);
-        phone.setModel(phoneModel);
+        phone.setBrand(PHONE_BRAND);
+        phone.setModel(PHONE_MODEL);
 
         newPhone = new Phone();
-        newPhone.setId(newPhoneId);
-        newPhone.setBrand(newPhoneBrand);
-        newPhone.setModel(newPhoneModel);
+        newPhone.setId(NEW_PHONE_ID);
+        newPhone.setBrand(NEW_PHONE_BRAND);
+        newPhone.setModel(NEW_PHONE_MODEL);
         this.jdbcTemplateTest.update(SQL_INSERT_INTO_PHONES,
                 newPhone.getId(),
                 newPhone.getBrand(),
@@ -80,19 +88,9 @@ public class JdbcPhoneDaoTest {
         this.phoneDao.save(phone);
     }
 
-
-    @Test
-    public void shouldFindFirstPhone() {
-        List<Phone> phones = this.phoneDao.findAll(0, 1, "");
-
-        Assert.assertEquals(1, phones.size());
-        Assert.assertEquals(newPhone.getBrand(), phones.get(0).getBrand());
-        Assert.assertEquals(newPhone.getModel(), phones.get(0).getModel());
-    }
-
     @Test
     public void shouldGetPhoneById() {
-        phone = this.phoneDao.get(newPhoneId).get();
+        phone = this.phoneDao.get(NEW_PHONE_ID).get();
 
         Assert.assertEquals(newPhone.getId(), phone.getId());
         Assert.assertEquals(newPhone.getBrand(), phone.getBrand());
@@ -102,7 +100,7 @@ public class JdbcPhoneDaoTest {
     @Test
     public void shouldDeletePhone() {
         long oldCount = this.jdbcTemplateTest.queryForObject(SQL_SELECT_COUNT_FROM_PHONES, long.class);
-        phone.setId(idForDelete);
+        phone.setId(ID_FOR_DELETE);
 
         this.phoneDao.delete(phone);
         long newCount = this.jdbcTemplateTest.queryForObject(SQL_SELECT_COUNT_FROM_PHONES, long.class);
@@ -112,28 +110,38 @@ public class JdbcPhoneDaoTest {
 
     @Test
     public void shouldGetMaxPhoneId(){
-        long realMaxId = 8251L;
-
         long maxId = this.phoneDao.getMaxPhoneId();
 
-        Assert.assertEquals(realMaxId, maxId);
+        Assert.assertEquals(REAL_MAX_ID, maxId);
     }
 
     @Test
     public void shouldGetCountPhones(){
-        long realCount = 16L;
+        long countPhones = this.phoneDao.getCountPhones();
 
-        long count = this.phoneDao.getCountPhones();
-
-        Assert.assertEquals(realCount, count);
+        Assert.assertEquals(REAL_COUNT_PHONES, countPhones);
     }
 
     @Test
     public void shouldGetNumberAvailablePhones(){
-        long realNumberAvailablePhones = 2L;
-
         long numberAvailablePhones = this.phoneDao.getNumberAvailablePhones("");
 
-        Assert.assertEquals(realNumberAvailablePhones, numberAvailablePhones);
+        Assert.assertEquals(REAL_NUMBER_AVAILABLE_PHONES, numberAvailablePhones);
+    }
+
+    @Test
+    public void shouldFindFirstAvailablePhone(){
+        List<Phone> phones = this.phoneDao.findAll(0, 1, DEFAULT_SEARCH,DEFAULT_SORT, DEFAULT_DIRECTION);
+
+        Assert.assertEquals(1, phones.size());
+        Assert.assertEquals(FIRST_AVAILABLE_PHONE_BRAND, phones.get(0).getBrand());
+        Assert.assertEquals(FIRST_AVAILABLE_PHONE_MODEL, phones.get(0).getModel());
+    }
+
+    @Test
+    public void shouldContainsPhone(){
+        boolean isContains = this.phoneDao.contains(FIRST_AVAILABLE_PHONE_ID);
+
+        Assert.assertTrue(isContains);
     }
 }
