@@ -4,8 +4,13 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <template:page>
     <div class="container">
-        <h4>Cart</h4>
+        <h4>Order</h4>
         <a class ="btn" href="<c:url value="/productList"/>"><h4>Back to product list</h4></a>
+        <c:if test="${errorMessage ne null}">
+            <h4>
+                ${errorMessage}
+            </h4>
+        </c:if>
         <c:choose>
         <c:when test="${not empty orderForm.orderFormItems}">
         <table id="tableProductsOrder" border="1px" width="100%" cellspacing="0" class="table table-striped table-bordered table-hover">
@@ -93,7 +98,7 @@
                     <td><form:textarea path="additionalInformation"/></td>
                 </tr>
             </table>
-            <input type="submit" value="Order">
+            <input type="submit" value="Order" style="width: 100px;">
         </form:form>
         </c:when>
         <c:otherwise>
