@@ -1,22 +1,23 @@
 package com.es.core.model.phone;
 
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(value = "/context/testContext-test.xml")
-
 public class JdbcPhoneDaoTest {
+
+    @Autowired
+    private PhoneDao phoneDao;
+
+    @Autowired
+    private ColorDao colorDao;
 
     private static String PHONE_BRAND = "ExpertSoft";
     private static String PHONE_MODEL = "iExpert 9";
@@ -24,10 +25,11 @@ public class JdbcPhoneDaoTest {
     private static String DEVICE_TYPE = "SUPER DUPER TYPE";
     private static long NOT_EXISTING_PHONE_ID = 12500L;
     private static int PHONE_AMOUNT = 8;
-    private static long UPDATING_PHONE_ID = 1000;
+    private static long UPDATING_PHONE_ID = 1000L;
+    private static long EXISTING_PHONE_ID = 1000L;
+    private static Long RED_COLOR_ID = 1004L;
+    private static Long BLACK_COLOR_ID = 1000L;
 
-    @Autowired
-    private PhoneDao phoneDao;
 
     @Test
     public void testSavePhone(){
@@ -58,10 +60,34 @@ public class JdbcPhoneDaoTest {
     }
 
     @Test
+    public void testColorsAdding(){
+        Phone phone = phoneDao.get(UPDATING_PHONE_ID).get();
+
+        Color redColor = colorDao.get(RED_COLOR_ID).get();
+        Color blackColor = colorDao.get(BLACK_COLOR_ID).get();
+
+        Set<Color> colors = new HashSet<>();
+        colors.add(redColor);
+        colors.add(blackColor);
+
+        phone.setColors(colors);
+
+        phoneDao.save(phone);
+
+        phone = phoneDao.get(UPDATING_PHONE_ID).get();
+        Assert.assertTrue(phone.getColors().containsAll(colors));
+    }
+
+    @Test
     public void testGetNotExistingPhone(){
         Optional<Phone> optionalPhone = phoneDao.get(NOT_EXISTING_PHONE_ID);
-        System.out.println(optionalPhone.toString());
         Assert.assertFalse(optionalPhone.isPresent());
+    }
+
+    @Test
+    public void testGetExistingPhone(){
+        Optional<Phone> optionalPhone = phoneDao.get(EXISTING_PHONE_ID);
+        Assert.assertTrue(optionalPhone.isPresent());
     }
 
     @Test
@@ -69,5 +95,4 @@ public class JdbcPhoneDaoTest {
         List<Phone> phoneList = phoneDao.findAll(0, PHONE_AMOUNT);
         Assert.assertEquals(phoneList.size(), PHONE_AMOUNT);
     }
-
 }

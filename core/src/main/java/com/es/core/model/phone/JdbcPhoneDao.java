@@ -1,8 +1,7 @@
 package com.es.core.model.phone;
 
-import com.es.core.model.phone.mappers.ColorExtractor;
+import com.es.core.utils.InjectLogger;
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -10,30 +9,25 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Repository("jdbcPhoneDao")
 public class JdbcPhoneDao implements PhoneDao{
 
-    private static final Log LOG = LogFactory.getLog(JdbcPhoneDao.class);
+    @InjectLogger
+    private static Log LOG;
 
     private final String SQL_GET_PHONE_BY_ID_QUERY = "select * from phones where id = ?";
-
-    private final String SQL_GET_COLORS_QUERY = "select * from colors " +
-            "inner join phone2color " +
-            "on colors.id = phone2color.colorId " +
-            "where phone2color.phoneId = ?";
 
     private final String SQL_FIND_ALL_QUERY = "select * from phones offset :offset_number limit :limit_number";
 
     private final String SQL_COUNT_OF_PHONE_QUERY = "select count(*) from phones where phones.id = ?;";
 
-    private final String SQL_ADD_COLORS_TO_PHONE_QUERY = "INSERT INTO phone2color (phoneId, colorId) " +
-            "values (?, ?)";
     private final String SQL_UPDATE_PHONE_QUERY = "update phones set" +
             " brand = ?," +
             " model = ?," +
@@ -62,16 +56,17 @@ public class JdbcPhoneDao implements PhoneDao{
             " description = ?" +
             " where phones.id = ?;";
 
-
-
+    private final ColorDao colorDao;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
-    public JdbcPhoneDao(JdbcTemplate jdbcTemplate,
+    public JdbcPhoneDao(ColorDao colorDao,
+                        JdbcTemplate jdbcTemplate,
                         SimpleJdbcInsert simpleJdbcInsert,
                         NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.colorDao = colorDao;
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = simpleJdbcInsert;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -79,8 +74,8 @@ public class JdbcPhoneDao implements PhoneDao{
 
     /**
      * Returns a Phone object from database
-     * @param key
-     * @return
+     * @param key - id of the phone
+     *            from database
      */
     public Optional<Phone> get(final Long key) {
 
@@ -89,11 +84,16 @@ public class JdbcPhoneDao implements PhoneDao{
                     new BeanPropertyRowMapper<>(Phone.class));
 
             Optional<Phone> result = Optional.of(phone);
-            result.ifPresent(item -> phone.setColors(getColors(key)));
+            result.ifPresent(item -> phone.setColors(colorDao.getPhoneColors(key)));
 
-            return Optional.of(phone);
+            LOG.info("A phone object from db loaded with id: " + (key == null ? "null" : key.toString()));
+
+            return result;
         }
         catch (EmptyResultDataAccessException e){
+
+            LOG.error("Can't find phone data with id: " + (key == null ? "null" : key.toString()));
+
             return Optional.empty();
         }
     }
@@ -112,7 +112,6 @@ public class JdbcPhoneDao implements PhoneDao{
                     update(phone);
                     LOG.info("Contact updated with id: " + phone.getId());
                 } else {
-                    LOG.info("Adding new phone");
                     addPhone(phone);
                     LOG.info("New contact inserted with id: " + phone.getId());
                 }
@@ -120,8 +119,8 @@ public class JdbcPhoneDao implements PhoneDao{
         }
         else {
             addPhone(phone);
+            LOG.info("New contact inserted with id: " + phone.getId());
         }
-
     }
 
     /**
@@ -139,29 +138,21 @@ public class JdbcPhoneDao implements PhoneDao{
         List<Phone> phones = namedParameterJdbcTemplate.query(SQL_FIND_ALL_QUERY, namedParameters,
                 new BeanPropertyRowMapper<>(Phone.class));
 
-        phones.parallelStream().forEach(item -> item.setColors(getColors(item.getId())));
+        phones.parallelStream().forEach(item -> item.setColors(colorDao.getPhoneColors(item.getId())));
 
         return phones;
     }
 
-    /**
-     * Adds new phone to database
-     * @param phone
-     */
     private void addPhone(final Phone phone) {
-        final Long id = simpleJdbcInsert
+        Long id = simpleJdbcInsert
                 .withTableName("phones")
                 .usingGeneratedKeyColumns("id")
                 .executeAndReturnKey(new BeanPropertySqlParameterSource(phone))
                 .longValue();
-        addColorsToPhone(phone.getColors(), id);
         phone.setId(id);
+        colorDao.addColorsToPhone(phone.getColors(), id);
     }
 
-    /**
-     * Updates a phone entity in database
-     * @param phone
-     */
     private void update(final Phone phone) {
 
         jdbcTemplate.update(SQL_UPDATE_PHONE_QUERY,
@@ -172,25 +163,8 @@ public class JdbcPhoneDao implements PhoneDao{
                 phone.getFrontCameraMegapixels(), phone.getRamGb(), phone.getInternalStorageGb(), phone.getBatteryCapacityMah(),
                 phone.getTalkTimeHours(), phone.getStandByTimeHours(), phone.getBluetooth(), phone.getPositioning(),
                 phone.getImageUrl(), phone.getDescription(), phone.getId());
-        addColorsToPhone(phone.getColors(), phone.getId());
+        colorDao.addColorsToPhone(phone.getColors(), phone.getId());
 
-    }
-
-    /**
-     * Persists a phone <-> colors junction
-     * @param colors a set of colors the phone have
-     * @param phoneId id of the phone where we want to add colors
-     */
-    private void addColorsToPhone(final Set<Color> colors, final Long phoneId) {
-        Set<Color> existingColors = getColors(phoneId);
-        List<Object[]> insertParams = colors.parallelStream()
-                .filter(item -> !existingColors.contains(item))
-                .map(color -> new Object[]{phoneId, color.getId()})
-                .collect(Collectors.toList());
-
-        jdbcTemplate.batchUpdate(SQL_ADD_COLORS_TO_PHONE_QUERY, insertParams);
-
-        LOG.info(String.format("Colors of the phone with id: %s successfully updated", phoneId));
     }
 
     /**
@@ -199,19 +173,9 @@ public class JdbcPhoneDao implements PhoneDao{
      * @return
      */
     private Long getAmountOfPhoneInDatabase(final Long id) {
-        LOG.info("Checking existing phone in database with id: " + id);
+        //LOG.info("Checking existing phone in database with id: " + id);
         if(id == null) return 0L;
         return jdbcTemplate.queryForObject(SQL_COUNT_OF_PHONE_QUERY,
                 new Object[]{ id }, Long.class);
-    }
-
-    /**
-     * Fetchs a set of phone colors from database
-     * @param key
-     * @return
-     */
-    private Set<Color> getColors(final Long key) {
-        return jdbcTemplate.query(SQL_GET_COLORS_QUERY,
-                new ColorExtractor(), key);
     }
 }
