@@ -27,9 +27,6 @@ public class JdbcPhoneDaoTest {
     private static int PHONE_AMOUNT = 8;
     private static long UPDATING_PHONE_ID = 1000L;
     private static long EXISTING_PHONE_ID = 1000L;
-    private static Long RED_COLOR_ID = 1004L;
-    private static Long BLACK_COLOR_ID = 1000L;
-
 
     @Test
     public void testSavePhone(){
@@ -57,25 +54,6 @@ public class JdbcPhoneDaoTest {
 
         phone = phoneDao.get(UPDATING_PHONE_ID).get();
         Assert.assertTrue(phone.getModel().equals(newModel));
-    }
-
-    @Test
-    public void testColorsAdding(){
-        Phone phone = phoneDao.get(UPDATING_PHONE_ID).get();
-
-        Color redColor = colorDao.get(RED_COLOR_ID).get();
-        Color blackColor = colorDao.get(BLACK_COLOR_ID).get();
-
-        Set<Color> colors = new HashSet<>();
-        colors.add(redColor);
-        colors.add(blackColor);
-
-        phone.setColors(colors);
-
-        phoneDao.save(phone);
-
-        phone = phoneDao.get(UPDATING_PHONE_ID).get();
-        Assert.assertTrue(phone.getColors().containsAll(colors));
     }
 
     @Test

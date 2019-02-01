@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(value = "/context/testContext-test.xml")
@@ -21,8 +23,9 @@ public class JdbcColorDaoTest {
 
     private static long NOT_EXISTING_PHONE_ID = 12511L;
     private static long BLACK_COLOR_ID = 1000L;
+    private static Long RED_COLOR_ID = 1004L;
     private static String BLACK_COLOR = "Black";
-
+    private static long UPDATING_PHONE_ID = 1000L;
     private static String PINK_COLOR = "PINK KSENIA =)-";
 
 
@@ -55,6 +58,25 @@ public class JdbcColorDaoTest {
                 colorDao.get(NOT_EXISTING_PHONE_ID);
 
         Assert.assertFalse(blackColor.isPresent());
+    }
+
+    @Test
+    public void testColorsAdding(){
+        Phone phone = phoneDao.get(UPDATING_PHONE_ID).get();
+
+        Color redColor = colorDao.get(RED_COLOR_ID).get();
+        Color blackColor = colorDao.get(BLACK_COLOR_ID).get();
+
+        Set<Color> colors = new HashSet<>();
+        colors.add(redColor);
+        colors.add(blackColor);
+
+        phone.setColors(colors);
+
+        phoneDao.save(phone);
+
+        phone = phoneDao.get(UPDATING_PHONE_ID).get();
+        Assert.assertTrue(phone.getColors().containsAll(colors));
     }
 
 }

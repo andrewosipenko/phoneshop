@@ -8,7 +8,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -38,21 +37,17 @@ public class JdbcColorDao implements ColorDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
     public JdbcColorDao(JdbcTemplate jdbcTemplate,
-                        SimpleJdbcInsert simpleJdbcInsert,
-                        NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+                        SimpleJdbcInsert simpleJdbcInsert) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = simpleJdbcInsert;
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     /**
      * Fetchs a set of phone colors from database
-     * @param key
-     * @return
+     * @param key - pk of phone
      */
     public Set<Color> getPhoneColors(final Long key) {
         return jdbcTemplate.query(SQL_GET_COLORS_QUERY,
@@ -111,6 +106,10 @@ public class JdbcColorDao implements ColorDao {
         LOG.info(String.format("Colors of the phone with id: %s successfully updated", phoneId));
     }
 
+    /**
+     * Returns entity from database by pk
+     * @param key - pk of entity
+     */
     @Override
     public Optional<Color> get(Long key) {
         try{
@@ -130,12 +129,16 @@ public class JdbcColorDao implements ColorDao {
     }
 
     private Long getAmountOfColorInDatabase(final Long id) {
-        //LOG.info("Checking existing phone in database with id: " + id);
+        LOG.info("Checking existing color in database with id: " + id);
         if(id == null) return 0L;
         return jdbcTemplate.queryForObject(SQL_COUNT_OF_COLOR_QUERY,
                 new Object[]{ id }, Long.class);
     }
 
+    /**
+     * Adds color entity to database
+     * @param color - adding entity
+     */
     public void saveColor(Color color) {
         Optional<Long> id = Optional.of(color).map(item -> color.getId());
         if(id.isPresent()) {
@@ -143,16 +146,16 @@ public class JdbcColorDao implements ColorDao {
                     .ifPresent(count -> {
                         if (count > 0) {
                             updateColor(color);
-                            LOG.info("Contact updated with id: " + color.getId());
+                            LOG.info("Color updated with id: " + color.getId());
                         } else {
-                            LOG.info("Adding new color");
                             addColor(color);
-                            LOG.info("New contact inserted with id: " + color.getId());
+                            LOG.info("New color inserted with id: " + color.getId());
                         }
                     } );
         }
         else {
             addColor(color);
+            LOG.info("New color inserted with id: " + color.getId());
         }
     }
 }

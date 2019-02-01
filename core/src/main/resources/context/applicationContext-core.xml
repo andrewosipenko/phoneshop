@@ -31,7 +31,20 @@
           depends-on="dataSource">
         <constructor-arg type="javax.sql.DataSource" ref="dataSource"/>
     </bean>
+    <!--
+    <bean id="jdbcColorDao" class="com.es.core.model.phone.JdbcColorDao">
+        <constructor-arg type="org.springframework.jdbc.core.JdbcTemplate" ref="jdbcTemplate"/>
+        <constructor-arg type="org.springframework.jdbc.core.simple.SimpleJdbcInsert" ref="simpleJdbcInsert"/>
+    </bean>
+    <bean id="jdbcPhoneDao" class="com.es.core.model.phone.JdbcPhoneDao">
+        <constructor-arg type="com.es.core.model.phone.JdbcColorDao" ref="jdbcColorDao"/>
+        <constructor-arg type="org.springframework.jdbc.core.JdbcTemplate" ref="jdbcTemplate"/>
+        <constructor-arg type="org.springframework.jdbc.core.simple.SimpleJdbcInsert" ref="simpleJdbcInsert"/>
+        <constructor-arg type="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate"
+                         ref="namedParameterJdbcTemplate"/>
 
+    </bean>
+    -->
     <jdbc:initialize-database enabled="${db.insertSchema}" data-source="dataSource">
         <jdbc:script location="classpath:db/schema.sql" />
     </jdbc:initialize-database>

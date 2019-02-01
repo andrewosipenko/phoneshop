@@ -125,9 +125,6 @@ public class JdbcPhoneDao implements PhoneDao{
 
     /**
      * Get's all phones in page
-     * @param offset
-     * @param limit
-     * @return
      */
     public List<Phone> findAll(int offset, int limit) {
         final Map<String, Object> namedParameters = new HashMap<>();
@@ -173,7 +170,7 @@ public class JdbcPhoneDao implements PhoneDao{
      * @return
      */
     private Long getAmountOfPhoneInDatabase(final Long id) {
-        //LOG.info("Checking existing phone in database with id: " + id);
+        LOG.info("Checking existing phone in database with id: " + id);
         if(id == null) return 0L;
         return jdbcTemplate.queryForObject(SQL_COUNT_OF_PHONE_QUERY,
                 new Object[]{ id }, Long.class);
