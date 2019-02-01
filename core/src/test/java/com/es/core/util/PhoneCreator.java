@@ -1,6 +1,6 @@
 package com.es.core.util;
 
-import com.es.core.model.phone.Color;
+import com.es.core.model.color.Color;
 import com.es.core.model.phone.Phone;
 
 import java.util.Set;

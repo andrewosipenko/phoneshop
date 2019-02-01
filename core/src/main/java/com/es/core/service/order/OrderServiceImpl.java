@@ -13,7 +13,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void placeOrder(Order order) throws OutOfStockException {
+    public void placeOrder(Order order){
         throw new UnsupportedOperationException("TODO");
     }
 }
