@@ -3,6 +3,7 @@ package com.es.core.model.phone;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 public class Phone {
@@ -271,5 +272,52 @@ public class Phone {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Phone)) return false;
+        Phone phone = (Phone) o;
+        return Objects.equals(getId(), phone.getId()) &&
+                Objects.equals(getBrand(), phone.getBrand()) &&
+                Objects.equals(getModel(), phone.getModel()) &&
+                Objects.equals(getPrice(), phone.getPrice()) &&
+                Objects.equals(getDisplaySizeInches(), phone.getDisplaySizeInches()) &&
+                Objects.equals(getWeightGr(), phone.getWeightGr()) &&
+                Objects.equals(getLengthMm(), phone.getLengthMm()) &&
+                Objects.equals(getWidthMm(), phone.getWidthMm()) &&
+                Objects.equals(getHeightMm(), phone.getHeightMm()) &&
+                Objects.equals(getAnnounced(), phone.getAnnounced()) &&
+                Objects.equals(getDeviceType(), phone.getDeviceType()) &&
+                Objects.equals(getOs(), phone.getOs()) &&
+                Objects.equals(getColors(), phone.getColors()) &&
+                Objects.equals(getDisplayResolution(), phone.getDisplayResolution()) &&
+                Objects.equals(getPixelDensity(), phone.getPixelDensity()) &&
+                Objects.equals(getDisplayTechnology(), phone.getDisplayTechnology()) &&
+                Objects.equals(getBackCameraMegapixels(), phone.getBackCameraMegapixels()) &&
+                Objects.equals(getFrontCameraMegapixels(), phone.getFrontCameraMegapixels()) &&
+                Objects.equals(getRamGb(), phone.getRamGb()) &&
+                Objects.equals(getInternalStorageGb(), phone.getInternalStorageGb()) &&
+                Objects.equals(getBatteryCapacityMah(), phone.getBatteryCapacityMah()) &&
+                Objects.equals(getTalkTimeHours(), phone.getTalkTimeHours()) &&
+                Objects.equals(getStandByTimeHours(), phone.getStandByTimeHours()) &&
+                Objects.equals(getBluetooth(), phone.getBluetooth()) &&
+                Objects.equals(getPositioning(), phone.getPositioning()) &&
+                Objects.equals(getImageUrl(), phone.getImageUrl()) &&
+                Objects.equals(getDescription(), phone.getDescription());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getId(), getBrand(), getModel(),
+                getPrice(), getDisplaySizeInches(), getWeightGr(),
+                getLengthMm(), getWidthMm(), getHeightMm(), getAnnounced(),
+                getDeviceType(), getOs(), getColors(), getDisplayResolution(),
+                getPixelDensity(), getDisplayTechnology(), getBackCameraMegapixels(),
+                getFrontCameraMegapixels(), getRamGb(), getInternalStorageGb(),
+                getBatteryCapacityMah(), getTalkTimeHours(), getStandByTimeHours(),
+                getBluetooth(), getPositioning(), getImageUrl(), getDescription());
     }
 }
