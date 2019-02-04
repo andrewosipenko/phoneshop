@@ -86,13 +86,10 @@
                 <td>${order.additionalInformation}</td>
             </tr>
         </table>
-        <input type="button" value="Back" onClick='location.href="<c:url value="/admin/orders"/>"' style="width: 100px">
-        <c:forEach var="orderStatusName" items="${orderStatusNames}">
-            <c:url var="urlValue" value="/admin/orders/${order.id}/setNewOrderStatus"/>
-            <form:form method="post" action="${urlValue}">
-                <input type="hidden" name="newOrderStatus" value="${orderStatusName}">
-                <button type="submit">${orderStatusName}</button>
-            </form:form>
-        </c:forEach>
+        <a class ="btn" href="<c:url value="/admin/orders"/>"><h4>Back</h4></a>
+        <form method="post">
+            <input type="submit" <c:if test='${order.status != "NEW"}'> disabled </c:if> name="orderStatus" value="Delivered">
+            <input type="submit" <c:if test='${order.status != "NEW"}'> disabled </c:if> name="orderStatus" value="Rejected">
+        </form>
     </div>
 </template:page>
