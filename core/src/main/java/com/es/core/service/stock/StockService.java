@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface StockService {
     List<Stock> getPhonesStocks(List<Phone> phones);
-    void updateStocks(Order order);
+    void updateStocks(Order order, boolean flag);
+    void reduceReserved(Order order);
 }

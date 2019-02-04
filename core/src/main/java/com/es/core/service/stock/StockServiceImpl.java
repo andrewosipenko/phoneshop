@@ -16,14 +16,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class StockServiceImpl implements StockService{
+public class StockServiceImpl implements StockService {
+    private final String ERROR_MESSAGE = "Some phone are out of stocks. So they were removed from your cart";
+
     @Resource
     private StockDao stockDao;
     @Resource(name = "phoneServiceImpl")
     private PhoneService phoneService;
 
     @Override
-    public List<Stock> getPhonesStocks(List<Phone> phones){
+    public List<Stock> getPhonesStocks(List<Phone> phones) {
         List<Stock> stocks = new ArrayList<>();
         for (Phone phone : phones) {
             Stock stock = stockDao.get(phone.getId()).get();
@@ -33,7 +35,7 @@ public class StockServiceImpl implements StockService{
     }
 
     @Override
-    public void updateStocks(Order order) {
+    public void updateStocks(Order order, boolean flag) {
         List<OrderItem> orderItems = order.getOrderItems();
         List<Phone> phones = phoneService.getPhoneListFromOrder(order);
         List<Stock> stocks = getPhonesStocks(phones);
@@ -44,20 +46,36 @@ public class StockServiceImpl implements StockService{
             Stock stock = stockMap.get(phoneId);
             Long oldStock = stock.getStock();
             Long oldReserved = stock.getReserved();
-            if (oldStock < quantity){
-                throw new OutOfStockException("Some phone are out of stocks\n" +
-                        "So they were removed from your cart");
+            if (oldStock < quantity) {
+                throw new OutOfStockException(ERROR_MESSAGE);
             } else {
-                Long newStock = oldStock - quantity;
+                Long newStock = (flag) ? oldStock - quantity : oldStock + quantity;
                 stock.setStock(newStock);
-                Long newReserved = oldReserved + quantity;
+                Long newReserved = (flag) ? oldReserved + quantity : oldReserved - quantity;
                 stock.setReserved(newReserved);
             }
         }
         stockDao.update(new ArrayList<>(stockMap.values()));
     }
 
-    public Map<Long, Stock> convertListStocksToMap(List<Stock> stocks){
+    @Override
+    public void reduceReserved(Order order) {
+        List<OrderItem> orderItems = order.getOrderItems();
+        List<Phone> phones = phoneService.getPhoneListFromOrder(order);
+        List<Stock> stocks = getPhonesStocks(phones);
+        Map<Long, Stock> stockMap = convertListStocksToMap(stocks);
+        for (OrderItem orderItem : orderItems) {
+            Long phoneId = orderItem.getPhone().getId();
+            Long quantity = orderItem.getQuantity();
+            Stock stock = stockMap.get(phoneId);
+            Long oldReserved = stock.getReserved();
+            Long newReserved = oldReserved - quantity;
+            stock.setReserved(newReserved);
+        }
+        stockDao.update(new ArrayList<>(stockMap.values()));
+    }
+
+    public Map<Long, Stock> convertListStocksToMap(List<Stock> stocks) {
         return stocks.stream().collect(Collectors.toMap(Stock -> Stock.getPhone().getId(), Stock -> Stock));
     }
 }
