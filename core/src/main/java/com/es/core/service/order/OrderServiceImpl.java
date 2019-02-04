@@ -56,7 +56,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void placeOrder(Order order) throws OutOfStockException {
-        stockService.updateStocks(order);
+        stockService.updateStocks(order, true);
         order.setStatus(OrderStatus.NEW);
         orderDao.save(order);
         cartService.clearCart();
@@ -79,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
         for (Phone phone : phones) {
             OrderFormItem orderFormItem = new OrderFormItem();
             orderFormItem.setPhone(phone);
-            orderFormItem.setQuantity(cart.getItemQuantity(phone.getId()));
+            orderFormItem.setQuantity(cartService.getItemQuantity(phone.getId()));
             orderFormItems.add(orderFormItem);
         }
         return orderFormItems;
@@ -87,6 +87,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getOrder(Long key) {
+        return orderDao.get(key).get();
+    }
+
+    @Override
+    public Order getOrder(String key) {
         return orderDao.get(key).get();
     }
 
@@ -117,6 +122,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void updateOrderStatus(Long orderId, OrderStatus orderStatus) {
-
+        orderDao.updateOrderStatus(orderId, orderStatus);
     }
 }

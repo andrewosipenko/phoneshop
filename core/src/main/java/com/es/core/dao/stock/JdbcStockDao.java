@@ -54,11 +54,5 @@ public class JdbcStockDao implements StockDao {
         this.namedParameterJdbcTemplate.batchUpdate(SQL_UPDATE_STOCK_BY_ID, batch);
     }
 
-    private Map<String, Object> getAllValuesStock(Stock stock) {
-        Map<String, Object> allValuesStock = new HashMap<>();
-        allValuesStock.put("stock", stock.getStock());
-        allValuesStock.put("reserved", stock.getReserved());
-        allValuesStock.put("phone.id", stock.getPhone().getId());
-        return allValuesStock;
-    }
+
 }

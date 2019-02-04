@@ -1,7 +1,7 @@
 package com.es.phoneshop.web.controller;
 
 import com.es.core.exceptions.cart.AddToCartException;
-import com.es.core.form.cart.AddCartForm;
+import com.es.core.form.cart.CartFormItem;
 import com.es.core.service.cart.CartService;
 import com.es.core.validator.AddCartValidator;
 import com.es.phoneshop.web.services.MessageService;
@@ -26,6 +26,8 @@ import javax.annotation.Resource;
 @Controller
 @RequestMapping(value = "/ajaxCart")
 public class AjaxCartController {
+    private final String ATTRIBUTE_SUBTOTAL = "subtotal";
+    private final String ATTRIBUTE_CART_AMOUNT = "cartAmount";
     private final String MESSAGE_WRONG_FORMAT = "Wrong format";
 
     @Resource
@@ -42,15 +44,15 @@ public class AjaxCartController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView addPhone(@Validated @RequestBody AddCartForm cartForm, BindingResult bindingResult) {
+    public ModelAndView addPhone(@Validated @RequestBody CartFormItem cartForm, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView(new MappingJackson2JsonView());
         if (bindingResult.hasErrors()) {
             String errorMessage = messageService.getErrorMessage(bindingResult);
             throw new AddToCartException(errorMessage);
         } else {
             cartService.addPhone(cartForm.getPhoneId(), cartForm.getQuantity());
-            modelAndView.addObject("subtotal", cartService.getCart().getSubtotal());
-            modelAndView.addObject("cartAmount", cartService.getCart().getCartAmount());
+            modelAndView.addObject(ATTRIBUTE_SUBTOTAL, cartService.getCart().getSubtotal());
+            modelAndView.addObject(ATTRIBUTE_CART_AMOUNT, cartService.getCart().getCartAmount());
             modelAndView.setStatus(HttpStatus.OK);
         }
         return modelAndView;

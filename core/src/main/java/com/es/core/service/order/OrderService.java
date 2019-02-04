@@ -14,6 +14,7 @@ public interface OrderService {
     void placeOrder(Order order) throws OutOfStockException;
     OrderForm createOrderForm(Cart cart);
     Order getOrder(Long key);
+    Order getOrder(String key);
     String getOrderKey(Long orderId);
     void updateOrderForm(OrderForm orderForm, Cart cart);
     BigDecimal getDeliveryPrice();

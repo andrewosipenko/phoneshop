@@ -1,6 +1,5 @@
 package com.es.core.model.cart;
 
-import com.es.core.exceptions.phone.PhoneException;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
@@ -20,13 +19,6 @@ public class Cart {
         cartItems = new HashMap<>();
         subtotal = BigDecimal.ZERO;
         cartAmount = 0L;
-    }
-
-    public Long getItemQuantity(Long phoneId) {
-        if (!cartItems.containsKey(phoneId)) {
-            throw new PhoneException();
-        }
-        return cartItems.get(phoneId);
     }
 
     public Map<Long, Long> getCartItems() {

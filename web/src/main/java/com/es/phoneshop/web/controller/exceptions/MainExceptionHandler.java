@@ -7,10 +7,11 @@ import org.springframework.web.servlet.ModelAndView;
 @ControllerAdvice
 public class MainExceptionHandler {
     private final String ERROR_MESSAGE_ATTRIBUTE = "errorMessage";
+    private final String PAGE_ERROR = "/error/error";
 
-    @ExceptionHandler(InvalidParametersInUrlException.class)
+    @ExceptionHandler(Exception.class)
     public ModelAndView handleInvalidParametersInUrlException(Exception exception){
-        ModelAndView modelAndView = new ModelAndView("/error/error");
+        ModelAndView modelAndView = new ModelAndView(PAGE_ERROR);
         modelAndView.addObject(ERROR_MESSAGE_ATTRIBUTE, exception.getLocalizedMessage());
         return modelAndView;
     }

@@ -5,14 +5,14 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class UpdateCartForm {
-    List<AddCartForm> cartFormList;
+public class CartForm {
+    List<CartFormItem> cartFormList;
 
-    public List<AddCartForm> getCartFormList() {
+    public List<CartFormItem> getCartFormList() {
         return cartFormList;
     }
 
-    public void setCartFormList(List<AddCartForm> cartFormList) {
+    public void setCartFormList(List<CartFormItem> cartFormList) {
         this.cartFormList = cartFormList;
     }
 }

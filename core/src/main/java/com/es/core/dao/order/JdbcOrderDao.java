@@ -28,10 +28,6 @@ import java.util.Optional;
 public class JdbcOrderDao implements OrderDao {
     private final String SQL_SELECT_ALL_ORDERS = "select * from orders ";
     private final String SQL_SELECT_ORDER_BY_ID = SQL_SELECT_ALL_ORDERS + "where id = :id";
-    private final String SQL_SELECT_MAX_ID_FROM_ORDERS = "select max(id) from orders";
-    private final String SQL_INSERT_INTO_ORDERS = "insert into orders values (" +
-            ":id, :orderItems, :subtotal, :deliveryPrice, :totalPrice, :firstName, :lastName, " +
-            ":deliveryAddress, :contactPhoneNo, :status, :additionalInformation)";
     private final String SQL_SELECT_ORDER_KEY_BY_ORDER_ID = "select orderKey from orderId2OrderKey where orderId = :orderId";
     private final String SQL_SELECT_ORDER_ID_BY_ORDER_KEY = "select orderId from orderId2OrderKey where orderKey = :orderKey";
     private final String SQL_UPDATE_STATUS_BY_ID = "update orders set status = :status where id = :id";
@@ -61,7 +57,8 @@ public class JdbcOrderDao implements OrderDao {
             this.sqlParameterSource = new MapSqlParameterSource("id", orderId);
             this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
             Order order = this.namedParameterJdbcTemplate.queryForObject(SQL_SELECT_ORDER_BY_ID, sqlParameterSource, orderBeanPropertyRowMapper);
-            return Optional.ofNullable(order);
+            order.setOrderItems(getOrderItems(orderId));
+            return Optional.of(order);
         } catch (EmptyResultDataAccessException ex) {
             return Optional.empty();
         }
@@ -95,6 +92,9 @@ public class JdbcOrderDao implements OrderDao {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.namedParameterJdbcTemplate.update(SQL_INSERT_ORDER_KEY, getAllValuesOrderId2OrderKey(orderId, orderKey));
         this.jdbcTemplate.update(SQL_DELETE_ORDER_ITEMS + orderId);
+        for (OrderItem orderItem : order.getOrderItems()) {
+            orderItem.setOrder(order);
+        }
         saveOrderItems(order.getOrderItems());
     }
 
@@ -129,7 +129,8 @@ public class JdbcOrderDao implements OrderDao {
 
     @Override
     public void updateOrderStatus(Long orderId, OrderStatus orderStatus) {
-        this.jdbcTemplate.update(SQL_UPDATE_STATUS_BY_ID, orderStatus.toString(), orderId);
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        this.namedParameterJdbcTemplate.update(SQL_UPDATE_STATUS_BY_ID, getAllValuesOrderStatusOrder(orderStatus.toString(), orderId));
     }
 
     @Override
@@ -153,21 +154,29 @@ public class JdbcOrderDao implements OrderDao {
         return getAllValuesOrder2OrderItem;
     }
 
-    private Map<String,Object> getAllValuesOrderItemsPhone(Long phoneId, Long id) {
+    private Map<String, Object> getAllValuesOrderItemsPhone(Long phoneId, Long id) {
         Map<String, Object> getAllValuesOrderItemsPhone = new HashMap<>();
         getAllValuesOrderItemsPhone.put("phoneId", phoneId);
         getAllValuesOrderItemsPhone.put("id", id);
         return getAllValuesOrderItemsPhone;
     }
 
-    private Map<String,Object> getAllValuesOrderItemsOrder(Long orderId, Long id) {
+    private Map<String, Object> getAllValuesOrderItemsOrder(Long orderId, Long id) {
         Map<String, Object> getAllValuesOrderItemsPhone = new HashMap<>();
         getAllValuesOrderItemsPhone.put("orderId", orderId);
         getAllValuesOrderItemsPhone.put("id", id);
         return getAllValuesOrderItemsPhone;
     }
 
+    private Map<String, Object> getAllValuesOrderStatusOrder(String orderStatus, Long orderId){
+        Map<String, Object> getAllValuesOrderStatusOrder = new HashMap<>();
+        getAllValuesOrderStatusOrder.put("status", orderStatus);
+        getAllValuesOrderStatusOrder.put("id", orderId);
+        return getAllValuesOrderStatusOrder;
+    }
+
     @Override
+
     public List<OrderItem> getOrderItems(Long orderId) {
         this.sqlParameterSource = new MapSqlParameterSource("orderId", orderId);
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);

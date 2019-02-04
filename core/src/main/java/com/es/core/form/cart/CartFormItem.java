@@ -3,7 +3,7 @@ package com.es.core.form.cart;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AddCartForm {
+public class CartFormItem {
     private Long phoneId;
     private Long quantity;
 

@@ -42,11 +42,8 @@
                                 <td>${phones[index].displaySizeInches}"</td>
                                 <td>${phones[index].price}.00$</td>
                                 <td id="quantityArea">
-                                    <label>
-                                        <form:input class="text-input" cssStyle="margin-top: 9px !important;" path="cartFormList['${index}'].quantity" value="${cartFormList[index].quantity}"/><br>
-                                        <%--<form:errors path="cartFormList['${index}'].quantity" cssClass="text-danger"/>--%>
-                                        <p class="text-danger" id=error${index}></p>
-                                    </label>
+                                    <form:input class="text-input" cssStyle="margin-top: 9px !important;" path="cartFormList['${index}'].quantity" value="${cartFormList[index].quantity}"/><br>
+                                    <p class="text-danger"}>${errors[index]}</p>
                                 </td>
                                 <td>
                                     <input formmethod="post" formaction="<c:url value="/cart/delete"/>?phoneId=${phones[index].id}" type="submit" value="Delete">

@@ -1,7 +1,7 @@
 package com.es.core.validator;
 
-import com.es.core.form.cart.AddCartForm;
-import com.es.core.form.cart.UpdateCartForm;
+import com.es.core.form.cart.CartForm;
+import com.es.core.form.cart.CartFormItem;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -12,13 +12,13 @@ import java.util.List;
 public class UpdateCartValidator implements Validator {
     @Override
     public boolean supports(Class<?> aClass) {
-        return UpdateCartForm.class.equals(aClass);
+        return CartForm.class.equals(aClass);
     }
 
     @Override
     public void validate(Object o, Errors errors) {
-        UpdateCartForm updateCartForm = (UpdateCartForm) o;
-        List<AddCartForm> cartFormList = updateCartForm.getCartFormList();
+        CartForm updateCartForm = (CartForm) o;
+        List<CartFormItem> cartFormList = updateCartForm.getCartFormList();
         for (int i = 0; i < cartFormList.size(); i++) {
             Long phoneId = cartFormList.get(i).getPhoneId();
             Long quantity = cartFormList.get(i).getQuantity();

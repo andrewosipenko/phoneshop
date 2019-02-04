@@ -8,6 +8,8 @@ import javax.annotation.Resource;
 
 @Component
 public class PaginationService {
+    private final String NEXT_PAGE = "next";
+    private final String PREV_PAGE = "prev";
 
     @Resource
     private PhoneDao phoneDao;
@@ -41,9 +43,9 @@ public class PaginationService {
     }
 
     public int getNewPage(Integer currentPage, String action, String search) {
-        if (action.equals("next")) {
+        if (action.equals(NEXT_PAGE)) {
             return getPageStartNumber(currentPage + PAGES_NUMBER, search);
-        } else if (action.equals("prev")) {
+        } else if (action.equals(PREV_PAGE)) {
             return (currentPage - PAGES_NUMBER < 1) ? currentPage : currentPage - PAGES_NUMBER;
         } else {
             throw new InvalidParametersInUrlException("Action " + action + " is wrong!");

@@ -21,7 +21,7 @@ public class OrderForm {
     @Size(min = 1, message = "Delivery address is a required field")
     private String deliveryAddress;
     @NotNull
-    @Pattern(regexp = "^\\+375(17|29|33|44)[0-9]{7}$")
+    @Pattern(regexp = "^\\+375(17|29|33|44)[0-9]{7}$", message = "Phone number must be in the format +375(17|29|33|44)xxxxxxx")
     private String contactPhoneNo;
     private String additionalInformation;
     private BigDecimal subtotal;

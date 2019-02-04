@@ -2,8 +2,8 @@ package com.es.core.service.cart;
 
 import com.es.core.dao.phone.PhoneDao;
 import com.es.core.exceptions.phone.PhoneException;
-import com.es.core.form.cart.AddCartForm;
-import com.es.core.form.cart.UpdateCartForm;
+import com.es.core.form.cart.CartForm;
+import com.es.core.form.cart.CartFormItem;
 import com.es.core.model.cart.Cart;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.stock.Stock;
@@ -12,7 +12,6 @@ import com.es.core.service.stock.StockService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +50,14 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
+    public Long getItemQuantity(Long phoneId) {
+        if (!cart.getCartItems().containsKey(phoneId)) {
+            throw new PhoneException();
+        }
+        return cart.getCartItems().get(phoneId);
+    }
+
+    @Override
     public void update(Map<Long, Long> items) {
         for (Map.Entry<Long, Long> item : items.entrySet()) {
             Long phoneId = item.getKey();
@@ -73,11 +80,11 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public UpdateCartForm getUpdateCart(List<Phone> phones, Map<Long, Long> cartItems) {
-        UpdateCartForm updateCartForm = new UpdateCartForm();
-        List<AddCartForm> cartFormList = new ArrayList<>();
+    public CartForm getUpdateCart(List<Phone> phones, Map<Long, Long> cartItems) {
+        CartForm updateCartForm = new CartForm();
+        List<CartFormItem> cartFormList = new ArrayList<>();
         for (Phone phone : phones) {
-            AddCartForm addCartForm = new AddCartForm();
+            CartFormItem addCartForm = new CartFormItem();
             Long phoneId = phone.getId();
             addCartForm.setPhoneId(phoneId);
             Long quantity = cartItems.get(phoneId);
@@ -89,9 +96,9 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public Map<Long, Long> getItemsCart(UpdateCartForm updateCartForm) {
+    public Map<Long, Long> getItemsCart(CartForm updateCartForm) {
         Map<Long, Long> cartItems = new HashMap<>();
-        for (AddCartForm addCartForm : updateCartForm.getCartFormList()) {
+        for (CartFormItem addCartForm : updateCartForm.getCartFormList()) {
             cartItems.put(addCartForm.getPhoneId(), addCartForm.getQuantity());
         }
         return cartItems;
@@ -105,7 +112,7 @@ public class HttpSessionCartService implements CartService {
         List<Stock> stocks = stockService.getPhonesStocks(phones);
         for (Stock stock : stocks) {
             Long phoneId = stock.getPhone().getId();
-            Long quantity = cart.getItemQuantity(phoneId);
+            Long quantity = getItemQuantity(phoneId);
             if (stock.getStock() < quantity){
                 remove(phoneId);
                 isExistPhoneOutOfTheStock = true;
