@@ -6,6 +6,7 @@ drop table if exists orders;
 drop table if exists orderItems;
 drop table if exists order2orderItem;
 drop table if exists orderId2orderKey;
+drop table if exists comments;
 
 create table colors (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -94,4 +95,14 @@ create table orderId2orderKey (
   orderKey VARCHAR(50) NOT NULL,
   UNIQUE (orderId),
   CONSTRAINT FK_orderId2orderKey_orderId FOREIGN KEY (orderId) REFERENCES orders (id) ON DELETE CASCADE  ON UPDATE CASCADE
+);
+
+create table comments (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    phoneId BIGINT,
+    authorName VARCHAR(50) NOT NULL,
+    rating SMALLINT NOT NULL,
+    commentText VARCHAR(4096) NOT NULL,
+    status VARCHAR(50),
+    CONSTRAINT FK_comments_phoneId FOREIGN KEY (phoneId) REFERENCES phones (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
