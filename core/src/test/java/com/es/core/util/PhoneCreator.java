@@ -15,4 +15,10 @@ public class PhoneCreator {
 
         return phone;
     }
+
+    public static void setNumbersValueToPhone(Phone phone) {
+        phone.setWeightGr(0);
+        phone.setPixelDensity(0);
+        phone.setBatteryCapacityMah(0);
+    }
 }

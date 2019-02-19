@@ -13,3 +13,8 @@ insert into phone2color (phoneId, colorId) values (1000, 1000);
 insert into phone2color (phoneId, colorId) values (1000, 1003);
 insert into phone2color (phoneId, colorId) values (1001, 1001);
 insert into phone2color (phoneId, colorId) values (1002, 1000);
+
+insert into stocks (phoneId, stock, reserved) values (1000, 0, 0);
+insert into stocks (phoneId, stock, reserved) values (1001, 11, 0);
+insert into stocks (phoneId, stock, reserved) values (1002, 12, 1);
+insert into stocks (phoneId, stock, reserved) values (1003, 13, 2);

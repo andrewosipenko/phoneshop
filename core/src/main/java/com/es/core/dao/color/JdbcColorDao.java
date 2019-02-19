@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -54,5 +55,10 @@ public class JdbcColorDao implements ColorDao {
         stringParameter = stringParameter.substring(1, stringParameter.length() - 1);
 
         return query.replace(REGEX_TO_ADD_ARRAY_PARAMETER, stringParameter);
+    }
+
+    @Override
+    public void setUpColorsToPhones(List<Phone> phones) {
+
     }
 }

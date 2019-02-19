@@ -18,11 +18,12 @@
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${db.driver}" />
-        <property name="url" value="${db.url}" />
+        <property name="url" value="${db.url}"/>
         <property name="username" value="${db.user}" />
         <property name="password" value="${db.password}" />
     </bean>
 
+    <bean id="cart" class="com.es.core.model.cart.Cart" scope="session"/>
 
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="dataSource" />
