@@ -1,5 +1,6 @@
 package com.es.core.model.order;
 
+import com.es.core.model.order.Order;
 import com.es.core.model.phone.Phone;
 
 public class OrderItem {
