@@ -23,11 +23,10 @@ public class AjaxCartController {
     @Resource
     private CartService cartService;
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public Cart addPhone(HttpSession httpSession, @RequestBody CartItemInfo cartItemInfo, Model model) {
         Cart cart = cartService.getCart(httpSession);
         cartService.addCartItem(cart, cartItemInfo.getPhoneId(), cartItemInfo.getQuantity());
-
         /*if (bindingResult.hasErrors()) {
             System.out.println("AFIJBNFBJ");
         }*/
