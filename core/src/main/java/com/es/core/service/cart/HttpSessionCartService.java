@@ -19,7 +19,6 @@ import java.util.Optional;
 @Service
 public class HttpSessionCartService implements CartService {
     private final static String CART_ATTRIBUTE = "cart";
-    private final static ApplicationContext context = new ClassPathXmlApplicationContext("context/applicationContext-core.xml");
 
     @Resource
     private PhoneDao phoneDao;
@@ -28,7 +27,7 @@ public class HttpSessionCartService implements CartService {
     public void addCartItem(Cart cart, Long phoneId, Long quantity) {
         List<CartItem> cartItems = cart.getCartItems();
         Phone phone = phoneDao.get(phoneId).orElseThrow(IllegalArgumentException::new);
-
+        System.out.println(phone);
         Optional<CartItem> optionalCartItem = cartItems.stream()
                 .findAny()
                 .filter(item -> phoneId.equals(item.getPhone().getId()));
@@ -62,10 +61,23 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public Cart getCart() {
-        return context.getBean("cart", Cart.class);
+        return new Cart();
+    }
+
+    @Override
+    public Cart getCart(HttpSession session) {
+        Cart cart = (Cart) session.getAttribute(CART_ATTRIBUTE);
+        System.out.println(cart);
+        if (cart == null) {
+            cart = new Cart();
+            session.setAttribute(CART_ATTRIBUTE, cart);
+        }
+
+        return cart;
     }
 
     private void recalculatePrice(Cart cart) {
+        System.out.println(cart.getCartItems()  );
         BigDecimal totalPrice = cart.getCartItems().stream()
                 .map(item -> item.getPhone().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

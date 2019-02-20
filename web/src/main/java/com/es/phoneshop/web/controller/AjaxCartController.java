@@ -1,15 +1,19 @@
 package com.es.phoneshop.web.controller;
 
 import com.es.core.model.cart.Cart;
+import com.es.core.model.cart.CartItem;
 import com.es.core.service.cart.CartService;
+import com.es.phoneshop.form.CartItemInfo;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping(value = "**/ajaxCart", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -20,10 +24,9 @@ public class AjaxCartController {
     private CartService cartService;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Cart addPhone(@RequestBody Long phoneId,
-                         @RequestBody Long quantity, Model model) {
-        Cart cart = cartService.getCart();
-        cartService.addCartItem(cart, phoneId, quantity);
+    public Cart addPhone(HttpSession httpSession, @RequestBody CartItemInfo cartItemInfo, Model model) {
+        Cart cart = cartService.getCart(httpSession);
+        cartService.addCartItem(cart, cartItemInfo.getPhoneId(), cartItemInfo.getQuantity());
 
         /*if (bindingResult.hasErrors()) {
             System.out.println("AFIJBNFBJ");

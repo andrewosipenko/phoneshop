@@ -9,6 +9,7 @@ import java.util.Map;
 public interface CartService {
 
     Cart getCart();
+    Cart getCart(HttpSession session);
 
     void addCartItem(Cart cart, Long phoneId, Long quantity);
 
