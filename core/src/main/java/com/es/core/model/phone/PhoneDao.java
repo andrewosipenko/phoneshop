@@ -1,4 +1,4 @@
-package com.es.core.phone;
+package com.es.core.model.phone;
 
 import java.util.List;
 import java.util.Optional;

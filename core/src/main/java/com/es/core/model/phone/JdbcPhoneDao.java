@@ -1,5 +1,6 @@
-package com.es.core.phone;
+package com.es.core.model.phone;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -32,9 +33,13 @@ public class JdbcPhoneDao implements PhoneDao{
 
     public Optional<Phone> get(final Long key) {
         SqlParameterSource namedParameters = new MapSqlParameterSource("id", key);
-        Phone phone = (Phone) namedParameterJdbcTemplate.queryForObject(SQL_GET_BY_ID, namedParameters, new BeanPropertyRowMapper(Phone.class));
-        phone.setColors(colorDao.get(key));
-        return Optional.of(phone);
+        try {
+            Phone phone = (Phone) namedParameterJdbcTemplate.queryForObject(SQL_GET_BY_ID, namedParameters, new BeanPropertyRowMapper(Phone.class));
+            phone.setColors(colorDao.get(key));
+            return Optional.of(phone);
+        } catch (DataAccessException ex) {
+            return Optional.empty();
+        }
     }
 
     public void save(final Phone phone) {
