@@ -2,14 +2,11 @@ package com.es.core.dao.phone;
 
 import com.es.core.dao.color.ColorDao;
 import com.es.core.model.phone.Phone;
-import com.es.core.setExtractor.PhoneSetExtractor;
-import com.es.core.setExtractor.PhonesSetExtractor;
+import com.es.core.extractor.PhoneSetExtractor;
+import com.es.core.extractor.PhonesSetExtractor;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -18,8 +15,6 @@ import java.util.Optional;
 @Repository
 public class JdbcPhoneDao implements PhoneDao {
     private final static String REPLACE_REGEX = "var";
-    private final static String QUERY_FOR_FIND_ALL_PHONES_WITH_OFFSET_AND_LIMIT =
-            "select * from phones offset ? limit ?";
     private final static String QUERY_FOR_FIND_PHONE_BY_ID =
             "select phones.*, c.id as colorId, c.code from " +
                     "(select * from phones where id = ?) phones " +
@@ -85,13 +80,7 @@ public class JdbcPhoneDao implements PhoneDao {
         return optionalPhone;
     }
 
-    public List<Phone> findAll(int offset, int limit) {
-        return jdbcTemplate.query(QUERY_FOR_FIND_ALL_PHONES_WITH_OFFSET_AND_LIMIT,
-                new BeanPropertyRowMapper(Phone.class), offset, limit);
-    }
-
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
     public void save(Phone phone) {
         jdbcTemplate.update(QUERY_TO_SAVE_PHONE,
                 phone.getBrand(),

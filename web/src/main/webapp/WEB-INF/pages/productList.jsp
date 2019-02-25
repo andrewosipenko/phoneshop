@@ -70,7 +70,7 @@
             </c:if>
 
             <c:forEach begin="${page < 5 ? 1 : page - 4}"
-                       end="${numberOfPage < 10 ? numberOfPage : page < 5 ? 10 : page < numberOfPage - 5 ? page + 5 : numberOfPage}" var="i">
+                       end="${numberOfPage < 10 ? numberOfPage : page < 5 ? 10 : page < numberOfPage - 5 ? page + 4 : numberOfPage}" var="i">
                 <c:choose>
                     <c:when test="${page == i}">
                         <td class="active-page"><tags:link page="${i}" text="${i}" order="${order}" query="${query}" sort="${sort}"/></td>

@@ -83,28 +83,10 @@ public class JdbcPhoneDaoTest {
     }
 
     @Test
-    public void shouldReturnAllPhones() {
-        int expectedCount = JdbcTestUtils.countRowsInTable(jdbcTemplate, PHONE_TABLE);
-
-        int actualCount = phoneDao.findAll(0, 100).size();
-
-        assertEquals(expectedCount, actualCount);
-    }
-
-    @Test
-    public void shouldReturnAllPhonesWithLimit() {
-        int expectedCount = 2;
-
-        int actualCount = phoneDao.findAll(0, 2).size();
-
-        assertEquals(expectedCount, actualCount);
-    }
-
-    @Test
     public void shouldReturnPhonesToFirstPage() {
         Phone phone = PhoneCreator.createPhone(PHONE_ID_WITHOUT_COLOR, BRAND, MODEL_3, new HashSet<>());
         PhoneCreator.setNumbersValueToPhone(phone);
-        List<Phone> expectedList = new ArrayList<Phone>(Collections.singletonList(phone));
+        List<Phone> expectedList = new ArrayList<>(Collections.singletonList(phone));
 
         List<Phone> actualList = phoneDao.findActivePhonesByPage(2,1);
 

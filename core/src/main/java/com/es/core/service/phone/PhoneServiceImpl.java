@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PhoneServiceImpl implements PhoneService {
@@ -18,6 +19,12 @@ public class PhoneServiceImpl implements PhoneService {
 
     @Override
     public List<Phone> getPhonesByPage(int pageId, int phonesOnPage) {
+
         return null;
+    }
+
+    @Override
+    public Optional<Phone> get(Long key) {
+        return phoneDao.get(key);
     }
 }

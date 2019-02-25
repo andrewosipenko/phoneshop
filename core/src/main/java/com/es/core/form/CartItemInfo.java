@@ -1,7 +1,14 @@
-package com.es.phoneshop.form;
+package com.es.phoneshop.web.form;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 public class CartItemInfo {
+    @NotNull
     private long phoneId;
+
+    @NotNull
+    @Positive
     private long quantity;
 
     public CartItemInfo() {

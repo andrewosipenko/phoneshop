@@ -1,7 +1,5 @@
 package com.es.core.model.cart;
 
-import com.es.core.model.phone.Phone;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

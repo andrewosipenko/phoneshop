@@ -1,4 +1,4 @@
-package com.es.core.setExtractor;
+package com.es.core.extractor;
 
 import com.es.core.model.color.Color;
 import com.es.core.model.phone.Phone;
@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class PhoneSetExtractor implements ResultSetExtractor<Phone> {
@@ -17,19 +18,13 @@ public class PhoneSetExtractor implements ResultSetExtractor<Phone> {
 
     @Override
     public Phone extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-        Phone phone = new Phone();
-        Set<Color> colors = new HashSet<>();
-        if (resultSet.next()) {
-            phone = CreatorFromResultSet.createPhone(resultSet);
+        PhonesSetExtractor phonesSetExtractor = new PhonesSetExtractor();
+        List<Phone> phones = phonesSetExtractor.extractData(resultSet);
 
-            while (resultSet.next()) {
-                if (!NULL_VALUE.equals(resultSet.getLong(COLOR_ID_PARAMETER))) {
-                    colors.add(CreatorFromResultSet.createColor(resultSet));
-                }
-            }
-
+        if (phones.size() == 0) {
+            throw new IllegalArgumentException();
         }
-        phone.setColors(colors);
-        return phone;
+
+        return phones.get(0);
     }
 }

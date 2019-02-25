@@ -5,8 +5,6 @@ import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
 import com.es.core.model.phone.Phone;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -23,11 +21,14 @@ public class HttpSessionCartService implements CartService {
     @Resource
     private PhoneDao phoneDao;
 
+    @Autowired
+    private Cart cart;
+
     @Override
     public void addCartItem(Cart cart, Long phoneId, Long quantity) {
         List<CartItem> cartItems = cart.getCartItems();
         Phone phone = phoneDao.get(phoneId).orElseThrow(IllegalArgumentException::new);
-        System.out.println(phone);
+
         Optional<CartItem> optionalCartItem = cartItems.stream()
                 .findAny()
                 .filter(item -> phoneId.equals(item.getPhone().getId()));
@@ -51,7 +52,6 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void update(Cart cart, Long phoneId, Long quantity) {
         List<CartItem> cartItems = cart.getCartItems();
-
     }
 
     @Override
@@ -61,13 +61,12 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public Cart getCart() {
-        return new Cart();
+        return cart;
     }
 
     @Override
     public Cart getCart(HttpSession session) {
         Cart cart = (Cart) session.getAttribute(CART_ATTRIBUTE);
-        System.out.println(cart);
         if (cart == null) {
             cart = new Cart();
             session.setAttribute(CART_ATTRIBUTE, cart);
@@ -76,8 +75,9 @@ public class HttpSessionCartService implements CartService {
         return cart;
     }
 
+
     private void recalculatePrice(Cart cart) {
-        System.out.println(cart.getCartItems()  );
+        System.out.println(cart.getCartItems());
         BigDecimal totalPrice = cart.getCartItems().stream()
                 .map(item -> item.getPhone().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

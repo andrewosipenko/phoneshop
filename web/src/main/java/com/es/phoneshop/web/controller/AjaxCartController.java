@@ -1,12 +1,18 @@
 package com.es.phoneshop.web.controller;
 
 import com.es.core.model.cart.Cart;
-import com.es.core.model.cart.CartItem;
 import com.es.core.service.cart.CartService;
-import com.es.phoneshop.form.CartItemInfo;
+import com.es.phoneshop.web.form.CartItemInfo;
+import com.es.phoneshop.web.response.AddingToCartResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,27 +20,43 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.math.BigDecimal;
 
 @Controller
 @RequestMapping(value = "**/ajaxCart", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class AjaxCartController {
-    private final static String CART_ATTRIBUTE = "cart";
+    private final static String STATUS_SUCCESS = "SUCCESS";
+    private final static String STATUS_ERROR = "error";
 
     @Resource
     private CartService cartService;
 
-    @RequestMapping(method = RequestMethod.POST)
-    public Cart addPhone(HttpSession httpSession, @RequestBody CartItemInfo cartItemInfo, Model model) {
-        Cart cart = cartService.getCart(httpSession);
-        cartService.addCartItem(cart, cartItemInfo.getPhoneId(), cartItemInfo.getQuantity());
-        /*if (bindingResult.hasErrors()) {
-            System.out.println("AFIJBNFBJ");
-        }*/
+    @Autowired
+    @Qualifier("cartItemInfoValidator")
+    private Validator validator;
 
-       /* if (bindingResult1.hasErrors()) {
-            System.out.println("111111111");
-        }*/
-        //cartService.addPhone(phoneId, quantity);
-        return cart;
+    @InitBinder
+    private void initBinder(WebDataBinder webDataBinder) {
+        webDataBinder.setValidator(validator);
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    @ResponseBody
+    public AddingToCartResponse addPhone(@Validated @RequestBody CartItemInfo cartItemInfo, BindingResult bindingResult) {
+        AddingToCartResponse response = new AddingToCartResponse();
+        if (bindingResult.hasErrors()) {
+            response.setErrors(bindingResult.getAllErrors());
+            response.setStatus(STATUS_ERROR);
+        } else {
+            Cart cart = cartService.getCart();
+            cartService.addCartItem(cart, cartItemInfo.getPhoneId(), cartItemInfo.getQuantity());
+            System.out.println(cart);
+            response.setCart(cart);
+            response.setStatus(STATUS_SUCCESS);
+        }
+        return response;
     }
 }

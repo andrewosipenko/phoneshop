@@ -2,12 +2,7 @@ package com.es.core.model.cart;
 
 import com.es.core.model.phone.Phone;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-
 public class CartItem {
-    @NotNull
-    @Min(1)
     private Long quantity;
 
     private Phone phone;
@@ -16,7 +11,7 @@ public class CartItem {
 
     }
 
-    public CartItem(@NotNull @Min(1) Long quantity, Phone phone) {
+    public CartItem(Long quantity, Phone phone) {
         this.quantity = quantity;
         this.phone = phone;
     }
