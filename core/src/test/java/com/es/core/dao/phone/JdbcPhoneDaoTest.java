@@ -13,7 +13,6 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -99,7 +98,7 @@ public class JdbcPhoneDaoTest {
         PhoneCreator.setNumbersValueToPhone(phone);
         List<Phone> expectedList = new ArrayList<Phone>(Collections.singletonList(phone));
 
-        List<Phone> actualList = phoneDao.findPhonesLikeQuery(0, PAGE_SIZE, MODEL_3);
+        List<Phone> actualList = phoneDao.findPhonesLikeSearchText(0, PAGE_SIZE, MODEL_3);
 
         assertEquals(expectedList, actualList);
     }
@@ -108,25 +107,25 @@ public class JdbcPhoneDaoTest {
     public void shouldReturnEmptyListWhenNoPhoneWithCurrentBrand() {
         List<Phone> expectedList = new ArrayList<>();
 
-        List<Phone> actualList = phoneDao.findPhonesLikeQuery(0, PAGE_SIZE, "asvaf");
+        List<Phone> actualList = phoneDao.findPhonesLikeSearchText(0, PAGE_SIZE, "asvaf");
 
         assertEquals(expectedList, actualList);
     }
 
     @Test
-    public void shouldReturnNumberOfPageOfPhonesWithCurrentBrand() {
+    public void shouldReturnNumberOfPhonesWithCurrentBrand() {
         int expectedCount = 3;
 
-        int actualCount = phoneDao.findPageCountWithQuery(1, BRAND);
+        int actualCount = phoneDao.findPageCountWithSearchText(BRAND);
 
         assertEquals(expectedCount, actualCount);
     }
 
     @Test
-    public void shouldReturnNumberOfPageOfActivePhones() {
+    public void shouldReturnNumberOfActivePhones() {
         int expectedCount = 3;
 
-        int actualCount = phoneDao.findPageCount(1);
+        int actualCount = phoneDao.findPageCount();
 
         assertEquals(expectedCount, actualCount);
     }
@@ -167,7 +166,7 @@ public class JdbcPhoneDaoTest {
         boolean isSort = true;
         int expectedSize = 3;
 
-        List<Phone> phones = phoneDao.sortPhonesLikeQuery(0,10,"model", "desc", BRAND);
+        List<Phone> phones = phoneDao.sortPhonesLikeSearchText(0,10,"model", "desc", BRAND);
         int size = phones.size() - 1;
         for (int i = 0; i < size; i++) {
             if (phones.get(i).getModel().compareTo(phones.get(i + 1).getModel()) < 1) {
@@ -185,7 +184,7 @@ public class JdbcPhoneDaoTest {
         boolean isSort = true;
         int expectedSize = 3;
 
-        List<Phone> phones = phoneDao.sortPhonesLikeQuery(0,10,"model", "asc", BRAND);
+        List<Phone> phones = phoneDao.sortPhonesLikeSearchText(0,10,"model", "asc", BRAND);
         int size = phones.size() - 1;
         for (int i = 0; i < size; i++) {
             if (phones.get(i).getModel().compareTo(phones.get(i + 1).getModel()) >= 1) {

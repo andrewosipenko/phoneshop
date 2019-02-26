@@ -1,14 +1,15 @@
 package com.es.phoneshop.web.response;
 
-import com.es.core.model.cart.Cart;
 import org.springframework.validation.ObjectError;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class AddingToCartResponse {
     private String status;
-    private Cart cart;
     private List<ObjectError> errors;
+    private int countOfCartItems;
+    private BigDecimal totalPrice;
 
     public AddingToCartResponse() {
 
@@ -22,14 +23,6 @@ public class AddingToCartResponse {
         this.status = status;
     }
 
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
-    }
-
     public List<ObjectError> getErrors() {
         return errors;
     }
@@ -38,12 +31,29 @@ public class AddingToCartResponse {
         this.errors = errors;
     }
 
+    public int getCountOfCartItems() {
+        return countOfCartItems;
+    }
+
+    public void setCountOfCartItems(int countOfCartItems) {
+        this.countOfCartItems = countOfCartItems;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
     @Override
     public String toString() {
         return "AddingToCartResponse{" +
                 "status='" + status + '\'' +
-                ", cart=" + cart +
                 ", errors=" + errors +
+                ", countOfCartItems=" + countOfCartItems +
+                ", totalPrice=" + totalPrice +
                 '}';
     }
 }

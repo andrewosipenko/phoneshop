@@ -4,6 +4,7 @@ import com.es.core.dao.phone.PhoneDao;
 import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
 import com.es.core.model.phone.Phone;
+import com.es.core.service.price.PriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,10 @@ public class HttpSessionCartService implements CartService {
     @Resource
     private PhoneDao phoneDao;
 
-    @Autowired
+    @Resource
+    private PriceService priceService;
+
+    @Autowired( required = false)
     private Cart cart;
 
     @Override
@@ -41,7 +45,7 @@ public class HttpSessionCartService implements CartService {
             cartItems.add(cartItem);
         }
 
-        recalculatePrice(cart);
+        priceService.recalculatePrice(cart);
     }
 
     @Override
@@ -56,31 +60,10 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void remove(Cart cart, Long phoneId) {
-
     }
 
     @Override
     public Cart getCart() {
         return cart;
-    }
-
-    @Override
-    public Cart getCart(HttpSession session) {
-        Cart cart = (Cart) session.getAttribute(CART_ATTRIBUTE);
-        if (cart == null) {
-            cart = new Cart();
-            session.setAttribute(CART_ATTRIBUTE, cart);
-        }
-
-        return cart;
-    }
-
-
-    private void recalculatePrice(Cart cart) {
-        System.out.println(cart.getCartItems());
-        BigDecimal totalPrice = cart.getCartItems().stream()
-                .map(item -> item.getPhone().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        cart.setTotalPrice(totalPrice);
     }
 }

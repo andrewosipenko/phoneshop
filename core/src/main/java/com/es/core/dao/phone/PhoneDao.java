@@ -7,11 +7,11 @@ import java.util.Optional;
 
 public interface PhoneDao {
     Optional<Phone> get(Long key);
-    void save(Phone phone);
+    Phone save(Phone phone);
     List<Phone> findActivePhonesByPage(int offset, int limit);
-    List<Phone> findPhonesLikeQuery(int offset, int limit, String query);
+    List<Phone> findPhonesLikeSearchText(int offset, int limit, String searchText);
     List<Phone> sortPhones(int offset, int limit, String sort, String order);
-    List<Phone> sortPhonesLikeQuery(int offset, int limit, String sort, String order, String query);
-    int findPageCount(int pageSize);
-    int findPageCountWithQuery(int pageSize, String query);
+    List<Phone> sortPhonesLikeSearchText(int offset, int limit, String sort, String order, String searchText);
+    int findPageCount();
+    int findPageCountWithSearchText(String searchText);
 }

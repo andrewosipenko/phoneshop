@@ -65,23 +65,20 @@ public class JdbcPhoneDao implements PhoneDao {
     @Resource
     private JdbcTemplate jdbcTemplate;
 
-    @Resource
-    private ColorDao colorDao;
-
     public Optional<Phone> get(Long key) {
         Optional<Phone> optionalPhone;
         try {
             Phone phone = jdbcTemplate
                     .query(QUERY_FOR_FIND_PHONE_BY_ID, new PhoneSetExtractor(), key);
             optionalPhone = Optional.of(phone);
-        } catch (EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException | IllegalArgumentException e) {
             optionalPhone = Optional.empty();
         }
         return optionalPhone;
     }
 
     @Override
-    public void save(Phone phone) {
+    public Phone save(Phone phone) {
         jdbcTemplate.update(QUERY_TO_SAVE_PHONE,
                 phone.getBrand(),
                 phone.getModel(),
@@ -114,34 +111,35 @@ public class JdbcPhoneDao implements PhoneDao {
             Long id = jdbcTemplate.queryForObject(QUERY_TO_FIND_PHONE_ID, Long.class, phone.getBrand(), phone.getModel());
             phone.setId(id);
         }
-
-        colorDao.savePhoneColors(phone);
+        return phone;
     }
 
     @Override
-    public List<Phone> findPhonesLikeQuery(int offset, int limit, String query) {
+    public List<Phone> findPhonesLikeSearchText(int offset, int limit, String searchText) {
         return jdbcTemplate.query(QUERY_TO_GET_PHONES_LIKE_QUERY_BY_PAGE, new PhonesSetExtractor(),
-                query, query, offset, limit);
+                searchText, searchText, offset, limit);
     }
 
     @Override
     public List<Phone> sortPhones(int offset, int limit, String sort, String order) {
         String dbQeury = QUERY_TO_GET_SORT_PHONES_BY_PAGE.replaceFirst(REPLACE_REGEX, sort);
         dbQeury = dbQeury.replaceFirst(REPLACE_REGEX, order);
+        System.out.println(dbQeury);
         return jdbcTemplate.query(dbQeury, new PhonesSetExtractor(), offset, limit);
     }
 
     @Override
-    public List<Phone> sortPhonesLikeQuery(int offset, int limit, String sort, String order, String query) {
+    public List<Phone> sortPhonesLikeSearchText(int offset, int limit, String sort, String order, String searchText) {
         String dbQeury = QUERY_TO_GET_SORT_PHONES_LIKE_QUERY_BY_PAGE.replaceFirst(REPLACE_REGEX, sort);
         dbQeury = dbQeury.replaceFirst(REPLACE_REGEX, order);
+        System.out.println(dbQeury);
         return jdbcTemplate.query(dbQeury, new PhonesSetExtractor(),
-                query, query, offset, limit);
+                searchText, searchText, offset, limit);
     }
 
     @Override
-    public int findPageCount(int pageSize) {
-        return jdbcTemplate.queryForObject(QUERY_FOR_GET_ACTIVE_PHONE_COUNT, Integer.class) / pageSize;
+    public int findPageCount() {
+        return jdbcTemplate.queryForObject(QUERY_FOR_GET_ACTIVE_PHONE_COUNT, Integer.class);
     }
 
     @Override
@@ -151,8 +149,8 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     @Override
-    public int findPageCountWithQuery(int pageSize, String query) {
+    public int findPageCountWithSearchText(String searchText) {
         return jdbcTemplate.queryForObject(QUERY_FOR_GET_PHONE_LIKE_QUERY_COUNT,
-                Integer.class, query, query) / pageSize;
+                Integer.class, searchText, searchText);
     }
 }

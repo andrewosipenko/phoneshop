@@ -19,17 +19,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.math.BigDecimal;
 
 @Controller
 @RequestMapping(value = "**/ajaxCart", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class AjaxCartController {
     private final static String STATUS_SUCCESS = "SUCCESS";
-    private final static String STATUS_ERROR = "error";
+    private final static String STATUS_ERROR = "ERROR";
 
     @Resource
     private CartService cartService;
@@ -53,8 +48,8 @@ public class AjaxCartController {
         } else {
             Cart cart = cartService.getCart();
             cartService.addCartItem(cart, cartItemInfo.getPhoneId(), cartItemInfo.getQuantity());
-            System.out.println(cart);
-            response.setCart(cart);
+            response.setCountOfCartItems(cart.getCartItems().size());
+            response.setTotalPrice(cart.getTotalPrice());
             response.setStatus(STATUS_SUCCESS);
         }
         return response;

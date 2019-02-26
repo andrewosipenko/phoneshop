@@ -7,5 +7,11 @@ import java.util.Optional;
 
 public interface PhoneService {
     Optional<Phone> get(Long key);
-    List<Phone> getPhonesByPage(int pageId, int phonesOnPage);
+    void save(Phone phone);
+    List<Phone> findActivePhonesByPage(int offset, int limit);
+    List<Phone> findPhonesLikeSearchText(int offset, int limit, String searchText);
+    List<Phone> sortPhones(int offset, int limit, String sort, String order);
+    List<Phone> sortPhonesLikeSearchText(int offset, int limit, String sort, String order, String searchText);
+    int findPageCount(int pageSize);
+    int findPageCountWithSearchText(int pageSize, String searchText);
 }
