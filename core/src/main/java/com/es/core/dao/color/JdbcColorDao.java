@@ -56,9 +56,4 @@ public class JdbcColorDao implements ColorDao {
 
         return query.replace(REGEX_TO_ADD_ARRAY_PARAMETER, stringParameter);
     }
-
-    @Override
-    public void setUpColorsToPhones(List<Phone> phones) {
-
-    }
 }

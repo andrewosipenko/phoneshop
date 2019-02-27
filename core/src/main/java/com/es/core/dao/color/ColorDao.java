@@ -9,5 +9,4 @@ import java.util.Set;
 public interface ColorDao {
     void savePhoneColors(Phone phone);
     Set<Color> findColorsToPhone(Long key);
-    void setUpColorsToPhones(List<Phone> phones);
 }

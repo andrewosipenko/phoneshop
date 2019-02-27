@@ -16,7 +16,7 @@ import java.util.Set;
 public class PhonesSetExtractor implements ResultSetExtractor<List<Phone>> {
     private final static String PHONE_ID_PARAMETER = "id";
     private final static String COLOR_ID_PARAMETER = "colorId";
-    private final static Long EMPTY_VALUE = 0L;
+    private final static Long ZERO_VALUE = 0L;
 
     @Override
     public List<Phone> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
@@ -42,7 +42,7 @@ public class PhonesSetExtractor implements ResultSetExtractor<List<Phone>> {
     }
 
     private void addColorToPhone(ResultSet resultSet, Phone phone) throws SQLException {
-        if (!EMPTY_VALUE.equals(resultSet.getLong(COLOR_ID_PARAMETER))) {
+        if (!ZERO_VALUE.equals(resultSet.getLong(COLOR_ID_PARAMETER))) {
             Set<Color> colors = phone.getColors();
             colors.add(CreatorFromResultSet.createColor(resultSet));
             phone.setColors(colors);

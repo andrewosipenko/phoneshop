@@ -25,7 +25,6 @@ public class ProductListPageController {
     private final static String ORDER_PARAMETER = "order";
     private final static String TOTAL_PRICE = "totalPrice";
     private final static String COUNT_OF_CART_ITEM = "countOfCartItems";
-
     private final static int PAGE_SIZE = 10;
     private final static String PRODUCT_LIST_PAGE = "productList";
 

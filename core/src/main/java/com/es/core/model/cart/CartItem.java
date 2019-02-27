@@ -4,7 +4,6 @@ import com.es.core.model.phone.Phone;
 
 public class CartItem {
     private Long quantity;
-
     private Phone phone;
 
     public CartItem() {

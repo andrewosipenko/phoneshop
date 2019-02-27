@@ -8,8 +8,6 @@
     <import resource="classpath:context/applicationContext-core.xml"/>
     <import resource="classpath:context/applicationContext-demoda.xml"/>
 
-    <context:component-scan base-package="com.es.core" scoped-proxy="targetClass"/>
-
     <bean id="cart" class="com.es.core.model.cart.Cart" scope="session" lazy-init="true">
         <aop:scoped-proxy/>
     </bean>
