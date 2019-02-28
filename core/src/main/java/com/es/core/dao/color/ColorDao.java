@@ -3,6 +3,7 @@ package com.es.core.dao.color;
 import com.es.core.model.color.Color;
 import com.es.core.model.phone.Phone;
 
+import java.util.List;
 import java.util.Set;
 
 public interface ColorDao {

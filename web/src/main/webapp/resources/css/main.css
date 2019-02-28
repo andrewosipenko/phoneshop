@@ -1,0 +1,61 @@
+.td-center-align {
+  text-align: center;
+}
+
+.pagination-table {
+  float: right;
+  font-size: 20px;
+  color: black;
+  margin: 5px 40px 10px 0;
+}
+
+.pagination-table td  {
+  padding: 7px;
+}
+
+.pagination-table td a {
+  color: black;
+}
+
+.active-page {
+  background-color: gray;
+}
+
+header {
+  border-bottom: black 3px solid;
+}
+
+.header-cart {
+  float: right;
+  background-color: darkgray;
+  font-size: 25px;
+  padding: 15px 35px;
+  margin: 10px;
+  border-radius: 30px;
+}
+
+.inline-element {
+  display: inline;
+}
+
+.search {
+  float: right;
+  font-size: 19px;
+  margin: 10px;
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.h3-text {
+  font-size: 30px;
+  display: inline;
+  margin: 5px 20px;
+}
+
+.error-message {
+  color: red;
+}

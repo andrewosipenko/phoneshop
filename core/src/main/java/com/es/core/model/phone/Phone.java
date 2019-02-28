@@ -13,56 +13,33 @@ public class Phone {
     private String brand;
     private String model;
     private BigDecimal price;
+    private BigDecimal displaySizeInches;
+    private Integer weightGr;
+    private BigDecimal lengthMm;
+    private BigDecimal widthMm;
+    private BigDecimal heightMm;
+    private Date announced;
+    private String deviceType;
+    private String os;
+    private Set<Color> colors = Collections.EMPTY_SET;
+    private String displayResolution;
+    private Integer pixelDensity;
+    private String displayTechnology;
+    private BigDecimal backCameraMegapixels;
+    private BigDecimal frontCameraMegapixels;
+    private BigDecimal ramGb;
+    private BigDecimal internalStorageGb;
+    private Integer batteryCapacityMah;
+    private BigDecimal talkTimeHours;
+    private BigDecimal standByTimeHours;
+    private String bluetooth;
+    private String positioning;
+    private String imageUrl;
+    private String description;
 
     public Phone() {
 
     }
-
-    private BigDecimal displaySizeInches;
-
-    private Integer weightGr;
-
-    private BigDecimal lengthMm;
-
-    private BigDecimal widthMm;
-
-    private BigDecimal heightMm;
-
-    private Date announced;
-
-    private String deviceType;
-
-    private String os;
-
-    private Set<Color> colors = Collections.EMPTY_SET;
-
-    private String displayResolution;
-
-    private Integer pixelDensity;
-
-    private String displayTechnology;
-
-    private BigDecimal backCameraMegapixels;
-
-    private BigDecimal frontCameraMegapixels;
-
-    private BigDecimal ramGb;
-
-    private BigDecimal internalStorageGb;
-
-    private Integer batteryCapacityMah;
-
-    private BigDecimal talkTimeHours;
-
-    private BigDecimal standByTimeHours;
-
-    private String bluetooth;
-
-    private String positioning;
-
-    private String imageUrl;
-
-    private String description;
 
     public String getBrand() {
         return brand;
@@ -284,32 +261,32 @@ public class Phone {
     public String toString() {
         return "Phone{" +
                 "id=" + id +
-                ", brand='" + brand + '\n' +
-                ", model='" + model + '\n' +
-                ", price=" + price + '\n' +
-                ", displaySizeInches=" + displaySizeInches + '\n' +
-                ", weightGr=" + weightGr + '\n' +
-                ", lengthMm=" + lengthMm + '\n' +
-                ", widthMm=" + widthMm + '\n' +
-                ", heightMm=" + heightMm + '\n' +
-                ", announced=" + announced + '\n' +
-                ", deviceType='" + deviceType + '\n' +
-                ", os='" + os + '\n' +
-                ", colors=" + colors + '\n' +
-                ", displayResolution='" + displayResolution + '\n' +
-                ", pixelDensity=" + pixelDensity + '\n' +
-                ", displayTechnology='" + displayTechnology + '\n' +
-                ", backCameraMegapixels=" + backCameraMegapixels + '\n' +
-                ", frontCameraMegapixels=" + frontCameraMegapixels + '\n' +
-                ", ramGb=" + ramGb + '\n' +
-                ", internalStorageGb=" + internalStorageGb + '\n' +
-                ", batteryCapacityMah=" + batteryCapacityMah + '\n' +
-                ", talkTimeHours=" + talkTimeHours + '\n' +
-                ", standByTimeHours=" + standByTimeHours + '\n' +
-                ", bluetooth='" + bluetooth + '\n' +
-                ", positioning='" + positioning + '\n' +
-                ", imageUrl='" + imageUrl + '\n' +
-                ", description='" + description + '\n' +
+                ", brand='" + brand + '\'' +
+                ", model='" + model + '\'' +
+                ", price=" + price +
+                ", displaySizeInches=" + displaySizeInches +
+                ", weightGr=" + weightGr +
+                ", lengthMm=" + lengthMm +
+                ", widthMm=" + widthMm +
+                ", heightMm=" + heightMm +
+                ", announced=" + announced +
+                ", deviceType='" + deviceType + '\'' +
+                ", os='" + os + '\'' +
+                ", colors=" + colors +
+                ", displayResolution='" + displayResolution + '\'' +
+                ", pixelDensity=" + pixelDensity +
+                ", displayTechnology='" + displayTechnology + '\'' +
+                ", backCameraMegapixels=" + backCameraMegapixels +
+                ", frontCameraMegapixels=" + frontCameraMegapixels +
+                ", ramGb=" + ramGb +
+                ", internalStorageGb=" + internalStorageGb +
+                ", batteryCapacityMah=" + batteryCapacityMah +
+                ", talkTimeHours=" + talkTimeHours +
+                ", standByTimeHours=" + standByTimeHours +
+                ", bluetooth='" + bluetooth + '\'' +
+                ", positioning='" + positioning + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 
