@@ -1,4 +1,4 @@
-function ajaxAddCartItem(index, phoneId) {
+function ajaxAddCartItem(phoneId) {
     var cartItem = {
         phoneId : phoneId,
         quantity : Number($("#quantity" + phoneId).val())

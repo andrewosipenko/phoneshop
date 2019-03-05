@@ -5,6 +5,7 @@ import com.es.core.model.phone.Phone;
 import com.es.core.service.cart.CartService;
 import com.es.core.service.phone.PhoneService;
 import com.es.core.util.OffsetPhoneToPage;
+import com.es.phoneshop.web.util.ParameterSetter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +24,6 @@ public class ProductListPageController {
     private final static String SEARCH_TEXT_PARAMETER = "text";
     private final static String SORT_PARAMETER = "sort";
     private final static String ORDER_PARAMETER = "order";
-    private final static String TOTAL_PRICE = "totalPrice";
-    private final static String COUNT_OF_CART_ITEM = "countOfCartItems";
     private final static int PAGE_SIZE = 10;
     private final static String PRODUCT_LIST_PAGE = "productList";
 
@@ -96,9 +95,7 @@ public class ProductListPageController {
     }
 
     private void setCartParameterToModel(Model model, int page, int numberOfPage, List<Phone> phones) {
-        Cart cart = cartService.getCart();
-        model.addAttribute(COUNT_OF_CART_ITEM, cart.getCartItems().size());
-        model.addAttribute(TOTAL_PRICE, cart.getTotalPrice());
+        ParameterSetter.setCartParameters(cartService.getCart(), model);
         model.addAttribute(NUMBER_OF_PAGE_PARAMETER, numberOfPage);
         model.addAttribute(PAGE_PARAMETER, page);
         model.addAttribute(PHONES_PARAMETER, phones);

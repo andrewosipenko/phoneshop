@@ -30,36 +30,36 @@ public class JdbcPhoneDao implements PhoneDao {
     private final static String QUERY_TO_GET_ACTIVE_PHONES_BY_PAGE =
             "select phones.*, c.id as colorId, c.code from " +
                     "(select * from phones where id in " +
-                    "(select phoneid from stocks where stock > '0') offset ? limit ?) phones " +
+                    "(select phoneid from stocks where stock > '0') and price > 0 offset ? limit ?) phones " +
                     "left join colors c on c.id in " +
                     "(select colorId from phone2color where phones.id = phone2color.phoneId)";
     private final static String QUERY_TO_GET_SORT_PHONES_BY_PAGE =
             "select phones.*, c.id as colorId, c.code from " +
                     "(select * from phones where id in " +
-                    "(select phoneid from stocks where stock > '0') order by var var offset ? limit ?) phones " +
+                    "(select phoneid from stocks where stock > '0') and price > 0 order by var var offset ? limit ?) phones " +
                     "left join colors c on c.id in " +
                     "(select colorId from phone2color where phones.id = phone2color.phoneId)";
     private final static String QUERY_TO_GET_PHONES_LIKE_QUERY_BY_PAGE =
             "select phones.*, c.id as colorId, c.code from " +
                     "(select * from phones where id in " +
                     "(select phoneid from stocks where stock > '0') " +
-                    "and (model like ? or brand like ?) offset ? limit ?) phones " +
+                    "and (model like ? or brand like ?) and price > 0 offset ? limit ?) phones " +
                     "left join colors c on c.id in " +
                     "(select colorId from phone2color where phones.id = phone2color.phoneId)";
     private final static String QUERY_TO_GET_SORT_PHONES_LIKE_QUERY_BY_PAGE =
             "select phones.*, c.id as colorId, c.code from " +
                     "(select * from phones where id in " +
                     "(select phoneid from stocks where stock > '0') " +
-                    "and (model like ? or brand like ?) order by var var offset ? limit ?) phones " +
+                    "and (model like ? or brand like ?) and price > 0 order by var var offset ? limit ?) phones " +
                     "left join colors c on c.id in " +
                     "(select colorId from phone2color where phones.id = phone2color.phoneId)";
     private final static String QUERY_FOR_GET_ACTIVE_PHONE_COUNT =
             "select count(1) from phones where id in (" +
-                    "select phoneId from stocks where stock > '0')";
+                    "select phoneId from stocks where stock > '0') and price > 0";
     private final static String QUERY_FOR_GET_PHONE_LIKE_QUERY_COUNT =
             "select count(*) from phones where id in (" +
                     "select phoneId from stocks where stock > '0') " +
-                    "and (model like ? or brand like ?)";
+                    "and (model like ? or brand like ?) and price > 0";
 
     @Resource
     private JdbcTemplate jdbcTemplate;

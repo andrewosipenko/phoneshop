@@ -11,11 +11,12 @@
 </head>
 <body>
     <header>
+        <img src="${pageContext.servletContext.contextPath}/resources/images/logo.png"/>
         <div class="header-cart">
-            My cart:
+            <a href="${pageContext.servletContext.contextPath}/cart"> My cart:
             <p class="inline-element" id="countOfCartItem">${countOfCartItems}</p>
             items
-            <p class="inline-element" id="totalPrice">${totalPrice == null ? "0" : totalPrice}</p>$
+            <p class="inline-element" id="totalPrice">${totalPrice == null ? "0" : totalPrice}</p>$</a>
         </div>
         <div class="clearfix"/>
     </header>
