@@ -51,7 +51,7 @@ public class HttpSessionCartServiceTest {
     private Cart cart;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         cart = new Cart();
         phone = PhoneCreator.createPhone(ID, BRAND, MODEL, COLORS);
         cartItem = new CartItem(QUANTITY, phone);

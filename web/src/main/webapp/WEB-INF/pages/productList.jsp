@@ -63,7 +63,7 @@
                     <div class="error-message" id="errorField${phone.id}"/>
                 </td>
                 <td class="td-center-align">
-                    <button onclick="ajaxAddCartItem(${phone.id})">Add to</button>
+                    <button class="buttonAddCartItem" value="${phone.id}">Add to</button>
                 </td>
             </tr>
         </c:forEach>

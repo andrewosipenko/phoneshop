@@ -1,9 +1,9 @@
-package com.es.core.validator;
+package com.es.phoneshop.web.validator;
 
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import com.es.core.form.CartItemInfo;
+import com.es.phoneshop.web.form.CartItemInfo;
 
 @Service
 public class CartItemInfoValidator implements Validator {

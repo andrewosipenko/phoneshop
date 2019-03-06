@@ -2,7 +2,7 @@ package com.es.phoneshop.web.controller;
 
 import com.es.core.model.cart.Cart;
 import com.es.core.service.cart.CartService;
-import com.es.core.form.CartItemInfo;
+import com.es.phoneshop.web.form.CartItemInfo;
 import com.es.phoneshop.web.response.AddingToCartResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

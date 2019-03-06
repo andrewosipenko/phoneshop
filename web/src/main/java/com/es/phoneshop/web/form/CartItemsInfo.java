@@ -1,23 +1,23 @@
-package com.es.core.form;
+package com.es.phoneshop.web.form;
 
 import java.util.Arrays;
 
 public class CartItemsInfo {
-    private Long[] quantity;
+    private String[] quantity;
 
     public CartItemsInfo() {
 
     }
 
-    public CartItemsInfo(Long[] quantity) {
+    public CartItemsInfo(String[] quantity) {
         this.quantity = quantity;
     }
 
-    public Long[] getQuantity() {
+    public String[] getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Long[] quantity) {
+    public void setQuantity(String[] quantity) {
         this.quantity = quantity;
     }
 

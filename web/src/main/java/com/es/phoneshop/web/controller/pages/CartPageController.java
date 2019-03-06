@@ -1,11 +1,12 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.form.CartItemsInfo;
+import com.es.phoneshop.web.form.CartItemsInfo;
 import com.es.core.model.cart.Cart;
 import com.es.core.service.cart.CartService;
 import com.es.phoneshop.web.util.ParameterSetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,28 +15,22 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.MatrixVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/cart")
 public class CartPageController {
-    private final String CART_PARAMETER = "cart";
-    private final String CART_PAGE = "cart";
-    private final String ERRORS_PARAMETER = "errors";
-    private final String CART_ITEMS_INFO_PARAMETER= "cartItemsInfo";
+    private static final String CART_PARAMETER = "cart";
+    private static final String CART_PAGE = "cart";
+    private static final String ERRORS_PARAMETER = "errors";
+    private static final String CART_ITEMS_INFO_PARAMETER= "cartItemsInfo";
 
     @Resource
     private CartService cartService;

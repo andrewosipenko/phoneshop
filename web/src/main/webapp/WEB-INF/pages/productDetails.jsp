@@ -108,7 +108,7 @@
                 <p>Price: ${phone.price}$</p>
                 <br>
                 <input class="input-text" type="number" id="quantity${phone.id}"/>
-                <button onclick="ajaxAddCartItem(${phone.id})">Add to cart</button>
+                <button class="buttonAddCartItem" value="${phone.id}">Add to cart</button>
                 <div class="error-message" id="errorField${phone.id}"/>
             </div>
         </div>

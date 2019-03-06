@@ -1,4 +1,4 @@
-package com.es.core.form;
+package com.es.phoneshop.web.form;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
