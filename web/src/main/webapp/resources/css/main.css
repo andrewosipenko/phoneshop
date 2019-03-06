@@ -1,61 +1,156 @@
 .td-center-align {
-  text-align: center;
+    text-align: center;
 }
 
 .pagination-table {
-  float: right;
-  font-size: 20px;
-  color: black;
-  margin: 5px 40px 10px 0;
+    float: right;
+    font-size: 20px;
+    color: black;
+    margin: 5px 40px 10px 0;
 }
 
-.pagination-table td  {
-  padding: 7px;
+.pagination-table td {
+    padding: 7px;
 }
 
 .pagination-table td a {
-  color: black;
+    color: black;
 }
 
 .active-page {
-  background-color: gray;
+    background-color: gray;
 }
 
 header {
-  border-bottom: black 3px solid;
+    border-bottom: black 3px solid;
 }
 
 .header-cart {
-  float: right;
-  background-color: darkgray;
-  font-size: 25px;
-  padding: 15px 35px;
-  margin: 10px;
-  border-radius: 30px;
+    float: right;
+    background-color: darkgray;
+    font-size: 25px;
+    padding: 15px 35px;
+    margin: 10px;
+    border-radius: 30px;
+}
+
+.header-cart a {
+    color: black;
+    text-decoration: none;
+}
+
+.header-cart a:hover {
+    color: blue;
 }
 
 .inline-element {
-  display: inline;
+    display: inline;
 }
 
 .search {
-  float: right;
-  font-size: 19px;
-  margin: 10px;
+    float: right;
+    font-size: 19px;
+    margin: 10px;
 }
 
 .clearfix::after {
-  content: "";
-  clear: both;
-  display: table;
+    content: "";
+    display: table;
+    clear: both;
 }
 
 .h3-text {
-  font-size: 30px;
-  display: inline;
-  margin: 5px 20px;
+    font-size: 30px;
+    display: inline;
+    margin: 5px 20px;
 }
 
 .error-message {
-  color: red;
+    color: red;
+}
+
+.container {
+    width: 60%;
+    margin: 1px auto;
+}
+
+.column {
+    min-height: 100px;
+    padding: 10px;
+}
+
+.column1 {
+    width: 30%;
+    float: left;
+}
+
+.column2 {
+    margin-top: 10px;
+    width: 25%;
+    margin-right: 40%;
+    float: right;
+}
+
+.button-on-page {
+    font-size: 23px;
+}
+
+.image-in-page {
+    width: 400px;
+    height: 400px;
+}
+
+.image-in-table {
+    width: 70px;
+    height: 70px;
+}
+
+.description {
+    font-size: 18px;
+    margin-top: 10px;
+    width: 80%;
+}
+
+.area-add-to-cart {
+    margin-top: 20px;
+    padding: 10px;
+    width: 200px;
+    border: 1px black solid;
+    background-color: lightyellow;
+}
+
+.area-add-to-cart p {
+    font-size: 26px;
+    font-weight: 500;
+    display: inline;
+}
+
+.area-add-to-cart input {
+    width: 50px;
+    font-size: 18px;
+    display: inline;
+}
+
+.area-add-to-cart button {
+    font-size: 18px;
+}
+
+.message {
+    font-size: 40px;
+}
+
+.content {
+    margin: 20px 50px;
+}
+
+.right-button {
+    float: right;
+}
+
+.left-button {
+    float: left;
+}
+
+.cart-table {
+    margin-top: 65px;
 }

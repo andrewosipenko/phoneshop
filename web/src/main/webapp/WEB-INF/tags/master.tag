@@ -8,18 +8,20 @@
     <link href=${pageContext.request.contextPath}/resources/css/main.css rel="stylesheet" type="text/css"/>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="${pageContext.request.contextPath}/resources/js/ajaxAddCartItem.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/js/bindAction.js"></script>
 </head>
 <body>
-    <header>
-        <div class="header-cart">
-            My cart:
+<header>
+    <img src="${pageContext.servletContext.contextPath}/resources/images/logo.png"/>
+    <div class="header-cart">
+        <a href="${pageContext.servletContext.contextPath}/cart"> My cart:
             <p class="inline-element" id="countOfCartItem">${countOfCartItems}</p>
             items
-            <p class="inline-element" id="totalPrice">${totalPrice == null ? "0" : totalPrice}</p>$
-        </div>
-        <div class="clearfix"/>
-    </header>
+            <p class="inline-element" id="totalPrice">${totalPrice == null ? "0" : totalPrice}</p>$</a>
+    </div>
+    <div class="clearfix"/>
+</header>
 
-    <jsp:doBody/>
+<jsp:doBody/>
 </body>
 </html>

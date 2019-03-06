@@ -43,8 +43,10 @@
         <c:forEach var="phone" items="${phones}" varStatus="status">
             <tr class="content-align">
                 <td>
-                    <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}"
-                         width="70" height="70">
+                    <a href="${pageContext.servletContext.contextPath}/productDetails/${phone.id}">
+                        <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}"
+                             class="image-in-table">
+                    </a>
                 </td>
                 <td>${phone.brand}</td>
                 <td>${phone.model}</td>
@@ -61,7 +63,7 @@
                     <div class="error-message" id="errorField${phone.id}"/>
                 </td>
                 <td class="td-center-align">
-                    <button onclick="ajaxAddCartItem(${status.index}, ${phone.id})">Add to</button>
+                    <button class="buttonAddCartItem" value="${phone.id}">Add to</button>
                 </td>
             </tr>
         </c:forEach>
