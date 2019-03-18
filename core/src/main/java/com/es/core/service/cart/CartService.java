@@ -2,9 +2,7 @@ package com.es.core.service.cart;
 
 import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
-import com.es.core.model.phone.Phone;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -18,5 +16,9 @@ public interface CartService {
 
     void remove(Cart cart, Long phoneId);
 
-    Map<Long, Long> createMapForUpdating(Long[] quantities, List<CartItem> cartItems);
+    Map<Long, Long> createMapForUpdating(String[] quantities, List<CartItem> cartItems);
+
+    void clearCart(Cart cart);
+
+    void removeMissingQuantity(CartItem cartItem);
 }

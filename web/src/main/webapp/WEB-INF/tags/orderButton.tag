@@ -1,3 +1,1 @@
-<form action="${pageContext.servletContext.contextPath}/order">
-    <button class="btn button-on-page right-button">Order</button>
-</form>
+<a class="link-button button-on-page right-button" href="${pageContext.servletContext.contextPath}/order">Order</a>

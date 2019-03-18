@@ -2,9 +2,9 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<tags:master pageTitle="productDetails">
+<tags:master pageTitle="productDetails" isShowCart="true">
     <div class="content">
-        <tags:backToProductList/>
+        <tags:backToProductList text="back to product list"/>
         <div class="clearfix"/>
         <br>
         <div class="column column2">

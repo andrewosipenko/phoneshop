@@ -57,7 +57,7 @@ public class PhoneServiceImpl implements PhoneService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void save(Phone phone) {
-        phone = phoneDao.save(phone);
+        phone = phoneDao.saveOrUpdate(phone);
         colorDao.savePhoneColors(phone);
     }
 }

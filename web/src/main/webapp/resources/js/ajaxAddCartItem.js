@@ -21,6 +21,7 @@ function ajaxAddCartItem(phoneId) {
                     document.getElementById('countOfCartItem').innerHTML = result.countOfCartItems;
                     document.getElementById('totalPrice').innerHTML = result.totalPrice;
                     document.getElementById('quantity' + phoneId).value = '';
+                    document.getElementById('errorField' + phoneId).innerHTML = '';
                 } break;
                 case 'ERROR': {
                     console.log('errorField' + phoneId);

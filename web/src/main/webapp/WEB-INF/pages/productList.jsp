@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
-<tags:master pageTitle="Product list">
+<tags:master pageTitle="Product list" isShowCart="true">
     <div class="h3-text">Phones</div>
     <div class="search">
         <form method="get">

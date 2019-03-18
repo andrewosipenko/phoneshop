@@ -1,6 +1,7 @@
 package com.es.core.service.cart;
 
 import com.es.core.dao.phone.PhoneDao;
+import com.es.core.dao.stock.StockDao;
 import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
 import com.es.core.model.color.Color;
@@ -45,6 +46,9 @@ public class HttpSessionCartServiceTest {
 
     @Mock
     private PriceService priceService;
+
+    @Mock
+    private StockDao stockDao;
 
     private Phone phone;
     private CartItem cartItem;
@@ -99,8 +103,27 @@ public class HttpSessionCartServiceTest {
         expectedMap.put(phone.getId(), EXPECTED_QUANTITY);
 
         Map<Long, Long> actualMap = cartService
-                .createMapForUpdating(new Long[] {EXPECTED_QUANTITY}, cart.getCartItems());
+                .createMapForUpdating(new String[] {"2"}, cart.getCartItems());
 
         assertEquals(expectedMap, actualMap);
+    }
+
+    @Test
+    public void shouldClearCart() {
+        Cart expectedCart = new Cart();
+
+        cartService.clearCart(cart);
+
+        assertEquals(expectedCart, cart);
+    }
+
+    @Test
+    public void shouldDeleteMissingQuantity() {
+        when(stockDao.findPhoneQuantity(1003L)).thenReturn(EXPECTED_QUANTITY);
+
+        cartService.removeMissingQuantity(cart.getCartItems().get(0));
+        Long actualQuantity = cart.getCartItems().get(0).getQuantity();
+
+        assertEquals(EXPECTED_QUANTITY, actualQuantity);
     }
 }

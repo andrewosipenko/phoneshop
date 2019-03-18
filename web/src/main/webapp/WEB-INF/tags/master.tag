@@ -1,4 +1,6 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@attribute name="pageTitle" type="java.lang.String" required="true" %>
+<%@attribute name="isShowCart" type="java.lang.Boolean" required="true" %>
 
 <html>
 <head>
@@ -12,14 +14,18 @@
 </head>
 <body>
 <header>
-    <img src="${pageContext.servletContext.contextPath}/resources/images/logo.png"/>
-    <div class="header-cart">
-        <a href="${pageContext.servletContext.contextPath}/cart"> My cart:
-            <p class="inline-element" id="countOfCartItem">${countOfCartItems}</p>
-            items
-            <p class="inline-element" id="totalPrice">${totalPrice == null ? "0" : totalPrice}</p>$</a>
-    </div>
-    <div class="clearfix"/>
+    <a href="${pageContext.servletContext.contextPath}/productList?page=1">
+        <img src="${pageContext.servletContext.contextPath}/resources/images/logo.png"/>
+    </a>
+    <c:if test="${isShowCart == true}">
+        <div class="header-cart">
+            <a href="${pageContext.servletContext.contextPath}/cart"> My cart:
+                <p class="inline-element" id="countOfCartItem">${countOfCartItems}</p>
+                items
+                <p class="inline-element" id="totalPrice">${totalPrice == null ? "0" : totalPrice}</p>$</a>
+        </div>
+        <div class="clearfix"/>
+    </c:if>
 </header>
 
 <jsp:doBody/>

@@ -6,7 +6,7 @@ import com.es.core.model.phone.Phone;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public final class CreatorFromResultSet {
+public final class PhoneCreatorFromResultSet {
     private final static String PHONE_ID_PARAMETER = "id";
     private final static String PHONE_BRAND_PARAMETER = "brand";
     private final static String PHONE_MODEL_PARAMETER = "model";
@@ -36,7 +36,7 @@ public final class CreatorFromResultSet {
     private final static String COLOR_ID_PARAMETER = "colorId";
     private final static String COLOR_CODE_PARAMETER = "code";
 
-    private CreatorFromResultSet() {
+    private PhoneCreatorFromResultSet() {
 
     }
 

@@ -1,4 +1,4 @@
-package com.es.core.extractor;
+package com.es.core.extractor.phone;
 
 import com.es.core.model.phone.Phone;
 import org.springframework.dao.DataAccessException;

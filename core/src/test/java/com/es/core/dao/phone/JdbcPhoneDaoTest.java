@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -53,7 +54,7 @@ public class JdbcPhoneDaoTest {
         expectedPhone.setPixelDensity(0);
         expectedPhone.setBatteryCapacityMah(0);
 
-        phoneDao.save(expectedPhone);
+        phoneDao.saveOrUpdate(expectedPhone);
         Phone actualPhone = phoneDao.get(expectedPhone.getId()).orElseThrow(IllegalArgumentException::new);
 
         assertEquals(expectedPhone, actualPhone);
@@ -64,7 +65,7 @@ public class JdbcPhoneDaoTest {
         int expectedCount = JdbcTestUtils.countRowsInTable(jdbcTemplate, PHONE_TABLE) + 1;
         Phone phone = PhoneCreator.createPhone(PHONE_ID_WITHOUT_COLOR, BRAND, "new model", new HashSet<>());
 
-        phoneDao.save(phone);
+        phoneDao.saveOrUpdate(phone);
         int actualCount = JdbcTestUtils.countRowsInTable(jdbcTemplate, PHONE_TABLE);
 
         assertEquals(expectedCount, actualCount);
@@ -75,7 +76,7 @@ public class JdbcPhoneDaoTest {
         int expectedCount = JdbcTestUtils.countRowsInTable(jdbcTemplate, PHONE_TABLE) + 1;
         Phone phone = PhoneCreator.createPhone(null, BRAND, "5", new HashSet<>());
 
-        phoneDao.save(phone);
+        phoneDao.saveOrUpdate(phone);
         int actualCount = JdbcTestUtils.countRowsInTable(jdbcTemplate, PHONE_TABLE);
 
         assertEquals(expectedCount, actualCount);
@@ -84,6 +85,7 @@ public class JdbcPhoneDaoTest {
     @Test
     public void shouldReturnPhonesToFirstPage() {
         Phone phone = PhoneCreator.createPhone(PHONE_ID_WITHOUT_COLOR, BRAND, MODEL_3, new HashSet<>());
+        phone.setPrice(new BigDecimal(40.5));
         PhoneCreator.setNumbersValueToPhone(phone);
         List<Phone> expectedList = new ArrayList<>(Collections.singletonList(phone));
 
@@ -95,6 +97,7 @@ public class JdbcPhoneDaoTest {
     @Test
     public void shouldReturnPhonesWithCurrentModel() {
         Phone phone = PhoneCreator.createPhone(PHONE_ID_WITHOUT_COLOR, BRAND, MODEL_3, new HashSet<>());
+        phone.setPrice(new BigDecimal(40.5));
         PhoneCreator.setNumbersValueToPhone(phone);
         List<Phone> expectedList = new ArrayList<Phone>(Collections.singletonList(phone));
 

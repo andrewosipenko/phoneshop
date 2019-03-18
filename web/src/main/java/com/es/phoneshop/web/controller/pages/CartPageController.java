@@ -65,7 +65,6 @@ public class CartPageController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute(ERRORS_PARAMETER, bindingResult.getAllErrors());
-            System.out.println(bindingResult.getAllErrors());
         } else {
             Map<Long, Long> map = cartService
                     .createMapForUpdating(cartItemsInfo.getQuantity(), cart.getCartItems());

@@ -1,8 +1,8 @@
-package com.es.core.extractor;
+package com.es.core.extractor.phone;
 
 import com.es.core.model.color.Color;
 import com.es.core.model.phone.Phone;
-import com.es.core.util.CreatorFromResultSet;
+import com.es.core.util.PhoneCreatorFromResultSet;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -44,13 +44,13 @@ public class PhonesSetExtractor implements ResultSetExtractor<List<Phone>> {
     private void addColorToPhone(ResultSet resultSet, Phone phone) throws SQLException {
         if (!ZERO_VALUE.equals(resultSet.getLong(COLOR_ID_PARAMETER))) {
             Set<Color> colors = phone.getColors();
-            colors.add(CreatorFromResultSet.createColor(resultSet));
+            colors.add(PhoneCreatorFromResultSet.createColor(resultSet));
             phone.setColors(colors);
         }
     }
 
     private Phone createNewPhone(ResultSet resultSet, List<Phone> phones) throws SQLException {
-        Phone phone = CreatorFromResultSet.createPhone(resultSet);
+        Phone phone = PhoneCreatorFromResultSet.createPhone(resultSet);
         phone.setColors(new HashSet<>());
         phones.add(phone);
         return phone;

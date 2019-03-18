@@ -1,7 +1,7 @@
 package com.es.core.dao.phone;
 
-import  com.es.core.extractor.PhoneSetExtractor;
-import com.es.core.extractor.PhonesSetExtractor;
+import com.es.core.extractor.phone.PhoneSetExtractor;
+import com.es.core.extractor.phone.PhonesSetExtractor;
 import com.es.core.model.phone.Phone;
 import com.es.core.util.QueryCreator;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -77,7 +77,7 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     @Override
-    public Phone save(Phone phone) {
+    public Phone saveOrUpdate(Phone phone) {
         jdbcTemplate.update(QUERY_TO_SAVE_PHONE,
                 phone.getBrand(),
                 phone.getModel(),
