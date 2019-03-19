@@ -1,6 +1,8 @@
 package com.es.phoneshop.web.validator;
 
 import com.es.phoneshop.web.form.OrderInfo;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -9,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
+@PropertySource("classpath:/message/errorMessageEN.properties")
 public class OrderInfoValidator implements Validator {
     private final static String PHONE_REGEX = "^[-+\\d]+";
     private static final String NAME = "name";
@@ -16,6 +19,12 @@ public class OrderInfoValidator implements Validator {
     private static final String ADDRESS = "address";
     private static final String ADDITIONAL_INFO = "additionalInfo";
     private static final String PHONE = "phone";
+
+    @Value("${message.empty}")
+    private String messageEmptyValue;
+
+    @Value("${massage.notPhoneFormat}")
+    private String messageNotPhoneFormat;
 
     @Override
     public boolean supports(Class<?> aClass) {
@@ -25,27 +34,25 @@ public class OrderInfoValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         OrderInfo orderInfo = (OrderInfo) o;
-        if (orderInfo.getName().isEmpty()) {
-            errors.rejectValue(NAME, orderInfo.getName(), new String[]{NAME},"Name should be not empty");
-        }
-        if (orderInfo.getLastName().isEmpty()) {
-            errors.rejectValue(LAST_NAME, orderInfo.getLastName(), new String[]{LAST_NAME},"Last name should be not empty");
-        }
-        if (orderInfo.getAddress().isEmpty()) {
-            errors.rejectValue(ADDRESS, orderInfo.getAddress(), new String[]{ADDRESS},"Address should be not empty");
-        }
-        if (orderInfo.getAdditionalInfo().isEmpty()) {
-            errors.rejectValue(ADDITIONAL_INFO, orderInfo.getAdditionalInfo(), new String[]{ADDITIONAL_INFO},"Additional info should be not empty");
-        }
+        validateFieldOnEmpty(NAME, orderInfo.getName(), errors);
+        validateFieldOnEmpty(LAST_NAME, orderInfo.getLastName(), errors);
+        validateFieldOnEmpty(ADDRESS, orderInfo.getAddress(), errors);
+        validateFieldOnEmpty(ADDITIONAL_INFO, orderInfo.getAdditionalInfo(), errors);
+        validateFieldOnEmpty(PHONE, orderInfo.getPhone(), errors);
+        validateFieldOnPhone(PHONE, orderInfo.getPhone(), errors);
+    }
 
-        if (orderInfo.getPhone().isEmpty()) {
-            errors.rejectValue(PHONE, orderInfo.getPhone(), new String[]{PHONE}, "Phone should be not empty");
-        } else {
-            Pattern pattern = Pattern.compile(PHONE_REGEX);
-            Matcher matcher = pattern.matcher(orderInfo.getPhone());
-            if (!matcher.matches()) {
-                errors.rejectValue(PHONE, orderInfo.getPhone(), new String[]{PHONE}, "Not phone format");
-            }
+    private void validateFieldOnEmpty(String field, String value, Errors errors) {
+        if (value.isEmpty()) {
+            errors.rejectValue(field, value, new String[]{field}, messageEmptyValue);
+        }
+    }
+
+    private void validateFieldOnPhone(String field, String value, Errors errors) {
+        Pattern pattern = Pattern.compile(PHONE_REGEX);
+        Matcher matcher = pattern.matcher(value);
+        if (!matcher.matches()) {
+            errors.rejectValue(field, value, new String[]{field}, messageNotPhoneFormat);
         }
     }
 }

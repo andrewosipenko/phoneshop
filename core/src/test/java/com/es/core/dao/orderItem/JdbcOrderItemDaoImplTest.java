@@ -25,6 +25,7 @@ public class JdbcOrderItemDaoImplTest {
     private static final String ORDER_ITEM_TABLE = "orderItems";
     private static final long PHONE_ID = 1000L;
     private static final long QUANTITY = 1L;
+    private static final long ORDER_ID = 2L;
 
     @Resource
     private OrderItemDao orderItemDao;
@@ -39,7 +40,7 @@ public class JdbcOrderItemDaoImplTest {
         phone.setId(PHONE_ID);
         OrderItem orderItem = new OrderItem(phone, QUANTITY);
 
-        orderItemDao.save(Collections.singletonList(orderItem), 2L);
+        orderItemDao.save(Collections.singletonList(orderItem), ORDER_ID);
         int actualSize = JdbcTestUtils.countRowsInTable(jdbcTemplate, ORDER_ITEM_TABLE);
 
         assertEquals(expectedSize, actualSize);

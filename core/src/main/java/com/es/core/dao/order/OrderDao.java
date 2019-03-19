@@ -11,5 +11,5 @@ public interface OrderDao {
 
     void save(Order order);
 
-    Long findIdToOrder(String secureId);
+    Long findOrderIdBySecureId(String secureId);
 }

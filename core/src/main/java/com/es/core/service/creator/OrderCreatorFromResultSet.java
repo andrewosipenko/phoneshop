@@ -1,12 +1,14 @@
-package com.es.core.util;
+package com.es.core.service.creator;
 
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderStatus;
+import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public final class OrderCreatorFromResultSet {
+@Service
+public class OrderCreatorFromResultSet {
     private final static String ID = "orderId";
     private final static String SECURE_ID = "secureId";
     private final static String NAME = "firstName";
@@ -20,11 +22,7 @@ public final class OrderCreatorFromResultSet {
     private final static String STATUS = "orderStatus";
     private final static String ORDER_DATE = "orderDate";
 
-    private OrderCreatorFromResultSet() {
-
-    }
-
-    public static Order createOrder(ResultSet resultSet) throws SQLException {
+    public Order createOrder(ResultSet resultSet) throws SQLException {
         Order order = new Order();
         order.setId(resultSet.getLong(ID));
         order.setSecureId(resultSet.getString(SECURE_ID));

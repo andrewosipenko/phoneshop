@@ -31,14 +31,20 @@ public class JdbcOrderDaoImpl implements OrderDao {
     @Resource
     private JdbcTemplate jdbcTemplate;
 
+    @Resource
+    private OrdersSetExtractor ordersSetExtractor;
+
+    @Resource
+    private OrderSetExtractor orderSetExtractor;
+
     @Override
     public Order findOrder(String secureId) {
-        return jdbcTemplate.query(QUERY_TO_GET_ORDER_BY_KEY, new OrderSetExtractor(), secureId);
+        return jdbcTemplate.query(QUERY_TO_GET_ORDER_BY_KEY, orderSetExtractor, secureId);
     }
 
     @Override
     public List<Order> findAll() {
-        return jdbcTemplate.query(QUERY_TO_FIND_ALL_ORDERS, new OrdersSetExtractor());
+        return jdbcTemplate.query(QUERY_TO_FIND_ALL_ORDERS, ordersSetExtractor);
     }
 
     @Override
@@ -56,7 +62,7 @@ public class JdbcOrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public Long findIdToOrder(String secureId) {
+    public Long findOrderIdBySecureId(String secureId) {
         return jdbcTemplate.queryForObject(QUERY_TO_FIND_ORDER_ID, Long.class, secureId);
     }
 }

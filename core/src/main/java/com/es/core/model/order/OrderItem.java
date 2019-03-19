@@ -19,7 +19,7 @@ public class OrderItem {
         return phone;
     }
 
-    public void setPhone(final Phone phone) {
+    public void setPhone(Phone phone) {
         this.phone = phone;
     }
 
@@ -27,7 +27,7 @@ public class OrderItem {
         return quantity;
     }
 
-    public void setQuantity(final Long quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 

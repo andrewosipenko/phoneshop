@@ -2,12 +2,10 @@ package com.es.core.service.order;
 
 import com.es.core.dao.order.OrderDao;
 import com.es.core.dao.orderItem.OrderItemDao;
-import com.es.core.dao.stock.StockDao;
 import com.es.core.model.cart.Cart;
-import com.es.core.model.cart.CartItem;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
-import com.es.core.model.order.OrderOwnerInfo;
+import com.es.core.model.customer.CustomerInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +26,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public Order createOrder(Cart cart, OrderOwnerInfo orderOwnerInfo, BigDecimal deliveryPrice) {
+    public Order createOrder(Cart cart, CustomerInfo customerInfo, BigDecimal deliveryPrice) {
         Order order = new Order();
         order.setSubtotal(cart.getTotalPrice());
         order.setDeliveryPrice(deliveryPrice);
@@ -39,15 +37,15 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
         order.setOrderItems(orderItems);
 
-        order.setFirstName(orderOwnerInfo.getName());
-        order.setLastName(orderOwnerInfo.getLastName());
-        order.setDeliveryAddress(orderOwnerInfo.getAddress());
-        order.setAdditionalInfo(orderOwnerInfo.getAdditionalInfo());
-        order.setContactPhoneNo(orderOwnerInfo.getPhone());
+        order.setFirstName(customerInfo.getName());
+        order.setLastName(customerInfo.getLastName());
+        order.setDeliveryAddress(customerInfo.getAddress());
+        order.setAdditionalInfo(customerInfo.getAdditionalInfo());
+        order.setContactPhoneNo(customerInfo.getPhone());
         order.setSecureId(UUID.randomUUID().toString());
 
         orderDao.save(order);
-        order.setId(orderDao.findIdToOrder(order.getSecureId()));
+        order.setId(orderDao.findOrderIdBySecureId(order.getSecureId()));
         orderItemDao.save(order.getOrderItems(), order.getId());
 
         return order;

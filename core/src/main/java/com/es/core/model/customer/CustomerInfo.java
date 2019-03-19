@@ -1,6 +1,6 @@
-package com.es.core.model.order;
+package com.es.core.model.customer;
 
-public class OrderOwnerInfo {
+public class CustomerInfo {
     private String name;
     private String lastName;
     private String address;

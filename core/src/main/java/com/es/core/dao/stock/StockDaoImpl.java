@@ -12,8 +12,9 @@ public class StockDaoImpl implements StockDao {
 
     @Resource
     private JdbcTemplate jdbcTemplate;
+
     @Override
-    public Long findPhoneQuantity(Long key) {
-        return jdbcTemplate.queryForObject(QUERY_FOR_FIND_STOCK, Long.class, key);
+    public Long findPhoneQuantity(Long id) {
+        return jdbcTemplate.queryForObject(QUERY_FOR_FIND_STOCK, Long.class, id);
     }
 }

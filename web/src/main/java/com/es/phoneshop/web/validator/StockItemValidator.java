@@ -5,6 +5,8 @@ import com.es.core.model.cart.CartItem;
 import com.es.core.service.cart.CartService;
 import com.es.core.service.stock.StockService;
 import com.es.phoneshop.web.form.OrderInfo;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -13,7 +15,13 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service
+@PropertySource("classpath:/message/errorMessageEN.properties")
 public class StockItemValidator implements Validator {
+    private static final String FIELD_QUANTITY = "quantity";
+
+    @Value("${message.stockError}")
+    private String messageStockError;
+
     @Resource
     private StockService stockService;
 
@@ -34,10 +42,10 @@ public class StockItemValidator implements Validator {
             long phoneId = cartItems.get(i).getPhone().getId();
             long maxStock = stockService.findPhoneStock(phoneId);
             if (maxStock < quantity) {
-                errors.rejectValue("quantity",
+                errors.rejectValue(FIELD_QUANTITY,
                         String.valueOf(i),
                         new Long[] {phoneId},
-                        "Sorry, we have only " + maxStock + " stock, was delete " + (quantity - maxStock) + " stock");
+                        messageStockError + maxStock);
                 cartService.removeMissingQuantity(cartItems.get(i));
             }
         }

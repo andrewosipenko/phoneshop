@@ -1,4 +1,4 @@
-package com.es.phoneshop.web.service;
+package com.es.phoneshop.web.service.error;
 
 import org.springframework.stereotype.Service;
 import org.springframework.validation.ObjectError;

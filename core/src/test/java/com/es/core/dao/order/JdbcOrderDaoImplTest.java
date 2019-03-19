@@ -81,7 +81,7 @@ public class JdbcOrderDaoImplTest {
     public void shouldReturnIdToOrder() {
         Long expectedId = 1L;
 
-        Long actualId = orderDao.findIdToOrder(order.getSecureId());
+        Long actualId = orderDao.findOrderIdBySecureId(order.getSecureId());
 
         assertEquals(expectedId, actualId);
     }

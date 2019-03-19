@@ -3,7 +3,9 @@ package com.es.phoneshop.web.controller.pages;
 import com.es.phoneshop.web.form.CartItemsInfo;
 import com.es.core.model.cart.Cart;
 import com.es.core.service.cart.CartService;
+import com.es.phoneshop.web.service.validator.ValidatorService;
 import com.es.phoneshop.web.util.ParameterSetter;
+import com.es.phoneshop.web.validator.CartValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +29,7 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/cart")
 public class CartPageController {
+    private static final String BASE_VALIDATOR = "org.springframework";
     private static final String CART_PARAMETER = "cart";
     private static final String CART_PAGE = "cart";
     private static final String ERRORS_PARAMETER = "errors";
@@ -35,16 +38,16 @@ public class CartPageController {
     @Resource
     private CartService cartService;
 
-    @Autowired
-    @Qualifier("cartValidator")
-    private Validator validator;
+    @Resource
+    private ValidatorService validatorService;
+
+    @Resource
+    private CartValidator cartValidator;
 
     @InitBinder
     public void setUpValidators(WebDataBinder webDataBinder) {
-        if (webDataBinder.getTarget() != null) {
-            if (validator.supports(webDataBinder.getTarget().getClass())
-                    && !validator.getClass().getName().contains("org.springframework"))
-                webDataBinder.addValidators(validator);
+        if (validatorService.isAddValidator(webDataBinder, cartValidator, BASE_VALIDATOR)) {
+            webDataBinder.addValidators(cartValidator);
         }
     }
 

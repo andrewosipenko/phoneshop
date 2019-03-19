@@ -4,6 +4,7 @@ import com.es.core.model.cart.Cart;
 import com.es.core.service.cart.CartService;
 import com.es.phoneshop.web.form.CartItemInfo;
 import com.es.phoneshop.web.response.AddingToCartResponse;
+import com.es.phoneshop.web.validator.CartItemInfoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
@@ -28,9 +29,8 @@ public class AjaxCartController {
     @Resource
     private CartService cartService;
 
-    @Autowired
-    @Qualifier("cartItemInfoValidator")
-    private Validator validator;
+    @Resource
+    private CartItemInfoValidator validator;
 
     @InitBinder
     private void initBinder(WebDataBinder webDataBinder) {
