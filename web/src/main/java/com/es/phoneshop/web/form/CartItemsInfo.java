@@ -6,7 +6,6 @@ public class CartItemsInfo {
     private String[] quantity;
 
     public CartItemsInfo() {
-
     }
 
     public CartItemsInfo(String[] quantity) {

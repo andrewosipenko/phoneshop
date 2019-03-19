@@ -1,12 +1,14 @@
-package com.es.core.util;
+package com.es.core.service.creator;
 
 import com.es.core.model.color.Color;
 import com.es.core.model.phone.Phone;
+import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public final class CreatorFromResultSet {
+@Service
+public class PhoneCreatorFromResultSet {
     private final static String PHONE_ID_PARAMETER = "id";
     private final static String PHONE_BRAND_PARAMETER = "brand";
     private final static String PHONE_MODEL_PARAMETER = "model";
@@ -36,11 +38,7 @@ public final class CreatorFromResultSet {
     private final static String COLOR_ID_PARAMETER = "colorId";
     private final static String COLOR_CODE_PARAMETER = "code";
 
-    private CreatorFromResultSet() {
-
-    }
-
-    public static Phone createPhone(ResultSet resultSet) throws SQLException {
+    public Phone createPhone(ResultSet resultSet) throws SQLException {
         Phone phone = new Phone();
         phone.setId(resultSet.getLong(PHONE_ID_PARAMETER));
         phone.setBrand(resultSet.getString(PHONE_BRAND_PARAMETER));
@@ -71,7 +69,7 @@ public final class CreatorFromResultSet {
         return phone;
     }
 
-    public static Color createColor(ResultSet resultSet) throws SQLException {
+    public Color createColor(ResultSet resultSet) throws SQLException {
         Color color = new Color();
         color.setId(resultSet.getLong(COLOR_ID_PARAMETER));
         color.setCode(resultSet.getString(COLOR_CODE_PARAMETER));

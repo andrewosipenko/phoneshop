@@ -3,12 +3,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<tags:master pageTitle="Cart">
+<tags:master pageTitle="Cart" isShowCart="true">
     <div class="content">
         <c:if test="${cart.totalPrice != null && cart.totalPrice != 0}">
             <h1>Cart</h1>
         </c:if>
-        <tags:backToProductList/>
+        <tags:backToProductList text="Back to product list"/>
         <c:choose>
             <c:when test="${cart.totalPrice == null || cart.totalPrice == 0}">
                 <div class="message">
@@ -21,7 +21,7 @@
                     <input type="hidden" name="_method" value="DELETE"/>
                 </form>
                 <form:form action="${pageContext.servletContext.contextPath}/cart/update" modelAttribute="cartItemsInfo"
-                           method="POST">
+                           method="PUT">
                     <input type="hidden" name="_method" value="PUT"/>
                     <button class="btn button-on-page left-button">
                         Update

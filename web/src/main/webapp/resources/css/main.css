@@ -154,3 +154,63 @@ header {
 .cart-table {
     margin-top: 65px;
 }
+
+.link-button {
+    line-height: 1.42857143;
+    border-radius: 4px;
+    text-decoration: none;
+    background-color: buttonface;
+    color: black;
+    padding: 6px 12px;
+    border: 1px transparent solid;
+}
+
+.link-button:hover {
+    text-decoration: none;
+    color: black;
+}
+
+.link-button:active {
+    text-decoration: none;
+    color: red;
+    border: 1px skyblue solid;
+}
+
+.link-button:visited {
+    text-decoration: none;
+    color: black;
+}
+
+.order-input {
+    font-size: 20px;
+    width: 380px;
+}
+
+.order-input input {
+    margin: 10px 0;
+    float: right;
+}
+
+.order-input-info {
+    margin: 12px 0;
+    float: left;
+}
+
+.order-input textarea {
+    width: 100%;
+    height: 100px;
+}
+
+.order-overview-info {
+    margin: 10px 0;
+    display: inline;
+}
+
+.order-overview-info {
+    margin: 12px 0;
+    display: inline;
+}
+
+.additional-info-order {
+    width: 100%;
+}

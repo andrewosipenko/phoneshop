@@ -1,6 +1,7 @@
 package com.es.core.service.cart;
 
 import com.es.core.dao.phone.PhoneDao;
+import com.es.core.dao.stock.StockDao;
 import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
 import com.es.core.model.phone.Phone;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +24,9 @@ public class HttpSessionCartService implements CartService {
 
     @Resource
     private PriceService priceService;
+
+    @Resource
+    private StockDao stockDao;
 
     @Autowired(required = false)
     private Cart cart;
@@ -72,11 +78,23 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public Map<Long, Long> createMapForUpdating(Long[] quantities, List<CartItem> cartItems) {
+    public Map<Long, Long> createMapForUpdating(String[] quantities, List<CartItem> cartItems) {
         Map<Long, Long> map = new HashMap<>();
         for (int i = 0; i < quantities.length; i++) {
-            map.put(cartItems.get(i).getPhone().getId(), quantities[i]);
+            map.put(cartItems.get(i).getPhone().getId(), Long.valueOf(quantities[i]));
         }
         return map;
+    }
+
+    @Override
+    public void clearCart(Cart cart) {
+        cart.setCartItems(new ArrayList<>());
+        cart.setTotalPrice(new BigDecimal(0));
+    }
+
+    @Override
+    public void removeMissingQuantity(CartItem cartItem) {
+        Long quantity = stockDao.findPhoneQuantity(cartItem.getPhone().getId());
+        cartItem.setQuantity(quantity);
     }
 }
