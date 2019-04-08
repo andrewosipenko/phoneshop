@@ -40,7 +40,7 @@ public class StockItemValidator implements Validator {
         for (int i = 0; i < cartItems.size(); i++) {
             long quantity = cartItems.get(i).getQuantity();
             long phoneId = cartItems.get(i).getPhone().getId();
-            long maxStock = stockService.findPhoneStock(phoneId);
+            long maxStock = stockService.findPhoneStock(phoneId).getStock();
             if (maxStock < quantity) {
                 errors.rejectValue(FIELD_QUANTITY,
                         String.valueOf(i),

@@ -35,6 +35,7 @@ public class JdbcOrderDaoImplTest {
     private static final OrderStatus ORDER_STATUS = OrderStatus.NEW;
     private static final String ORDER_TABLE = "orders";
     private static final ArrayList<OrderItem> ORDER_ITEMS = new ArrayList<>();
+    private static final String EXPECTED_ORDER_STATUS = OrderStatus.DELIVERED.toString();
 
     @Resource
     private OrderDao orderDao;
@@ -62,8 +63,15 @@ public class JdbcOrderDaoImplTest {
     }
 
     @Test
-    public void shouldReturnOrder() {
-        Order actualOrder = orderDao.findOrder(SECURE_ID);
+    public void shouldReturnOrderBySecureId() {
+        Order actualOrder = orderDao.findOrderBySecureId(SECURE_ID);
+
+        assertEquals(order, actualOrder);
+    }
+
+    @Test
+    public void shouldReturnOrderById() {
+        Order actualOrder = orderDao.findOrderById(ID);
 
         assertEquals(order, actualOrder);
     }
@@ -94,5 +102,12 @@ public class JdbcOrderDaoImplTest {
         int actualSize = JdbcTestUtils.countRowsInTable(jdbcTemplate, ORDER_TABLE);
 
         assertEquals(expectedSize, actualSize);
+    }
+
+    @Test
+    public void shouldUpdateOrderStatus() {
+        orderDao.updateOrderStatus(ID, OrderStatus.DELIVERED.toString());
+        String actualOrderStatus = orderDao.findOrderById(ID).getStatus().toString();
+        assertEquals(EXPECTED_ORDER_STATUS, actualOrderStatus);
     }
 }

@@ -6,6 +6,7 @@ import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
 import com.es.core.model.phone.Phone;
 import com.es.core.service.price.PriceService;
+import com.es.core.service.stock.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class HttpSessionCartService implements CartService {
     private PriceService priceService;
 
     @Resource
-    private StockDao stockDao;
+    private StockService stockService;
 
     @Autowired(required = false)
     private Cart cart;
@@ -94,7 +95,7 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void removeMissingQuantity(CartItem cartItem) {
-        Long quantity = stockDao.findPhoneQuantity(cartItem.getPhone().getId());
+        Long quantity = stockService.findPhoneStock(cartItem.getPhone().getId()).getStock();
         cartItem.setQuantity(quantity);
     }
 }

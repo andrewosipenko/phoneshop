@@ -17,8 +17,7 @@ public class JdbcOrderItemDaoImpl implements OrderItemDao {
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public void save(List<OrderItem> orderItems, Long orderId) {
-        orderItems.forEach(p -> jdbcTemplate.update(QUERY_TO_SAVE_ORDER_ITEMS,
-                orderId, p.getPhone().getId(), p.getQuantity()));
+    public void save(OrderItem orderItem, Long orderId) {
+        jdbcTemplate.update(QUERY_TO_SAVE_ORDER_ITEMS, orderId, orderItem.getPhone().getId(), orderItem.getQuantity());
     }
 }

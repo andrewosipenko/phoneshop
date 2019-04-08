@@ -40,7 +40,7 @@ public class JdbcOrderItemDaoImplTest {
         phone.setId(PHONE_ID);
         OrderItem orderItem = new OrderItem(phone, QUANTITY);
 
-        orderItemDao.save(Collections.singletonList(orderItem), ORDER_ID);
+        orderItemDao.save(orderItem, ORDER_ID);
         int actualSize = JdbcTestUtils.countRowsInTable(jdbcTemplate, ORDER_ITEM_TABLE);
 
         assertEquals(expectedSize, actualSize);

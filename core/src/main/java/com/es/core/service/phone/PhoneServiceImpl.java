@@ -46,12 +46,12 @@ public class PhoneServiceImpl implements PhoneService {
 
     @Override
     public int findPageCount(int pageSize) {
-        return phoneDao.findPageCount() / pageSize;
+        return (int)Math.ceil(phoneDao.findPageCount() / (double)pageSize);
     }
 
     @Override
     public int findPageCountWithSearchText(int pageSize, String searchText) {
-        return phoneDao.findPageCountWithSearchText(searchText) / pageSize;
+        return (int)Math.ceil(phoneDao.findPageCountWithSearchText(searchText) / (double)pageSize);
     }
 
     @Override
