@@ -5,6 +5,7 @@ import com.es.core.dao.stock.StockDao;
 import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
 import com.es.core.model.phone.Phone;
+import com.es.core.model.stock.Stock;
 import com.es.core.service.price.PriceService;
 import com.es.core.service.stock.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +96,12 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void removeMissingQuantity(CartItem cartItem) {
-        Long quantity = stockService.findPhoneStock(cartItem.getPhone().getId()).getStock();
-        cartItem.setQuantity(quantity);
+        Stock stock = stockService.findPhoneStock(cartItem.getPhone().getId());
+        if (stock == null) {
+            throw new IllegalArgumentException();
+        } else {
+            Long quantity = stock.getStock();
+            cartItem.setQuantity(quantity);
+        }
     }
 }

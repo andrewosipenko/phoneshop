@@ -68,6 +68,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void placeOrder(Order order, String status) {
+        if (status == null) {
+            throw new IllegalArgumentException();
+        }
         order.setStatus(OrderStatus.valueOf(status));
         orderDao.updateOrderStatus(order.getId(), status);
         if (status.equals(OrderStatus.DELIVERED.toString())) {

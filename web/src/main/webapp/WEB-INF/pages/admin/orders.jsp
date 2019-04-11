@@ -20,7 +20,7 @@
             <c:forEach var="order" items="${orders}">
                 <tr class="content-align">
                     <td><a href="${pageContext.servletContext.contextPath}/admin/orders/${order.id}">${order.id}</a></td>
-                    <td>${order.firstName.concat(" ").concat(order.lastName)}</td>
+                    <td><tags:customerFio firstName="${order.firstName}" lastName="${order.lastName}"</td>
                     <td>${order.contactPhoneNo}"</td>
                     <td>${order.deliveryAddress}</td>
                     <td>${order.orderDate}</td>

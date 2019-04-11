@@ -43,7 +43,7 @@ public class OrderServiceImplTest {
     private static final Set<Color> COLORS = new HashSet<>();
     private static final String SECURE_ID = "secure_id";
     private static final String DELIVERED_STATUS = OrderStatus.DELIVERED.toString();
-    public static final long ORDER_ID = 3L;
+    private static final long ORDER_ID = 3L;
 
     @InjectMocks
     private OrderService orderService = new OrderServiceImpl();
@@ -107,5 +107,10 @@ public class OrderServiceImplTest {
 
         verify(orderDao, times(1)).updateOrderStatus(ORDER_ID, DELIVERED_STATUS);
         verify(stockService, times(1)).deleteReserved(ID, QUANTITY);
+    }
+
+    @Test( expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentException() {
+        orderService.placeOrder(order, null);
     }
 }
