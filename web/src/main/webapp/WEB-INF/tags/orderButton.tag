@@ -1,1 +1,1 @@
-<a class="link-button button-on-page right-button" href="${pageContext.servletContext.contextPath}/order">Order</a>
+<a class="link-button button-on-page right-content" href="${pageContext.servletContext.contextPath}/order">Order</a>

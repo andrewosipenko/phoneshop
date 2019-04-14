@@ -143,11 +143,11 @@ header {
     margin: 20px 50px;
 }
 
-.right-button {
+.right-content {
     float: right;
 }
 
-.left-button {
+.left-content {
     float: left;
 }
 
@@ -213,4 +213,44 @@ header {
 
 .additional-info-order {
     width: 100%;
+}
+
+.authorization {
+    float: right;
+    font-size: 20px;
+    margin: 30px 5px;
+}
+
+.username {
+    float: right;
+    font-size: 20px;
+    margin: 30px 5px;
+}
+
+.login_input {
+    width: 200px;
+    float: right;
+    /*margin: 10px;*/
+}
+
+.login_input:after {
+    clear: both;
+    content: "";
+}
+
+.login-form {
+    font-size: 20px;
+    width: 320px;
+}
+
+.check-box {
+    width: 20px;
+    height: 20px;
+    float: none;
+    padding: 10px;
+}
+
+.page-text {
+    font-size: 25px;
+    margin: 5px 0px;
 }

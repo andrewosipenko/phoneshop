@@ -6,7 +6,9 @@ import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
 import com.es.core.model.color.Color;
 import com.es.core.model.phone.Phone;
+import com.es.core.model.stock.Stock;
 import com.es.core.service.price.PriceService;
+import com.es.core.service.stock.StockService;
 import com.es.core.util.PhoneCreator;
 import org.junit.Assert;
 import org.junit.Before;
@@ -37,6 +39,7 @@ public class HttpSessionCartServiceTest {
     private final static Long QUANTITY = 1L;
     private final static Set<Color> COLORS = new HashSet<>();
     private final static Long EXPECTED_QUANTITY = 2L;
+    private static final Stock STOCK = new Stock(new Phone(), EXPECTED_QUANTITY, 1L);
 
     @InjectMocks
     private final static CartService cartService = new HttpSessionCartService();
@@ -48,7 +51,7 @@ public class HttpSessionCartServiceTest {
     private PriceService priceService;
 
     @Mock
-    private StockDao stockDao;
+    private StockService stockService;
 
     private Phone phone;
     private CartItem cartItem;
@@ -119,11 +122,11 @@ public class HttpSessionCartServiceTest {
 
     @Test
     public void shouldDeleteMissingQuantity() {
-        when(stockDao.findPhoneQuantity(1003L)).thenReturn(EXPECTED_QUANTITY);
+        when(stockService.findPhoneStock(ID)).thenReturn(STOCK);
 
         cartService.removeMissingQuantity(cart.getCartItems().get(0));
         Long actualQuantity = cart.getCartItems().get(0).getQuantity();
 
-        assertEquals(EXPECTED_QUANTITY, actualQuantity);
+        assertEquals(STOCK.getStock(), actualQuantity);
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 
@@ -22,7 +21,7 @@ public class OrderOverviewPageController {
 
     @RequestMapping(value = "/{secureId}", method = RequestMethod.GET)
     public String getOrder(@PathVariable String secureId, Model model) {
-        Order order = orderDao.findOrder(secureId);
+        Order order = orderDao.findOrderBySecureId(secureId);
         model.addAttribute(ORDER_PARAMETER, order);
         return ORDER_OVERVIEW_PAGE;
     }

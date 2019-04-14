@@ -1,11 +1,13 @@
 package com.es.core.service.order;
 
 import com.es.core.dao.order.OrderDao;
-import com.es.core.dao.orderItem.OrderItemDao;
 import com.es.core.model.cart.Cart;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.customer.CustomerInfo;
+import com.es.core.model.order.OrderStatus;
+import com.es.core.service.orderItem.OrderItemService;
+import com.es.core.service.stock.StockService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +24,10 @@ public class OrderServiceImpl implements OrderService {
     private OrderDao orderDao;
 
     @Resource
-    private OrderItemDao orderItemDao;
+    private OrderItemService orderItemService;
+
+    @Resource
+    private StockService stockService;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
@@ -46,18 +51,39 @@ public class OrderServiceImpl implements OrderService {
 
         orderDao.save(order);
         order.setId(orderDao.findOrderIdBySecureId(order.getSecureId()));
-        orderItemDao.save(order.getOrderItems(), order.getId());
+        orderItemService.save(order.getOrderItems(), order.getId());
 
         return order;
     }
 
     @Override
     public Order findOrderBuSecureId(String secureId) {
-        return orderDao.findOrder(secureId);
+        return orderDao.findOrderBySecureId(secureId);
     }
 
     @Override
-    public void placeOrder(Order order) {
-        throw new UnsupportedOperationException("TODO");
+    public Order findOrderById(Long id) {
+        return orderDao.findOrderById(id);
+    }
+
+    @Override
+    public void placeOrder(Order order, String status) {
+        if (status == null) {
+            throw new IllegalArgumentException();
+        }
+        order.setStatus(OrderStatus.valueOf(status));
+        orderDao.updateOrderStatus(order.getId(), status);
+        if (status.equals(OrderStatus.DELIVERED.toString())) {
+            order.getOrderItems()
+                    .forEach(orderItem -> stockService.deleteReserved(orderItem.getPhone().getId(), orderItem.getQuantity()));
+        } else {
+            order.getOrderItems()
+                    .forEach(orderItem -> stockService.replaceReservedToStock(orderItem.getPhone().getId(), orderItem.getQuantity()));
+        }
+    }
+
+    @Override
+    public List<Order> findAll() {
+        return orderDao.findAll();
     }
 }

@@ -24,8 +24,17 @@
                 items
                 <p class="inline-element" id="totalPrice">${totalPrice == null ? "0" : totalPrice}</p>$</a>
         </div>
-        <div class="clearfix"/>
     </c:if>
+    <c:choose>
+        <c:when test="${username == null}">
+            <a class="authorization" href="${pageContext.request.contextPath}/login">Login</a>
+        </c:when>
+        <c:otherwise>
+            <a class="username" href="${pageContext.request.contextPath}/logout">Logout</a>
+            <p class="authorization">${username}</p>
+        </c:otherwise>
+    </c:choose>
+    <div class="clearfix"/>
 </header>
 
 <jsp:doBody/>
