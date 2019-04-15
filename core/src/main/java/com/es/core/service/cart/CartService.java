@@ -21,4 +21,6 @@ public interface CartService {
     void clearCart(Cart cart);
 
     void removeMissingQuantity(CartItem cartItem);
+
+    void addCartItems(Cart cart, Map<Long, Long> items);
 }

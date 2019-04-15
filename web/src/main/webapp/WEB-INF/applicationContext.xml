@@ -12,6 +12,5 @@
     <bean id="cart" class="com.es.core.model.cart.Cart" scope="session" lazy-init="true">
         <aop:scoped-proxy/>
     </bean>
-
     <context:annotation-config/>
 </beans>

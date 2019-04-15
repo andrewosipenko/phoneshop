@@ -9,6 +9,7 @@
             <input name="text" value="${text}">
             <button>Search</button>
         </form>
+        <a class="link-button button-on-page" href="${pageContext.servletContext.contextPath}/quickOrder">Quick order</a>
     </div>
     <div class="clearfix"/>
     <table class="table table-bordered">

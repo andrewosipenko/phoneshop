@@ -54,6 +54,13 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
+    public void addCartItems(Cart cart, Map<Long, Long> items) {
+        for (Map.Entry<Long, Long> item : items.entrySet()) {
+            addCartItem(cart, item.getKey(), item.getValue());
+        }
+    }
+
+    @Override
     public void update(Cart cart, Map<Long, Long> items) {
         List<CartItem> cartItemList = cart.getCartItems();
         for (Map.Entry<Long, Long> item : items.entrySet()) {
