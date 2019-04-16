@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+
+    <context:component-scan base-package="com.es.core"/>
+
+    <import resource="applicationContext-core.xml"/>
+
+    <context:property-placeholder location="classpath:conf/application-test.properties"/>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${db.driver}"/>
+        <property name="url" value="${db.url};DB_CLOSE_DELAY=-1"/>
+    </bean>
+
+    <bean id="paginationService" class="com.es.phoneshop.web.services.PaginationService"/>
+
+    <jdbc:initialize-database data-source="dataSource">
+        <jdbc:script location="classpath:db/schema.sql"/>
+    </jdbc:initialize-database>
+
+    <jdbc:initialize-database data-source="dataSource" enabled="${db.insertSchema}">
+        <jdbc:script location="classpath:db/phoneData.sql"/>
+    </jdbc:initialize-database>
+
+</beans>
