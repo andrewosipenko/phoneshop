@@ -72,7 +72,8 @@ public class ProductListPageController {
     }
 
     @RequestMapping(value = "/search/{pageAction}", method = RequestMethod.GET)
-    public String searchProducts(@PathVariable String pageAction, @RequestParam(required = false) String searchFor, Model model, HttpSession httpSession) {
+    public String searchProducts(@PathVariable String pageAction, @RequestParam(required = false) String searchFor,
+                                 @RequestParam(required = false) String sortField, @RequestParam(required = false) String sortOrder, Model model, HttpSession httpSession) {
         String searchFor_session = (String) httpSession.getAttribute("searchFor");
         if (searchFor_session == null) {
             searchFor_session = searchFor;
@@ -104,7 +105,18 @@ public class ProductListPageController {
 
             }
         }
-        List<Stock> stockList = stockDao.getAvailableStocksByPage_search(searchFor, (currentPage_searchProductList.get() - 1) * COUNT_ON_PAGE + 1, COUNT_ON_PAGE);
+        List<Stock> stockList;
+        if (sortField != null) {
+            stockList = sortStocks_search(sortField, sortOrder, searchFor, httpSession, (currentPage_searchProductList.get() - 1) * COUNT_ON_PAGE + 1);
+        } else {
+            String currentSortField = (String) httpSession.getAttribute("currentSortField");
+            String currentSortOrder = (String) httpSession.getAttribute("currentSortOrder");
+            if (currentSortField != null) {
+                stockList = sortStocks_search(currentSortField, currentSortOrder, searchFor, httpSession, (currentPage_searchProductList.get() - 1) * COUNT_ON_PAGE + 1);
+            } else {
+                stockList = stockDao.getAvailableStocksByPage_search(searchFor, (currentPage_searchProductList.get() - 1) * COUNT_ON_PAGE + 1, COUNT_ON_PAGE);
+            }
+        }
         model.addAttribute("countOfPages", countOfPages);
         model.addAttribute("stockList", stockList);
         model.addAttribute("searchFor", searchFor);
@@ -189,6 +201,83 @@ public class ProductListPageController {
         }
         if (stockList == null) {
             stockList = stockDao.getAvailableStocksByPage(pageId, ProductListPageController.COUNT_ON_PAGE);
+        }
+        return stockList;
+    }
+
+    private List<Stock> sortStocks_search(String sortFiled, String sortOrder, String searchFor, HttpSession httpSession, int pageId) {
+        List<Stock> stockList = null;
+        if (sortOrder == null) {
+            sortOrder = (String) httpSession.getAttribute("currentSortField");
+        }
+        switch (sortFiled) {
+            case "brand": {
+                httpSession.setAttribute("currentSortField", "brand");
+                switch (sortOrder) {
+                    case "asc": {
+                        httpSession.setAttribute("currentSortOrder", "asc");
+                        stockList = stockDao.getAvailableStocksSortBy_brand_Order_asc_ByPage_search(searchFor, pageId, ProductListPageController.COUNT_ON_PAGE);
+                        break;
+                    }
+                    case "desc": {
+                        httpSession.setAttribute("currentSortOrder", "desc");
+                        stockList = stockDao.getAvailableStocksSortBy_brand_Order_desc_ByPage_search(searchFor, pageId, ProductListPageController.COUNT_ON_PAGE);
+                        break;
+                    }
+                }
+                break;
+            }
+            case "model": {
+                httpSession.setAttribute("currentSortField", "model");
+                switch (sortOrder) {
+                    case "asc": {
+                        httpSession.setAttribute("currentSortOrder", "asc");
+                        stockList = stockDao.getAvailableStocksSortBy_model_Order_asc_ByPage_search(searchFor, pageId, ProductListPageController.COUNT_ON_PAGE);
+                        break;
+                    }
+                    case "desc": {
+                        httpSession.setAttribute("currentSortOrder", "desc");
+                        stockList = stockDao.getAvailableStocksSortBy_model_Order_desc_ByPage_search(searchFor, pageId, ProductListPageController.COUNT_ON_PAGE);
+                        break;
+                    }
+                }
+                break;
+            }
+            case "displaySize": {
+                httpSession.setAttribute("currentSortField", "displaySize");
+                switch (sortOrder) {
+                    case "asc": {
+                        httpSession.setAttribute("currentSortOrder", "asc");
+                        stockList = stockDao.getAvailableStocksSortBy_displaySize_Order_asc_ByPage_search(searchFor, pageId, ProductListPageController.COUNT_ON_PAGE);
+                        break;
+                    }
+                    case "desc": {
+                        httpSession.setAttribute("currentSortOrder", "desc");
+                        stockList = stockDao.getAvailableStocksSortBy_displaySize_Order_desc_ByPage_search(searchFor, pageId, ProductListPageController.COUNT_ON_PAGE);
+                        break;
+                    }
+                }
+                break;
+            }
+            case "price": {
+                httpSession.setAttribute("currentSortField", "price");
+                switch (sortOrder) {
+                    case "asc": {
+                        httpSession.setAttribute("currentSortOrder", "asc");
+                        stockList = stockDao.getAvailableStocksSortBy_price_Order_asc_ByPage_search(searchFor, pageId, ProductListPageController.COUNT_ON_PAGE);
+                        break;
+                    }
+                    case "desc": {
+                        httpSession.setAttribute("currentSortOrder", "desc");
+                        stockList = stockDao.getAvailableStocksSortBy_price_Order_desc_ByPage_search(searchFor, pageId, ProductListPageController.COUNT_ON_PAGE);
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        if (stockList == null) {
+            stockList = stockDao.getAvailableStocksByPage_search(searchFor, pageId, ProductListPageController.COUNT_ON_PAGE);
         }
         return stockList;
     }
