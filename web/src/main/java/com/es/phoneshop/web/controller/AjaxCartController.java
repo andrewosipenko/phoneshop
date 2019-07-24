@@ -15,9 +15,9 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping(value = "/ajaxCart")
 public class AjaxCartController {
+
     @Resource
     private CartService cartService;
-
 
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody
@@ -26,7 +26,14 @@ public class AjaxCartController {
         if (result.hasErrors()) {
             return "wrong format";
         }
-//        cartService.addPhone(phoneId, quantity);
-        return "";
+        cartService.addPhone(phoneId, Long.parseLong(validatedQuantity.getQuantity()));
+        return "added!";
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/replace")
+    public @ResponseBody
+    String replacePhone(@RequestParam Long phoneId, @Valid ValidatedQuantity validatedQuantity,
+                        BindingResult result) {
+        return "added!";
     }
 }

@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface IsValidQuantity {
-    String message() default "Invalid phone number";
+    String message() default "Invalid quantity";
 
     Class<?>[] groups() default {};
 

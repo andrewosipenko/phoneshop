@@ -25,16 +25,23 @@
     <h6 align="center"><a href="/productList/1">Go back to main</a></h6>
   </c:when>
   <c:otherwise>
-    <p>
-    <form action="/productList/search/1">
-      <input type="text" name="searchFor">
-      <input type="submit" value="search">
-    </form>
-    </p>
+    <div>
+    <div style="float: left;">
+      <form action="/productList/search/1">
+        <input type="text" name="searchFor">
+        <input type="submit" value="search">
+      </form>
+    </div>
+    <div style="float: right;">
+      <form action="/cart">
+        <button style="margin-left: 10px" class="btn btn-primary">My cart: ${cart.totalCount} items ${cart.totalPrice}$</button>
+      </form>
+    </div>
+    </div>
   </c:otherwise>
 </c:choose>
 <p>
-  <table border="1px">
+  <table border="1px" align="center">
     <thead>
       <tr>
         <td>Image</td>
@@ -42,7 +49,7 @@
         </td>
         <td>Model(<a href="?sortField=model&sortOrder=asc">&lt;</a>, <a href="?sortField=model&sortOrder=desc">&gt;</a>)
         </td>
-        <td>Color</td>
+        <td>Colors</td>
         <td>Display Size(<a href="?sortField=displaySize&sortOrder=asc">&lt;</a>, <a
                 href="?sortField=displaySize&sortOrder=desc">&gt;</a>)
         </td>
@@ -59,7 +66,7 @@
                style="width: 55%; height: 55%">
         </td>
         <td>${stock.phone.brand}</td>
-        <td>${stock.phone.model}</td>
+        <td><a href="/productDetails/${stock.phone.id}">${stock.phone.model}</a></td>
         <td>
           <c:forEach var="color" items="${stock.phone.colors}" varStatus="i">
             <c:choose>
@@ -77,13 +84,13 @@
         <form>
           <td>
             <input type="text" id="quantity${stock.phone.id}" name="quantity">
-  <p/>
-  <span style="color: crimson; font-size: 75%" id="response${stock.phone.id}"></span>
-  </td>
-  <td>
-    <button type="button" onclick="addToCart_ajax(${stock.phone.id});">Add to</button>
-  </td>
-  </form>
+        <p/>
+        <span style="font-size: 75%" id="response${stock.phone.id}"></span>
+        </td>
+        <td>
+          <button type="button" onclick="addToCart_ajax(${stock.phone.id});">Add to</button>
+        </td>
+        </form>
       </tr>
     </c:forEach>
   </table>

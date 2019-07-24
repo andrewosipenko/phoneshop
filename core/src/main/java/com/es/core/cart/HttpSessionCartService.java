@@ -1,28 +1,62 @@
 package com.es.core.cart;
 
+import com.es.core.model.ProductDao;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Map;
 
 @Service
 public class HttpSessionCartService implements CartService {
+
+    @Resource
+    private Cart cart;
+
+    @Resource
+    private ProductDao productDao;
+
     @Override
     public Cart getCart() {
-        throw new UnsupportedOperationException("TODO");
+        return cart;
     }
 
     @Override
     public void addPhone(Long phoneId, Long quantity) {
-        throw new UnsupportedOperationException("TODO");
+        cart.getProducts().put(phoneId, quantity);
     }
 
     @Override
     public void update(Map<Long, Long> items) {
-        throw new UnsupportedOperationException("TODO");
+        cart.setProducts(items);
     }
 
     @Override
     public void remove(Long phoneId) {
-        throw new UnsupportedOperationException("TODO");
+        cart.getProducts().remove(phoneId);
+    }
+
+    @Override
+    public void calculateTotalPrice() {
+        long totalPrice = 0;
+        for (Map.Entry<Long, Long> entry : cart.getProducts().entrySet()) {
+            totalPrice += Double.parseDouble(productDao.loadPhoneById(entry.getKey()).getPrice().toString()) * entry.getValue();
+        }
+        cart.setTotalPrice(totalPrice);
+    }
+
+    @Override
+    public void calculateTotalCount() {
+        cart.setTotalCount(cart.getProducts().size());
+    }
+
+    @Override
+    public void updateTotals() {
+        calculateTotalCount();
+        calculateTotalPrice();
+    }
+
+    @Override
+    public void delete(long phoneId) {
+        cart.getProducts().remove(phoneId);
     }
 }

@@ -1,5 +1,6 @@
 package com.es.phoneshop.web.controller.pages;
 
+import com.es.core.cart.CartService;
 import com.es.core.model.StockDao;
 import com.es.core.model.phone.Stock;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,9 @@ public class ProductListPageController {
 
     @Resource
     private StockDao stockDao;
+
+    @Resource
+    private CartService cartService;
 
     @RequestMapping(value = "/{pageAction}", method = RequestMethod.GET)
     public String showProductList(@PathVariable String pageAction, @RequestParam(required = false) String sortField, @RequestParam(required = false) String sortOrder,
@@ -68,6 +72,8 @@ public class ProductListPageController {
         }
         model.addAttribute("countOfPages", countOfPages);
         model.addAttribute("stockList", stockList);
+        cartService.updateTotals();
+        model.addAttribute("cart", cartService.getCart());
         return "productList";
     }
 
@@ -120,6 +126,8 @@ public class ProductListPageController {
         model.addAttribute("countOfPages", countOfPages);
         model.addAttribute("stockList", stockList);
         model.addAttribute("searchFor", searchFor);
+        cartService.updateTotals();
+        model.addAttribute("cart", cartService.getCart());
         return "productList";
     }
 
