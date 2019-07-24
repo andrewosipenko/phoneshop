@@ -16,4 +16,12 @@ public interface CartService {
     void update(Map<Long, Long> items);
 
     void remove(Long phoneId);
+
+    void calculateTotalPrice();
+
+    void calculateTotalCount();
+
+    void updateTotals();
+
+    void delete(long phoneId);
 }
