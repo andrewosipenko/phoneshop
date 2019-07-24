@@ -63,7 +63,7 @@
         <td>
           <c:forEach var="color" items="${stock.phone.colors}" varStatus="i">
             <c:choose>
-              <c:when test="${(fn:length(stock.phone.colors) - i.count) gt 0}">
+              <c:when test="${(fn:length(stock.phone.colors) - i.count) gt 1}">
                 ${color.code},
               </c:when>
               <c:otherwise>
