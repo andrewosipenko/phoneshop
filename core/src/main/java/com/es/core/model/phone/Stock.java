@@ -28,24 +28,4 @@ public class Stock {
     public void setReserved(Integer reserved) {
         this.reserved = reserved;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Stock stock1 = (Stock) o;
-
-        if (phone != null ? !phone.equals(stock1.phone) : stock1.phone != null) return false;
-        if (stock != null ? !stock.equals(stock1.stock) : stock1.stock != null) return false;
-        return reserved != null ? reserved.equals(stock1.reserved) : stock1.reserved == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = phone != null ? phone.hashCode() : 0;
-        result = 31 * result + (stock != null ? stock.hashCode() : 0);
-        result = 31 * result + (reserved != null ? reserved.hashCode() : 0);
-        return result;
-    }
 }
