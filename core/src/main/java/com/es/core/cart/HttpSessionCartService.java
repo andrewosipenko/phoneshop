@@ -59,4 +59,12 @@ public class HttpSessionCartService implements CartService {
     public void delete(long phoneId) {
         cart.getProducts().remove(phoneId);
     }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
+    public void setProductDao(ProductDao productDao) {
+        this.productDao = productDao;
+    }
 }

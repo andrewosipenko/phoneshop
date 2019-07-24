@@ -30,10 +30,4 @@ public class AjaxCartController {
         return "added!";
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/replace")
-    public @ResponseBody
-    String replacePhone(@RequestParam Long phoneId, @Valid ValidatedQuantity validatedQuantity,
-                        BindingResult result) {
-        return "added!";
-    }
 }
