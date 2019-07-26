@@ -33,9 +33,7 @@
         </form>
     </div>
     <div style="float: right;">
-        <form action="">
-            <input type="submit" class="btn btn-info" value="Order"/>
-        </form>
+
     </div>
 </div>
     <h2 align="center">${phone.model}</h2>

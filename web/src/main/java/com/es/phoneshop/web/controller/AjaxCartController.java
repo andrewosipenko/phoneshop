@@ -1,7 +1,7 @@
 package com.es.phoneshop.web.controller;
 
 import com.es.core.cart.CartService;
-import com.es.phoneshop.web.validator.ValidatedQuantity;
+import com.es.phoneshop.web.validator.quantity.ValidatedQuantity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,12 +1,15 @@
 package com.es.core.cart;
 
 import com.es.core.model.ProductDao;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Map;
 
 @Service
+@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class HttpSessionCartService implements CartService {
 
     @Resource

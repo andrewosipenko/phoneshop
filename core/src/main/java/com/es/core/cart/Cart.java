@@ -1,11 +1,13 @@
 package com.es.core.cart;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@Scope("session")
 public class Cart {
 
     private Map<Long, Long> products = new HashMap<>();

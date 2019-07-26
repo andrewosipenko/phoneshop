@@ -1,4 +1,4 @@
-package com.es.phoneshop.web.validator;
+package com.es.phoneshop.web.validator.quantity;
 
 public class ValidatedQuantity {
 

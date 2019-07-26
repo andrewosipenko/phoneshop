@@ -2,11 +2,26 @@ package com.es.core.model.order;
 
 import com.es.core.model.phone.Phone;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 public class OrderItem {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Phone phone;
     private Order order;
     private Long quantity;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Phone getPhone() {
         return phone;

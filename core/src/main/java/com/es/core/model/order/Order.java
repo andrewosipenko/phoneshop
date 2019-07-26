@@ -1,10 +1,18 @@
 package com.es.core.model.order;
 
+import com.es.core.model.order.validator.IsValidPhone;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
 import java.math.BigDecimal;
 import java.util.List;
 
 public class Order
 {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private List<OrderItem> orderItems;
     /**
@@ -17,10 +25,20 @@ public class Order
      */
     private BigDecimal totalPrice;
 
+    @NotEmpty(message = "First name is required")
     private String firstName;
+
+    @NotEmpty(message = "Last name is required")
     private String lastName;
+
+    @NotEmpty
     private String deliveryAddress;
+
+    @NotEmpty(message = "Phone is required")
+    @IsValidPhone
     private String contactPhoneNo;
+
+    private String additionalInformation;
 
     private OrderStatus status;
 
@@ -102,5 +120,13 @@ public class Order
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public String getAdditionalInformation() {
+        return additionalInformation;
+    }
+
+    public void setAdditionalInformation(String additionalInformation) {
+        this.additionalInformation = additionalInformation;
     }
 }

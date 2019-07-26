@@ -3,6 +3,7 @@ package com.es.phoneshop.web.controller.pages;
 import com.es.core.cart.CartService;
 import com.es.core.model.ProductDao;
 import com.es.core.model.phone.Phone;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,8 +36,8 @@ public class CartPageController {
         return "cart";
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public void updateCart() {
+    @RequestMapping(method = RequestMethod.POST, value = "/update")
+    public void updateCart(HttpRequest httpRequest) {
         cartService.update(null);
     }
 
