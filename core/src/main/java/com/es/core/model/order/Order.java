@@ -1,12 +1,18 @@
 package com.es.core.model.order;
 
+import com.es.core.model.order.validator.IsValidPhone;
+
+import javax.validation.constraints.NotEmpty;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Order
 {
+
     private Long id;
     private List<OrderItem> orderItems;
+    private LocalDateTime localDateTime;
     /**
      *  A sum of order item prices;
      */
@@ -17,10 +23,20 @@ public class Order
      */
     private BigDecimal totalPrice;
 
+    @NotEmpty(message = "First name is required")
     private String firstName;
+
+    @NotEmpty(message = "Last name is required")
     private String lastName;
+
+    @NotEmpty
     private String deliveryAddress;
+
+    @NotEmpty(message = "Phone is required")
+    @IsValidPhone
     private String contactPhoneNo;
+
+    private String additionalInformation;
 
     private OrderStatus status;
 
@@ -38,6 +54,14 @@ public class Order
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
+    }
+
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
     }
 
     public BigDecimal getSubtotal() {
@@ -102,5 +126,13 @@ public class Order
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public String getAdditionalInformation() {
+        return additionalInformation;
+    }
+
+    public void setAdditionalInformation(String additionalInformation) {
+        this.additionalInformation = additionalInformation;
     }
 }

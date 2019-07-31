@@ -25,4 +25,12 @@ public class HttpSessionCartService implements CartService {
     public void remove(Long phoneId) {
         throw new UnsupportedOperationException("TODO");
     }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
+    public void setProductDao(ProductDao productDao) {
+        this.productDao = productDao;
+    }
 }
