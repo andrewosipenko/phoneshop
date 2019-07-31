@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -39,18 +38,5 @@ public class CartPageController {
     @RequestMapping(method = RequestMethod.POST, value = "/update")
     public void updateCart(HttpRequest httpRequest) {
         cartService.update(null);
-    }
-
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public String replaceProduct(@RequestParam String phoneId, Model model) {
-        cartService.delete(Long.parseLong(phoneId));
-        cartService.updateTotals();
-        Map<Phone, Long> phonesAndCount = new HashMap<>();
-        for (Map.Entry<Long, Long> entry : cartService.getCart().getProducts().entrySet()) {
-            phonesAndCount.put(productDao.loadPhoneById(entry.getKey()), entry.getValue());
-        }
-        model.addAttribute("phonesAndCount", phonesAndCount);
-        model.addAttribute("cart", cartService.getCart());
-        return "cart";
     }
 }

@@ -12,27 +12,38 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
 <html>
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <title>Title</title>
 </head>
 <body>
-    <h2 align="center">Cart</h2>
+<div>
+    <div>
+        <h2 align="center">Cart</h2>
+    </div>
+    <div style="float: right">
+
+    </div>
+</div>
+
 <div style="width: 100%;">
     <div style="float: left;">
         <form action="/productList/1">
-        <button type="submit">Back to product list</button>
+            <button type="submit" class="btn btn-primary">Back to product list</button>
         </form>
     </div>
     <div style="float: right">
-        <button>My cart: ${cart.totalCount} items ${cart.totalPrice}$</button>
+        <button class="btn btn-primary">My cart: ${cart.totalCount} items ${cart.totalPrice}$</button>
+        <%--        <form action="/logout">--%>
+        <%--            <button type="submit" class="btn btn-danger">logout</button>--%>
+        <%--        </form>--%>
     </div>
 </div>
 <hr/>
     <c:choose>
         <c:when test="${cart.totalCount > 0}">
-            <table border="1px" align="center">
+            <table border="1px" align="center" id="table">
                 <thead>
                 <tr>
                     <td>Image</td>
@@ -50,7 +61,7 @@
                 </tr>
                 </thead>
                 <c:forEach var="entry" items="${phonesAndCount}">
-                    <tr>
+                    <tr id="tr${entry.key.id}">
                         <td>
                             <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${entry.key.imageUrl}"
                                  style="width: 55%; height: 55%">
@@ -71,24 +82,45 @@
                         </td>
                         <td>${entry.key.displaySizeInches}"</td>
                         <td>${entry.key.price}$</td>
-                        <form action="/cart/delete" method="post">
-                            <td>
-                                <input type="hidden" name="phoneId" value="${entry.key.id}">
-                                <input type="text" value="${entry.value}">
-                                <p/>
-                            </td>
-                            <td>
-                                <button type="submit">Delete</button>
-                            </td>
-                        </form>
+                        <td>
+                            <input type="text" value="${entry.value}">
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger" onclick="deleteFromCart_ajax(${entry.key.id})">
+                                Delete
+                            </button>
+                        </td>
                     </tr>
                 </c:forEach>
             </table>
+            <form action="/order">
+                <input type="submit" class="btn btn-primary" value="Order" id="order">
+            </form>
         </c:when>
         <c:otherwise>
             <h2 align="center">Cart is empty</h2>
         </c:otherwise>
     </c:choose>
-
 </body>
+<script type="text/javascript">
+    function deleteFromCart_ajax(phoneId) {
+        $.ajax({
+            type: "post",
+            url: "${pageContext.request.contextPath}/ajaxCart/delete",
+            data: {'phoneId': phoneId},
+            success: function () {
+                $('#tr' + phoneId).remove();
+                let rowCount = $('#table tr').length;
+                if (rowCount === 1) {
+                    $('#table').remove();
+                    $('#order').remove();
+                }
+            },
+            error: function (xhr, status, error) {
+                var errorMessage = xhr.status + ': ' + xhr.statusText;
+                alert('Error - ' + errorMessage);
+            }
+        });
+    }
+</script>
 </html>

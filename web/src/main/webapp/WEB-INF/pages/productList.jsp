@@ -36,6 +36,9 @@
       <form action="/cart">
         <button style="margin-left: 10px" class="btn btn-primary">My cart: ${cart.totalCount} items ${cart.totalPrice}$</button>
       </form>
+        <form action="${pageContext.request.contextPath}/logout?">
+            <button class="btn btn-error">Logout</button>
+        </form>
     </div>
     </div>
   </c:otherwise>

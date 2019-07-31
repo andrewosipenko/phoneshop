@@ -49,5 +49,7 @@ public interface StockDao {
 
     List<Stock> getAvailableStocksSortBy_price_Order_desc_ByPage_search(String searchFor, int pageId, int total);
 
+    Stock loadStockOfPhoneByPhoneId(long phoneId);
 
+    void reservePhonesByPhoneId(long phoneId, long quantity);
 }

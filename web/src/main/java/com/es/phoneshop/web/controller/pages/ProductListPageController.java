@@ -3,6 +3,7 @@ package com.es.phoneshop.web.controller.pages;
 import com.es.core.cart.CartService;
 import com.es.core.model.StockDao;
 import com.es.core.model.phone.Stock;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,9 @@ public class ProductListPageController {
 
     @Resource
     private CartService cartService;
+
+    @Resource
+    private ApplicationContext applicationContext;
 
     @RequestMapping(value = "/{pageAction}", method = RequestMethod.GET)
     public String showProductList(@PathVariable String pageAction, @RequestParam(required = false) String sortField, @RequestParam(required = false) String sortOrder,

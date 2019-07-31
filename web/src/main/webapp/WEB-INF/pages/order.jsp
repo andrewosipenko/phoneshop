@@ -33,13 +33,27 @@
             color: #ff0000;
             font-size: 50%;
         }
+
+        .bigError {
+            color: #ff0000;
+            font-size: 100%;
+        }
     </style>
 </head>
 <body>
 <h2 align="center">Order</h2>
-<form action="/cart">
-    <button style="margin-left: 10px" class="btn btn-primary">Back to cart</button>
-</form>
+<div>
+    <div style="float: left">
+        <form action="/cart">
+            <button style="margin-left: 10px" class="btn btn-primary">Back to cart</button>
+        </form>
+    </div>
+    <div style="float: right">
+        <form action="/logout">
+            <button class="btn btn-error">Logout</button>
+        </form>
+    </div>
+</div>
 <table border="1px" align="center" frame="void">
     <thead>
     <tr>
@@ -140,9 +154,8 @@
             <td><form:textarea path="additionalInformation"/></td>
         </tr>
         <tr>
-            <td></td>
-            <td align="center"><input type="submit" value="Order"/></td>
-            <td></td>
+            <td align="center"><input type="submit" class="btn btn-success" value="Order"/></td>
+            <td class="bigError">${errorMessage}</td>
         </tr>
     </form:form>
 </table>

@@ -1,6 +1,7 @@
 package com.es.phoneshop.web.controller;
 
 import com.es.core.cart.CartService;
+import com.es.core.model.ProductDao;
 import com.es.phoneshop.web.validator.quantity.ValidatedQuantity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -19,6 +20,9 @@ public class AjaxCartController {
     @Resource
     private CartService cartService;
 
+    @Resource
+    private ProductDao productDao;
+
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody
     String addPhone(@RequestParam Long phoneId, @Valid ValidatedQuantity validatedQuantity,
@@ -30,4 +34,9 @@ public class AjaxCartController {
         return "added!";
     }
 
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public @ResponseBody
+    void replaceProduct(@RequestParam String phoneId) {
+        cartService.delete(Long.parseLong(phoneId));
+    }
 }

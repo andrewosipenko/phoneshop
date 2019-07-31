@@ -27,17 +27,14 @@
 </head>
 <body>
 <div>
-    <div style="float: left;">
-
+    <div style="float: left">
+        <h4>Order number: ${order.id}</h4>
     </div>
     <div style="float: right;">
-        <form action="/logout">
-            <button class="btn btn-error">Logout</button>
-        </form>
+        <h4>Order status: </h4>
+        <h1>${order.status}</h1>
     </div>
 </div>
-<h2 align="Left">Thank you for order</h2>
-<h4 align="left">Order number: ${order.id}</h4>
 <table border="1px" align="center" frame="void">
     <thead>
     <tr>
@@ -121,8 +118,20 @@
     </tr>
     <tr>
         <td>
-            <form action="/productList">
-                <button class="btn btn-success" type="submit">Back to shopping</button>
+            <form action="/admin/orders">
+                <button class="btn btn-primary" type="submit">Back</button>
+            </form>
+        </td>
+        <td>
+            <form action="/admin/orders/${order.id}" method="post">
+                <input type="hidden" name="status" value="DELIVERED">
+                <button class="btn btn-success" type="submit">Delivered</button>
+            </form>
+        </td>
+        <td>
+            <form action="/admin/orders/${order.id}" method="post">
+                <input type="hidden" name="status" value="REJECTED">
+                <button class="btn btn-danger" type="submit">Rejected</button>
             </form>
         </td>
     </tr>

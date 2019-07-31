@@ -31,6 +31,9 @@
         <form action="/productList/1">
             <input type="submit" class="btn btn-info" value="Back to product list"/>
         </form>
+        <form action="/logout">
+            <button class="btn btn-error">Logout</button>
+        </form>
     </div>
     <div style="float: right;">
 

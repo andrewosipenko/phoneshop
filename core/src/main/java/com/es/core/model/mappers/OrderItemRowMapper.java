@@ -24,7 +24,6 @@ public class OrderItemRowMapper implements RowMapper<OrderItem> {
         OrderItem orderItem = new OrderItem();
         orderItem.setId(resultSet.getLong("id"));
         orderItem.setPhone(productDao.loadPhoneById(resultSet.getLong("phoneId")));
-        orderItem.setOrder(orderDao.loadOrderById(resultSet.getLong("orderId")));
         orderItem.setQuantity(resultSet.getLong("quantity"));
         return orderItem;
     }

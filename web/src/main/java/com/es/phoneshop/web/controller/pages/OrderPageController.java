@@ -7,6 +7,7 @@ import com.es.core.model.phone.Phone;
 import com.es.core.order.OrderService;
 import com.es.core.order.OutOfStockException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +23,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/order")
-@PropertySource("/WEB-INF/conf/application.properties")
+@PropertySource(value = {"WEB-INF/conf/application.properties"})
 public class OrderPageController {
 
     @Resource
@@ -33,6 +34,9 @@ public class OrderPageController {
 
     @Resource
     private ProductDao productDao;
+
+    @Resource
+    private ApplicationContext applicationContext;
 
     @Value("${delivery.price}")
     private double deliveryPrice;
@@ -52,12 +56,25 @@ public class OrderPageController {
 
     @RequestMapping(method = RequestMethod.POST)
     public String placeOrder(@Valid @ModelAttribute("order") Order order, BindingResult bindingResult,
-                             Model model) throws OutOfStockException {
+                             Model model) {
         cartService.updateTotals();
         if (!bindingResult.hasErrors()) {
-
-
-            return "redirect:/orderOverview?orderId=" + order.getId();
+            try {
+                order = orderService.createOrder(order, cartService.getCart());
+                orderService.placeOrder(order, cartService.getCart());
+                return "redirect:/orderOverview?orderId=" + order.getId();
+            } catch (OutOfStockException ex) {
+                cartService.updateTotals();
+                Map<Phone, Long> phonesAndCount = new HashMap<>();
+                for (Map.Entry<Long, Long> entry : cartService.getCart().getProducts().entrySet()) {
+                    phonesAndCount.put(productDao.loadPhoneById(entry.getKey()), entry.getValue());
+                }
+                model.addAttribute("phonesAndCount", phonesAndCount);
+                model.addAttribute("cart", cartService.getCart());
+                model.addAttribute("total", deliveryPrice + cartService.getCart().getTotalPrice());
+                model.addAttribute("errorMessage", "Can not place order, because some phones are out of stock! They were removed from the cart");
+                return "order";
+            }
         }
         Map<Phone, Long> phonesAndCount = new HashMap<>();
         for (Map.Entry<Long, Long> entry : cartService.getCart().getProducts().entrySet()) {

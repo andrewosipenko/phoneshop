@@ -2,19 +2,17 @@ package com.es.core.model.order;
 
 import com.es.core.model.order.validator.IsValidPhone;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Order
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     private Long id;
     private List<OrderItem> orderItems;
+    private LocalDateTime localDateTime;
     /**
      *  A sum of order item prices;
      */
@@ -56,6 +54,14 @@ public class Order
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
+    }
+
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
     }
 
     public BigDecimal getSubtotal() {

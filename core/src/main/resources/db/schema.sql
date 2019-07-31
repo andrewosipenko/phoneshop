@@ -2,8 +2,7 @@ drop table if exists phone2color;
 drop table if exists colors;
 drop table if exists stocks;
 drop table if exists phones;
-drop table if exists order_items
-drop table if exists orders2order_items
+drop table if exists order_items;
 drop table if exists orders;
 
 create table colors (
@@ -57,25 +56,10 @@ create table stocks (
   CONSTRAINT FK_stocks_phoneId FOREIGN KEY (phoneId) REFERENCES phones (id) ON delete CASCADE ON update CASCADE
 );
 
-create table order_items (
-    id BIGINT AUTO_INCREMENT primary key,
-    phoneId BIGINT NOT NULL,
-    orderId BIGINT NOT NULL,
-    quantity SMALLINT NOT NULL,
-    CONSTRAINT FK_order_items_phoneId FOREIGN KEY (phoneId) REFERENCES phones (id) ON delete CASCADE ON update CASCADE
-    CONSTRAINT FK_order_items_orderId FOREIGN KEY (orderId) REFERENCES orders (id) ON delete CASCADE ON update CASCADE
-);
-
-create table orders2order_items (
-    orderId BIGINT,
-    orderItemId BIGINT,
-    CONSTRAINT FK_phone2color_orderId FOREIGN KEY (orderId) REFERENCES orders (id) ON delete CASCADE ON update CASCADE,
-    CONSTRAINT FK_phone2color_order_item_id FOREIGN KEY (orderItemId) REFERENCES order_items (id) ON delete CASCADE ON update CASCADE
-)
-
 create table orders (
     id BIGINT AUTO_INCREMENT primary key,
     subtotal BIGINT,
+    dateTime DATETIME,
     deliveryPrice BIGINT,
     totalPrice BIGINT,
     firstName VARCHAR(100),
@@ -84,4 +68,13 @@ create table orders (
     contactPhoneNo VARCHAR(20),
     additionalInformation VARCHAR(1000),
     status VARCHAR(30)
+);
+
+create table order_items (
+    id BIGINT AUTO_INCREMENT primary key,
+    phoneId BIGINT NOT NULL,
+    orderId BIGINT NOT NULL,
+    quantity SMALLINT NOT NULL,
+    CONSTRAINT FK_order_items_phoneId FOREIGN KEY (phoneId) REFERENCES phones (id) ON delete CASCADE ON update CASCADE,
+    CONSTRAINT FK_order_items_orderId FOREIGN KEY (orderId) REFERENCES orders (id) ON delete CASCADE ON update CASCADE
 );

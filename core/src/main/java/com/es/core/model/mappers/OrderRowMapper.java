@@ -11,6 +11,8 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
@@ -24,6 +26,7 @@ public class OrderRowMapper implements RowMapper<Order> {
         Order order = new Order();
         order.setId(resultSet.getLong("id"));
         order.setStatus(OrderStatus.valueOf(resultSet.getString("status")));
+        order.setLocalDateTime(LocalDateTime.parse(resultSet.getString("dateTime").substring(0, resultSet.getString("dateTime").indexOf('.')), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         order.setTotalPrice(new BigDecimal(resultSet.getDouble("totalPrice")));
         order.setSubtotal(new BigDecimal(resultSet.getDouble("subtotal")));
         order.setDeliveryPrice(new BigDecimal(resultSet.getDouble("deliveryPrice")));
@@ -33,6 +36,9 @@ public class OrderRowMapper implements RowMapper<Order> {
         order.setFirstName(resultSet.getString("firstName"));
         order.setLastName(resultSet.getString("lastName"));
         List<OrderItem> orderItemList = orderItemDao.loadOrderItemsOfOrderByOrderId(order.getId());
+        orderItemList.forEach(orderItem -> {
+            orderItem.setOrder(order);
+        });
         order.setOrderItems(orderItemList);
         return order;
     }

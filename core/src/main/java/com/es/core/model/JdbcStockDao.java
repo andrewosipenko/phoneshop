@@ -64,6 +64,13 @@ public class JdbcStockDao implements StockDao {
             "frontCameraMegapixels, ramGb, internalStorageGb, batteryCapacityMah, talkTimeHours, standByTimeHours, bluetooth, " +
             "positioning, imageUrl, description FROM stocks JOIN phones ON phones.id=phoneId WHERE (stock - reserved) > 0 AND price NOT IS NULL ORDER BY price DESC LIMIT ?, ?";
 
+    private static final String SELECT_STOCK_OF_PHONE_BY_PHONE_ID = "SELECT phoneId, stock, reserved, brand, model, price, displaySizeInches, weightGr, lengthMm, widthMm, " +
+            "heightMm, announced, deviceType, os, displayResolution, pixelDensity, displayTechnology, backCameraMegapixels, " +
+            "frontCameraMegapixels, ramGb, internalStorageGb, batteryCapacityMah, talkTimeHours, standByTimeHours, bluetooth, " +
+            "positioning, imageUrl, description FROM stocks JOIN phones ON phones.id=phoneId WHERE phoneId=?";
+
+    private static final String RESERVE_PHONES_BY_PHONE_ID = "UPDATE stocks SET reserved=reserved+? WHERE phoneId=?";
+
     @Resource
     private JdbcTemplate jdbcTemplate;
 
@@ -232,6 +239,16 @@ public class JdbcStockDao implements StockDao {
                 "positioning, imageUrl, description FROM stocks JOIN phones ON phones.id=phoneId WHERE ((stock - reserved) > 0) AND (price NOT IS NULL) AND (brand LIKE '%" + searchFor +
                 "%' OR model LIKE '%" + searchFor + "%' ) ORDER BY price DESC LIMIT ?, ?";
         return jdbcTemplate.query(SELECT_ALL_STOCKS_SEARCH_SORT_BY_PRICE_ORDER_DESC_BY_PAGE, new Object[]{pageId, total}, stockRowMapper);
+    }
+
+    @Override
+    public Stock loadStockOfPhoneByPhoneId(long phoneId) {
+        return jdbcTemplate.queryForObject(SELECT_STOCK_OF_PHONE_BY_PHONE_ID, new Object[]{phoneId}, stockRowMapper);
+    }
+
+    @Override
+    public void reservePhonesByPhoneId(long phoneId, long quantity) {
+        jdbcTemplate.update(RESERVE_PHONES_BY_PHONE_ID, new Object[]{quantity, phoneId});
     }
 
 
