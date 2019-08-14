@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Set;
 
 public class Phone {
+
     private Long id;
     private String brand;
     private String model;
@@ -27,7 +28,7 @@ public class Phone {
 
     private String os;
 
-    private Set<Color> colors = Collections.EMPTY_SET;
+    private Set<Color> colors = Collections.emptySet();
 
     private String displayResolution;
 
