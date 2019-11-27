@@ -1,5 +1,6 @@
 package com.es.core.model.order;
 
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class Order
     private String lastName;
     private String deliveryAddress;
     private String contactPhoneNo;
+    private String extraInfo;
 
     private OrderStatus status;
 
@@ -38,6 +40,7 @@ public class Order
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+        orderItems.forEach(orderItem -> orderItem.setOrder(this));
     }
 
     public BigDecimal getSubtotal() {
@@ -102,5 +105,13 @@ public class Order
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public String getExtraInfo() {
+        return extraInfo;
+    }
+
+    public void setExtraInfo(String extraInfo) {
+        this.extraInfo = extraInfo;
     }
 }

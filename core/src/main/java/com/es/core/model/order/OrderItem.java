@@ -8,6 +8,14 @@ public class OrderItem {
     private Order order;
     private Long quantity;
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId(){
+        return id;
+    }
+
     public Phone getPhone() {
         return phone;
     }
