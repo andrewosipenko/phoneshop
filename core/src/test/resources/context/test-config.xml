@@ -7,7 +7,7 @@
 
     <bean id="dataSourceTest" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="org.h2.Driver"/>
-        <property name="url" value="jdbc:h2:mem:schema"/>
+        <property name="url" value="jdbc:h2:mem:schema;DB_CLOSE_DELAY=-1"/>
     </bean>
 
     <bean id="jdbcTemplateTest" class="org.springframework.jdbc.core.JdbcTemplate">
