@@ -50,7 +50,7 @@ public class JdbcPhoneDao implements PhoneDao {
                 .withTableName(PHONES_TABLE_NAME)
                 .usingGeneratedKeyColumns(GENERATED_KEY_NAME);
         Map<String,Object> parameters = new HashMap<>();
-        fillMapForSaving(parameters, FIELD_NAMES, phone);
+        fillMapForSaving(parameters, phone);
         try {
             simpleJdbcInsert.execute(parameters);
         } catch (DataIntegrityViolationException e) {
@@ -85,33 +85,33 @@ public class JdbcPhoneDao implements PhoneDao {
         phone.setColors(phoneColors);
     }
 
-    protected void fillMapForSaving(Map<String,Object> map,String[] fieldNames, Phone phone){
-        map.put(fieldNames[0], phone.getId());
-        map.put(fieldNames[1], phone.getBrand());
-        map.put(fieldNames[2], phone.getModel());
-        map.put(fieldNames[3], phone.getPrice());
-        map.put(fieldNames[4], phone.getDisplaySizeInches());
-        map.put(fieldNames[5], phone.getWeightGr());
-        map.put(fieldNames[6], phone.getLengthMm());
-        map.put(fieldNames[7], phone.getWidthMm());
-        map.put(fieldNames[8], phone.getHeightMm());
-        map.put(fieldNames[9], phone.getAnnounced());
-        map.put(fieldNames[10], phone.getDeviceType());
-        map.put(fieldNames[11], phone.getOs());
-        map.put(fieldNames[12], phone.getDisplayResolution());
-        map.put(fieldNames[13], phone.getPixelDensity());
-        map.put(fieldNames[14], phone.getDisplayTechnology());
-        map.put(fieldNames[15], phone.getBackCameraMegapixels());
-        map.put(fieldNames[16], phone.getFrontCameraMegapixels());
-        map.put(fieldNames[17], phone.getRamGb());
-        map.put(fieldNames[18], phone.getInternalStorageGb());
-        map.put(fieldNames[19], phone.getBatteryCapacityMah());
-        map.put(fieldNames[20], phone.getTalkTimeHours());
-        map.put(fieldNames[21], phone.getStandByTimeHours());
-        map.put(fieldNames[22], phone.getBluetooth());
-        map.put(fieldNames[23], phone.getPositioning());
-        map.put(fieldNames[24], phone.getImageUrl());
-        map.put(fieldNames[25], phone.getDescription());
+    protected void fillMapForSaving(Map<String, Object> map, Phone phone){
+        map.put(JdbcPhoneDao.FIELD_NAMES[0], phone.getId());
+        map.put(JdbcPhoneDao.FIELD_NAMES[1], phone.getBrand());
+        map.put(JdbcPhoneDao.FIELD_NAMES[2], phone.getModel());
+        map.put(JdbcPhoneDao.FIELD_NAMES[3], phone.getPrice());
+        map.put(JdbcPhoneDao.FIELD_NAMES[4], phone.getDisplaySizeInches());
+        map.put(JdbcPhoneDao.FIELD_NAMES[5], phone.getWeightGr());
+        map.put(JdbcPhoneDao.FIELD_NAMES[6], phone.getLengthMm());
+        map.put(JdbcPhoneDao.FIELD_NAMES[7], phone.getWidthMm());
+        map.put(JdbcPhoneDao.FIELD_NAMES[8], phone.getHeightMm());
+        map.put(JdbcPhoneDao.FIELD_NAMES[9], phone.getAnnounced());
+        map.put(JdbcPhoneDao.FIELD_NAMES[10], phone.getDeviceType());
+        map.put(JdbcPhoneDao.FIELD_NAMES[11], phone.getOs());
+        map.put(JdbcPhoneDao.FIELD_NAMES[12], phone.getDisplayResolution());
+        map.put(JdbcPhoneDao.FIELD_NAMES[13], phone.getPixelDensity());
+        map.put(JdbcPhoneDao.FIELD_NAMES[14], phone.getDisplayTechnology());
+        map.put(JdbcPhoneDao.FIELD_NAMES[15], phone.getBackCameraMegapixels());
+        map.put(JdbcPhoneDao.FIELD_NAMES[16], phone.getFrontCameraMegapixels());
+        map.put(JdbcPhoneDao.FIELD_NAMES[17], phone.getRamGb());
+        map.put(JdbcPhoneDao.FIELD_NAMES[18], phone.getInternalStorageGb());
+        map.put(JdbcPhoneDao.FIELD_NAMES[19], phone.getBatteryCapacityMah());
+        map.put(JdbcPhoneDao.FIELD_NAMES[20], phone.getTalkTimeHours());
+        map.put(JdbcPhoneDao.FIELD_NAMES[21], phone.getStandByTimeHours());
+        map.put(JdbcPhoneDao.FIELD_NAMES[22], phone.getBluetooth());
+        map.put(JdbcPhoneDao.FIELD_NAMES[23], phone.getPositioning());
+        map.put(JdbcPhoneDao.FIELD_NAMES[24], phone.getImageUrl());
+        map.put(JdbcPhoneDao.FIELD_NAMES[25], phone.getDescription());
     }
 
 }
