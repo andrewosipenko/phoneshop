@@ -1,5 +1,6 @@
-package com.es.core.dao;
+package com.es.core.dao.impl;
 
+import com.es.core.dao.ColorDao;
 import com.es.core.model.phone.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
