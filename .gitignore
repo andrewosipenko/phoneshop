@@ -29,3 +29,6 @@ target
 # Eclipse
 *.classpath
 *.project
+
+# Questions
+/question*.txt
