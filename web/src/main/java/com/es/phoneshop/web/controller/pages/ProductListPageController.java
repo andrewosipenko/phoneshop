@@ -1,12 +1,13 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.model.DAO.phone.PhoneDao;
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.annotation.Resource;
+import com.es.core.model.phone.PhoneDao;
 
 @Controller
 @RequestMapping (value = "/productList")
