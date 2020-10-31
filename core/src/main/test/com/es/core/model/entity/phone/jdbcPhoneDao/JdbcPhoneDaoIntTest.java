@@ -143,7 +143,6 @@ public class JdbcPhoneDaoIntTest {
     public void savingNewPhoneEqualityTest() {
         String query = "SELECT * FROM phones WHERE brand = 'exBrand' and model = 'exModel'";
 
-        //setuping expected
         Phone expectedPhone = new Phone();
         Color color1 = new Color(1000L, "Black");
         Color color2 = new Color(1001L, "White");
@@ -154,13 +153,12 @@ public class JdbcPhoneDaoIntTest {
 
         jdbcPhoneDao.save(expectedPhone);
 
-        //getting actual
         Phone actualPhone = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Phone.class));
         List<Color> actualColors = jdbcTemplate.query(SELECT_CORRESPONDING_COLORS_SQL, new Object[]{expectedPhone.getId()},
                 new BeanPropertyRowMapper<>(Color.class));
         actualPhone.setColors(Set.copyOf(actualColors));
 
-        //compare
+
         assertEquals(expectedPhone, actualPhone);
     }
 
@@ -179,7 +177,6 @@ public class JdbcPhoneDaoIntTest {
     public void savingExistingPhoneTest() {
         String query = "SELECT * FROM phones WHERE phones.id = ?";
 
-        //checking equality before updating
         Phone expectedPhone = testPhones.get(1000L);
         Phone actualPhone = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Phone.class), 1000L);
         List<Color> actualColors = jdbcTemplate.query(SELECT_CORRESPONDING_COLORS_SQL, new Object[]{expectedPhone.getId()},
@@ -188,19 +185,16 @@ public class JdbcPhoneDaoIntTest {
 
         assertEquals(expectedPhone, actualPhone);
 
-        //checking inequality after changing of one record
         String updateTestString = "updated";
         expectedPhone.setDescription(updateTestString);
 
         assertNotEquals(expectedPhone.getDescription(), actualPhone.getDescription());
 
-        //checking the number of records while saving
         int quantityBeforeSaving = JdbcTestUtils.countRowsInTable(jdbcTemplate, "phones");
         jdbcPhoneDao.save(expectedPhone);
         int quantityAfterAdding = JdbcTestUtils.countRowsInTable(jdbcTemplate, "phones");
         assertEquals(quantityBeforeSaving, quantityAfterAdding);
 
-        //checking equality of records after reloading old record
         actualPhone = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Phone.class), 1000L);
         actualColors = jdbcTemplate.query(SELECT_CORRESPONDING_COLORS_SQL, new Object[]{expectedPhone.getId()},
                 new BeanPropertyRowMapper<>(Color.class));
