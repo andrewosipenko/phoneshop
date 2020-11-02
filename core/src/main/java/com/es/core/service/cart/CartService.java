@@ -1,14 +1,16 @@
 package com.es.core.service.cart;
 
+import com.es.core.model.entity.cart.Cart;
+
 import java.util.Map;
 
-public interface CartService {
+public interface CartService<SessionResource>{
 
-    Cart getCart();
+    Cart getCart(SessionResource sessionResource);
 
-    void addPhone(Long phoneId, Long quantity);
+    void addPhone(Cart cart, Long phoneId, Long quantity);
 
-    void update(Map<Long, Long> items);
+    void update(Cart cart, Map<Long, Long> items);
 
-    void remove(Long phoneId);
+    void remove(Cart cart, Long phoneId);
 }

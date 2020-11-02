@@ -60,11 +60,13 @@ public class JdbcPhoneDao implements PhoneDao {
             "WHERE phones.id NOT IN " +
             "(SELECT phones.id FROM phones " +
             "LEFT JOIN phone2color ON phones.id = phone2color.phoneId " +
-            "WHERE phone2color.phoneId IS NULL) " +
+            "WHERE phone2color.phoneId IS NULL) AND phones.price IS NOT NULL " +
             "LIMIT ?, ?) " +
             "AS phonesWithColor " +
             "JOIN phone2color ON phonesWithColor.id = phone2color.phoneId " +
             "JOIN colors ON colors.id = phone2color.colorId " +
+            "JOIN stocks ON phonesWithColor.id = stocks.phoneId " +
+            "AND stocks.stock > 0 " +
             "ORDER BY phonesWithColor.id ";
 
     private static final String UPDATE_PHONE_SQL_QUERY = "UPDATE phones SET brand=:brand, model=:model, price=:price, " +

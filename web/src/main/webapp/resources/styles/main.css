@@ -1,0 +1,28 @@
+.quantityInput {
+    max-width: 80px;
+}
+
+.price, .quantity {
+    text-align: right;
+}
+
+table {
+    border-collapse: collapse;
+    border: 1px solid gray;
+}
+
+th {
+    padding: 10px;
+    border: 1px solid gray;
+    vertical-align: top;
+}
+
+td {
+    padding: 10px;
+    border: 1px solid gray;
+    vertical-align: top;
+}
+
+img.product-tile {
+    max-width: 64px;
+}
