@@ -76,7 +76,7 @@
     <jsp:doBody/>
   </main>
   <p>
-    (c) Vlad Brown :)
+      (c) Expert-Soft & Vlad Brown :)
   </p>
 </body>
 </html>

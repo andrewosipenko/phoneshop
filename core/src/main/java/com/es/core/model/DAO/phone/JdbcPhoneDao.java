@@ -16,9 +16,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.es.core.model.DAO.phone.PhoneFieldsConstantsController.*;
 
@@ -66,8 +68,26 @@ public class JdbcPhoneDao implements PhoneDao {
             "JOIN phone2color ON phonesWithColor.id = phone2color.phoneId " +
             "JOIN colors ON colors.id = phone2color.colorId " +
             "JOIN stocks ON phonesWithColor.id = stocks.phoneId " +
-            "AND stocks.stock > 0 " +
+            "OR stocks.stock > 0 " +
             "ORDER BY phonesWithColor.id ";
+
+    private final static String SELECT_ALL_MATCHED_WITH_LIMIT_AND_SORT_SQL_QUERY = "SELECT phonesWithColor.id AS id, brand, " +
+            "model, price, displaySizeInches, weightGr, lengthMm, widthMm, heightMm, " +
+            "announced, deviceType, os, displayResolution, pixelDensity, displayTechnology, " +
+            "backCameraMegapixels, frontCameraMegapixels, ramGb, internalStorageGb, batteryCapacityMah, " +
+            "talkTimeHours, standByTimeHours, bluetooth, positioning, imageUrl, description, " +
+            "colors.id AS colors_id, " +
+            "colors.code AS colors_code " +
+            "FROM (SELECT * FROM phones " +
+            "WHERE phones.id NOT IN (SELECT phones.id FROM phones " +
+            "LEFT JOIN phone2color ON phones.id = phone2color.phoneId " +
+            "LEFT JOIN stocks ON phones.id = stocks.phoneId " +
+            "WHERE phone2color.phoneId IS NULL " +
+            "OR stocks.phoneId IS NULL OR stocks.stock <= 0 OR phones.price IS NULL) " +
+            "%s ORDER BY %s %s LIMIT %d, %d) " +
+            "AS phonesWithColor " +
+            "JOIN phone2color ON phonesWithColor.id = phone2color.phoneId " +
+            "JOIN colors ON colors.id = phone2color.colorId";
 
     private static final String UPDATE_PHONE_SQL_QUERY = "UPDATE phones SET brand=:brand, model=:model, price=:price, " +
             "displaySizeInches=:displaySizeInches, weightGr=:weightGr, lengthMm=:lengthMm, widthMm=:widthMm, " +
@@ -77,6 +97,15 @@ public class JdbcPhoneDao implements PhoneDao {
             "batteryCapacityMah=:batteryCapacityMah, talkTimeHours=:talkTimeHours, standByTimeHours=:standByTimeHours, " +
             "bluetooth=:bluetooth, positioning=:positioning, imageUrl=:imageUrl, description=:description " +
             "WHERE phones.id=:id";
+
+    private static final String COUNT_ALL_VALID_PHONES_SQL_QUERY = "SELECT COUNT(*) " +
+            "FROM phones " +
+            "WHERE phones.id NOT IN (SELECT phones.id " +
+            "FROM phones " +
+            "LEFT JOIN phone2color ON phones.id = phone2color.phoneId " +
+            "LEFT JOIN stocks ON phones.id = stocks.phoneId " +
+            "WHERE phone2color.phoneId IS NULL " +
+            "OR stocks.phoneId IS NULL OR stocks.stock <= 0 OR phones.price IS NULL)";
 
     private final static String DELETE_PHONE2COLOR_RECORDS_SQL_QUERY = "DELETE FROM phone2color WHERE phoneId = ?";
 
@@ -108,12 +137,33 @@ public class JdbcPhoneDao implements PhoneDao {
         }
     }
 
-
     @Transactional(readOnly = true)
     public List<Phone> findAll(int offset, int limit) throws DataAccessException {
         return jdbcTemplate.query(SELECT_ALL_WITH_LIMIT_SQL_QUERY, resultSetExtractor, offset, limit);
     }
-    
+
+    @Transactional(readOnly = true)
+    public List<Phone> findAll(String sortField, String order, String query, int offset, int limit) {
+        String querySQL = String.format(SELECT_ALL_MATCHED_WITH_LIMIT_AND_SORT_SQL_QUERY,
+                getMatchingQueryForString(query), "phones." + sortField, order, offset, limit);
+        return jdbcTemplate.query(querySQL, resultSetExtractor);
+    }
+
+    @Override
+    public int getRecordsQuantity(String query) {
+        return jdbcTemplate.queryForObject(COUNT_ALL_VALID_PHONES_SQL_QUERY + getMatchingQueryForString(query), Integer.class);
+    }
+
+    private String getMatchingQueryForString(String rawTerms) {
+        String[] processedTerms = rawTerms.toLowerCase().replaceAll("[\\s]{2,}", " ").split(" ");
+        List<String> terms = Arrays
+                .stream(processedTerms)
+                .collect(Collectors.toList());
+        StringBuilder pattern = new StringBuilder("%");
+        pattern.append(String.join("%", terms)).append("%");
+        return " AND (CONCAT(LOWER(phones.model), LOWER(phones.brand)) LIKE '" + pattern + "' )";
+    }
+
     private void update(final Phone phone) {
         NamedParameterJdbcTemplate parameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         parameterJdbcTemplate.update(UPDATE_PHONE_SQL_QUERY, new BeanPropertySqlParameterSource(phone));

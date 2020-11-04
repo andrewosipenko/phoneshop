@@ -3,7 +3,7 @@
 }
 
 .price, .quantity {
-    text-align: right;
+    /*text-align: right;*/
 }
 
 table {
@@ -13,16 +13,20 @@ table {
 
 th {
     padding: 10px;
-    border: 1px solid gray;
+    /*border: 1px solid gray;*/
     vertical-align: top;
 }
 
 td {
     padding: 10px;
-    border: 1px solid gray;
+    /*border: 1px solid gray;*/
     vertical-align: top;
 }
 
 img.product-tile {
     max-width: 64px;
+}
+
+.row-even {
+    background-color: #f8f9fa;
 }

@@ -11,4 +11,8 @@ public interface PhoneDao {
     void save(Phone phone);
 
     List<Phone> findAll(int offset, int limit);
+
+    List<Phone> findAll(String sort, String order, String query, int offset, int limit);
+
+    int getRecordsQuantity(String query);
 }

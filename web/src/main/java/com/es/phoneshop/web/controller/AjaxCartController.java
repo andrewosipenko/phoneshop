@@ -8,12 +8,12 @@ import com.es.phoneshop.web.controller.dto.MiniCartDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.validation.*;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.util.stream.Collectors;
 
 @RestController

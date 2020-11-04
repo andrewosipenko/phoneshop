@@ -201,5 +201,19 @@ public class JdbcPhoneDaoIntTest {
         actualPhone.setColors(Set.copyOf(actualColors));
         assertEquals(expectedPhone, actualPhone);
     }
+
+
+    @Test
+    public void matchingQueryTest() {
+        System.out.println(getMatchingQueryForString(""));
+        assertTrue(true);
+    }
+
+    private String getMatchingQueryForString(String rawTerms) {
+        List<String> terms = Arrays.stream(rawTerms.replaceAll("[\\s]{2,}", " ").split(" ")).collect(Collectors.toList());
+        StringBuilder pattern = new StringBuilder("%");
+        pattern.append(String.join("%", terms)).append("%");
+        return "(CONCAT(LOWER(phones.model), LOWER(phones.brand)) LIKE " + pattern + " )";
+    }
 }
 

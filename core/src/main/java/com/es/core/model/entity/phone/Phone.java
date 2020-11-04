@@ -1,12 +1,13 @@
 package com.es.core.model.entity.phone;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
-public class Phone {
+public class Phone implements Serializable {
 
     private Long id;
     private String brand;
