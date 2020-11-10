@@ -53,10 +53,10 @@
     });
 </script>
 
-<body class="product-list">
-  <header>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-          <a class="navbar-brand logo" href="${pageContext.servletContext.contextPath}">
+<body class="phonify-head">
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-fixed-top">
+        <a class="navbar-brand logo" href="${pageContext.servletContext.contextPath}">
               Phonify
           </a>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">

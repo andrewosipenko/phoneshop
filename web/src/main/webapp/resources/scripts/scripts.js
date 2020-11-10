@@ -5,28 +5,28 @@ function addPhoneToCart(phoneId) {
     let quantityInputMessageId = 'quantityInputMessage-' + phoneId;
     $(document).ready(function () {
         $('#' + addPhoneButtonId).prop("disabled", true);
-        $.post('ajaxCart/', {
+        $.post('/phoneshop-web/miniCart', {
             phoneId: phoneId,
             quantity: quantity
         }).done(function (data) {
-            $("#" + addPhoneButtonId).prop("disabled", false);
             if (data.successful) {
                 $("#" + quantityInputMessageId).text(data.message).css({'color': 'green'});
             } else {
                 $("#" + quantityInputMessageId).text(data.message).css({'color': 'red'});
             }
             loadMiniCart(data.miniCart)
+        }).always(function () {
+            $("#" + addPhoneButtonId).prop("disabled", false);
         })
     });
 }
 
-function clearError(phoneId) {
-    $("#quantityInputMessage-"+ phoneId).text("dick")
+function deletePhoneFromCart(phoneId) {
 }
 
 function getMiniCart() {
     $(document).ready(function () {
-        $.get('ajaxCart/', function (data) {
+        $.get('/phoneshop-web/miniCart', function (data) {
             loadMiniCart(data)
         })
     });

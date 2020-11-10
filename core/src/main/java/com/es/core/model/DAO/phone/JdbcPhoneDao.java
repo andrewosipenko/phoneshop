@@ -2,6 +2,8 @@ package com.es.core.model.DAO.phone;
 
 import com.es.core.model.DAO.CommonJdbcDaoUtils;
 import com.es.core.model.DAO.exceptions.IdUniquenessException;
+import com.es.core.model.DAO.phone.consts.SortField;
+import com.es.core.model.DAO.phone.consts.SortOrder;
 import com.es.core.model.entity.phone.Phone;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.es.core.model.DAO.phone.PhoneFieldsConstantsController.*;
+import static com.es.core.model.DAO.phone.consts.PhoneFieldsConstantsController.*;
 
 @Repository
 public class JdbcPhoneDao implements PhoneDao {
@@ -143,7 +145,7 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     @Transactional(readOnly = true)
-    public List<Phone> findAll(String sortField, String order, String query, int offset, int limit) {
+    public List<Phone> findAll(SortField sortField, SortOrder order, String query, int offset, int limit) {
         String querySQL = String.format(SELECT_ALL_MATCHED_WITH_LIMIT_AND_SORT_SQL_QUERY,
                 getMatchingQueryForString(query), "phones." + sortField, order, offset, limit);
         return jdbcTemplate.query(querySQL, resultSetExtractor);

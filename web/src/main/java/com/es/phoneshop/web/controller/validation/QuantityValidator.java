@@ -1,25 +1,24 @@
 package com.es.phoneshop.web.controller.validation;
 
-import com.es.phoneshop.web.controller.dto.AddPhoneRequestDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 
 @Service
-public class AddPhoneDtoValidator implements Validator {
+public class QuantityValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return AddPhoneRequestDTO.class.equals(aClass);
+        return QuantityInputWrapper.class.equals(aClass);
     }
 
     @Override
     public void validate(Object o, Errors errors) {
-        AddPhoneRequestDTO addPhoneRequestDTO = ((AddPhoneRequestDTO) o);
+        QuantityInputWrapper quantityInputWrapper = ((QuantityInputWrapper) o);
         long quantity = 0;
         try {
-            quantity = Long.parseLong(addPhoneRequestDTO.getQuantity());
+            quantity = Long.parseLong(quantityInputWrapper.getQuantity());
         } catch (NumberFormatException e) {
             errors.rejectValue("quantity", "Only digits are allowed");
         }

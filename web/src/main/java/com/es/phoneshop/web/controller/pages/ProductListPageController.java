@@ -1,6 +1,8 @@
 package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.model.DAO.phone.PhoneDao;
+import com.es.core.model.DAO.phone.consts.SortField;
+import com.es.core.model.DAO.phone.consts.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +31,7 @@ public class ProductListPageController {
         int offset = calculateOffset(Integer.parseInt(currentPage), DEFAULT_RECORDS_LIMIT, numberOfPages);
 
         model.addAttribute("numberOfPages", numberOfPages);
-        model.addAttribute("phones", phoneDao.findAll(sort, order, query, offset, DEFAULT_RECORDS_LIMIT));
+        model.addAttribute("phones", phoneDao.findAll(SortField.valueOf(sort), SortOrder.valueOf(order), query, offset, DEFAULT_RECORDS_LIMIT));
         return "productList";
     }
 

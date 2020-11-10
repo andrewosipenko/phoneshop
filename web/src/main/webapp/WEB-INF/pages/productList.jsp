@@ -4,9 +4,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<jsp:useBean id="phoneFields" class="com.es.core.model.DAO.phone.PhoneFieldsConstantsController" scope="application"/>
 <tags:master pageTitle="Product list">
-
     <nav class="navbar navbar-light bg-light">
         <a class="navbar-brand">Phones</a>
         <form class="form-inline">
@@ -26,40 +24,44 @@
             <th scope="col">Image</th>
             <th scope="col">
                 Brand
-                <tags:sortFields sort="${phoneFields.BRAND_UNIQUE}" order="ASC"/>
-                <tags:sortFields sort="${phoneFields.BRAND_UNIQUE}" order="DESC"/>
+                <tags:sortFields sort="brand" order="ASC"/>
+                <tags:sortFields sort="brand" order="DESC"/>
             </th>
             <th scope="col">
                 Model
-                <tags:sortFields sort="${phoneFields.MODEL_UNIQUE}" order="ASC"/>
-                <tags:sortFields sort="${phoneFields.MODEL_UNIQUE}" order="DESC"/>
+                <tags:sortFields sort="model" order="ASC"/>
+                <tags:sortFields sort="model" order="DESC"/>
             </th>
             <th scope="col">
                 Color
             </th>
             <th scope="col">
                 Display size
-                <tags:sortFields sort="${phoneFields.DISPLAY_SIZE_INCHES}" order="ASC"/>
-                <tags:sortFields sort="${phoneFields.DISPLAY_SIZE_INCHES}" order="DESC"/>
+                <tags:sortFields sort="displaySizeInches" order="ASC"/>
+                <tags:sortFields sort="displaySizeInches" order="DESC"/>
             </th>
             <th scope="col">
                 Price
-                <tags:sortFields sort="${phoneFields.PRICE}" order="ASC"/>
-                <tags:sortFields sort="${phoneFields.PRICE}" order="DESC"/>
+                <tags:sortFields sort="price" order="ASC"/>
+                <tags:sortFields sort="price" order="DESC"/>
             </th>
             <th scope="col">Quantity</th>
             <th scope="col">Action</th>
         </tr>
         </thead>
         <tbody>
-        <c:forEach var="phone" items="${phones}" varStatus="statusPhones">
-            <tr class="row-${statusPhones.index % 2 == 0 ? "even" : ""}">
+        <c:forEach var="phone" items="${phones}" varStatus="statusCartItems">
+            <tr class="row-${statusCartItems.index % 2 == 0 ? "even" : ""}">
                 <th scope="row">
                     <img class="product-tile"
                          src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
                 </th>
                 <td>${phone.brand}</td>
-                <td>${phone.model}</td>
+                <td>
+                    <a href="${pageContext.servletContext.contextPath}/productDetails/${phone.id}">
+                            ${phone.model}
+                    </a>
+                </td>
                 <td>
                     <c:forEach var="color" items="${phone.colors}" varStatus="statusColors">
                         <c:out value="${color.code}"/>

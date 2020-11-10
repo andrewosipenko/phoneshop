@@ -1,4 +1,4 @@
-package com.es.core.model.DAO.phone;
+package com.es.core.model.DAO.phone.consts;
 
 public class PhoneFieldsConstantsController {
     public static final String PHONE_ID = "id";
@@ -27,20 +27,4 @@ public class PhoneFieldsConstantsController {
     public static final String POSITIONING = "positioning";
     public static final String IMAGE_URL = "imageUrl";
     public static final String DESCRIPTION = "description";
-
-    public String getBRAND_UNIQUE() {
-        return BRAND_UNIQUE;
-    }
-
-    public String getMODEL_UNIQUE() {
-        return MODEL_UNIQUE;
-    }
-
-    public String getDISPLAY_SIZE_INCHES() {
-        return DISPLAY_SIZE_INCHES;
-    }
-
-    public String getPRICE() {
-        return PRICE;
-    }
 }

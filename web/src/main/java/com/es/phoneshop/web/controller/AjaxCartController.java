@@ -2,13 +2,11 @@ package com.es.phoneshop.web.controller;
 
 import com.es.core.model.entity.cart.Cart;
 import com.es.core.service.cart.CartService;
-import com.es.phoneshop.web.controller.dto.AddPhoneRequestDTO;
 import com.es.phoneshop.web.controller.dto.AddPhoneResponseDTO;
 import com.es.phoneshop.web.controller.dto.MiniCartDTO;
+import com.es.phoneshop.web.controller.validation.QuantityInputWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
@@ -18,19 +16,20 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.stream.Collectors;
 
-@Controller
-@RequestMapping(value = "/ajaxCart")
+
+@RestController
+@RequestMapping(value = "/miniCart")
 public class AjaxCartController {
 
     @Resource
-    private Validator addPhoneDtoValidator;
+    private Validator quantityValidator;
 
     @Autowired
     private CartService cartService;
 
-    @InitBinder("addPhoneRequestDTO")
+    @InitBinder("quantityInputWrapper")
     protected void initBinder(WebDataBinder binder) {
-        binder.setValidator(addPhoneDtoValidator);
+        binder.setValidator(quantityValidator);
     }
 
     @GetMapping
@@ -43,16 +42,19 @@ public class AjaxCartController {
     }
 
     @PostMapping
-    public AddPhoneResponseDTO addPhone(AddPhoneRequestDTO addPhoneRequestDTO,
+    public AddPhoneResponseDTO addPhone(@RequestParam Long phoneId,
+                                        QuantityInputWrapper quantityInputWrapper,
                                         HttpSession httpSession,
                                         BindingResult bindingResult) {
 
         Cart cart = cartService.getCart(httpSession);
-        addPhoneDtoValidator.validate(addPhoneRequestDTO, bindingResult);
+
+        quantityValidator.validate(quantityInputWrapper, bindingResult);
         if (bindingResult.hasErrors()) {
             return createAddPhoneResponseDTO(false, cart, bindingResult);
         }
-        cartService.addPhone(cart, addPhoneRequestDTO.getPhoneId(), Long.valueOf(addPhoneRequestDTO.getQuantity()));
+
+        cartService.addPhone(cart, phoneId, Long.valueOf(quantityInputWrapper.getQuantity()));
         return createAddPhoneResponseDTO(true, cart, bindingResult);
     }
 
@@ -76,3 +78,4 @@ public class AjaxCartController {
         return responseDTO;
     }
 }
+

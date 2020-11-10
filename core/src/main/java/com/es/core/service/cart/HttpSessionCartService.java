@@ -33,7 +33,8 @@ public class HttpSessionCartService implements CartService {
         synchronized (httpSession) {
             Cart cart = (Cart) httpSession.getAttribute(CART_SESSION_ATTRIBUTE);
             if (cart == null) {
-                httpSession.setAttribute(CART_SESSION_ATTRIBUTE, cart = new Cart());
+                cart = new Cart();
+                httpSession.setAttribute(CART_SESSION_ATTRIBUTE, cart);
             }
             return cart;
         }
