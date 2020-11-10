@@ -9,17 +9,20 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-public class HttpSessionCartService implements CartService<HttpSession> {
+public class HttpSessionCartService implements CartService {
 
     private static final String CART_SESSION_ATTRIBUTE = HttpSessionCartService.class.getName() + ".cart";
-
-    private final PhoneDao phoneDao;
-
+    private static final String OUT_OF_STOCK_ERROR_MESSAGE = "Out of stock";
+    private static final String NOT_PRESENT_STOCK_ERROR_MESSAGE = "This product isn't available now";
+    private static final String UPDATE_SUCCESS_MESSAGE = "Successfully updated";
+    @Autowired
+    private PhoneDao phoneDao;
     @Autowired
     public HttpSessionCartService(PhoneDao phoneDao) {
         this.phoneDao = phoneDao;
@@ -93,7 +96,7 @@ public class HttpSessionCartService implements CartService<HttpSession> {
 
     private BigDecimal getCartItemTotalPrice(CartItem cartItem) {
         var phonePrice = cartItem.getProduct().getPrice();
-        if(phonePrice != null) {
+        if (phonePrice != null) {
             return phonePrice.multiply(BigDecimal.valueOf(cartItem.getQuantity()));
         } else return BigDecimal.ZERO;
     }

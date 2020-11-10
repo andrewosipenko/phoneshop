@@ -2,11 +2,12 @@ package com.es.core.service.cart;
 
 import com.es.core.model.entity.cart.Cart;
 
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
-public interface CartService<SessionResource>{
+public interface CartService {
 
-    Cart getCart(SessionResource sessionResource);
+    Cart getCart(HttpSession httpSession);
 
     void addPhone(Cart cart, Long phoneId, Long quantity);
 

@@ -4,6 +4,7 @@ import com.es.core.model.DAO.phone.PhoneDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,10 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ProductListPageController {
 
     private static final int DEFAULT_RECORDS_LIMIT = 10;
+
     @Autowired
     private PhoneDao phoneDao;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String showProductList(@RequestParam(required = false, defaultValue = "brand") String sort,
                                   @RequestParam(required = false, defaultValue = "ASC") String order,
                                   @RequestParam(required = false, defaultValue = " ") String query,

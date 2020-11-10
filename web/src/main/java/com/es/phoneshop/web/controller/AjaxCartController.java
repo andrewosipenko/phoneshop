@@ -8,23 +8,25 @@ import com.es.phoneshop.web.controller.dto.MiniCartDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.stream.Collectors;
 
-@RestController
+@Controller
 @RequestMapping(value = "/ajaxCart")
 public class AjaxCartController {
-    @Autowired
-    @Qualifier("addPhoneDtoValidator")
+
+    @Resource
     private Validator addPhoneDtoValidator;
 
     @Autowired
-    private CartService<HttpSession> cartService;
+    private CartService cartService;
 
     @InitBinder("addPhoneRequestDTO")
     protected void initBinder(WebDataBinder binder) {
