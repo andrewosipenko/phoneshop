@@ -1,5 +1,7 @@
 package com.es.core.model.DAO.phone;
 
+import com.es.core.model.DAO.phone.consts.SortField;
+import com.es.core.model.DAO.phone.consts.SortOrder;
 import com.es.core.model.entity.phone.Phone;
 
 import java.util.List;
@@ -11,4 +13,8 @@ public interface PhoneDao {
     void save(Phone phone);
 
     List<Phone> findAll(int offset, int limit);
+
+    List<Phone> findAll(SortField sort, SortOrder order, String query, int offset, int limit);
+
+    int getRecordsQuantity(String query);
 }

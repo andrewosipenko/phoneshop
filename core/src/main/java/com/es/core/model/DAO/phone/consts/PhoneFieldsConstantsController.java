@@ -1,4 +1,4 @@
-package com.es.core.model.DAO.phone;
+package com.es.core.model.DAO.phone.consts;
 
 public class PhoneFieldsConstantsController {
     public static final String PHONE_ID = "id";

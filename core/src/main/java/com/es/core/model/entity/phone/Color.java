@@ -1,8 +1,9 @@
 package com.es.core.model.entity.phone;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Color {
+public class Color implements Serializable {
     private Long id;
     private String code;
 
@@ -40,7 +41,7 @@ public class Color {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, code);
+        return Objects.hash(id);
     }
 
     @Override
