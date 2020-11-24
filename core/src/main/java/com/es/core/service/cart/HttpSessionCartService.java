@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -58,14 +59,16 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public Map<Long, String> update(Cart cart, Map<Long, Long> items, Map<Long, String> errors) {
-        if (validateUpdate(items, errors).isEmpty()) {
+        errors.putAll(validateUpdate(items));
+        if (errors.isEmpty()) {
             updateCart(cart, items);
             recalculateCart(cart);
         }
         return errors;
     }
 
-    private Map<Long, String> validateUpdate(Map<Long, Long> items, Map<Long, String> errors) {
+    private Map<Long, String> validateUpdate(Map<Long, Long> items) {
+        Map<Long, String> errors = new HashMap<>();
         for (var tuple : items.entrySet()) {
             Optional<Stock> optionalStock = stockDao.get(tuple.getKey());
             Stock stock;
