@@ -1,9 +1,11 @@
 package com.es.core.service.cart;
 
 import com.es.core.model.DAO.phone.PhoneDao;
+import com.es.core.model.DAO.stock.StockDao;
 import com.es.core.model.entity.cart.Cart;
 import com.es.core.model.entity.cart.CartItem;
 import com.es.core.model.entity.phone.Phone;
+import com.es.core.model.entity.phone.Stock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +26,7 @@ public class HttpSessionCartService implements CartService {
     @Autowired
     private PhoneDao phoneDao;
     @Autowired
-    public HttpSessionCartService(PhoneDao phoneDao) {
-        this.phoneDao = phoneDao;
-    }
+    private StockDao stockDao;
 
     @Override
     public Cart getCart(HttpSession httpSession) {
@@ -58,13 +58,45 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void update(Cart cart, Map<Long, Long> items) {
-        throw new UnsupportedOperationException("TODO");
+    public Map<Long, String> update(Cart cart, Map<Long, Long> items, Map<Long, String> errors) {
+        errors.putAll(validateUpdate(items));
+        if (errors.isEmpty()) {
+            updateCart(cart, items);
+            recalculateCart(cart);
+        }
+        return errors;
+    }
+
+    private Map<Long, String> validateUpdate(Map<Long, Long> items) {
+        Map<Long, String> errors = new HashMap<>();
+        for (var tuple : items.entrySet()) {
+            Optional<Stock> optionalStock = stockDao.get(tuple.getKey());
+            Stock stock;
+            if (optionalStock.isPresent()) {
+                stock = optionalStock.get();
+            } else {
+                errors.put(tuple.getKey(), NOT_PRESENT_STOCK_ERROR_MESSAGE);
+                continue;
+            }
+            if (tuple.getValue() > stock.getStock()) {
+                errors.put(tuple.getKey(), OUT_OF_STOCK_ERROR_MESSAGE);
+            }
+        }
+        return errors;
+    }
+
+    private void updateCart(Cart cart, Map<Long, Long> items) {
+        items.forEach((key, value) -> cart.getItems()
+                .stream()
+                .filter(cartItem -> cartItem.getProduct().getId().equals(key))
+                .findAny()
+                .ifPresent(cartItem -> cartItem.setQuantity(value)));
     }
 
     @Override
     public void remove(Cart cart, Long phoneId) {
-        throw new UnsupportedOperationException("TODO");
+        cart.getItems().removeIf(cartItem -> cartItem.getProduct().getId().equals(phoneId));
+        recalculateCart(cart);
     }
 
     private void recalculateCart(Cart cart) {
