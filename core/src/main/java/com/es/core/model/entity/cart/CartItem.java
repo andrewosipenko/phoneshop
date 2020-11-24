@@ -13,7 +13,7 @@ public class CartItem implements Serializable, Cloneable{
         this.quantity = quantity;
     }
 
-    public Phone getProduct() {
+    public Phone getPhone() {
         return phone;
     }
 

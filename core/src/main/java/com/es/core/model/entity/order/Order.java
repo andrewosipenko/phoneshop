@@ -3,12 +3,14 @@ package com.es.core.model.entity.order;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class Order
-{
+public class Order {
+
     private Long id;
+    private String secureId;
+
     private List<OrderItem> orderItems;
     /**
-     *  A sum of order item prices;
+     * A sum of order item prices;
      */
     private BigDecimal subtotal;
     private BigDecimal deliveryPrice;
@@ -21,15 +23,16 @@ public class Order
     private String lastName;
     private String deliveryAddress;
     private String contactPhoneNo;
+    private String additionalInformation;
 
     private OrderStatus status;
 
-    public Long getId() {
-        return id;
+    public String getSecureId() {
+        return secureId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setSecureId(String secureId) {
+        this.secureId = secureId;
     }
 
     public List<OrderItem> getOrderItems() {
@@ -39,6 +42,15 @@ public class Order
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 
     public BigDecimal getSubtotal() {
         return subtotal;
@@ -102,5 +114,13 @@ public class Order
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public String getAdditionalInformation() {
+        return additionalInformation;
+    }
+
+    public void setAdditionalInformation(String additionalInformation) {
+        this.additionalInformation = additionalInformation;
     }
 }
