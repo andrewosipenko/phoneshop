@@ -65,8 +65,10 @@ public class JdbcOrderDao implements OrderDao {
     private final ResultSetExtractor<List<Order>> resultSetExtractor = JdbcTemplateMapperFactory
             .newInstance().addKeys("secureId", "orderItems_phone_id")
             .newResultSetExtractor(Order.class);
+
     @Autowired
     CommonJdbcDaoUtils commonJdbcDaoUtils;
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -74,12 +76,14 @@ public class JdbcOrderDao implements OrderDao {
     @Override
     public Optional<Order> get(String secureId) {
         List<Order> queryResult = jdbcTemplate.query(SELECT_ONE_BY_ID_SQL_QUERY, new Object[]{secureId}, resultSetExtractor);
+
         if (queryResult.size() > 1) {
             throw new IdUniquenessException(secureId, queryResult.size());
         }
         if (queryResult.size() == 0) {
             return Optional.empty();
         }
+
         Order resultOrder = queryResult.get(0);
         resultOrder.getOrderItems().forEach(orderItem -> orderItem.setOrder(resultOrder));
         return Optional.of(resultOrder);
@@ -90,6 +94,7 @@ public class JdbcOrderDao implements OrderDao {
     public void save(Order order) {
         boolean isEntityExist = commonJdbcDaoUtils.isEntityExist(ORDERS_TABLE_NAME,
                 Map.of("secureId", order.getSecureId()));
+
         if (!isEntityExist) {
             insert(order);
         } else {

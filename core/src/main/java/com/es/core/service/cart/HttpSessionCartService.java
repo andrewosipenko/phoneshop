@@ -90,14 +90,14 @@ public class HttpSessionCartService implements CartService {
     private void updateCart(Cart cart, Map<Long, Long> items) {
         items.forEach((key, value) -> cart.getItems()
                 .stream()
-                .filter(cartItem -> cartItem.getPhone().getId().equals(key))
+                .filter(cartItem -> cartItem.getProduct().getId().equals(key))
                 .findAny()
                 .ifPresent(cartItem -> cartItem.setQuantity(value)));
     }
 
     @Override
     public void remove(Cart cart, Long phoneId) {
-        cart.getItems().removeIf(cartItem -> cartItem.getPhone().getId().equals(phoneId));
+        cart.getItems().removeIf(cartItem -> cartItem.getProduct().getId().equals(phoneId));
         recalculateCart(cart);
     }
 
@@ -125,12 +125,12 @@ public class HttpSessionCartService implements CartService {
     private Optional<CartItem> findItemInCart(Cart cart, Long productId) {
         return cart.getItems()
                 .stream()
-                .filter(existingCartItem -> existingCartItem.getPhone().getId().equals(productId))
+                .filter(existingCartItem -> existingCartItem.getProduct().getId().equals(productId))
                 .findAny();
     }
 
     private BigDecimal getCartItemTotalPrice(CartItem cartItem) {
-        var phonePrice = cartItem.getPhone().getPrice();
+        var phonePrice = cartItem.getProduct().getPrice();
         if (phonePrice != null) {
             return phonePrice.multiply(BigDecimal.valueOf(cartItem.getQuantity()));
         } else return BigDecimal.ZERO;
@@ -149,15 +149,15 @@ public class HttpSessionCartService implements CartService {
     public Map<Long, String> trimRedundantProducts(Cart cart) {
         Map<Long, String> changesInfo = new HashMap<>();
         for (var cartItem : cart.getItems()) {
-            var optionalStock = stockDao.get(cartItem.getPhone().getId());
+            var optionalStock = stockDao.get(cartItem.getProduct().getId());
             if (!optionalStock.isPresent()) {
                 cartItem.setQuantity(0L);
-                changesInfo.put(cartItem.getPhone().getId(), QUANTITY_CHANGED_OUT_OF_STOCK_MESSAGE);
+                changesInfo.put(cartItem.getProduct().getId(), QUANTITY_CHANGED_OUT_OF_STOCK_MESSAGE);
                 continue;
             }
             if (optionalStock.get().getStock() < cartItem.getQuantity()) {
                 cartItem.setQuantity(Long.valueOf(optionalStock.get().getStock()));
-                changesInfo.put(cartItem.getPhone().getId(), QUANTITY_CHANGED_OUT_OF_STOCK_MESSAGE);
+                changesInfo.put(cartItem.getProduct().getId(), QUANTITY_CHANGED_OUT_OF_STOCK_MESSAGE);
             }
         }
         recalculateCart(cart);

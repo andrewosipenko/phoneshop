@@ -65,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
         for (var item : cart.getItems()) {
             var orderItem = new OrderItem();
             orderItem.setOrder(order);
-            orderItem.setPhone(item.getPhone());
+            orderItem.setPhone(item.getProduct());
             orderItem.setQuantity(item.getQuantity());
             orderItems.add(orderItem);
         }

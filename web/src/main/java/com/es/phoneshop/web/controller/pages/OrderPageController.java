@@ -6,7 +6,6 @@ import com.es.core.service.cart.CartService;
 import com.es.core.service.order.OrderService;
 import com.es.core.service.order.OutOfStockException;
 import com.es.phoneshop.web.controller.dto.CustomerInfoDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,7 +35,8 @@ public class OrderPageController {
 
     @Resource
     private Validator customerInfoValidator;
-    @Autowired
+
+    @Resource
     private CartService cartService;
 
     @InitBinder("consumerInfoDto")

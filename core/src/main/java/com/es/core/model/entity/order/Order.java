@@ -9,14 +9,10 @@ public class Order {
     private String secureId;
 
     private List<OrderItem> orderItems;
-    /**
-     * A sum of order item prices;
-     */
+
     private BigDecimal subtotal;
     private BigDecimal deliveryPrice;
-    /**
-     * <code>subtotal</code> + <code>deliveryPrice</code>
-     */
+
     private BigDecimal totalPrice;
 
     private String firstName;
@@ -50,7 +46,6 @@ public class Order {
     public void setId(Long id) {
         this.id = id;
     }
-
 
     public BigDecimal getSubtotal() {
         return subtotal;

@@ -50,8 +50,6 @@ public class JdbcPhoneDaoIntTestConfiguration {
     @Bean
     public JdbcPhoneDao jdbcPhoneDao(@Qualifier("test") DataSource testDataSource) {
         var jdbcPhoneDao = new JdbcPhoneDao();
-        //replace with reflection api
-        //jdbcPhoneDao.setDataSource(testDataSource);
         return jdbcPhoneDao;
     }
 }

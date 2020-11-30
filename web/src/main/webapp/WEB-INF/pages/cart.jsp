@@ -43,28 +43,28 @@
             <tr class="row-${statusOrderItems.index % 2 == 0 ? "even" : ""}">
                 <th scope="row">
                     <img class="product-tile"
-                         src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${orderItem.phone.imageUrl}">
+                         src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${orderItem.product.imageUrl}">
                 </th>
-                <td>${orderItem.phone.brand}</td>
+                <td>${orderItem.product.brand}</td>
                 <td>
-                    <a href="${pageContext.servletContext.contextPath}/productDetails/${orderItem.phone.id}">
-                            ${orderItem.phone.model}
+                    <a href="${pageContext.servletContext.contextPath}/productDetails/${orderItem.product.id}">
+                            ${orderItem.product.model}
                     </a>
                 </td>
                 <td>
-                    <c:forEach var="color" items="${orderItem.phone.colors}" varStatus="statusColors">
+                    <c:forEach var="color" items="${orderItem.product.colors}" varStatus="statusColors">
                         <c:out value="${color.code}"/>
                         <c:if test="${not statusColors.last}">
                             <c:out value=","/>
                         </c:if>
                     </c:forEach>
                 </td>
-                <td>${orderItem.phone.displaySizeInches}</td>
-                <td class="price">${orderItem.phone.price} $</td>
+                <td>${orderItem.product.displaySizeInches}</td>
+                <td class="price">${orderItem.product.price} $</td>
                 <td style="max-width: 120px">
                     <fmt:formatNumber value="${orderItem.quantity}" var="quantity"/>
-                    <c:set var="error" value="${errors[orderItem.phone.id]}"/>
-                    <input id="quantity-${orderItem.phone.id}"
+                    <c:set var="error" value="${errors[orderItem.product.id]}"/>
+                    <input id="quantity-${orderItem.product.id}"
                            form="updateForm"
                            class="quantityInput quantity"
                            type="text"
@@ -73,7 +73,7 @@
                     <input type="hidden"
                            form="updateForm"
                            name="phoneId"
-                           value="${orderItem.phone.id}"/>
+                           value="${orderItem.product.id}"/>
                     <c:choose>
                         <c:when test="${not empty error}">
                             <div class="error">
@@ -88,8 +88,8 @@
                     </c:choose>
                 </td>
                 <td>
-                    <form action="${pageContext.servletContext.contextPath}/cart/${orderItem.phone.id}" method="post">
-                        <button id="btn-addPhoneToCart-${orderItem.phone.id}"
+                    <form action="${pageContext.servletContext.contextPath}/cart/${orderItem.product.id}" method="post">
+                        <button id="btn-addPhoneToCart-${orderItem.product.id}"
                                 type="submit"
                                 class="btn btn-outline-danger">
                             Delete
