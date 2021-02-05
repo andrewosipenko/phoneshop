@@ -1,25 +1,43 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.cart.CartService;
+import com.es.core.dto.CartPageDTO;
+import com.es.facade.CartPageFacade;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 @Controller
-@RequestMapping(value = "/cart")
 public class CartPageController {
-    @Resource
-    private CartService cartService;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public void getCart() {
-        cartService.getCart();
+    @Resource
+    private CartPageFacade cartPageFacade;
+
+    @GetMapping (value = "/cart")
+    public String getCart(Model model) {
+        model.addAttribute("cart", cartPageFacade.getCart());
+        return "cart";
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public void updateCart() {
-        cartService.update(null);
+    @PutMapping (value = "/cart")
+    public String updateCart(@ModelAttribute("cartPageDTO") @Valid CartPageDTO cartPageDTO, BindingResult bindingResult, Model model) {
+        if (!bindingResult.hasErrors()) {
+            model.addAttribute("cartPageDTO", cartPageDTO);
+            model.addAttribute("cart", cartPageFacade.updateCart(cartPageDTO));
+            return "redirect:/cart";
+        }
+        return "cart";
+    }
+
+    @PutMapping (value = "/cart/deleteCartItem")
+    public String deleteCartItemFromCart(@RequestParam (name = "idToDelete", required = false) Long idToDelete) {
+        cartPageFacade.deleteCartItemFromCart(idToDelete);
+        return "redirect:/cart";
     }
 }

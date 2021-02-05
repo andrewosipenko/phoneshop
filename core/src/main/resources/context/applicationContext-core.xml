@@ -7,20 +7,92 @@
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                            http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
-    <context:component-scan base-package="com.es.core" />
+    <context:component-scan base-package="com.es"/>
+
+    <import resource="classpath:context/appContext-configurer.xml"/>
+
+    <bean id="cartPageFacade" class="com.es.facade.CartPageFacade"/>
+
+    <bean id="productDetailsPageFacade" class="com.es.facade.ProductDetailsPageFacade"/>
+
+    <bean id="ajaxAddingToCartFacade" class="com.es.facade.AddingToCartFacade"/>
+
+    <bean id="productListFacade" class="com.es.facade.ProductListFacade"/>
+
+    <bean id="quantityForAddingOnPLPForm" class="com.es.core.form.ProductListPageForm"/>
+
+    <bean id="phoneDataPopulator" class="com.es.core.populator.impl.PhoneModelPopulator"/>
+
+    <bean id="phoneDataConverter" class="com.es.core.converter.PhoneDataConverter">
+        <property name="populators">
+            <list>
+                <ref bean="phoneDataPopulator"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="cartDataPopulator" class="com.es.core.populator.impl.CartModelToCartDataPopulator"/>
+
+    <bean id="cartDataConverter" class="com.es.core.converter.CartDataConverter">
+        <property name="cartPopulators">
+            <list>
+                <ref bean="cartDataPopulator"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="cartModelPopulator" class="com.es.core.populator.impl.CartPageDTOToCartModelPopulator"/>
+
+    <bean id="cartDTOConverter" class="com.es.core.converter.CartPageDTOConverter">
+        <property name="populators">
+            <list>
+                <ref bean="cartModelPopulator"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="parameterPopulator" class="com.es.core.populator.impl.ProductListPageParametersModelPopulator"/>
+
+    <bean id="pageParametersConverter" class="com.es.core.converter.ProductListPageParametersConverter">
+        <property name="paramPopulators">
+            <list>
+                <ref bean="parameterPopulator"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="addingToCartDataPopulator" class="com.es.core.populator.impl.AddingToCartDataPopulator"/>
+
+    <bean id="addingToCartConverter" class="com.es.core.converter.AddingToCartConverter">
+        <property name="addingToCartDataPopulators">
+            <list>
+                <ref bean="addingToCartDataPopulator"/>
+            </list>
+        </property>
+    </bean>
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="org.h2.Driver" />
-        <property name="url" value="jdbc:h2:~/phoneshop/db/h2" />
-        <property name="username" value="sa" />
-        <property name="password" value="" />
+        <property name="driverClassName" value="${db.driver}"/>
+        <property name="url" value="${db.url}"/>
+        <property name="username" value="${db.username}"/>
+        <property name="password" value="${db.password}"/>
     </bean>
 
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource"/>
     </bean>
 
+    <bean id="sort" class="com.es.core.util.FindAndSortUtil"/>
+
+    <bean id="cartPageDTO" class="com.es.core.dto.CartPageDTO"/>
+
+    <bean id="cartInfoDTO" class="com.es.core.dto.CartInfoDTO"/>
+
+    <bean id="validator"
+          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+
     <jdbc:initialize-database enabled="true" data-source="dataSource">
-        <jdbc:script location="classpath:db/schema.sql" />
+        <jdbc:script location="classpath:db/schema.sql"/>
     </jdbc:initialize-database>
+
 </beans>
