@@ -35,7 +35,6 @@ public class PhoneResultSetExtractor implements ResultSetExtractor<List<Phone>> 
                 phones.add(phone);
             }
         }
-        System.out.println(phones);
         return phones;
     }
 
