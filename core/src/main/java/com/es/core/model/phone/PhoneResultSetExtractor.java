@@ -6,36 +6,32 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class PhoneResultSetExtractor implements ResultSetExtractor<List<Phone>> {
     @Override
     public List<Phone> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-        List<Phone> phones = new ArrayList<>();
+        Map<Long, Phone> phoneMap = new HashMap<>();
         while (resultSet.next()) {
-            Phone phone = new Phone();
-            Long id = resultSet.getLong("id");
-            phone.setId(id);
+            Long phoneId = resultSet.getLong("id");
+            Phone phone = phoneMap.computeIfAbsent(phoneId, id -> createPhone(id, resultSet));
             Color color = findColor(resultSet);
-            Optional<Phone> optionalPhone = phones.stream().filter(p -> p.getId().equals(id)).findAny();
-            if (optionalPhone.isPresent()) {
-                int phoneIndex = phones.stream()
-                        .map(Phone::getId)
-                        .collect(Collectors.toList())
-                        .indexOf(id);
-                if (color.getCode() != null) {
-                    phones.get(phoneIndex).getColors().add(color);
-                }
-            } else {
-                setFieldValues(phone, resultSet);
-                if (color.getCode() != null) {
-                    Set<Color> colorSet = new HashSet<>(Arrays.asList(color));
-                    phone.setColors(colorSet);
-                }
-                phones.add(phone);
+            if (color.getCode() != null) {
+                phone.getColors().add(color);
             }
         }
-        return phones;
+        return new ArrayList<>(phoneMap.values());
+    }
+
+    private Phone createPhone(Long phoneId, ResultSet resultSet) {
+        Phone phone = new Phone();
+        try {
+            phone.setId(phoneId);
+            setFieldValues(phone, resultSet);
+            phone.setColors(new HashSet<>());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return phone;
     }
 
     private void setFieldValues(Phone phone, ResultSet resultSet) throws SQLException, DataAccessException {

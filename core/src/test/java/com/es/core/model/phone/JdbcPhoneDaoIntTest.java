@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:resources/context/applicationContext-core-test.xml")
+@ContextConfiguration("classpath:context/applicationContext-core-test.xml")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class JdbcPhoneDaoIntTest {
     @Resource
@@ -138,14 +138,12 @@ public class JdbcPhoneDaoIntTest {
     public void testSavePhoneNull() {
         Phone phone = null;
         phoneDao.save(phone);
-        fail("Phone can't be null");
     }
 
     @Test(expected = ArgumentIsNullException.class)
     public void testSavePhoneWithNullBrandOrModel() {
         Phone phone = new Phone();
         phoneDao.save(phone);
-        fail("Brand or model can't be null");
     }
 
     @Test
