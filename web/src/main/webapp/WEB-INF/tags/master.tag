@@ -1,5 +1,6 @@
 <%@ tag trimDirectiveWhitespaces="true" %>
 <%@ attribute name="pageTitle" required="true" %>
+<%@ attribute name="cart" required="true" type="com.es.core.model.cart.Cart" %>
 
 <html>
 <head>
@@ -18,9 +19,8 @@
     <div class="display-1">
         <a style="color: black" class="text-decoration-none"
            href="${pageContext.servletContext.contextPath}/productList">Phonify</a>
-        <a href="${pageContext.servletContext.contextPath}/cart" class="btn btn-dark btn-lg float-end"
+        <a id="cart" href="${pageContext.servletContext.contextPath}/cart" class="btn btn-dark btn-lg float-end"
            style="margin-top: 25px">
-            My cart: ${cart.totalQuantity} items ${cart.totalCost} $
         </a>
     </div>
     <hr style="height: 2px">
@@ -29,6 +29,37 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
             crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#cart').html('My cart: ${cart.totalQuantity} items ${cart.totalCost} $')
+            $('button').click(function () {
+                let id = $(this).attr('id')
+                let input = $('#input' + id).prop('value')
+                $.ajax({
+                    type: 'POST',
+                    url: '${pageContext.servletContext.contextPath}/ajaxCart',
+                    data: {
+                        phoneId: id,
+                        quantity: input
+                    },
+                    success: function (dto) {
+                        console.log(dto.totalQuantity)
+                        $('[id^=message]').hide()
+                        let message = $('#message' + id)
+                        if (dto.success === true) {
+                            message.attr('class', 'alert alert-success')
+                            $('#cart').html('My cart: ' + dto.totalQuantity.toString() + ' items ' + dto.totalCost.toString() + '$')
+                        } else {
+                            message.prop('class', 'alert alert-danger')
+                        }
+                        message.html(dto.message)
+                        message.show()
+                    }
+                })
+            })
+        })
+    </script>
     <jsp:doBody/>
 </main>
 <footer>

@@ -21,7 +21,7 @@ public class CartItemValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return CartItem.class.equals(aClass);
+        return CartItemForm.class.equals(aClass);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class CartItemValidator implements Validator {
         phoneDao.get(phoneId).ifPresent(phone -> {
             Stock stock = phoneDao.findStock(phone);
             if (stock.getStock() < quantity + quantityInCart) {
-                errors.reject("Out of stock. Available: " + stock.getStock());
+                errors.reject("Out of stock. Available: " + (stock.getStock() - quantityInCart));
             }
         });
     }

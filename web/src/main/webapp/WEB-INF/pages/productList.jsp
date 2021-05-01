@@ -2,8 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
-
-<tags:master pageTitle="Product List">
+<tags:master pageTitle="Product List" cart="${cart}">
     <form class="input-group mb-3">
         <input name="query" type="text" class="form-control" placeholder="Search" value="${param.query}"><br>
         <div class="input-group-append">
@@ -56,8 +55,8 @@
                 </td>
                 <td>${phone.displaySizeInches}''</td>
                 <td>$ ${phone.price}</td>
-                <td style="width: 10%">
-                    <input id="input${phone.id}" class="form-control"><br>
+                <td style="width: 15%">
+                    <input id="input${phone.id}" class="form-control" value="1"><br>
                     <div id="message${phone.id}"></div>
                 </td>
                 <td>
@@ -115,42 +114,4 @@
             </a>
         </li>
     </ul>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('[id^=input]').attr('value', 1)
-            $('button').click(function () {
-                let id = $(this).attr('id')
-                let input = $('#input' + id).prop('value')
-                $.ajax({
-                    type: 'POST',
-                    url: '${pageContext.servletContext.contextPath}/ajaxCart',
-                    contentType : 'application/json',
-                    data: JSON.stringify({
-                        phoneId: id,
-                        quantity: input
-                    }),
-                    success: function (msg) {
-                        console.log(msg)
-                        $('[id^=message]').attr('hidden', true)
-                        let message = $('#message' + id)
-                        message.attr('class', 'alert alert-success')
-                        message.attr('value', msg)
-                        message.attr('hidden', 'false')
-                        $('#input' + id).attr(value, '1');
-                    },
-                    error: function (msg) {
-                        console.log("error")
-                        console.log(msg)
-                        $('[id^=message]').attr('hidden', true)
-                        let message = $('#message' + id)
-                        message.attr('class', 'alert alert-danger')
-                        message.attr('value', msg)
-                        message.attr('hidden', 'false')
-                    }
-                })
-            })
-        })
-    </script>
 </tags:master>

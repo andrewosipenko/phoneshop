@@ -1,8 +1,6 @@
 package com.es.phoneshop.web.controller.pages;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
+import com.es.core.dao.PhoneDao;
 import com.es.core.model.cart.Cart;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.SortField;
@@ -10,13 +8,12 @@ import com.es.core.model.phone.SortOrder;
 import com.es.core.service.CartService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import com.es.core.dao.PhoneDao;
-
+import javax.annotation.Resource;
 import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "/productList")

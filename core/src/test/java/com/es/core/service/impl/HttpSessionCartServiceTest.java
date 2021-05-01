@@ -6,9 +6,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:context/applicationContext-core-test.xml")
+@WebAppConfiguration
 public class HttpSessionCartServiceTest {
     @Resource
     private Cart cart;
@@ -27,10 +28,8 @@ public class HttpSessionCartServiceTest {
     private HttpSessionCartService service;
     private Long quantityInCart = 5L;
 
-
     @Before
     public void init() {
-        MockitoAnnotations.initMocks(this);
         Long phoneId = 1002L;
         service.addPhone(new CartItem(phoneId, quantityInCart));
     }
