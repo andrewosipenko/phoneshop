@@ -70,7 +70,9 @@ public class HttpSessionCartService implements CartService {
         cart.setTotalQuantity(cart.getItems().stream().mapToLong(CartItem::getQuantity).sum());
         cart.setTotalCost(cart.getItems().stream().map(item -> {
             Optional<Phone> phone = phoneDao.get(item.getPhoneId());
-            phone.orElseThrow(PhoneNotFoundException::new);
+            if (!phone.isPresent()) {
+                throw new PhoneNotFoundException(item.getPhoneId());
+            }
             return phone.get().getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
         }).reduce(BigDecimal.ZERO, BigDecimal::add));
     }
