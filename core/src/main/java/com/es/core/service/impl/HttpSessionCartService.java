@@ -28,12 +28,12 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void addPhone(CartItem item) {
-        int index = findIndexById(item.getPhoneId());
+        int index = findIndexById(item.getPhone().getId());
         if (index == -1) {
             cart.getItems().add(item);
         } else {
             long quantityInCart = cart.getItems().get(index).getQuantity();
-            cart.getItems().set(index, new CartItem(item.getPhoneId(), item.getQuantity() + quantityInCart));
+            cart.getItems().set(index, new CartItem(item.getPhone(), item.getQuantity() + quantityInCart));
         }
         recalculateCart();
     }
@@ -41,7 +41,7 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void update(List<CartItem> items) {
         for (CartItem item : items) {
-            int index = findIndexById(item.getPhoneId());
+            int index = findIndexById(item.getPhone().getId());
             cart.getItems().set(index, item);
         }
         recalculateCart();
@@ -61,7 +61,8 @@ public class HttpSessionCartService implements CartService {
 
     private int findIndexById(Long phoneId) {
         return cart.getItems().stream()
-                .map(CartItem::getPhoneId)
+                .map(CartItem::getPhone)
+                .map(Phone::getId)
                 .collect(Collectors.toList())
                 .indexOf(phoneId);
     }
@@ -69,9 +70,9 @@ public class HttpSessionCartService implements CartService {
     private void recalculateCart() {
         cart.setTotalQuantity(cart.getItems().stream().mapToLong(CartItem::getQuantity).sum());
         cart.setTotalCost(cart.getItems().stream().map(item -> {
-            Optional<Phone> phone = phoneDao.get(item.getPhoneId());
+            Optional<Phone> phone = phoneDao.get(item.getPhone().getId());
             if (!phone.isPresent()) {
-                throw new PhoneNotFoundException(item.getPhoneId());
+                throw new PhoneNotFoundException(item.getPhone().getId());
             }
             return phone.get().getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
         }).reduce(BigDecimal.ZERO, BigDecimal::add));

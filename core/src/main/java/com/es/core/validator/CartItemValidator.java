@@ -3,6 +3,7 @@ package com.es.core.validator;
 import com.es.core.dao.PhoneDao;
 import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartItem;
+import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.Stock;
 import com.es.core.service.CartService;
 import org.springframework.stereotype.Component;
@@ -45,7 +46,8 @@ public class CartItemValidator implements Validator {
     private Long findQuantityInCart(Long phoneId) {
         Cart cart = cartService.getCart();
         int index = cart.getItems().stream()
-                .map(CartItem::getPhoneId)
+                .map(CartItem::getPhone)
+                .map(Phone::getId)
                 .collect(Collectors.toList())
                 .indexOf(phoneId);
         return index != -1 ? cart.getItems().get(index).getQuantity() : 0L;

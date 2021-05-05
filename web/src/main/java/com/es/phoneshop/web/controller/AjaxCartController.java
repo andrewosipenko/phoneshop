@@ -1,6 +1,8 @@
 package com.es.phoneshop.web.controller;
 
+import com.es.core.dao.PhoneDao;
 import com.es.core.model.cart.CartItem;
+import com.es.core.model.phone.Phone;
 import com.es.core.service.CartService;
 import com.es.core.validator.CartItemForm;
 import com.es.core.validator.CartItemValidator;
@@ -20,6 +22,8 @@ public class AjaxCartController {
     @Resource
     private CartService cartService;
     @Resource
+    private PhoneDao phoneDao;
+    @Resource
     private CartItemValidator validator;
     private static final String ADDED_TO_CART = "Added to cart successfully";
 
@@ -36,7 +40,8 @@ public class AjaxCartController {
         if (bindingResult.hasErrors()) {
             dto.setMessage(bindingResult.getAllErrors().get(0).getCode());
         } else {
-            CartItem cartItem = new CartItem(Long.parseLong(cartItemForm.getPhoneId()), Long.parseLong(cartItemForm.getQuantity()));
+            Phone phone = phoneDao.get(Long.parseLong(cartItemForm.getPhoneId())).get();
+            CartItem cartItem = new CartItem(phone, Long.parseLong(cartItemForm.getQuantity()));
             cartService.addPhone(cartItem);
             setDtoSuccess(dto);
         }

@@ -32,4 +32,13 @@
         <error-code>400</error-code>
         <location>/WEB-INF/pages/pageNotFound.jsp</location>
     </error-page>
+
+    <filter>
+        <filter-name>hiddenHttpMethodFilter</filter-name>
+        <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>hiddenHttpMethodFilter</filter-name>
+        <servlet-name>dispatcher</servlet-name>
+    </filter-mapping>
 </web-app>
