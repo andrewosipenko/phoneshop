@@ -1,4 +1,6 @@
-package com.es.core.model.phone;
+package com.es.core.dao.phoneDao;
+
+import com.es.core.model.entity.phone.Phone;
 
 import java.util.List;
 import java.util.Optional;
