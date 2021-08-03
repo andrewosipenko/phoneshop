@@ -1,6 +1,6 @@
-package com.es.core.model.entity.order;
+package com.es.core.model.order;
 
-import com.es.core.model.entity.phone.Phone;
+import com.es.core.model.phone.Phone;
 
 
 public class OrderItem {

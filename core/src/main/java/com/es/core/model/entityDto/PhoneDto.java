@@ -1,7 +1,7 @@
 package com.es.core.model.entityDto;
 
-import com.es.core.model.entity.phone.Color;
-import com.es.core.model.entity.phone.Phone;
+import com.es.core.model.phone.Color;
+import com.es.core.model.phone.Phone;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -9,33 +9,33 @@ import java.util.Date;
 import java.util.Set;
 
 public class PhoneDto {
-    private Long id;
-    private String brand;
-    private String model;
-    private BigDecimal price;
-    private BigDecimal displaySizeInches;
-    private Integer weightGr;
-    private BigDecimal lengthMm;
-    private BigDecimal widthMm;
-    private BigDecimal heightMm;
-    private Date announced;
-    private String deviceType;
-    private String os;
+    private final Long id;
+    private final String brand;
+    private final String model;
+    private final BigDecimal price;
+    private final BigDecimal displaySizeInches;
+    private final Integer weightGr;
+    private final BigDecimal lengthMm;
+    private final BigDecimal widthMm;
+    private final BigDecimal heightMm;
+    private final Date announced;
+    private final String deviceType;
+    private final String os;
+    private final String displayResolution;
+    private final Integer pixelDensity;
+    private final String displayTechnology;
+    private final BigDecimal backCameraMegapixels;
+    private final BigDecimal frontCameraMegapixels;
+    private final BigDecimal ramGb;
+    private final BigDecimal internalStorageGb;
+    private final Integer batteryCapacityMah;
+    private final BigDecimal talkTimeHours;
+    private final BigDecimal standByTimeHours;
+    private final String bluetooth;
+    private final String positioning;
+    private final String imageUrl;
+    private final String description;
     private Set<Color> colors = Collections.EMPTY_SET;
-    private String displayResolution;
-    private Integer pixelDensity;
-    private String displayTechnology;
-    private BigDecimal backCameraMegapixels;
-    private BigDecimal frontCameraMegapixels;
-    private BigDecimal ramGb;
-    private BigDecimal internalStorageGb;
-    private Integer batteryCapacityMah;
-    private BigDecimal talkTimeHours;
-    private BigDecimal standByTimeHours;
-    private String bluetooth;
-    private String positioning;
-    private String imageUrl;
-    private String description;
 
     public PhoneDto(Long id, String brand, String model, BigDecimal price, BigDecimal displaySizeInches,
                     Integer weightGr, BigDecimal lengthMm, BigDecimal widthMm, BigDecimal heightMm, Date announced,

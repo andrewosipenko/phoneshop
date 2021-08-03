@@ -1,4 +1,4 @@
-package com.es.core.model.entity.order;
+package com.es.core.model.order;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -7,7 +7,7 @@ public class Order {
     private Long id;
     private List<OrderItem> orderItems;
     /**
-     *  A sum of order item prices;
+     * A sum of order item prices;
      */
     private BigDecimal subtotal;
     private BigDecimal deliveryPrice;

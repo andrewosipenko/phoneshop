@@ -13,7 +13,7 @@
     <context:component-scan base-package="com.es.core"/>
 
 
-    <context:property-placeholder location="classpath:config/application.properties"/>
+    <context:property-placeholder location="classpath:config/application-test.properties"/>
 
     <import resource="applicationContext-core.xml"/>
 

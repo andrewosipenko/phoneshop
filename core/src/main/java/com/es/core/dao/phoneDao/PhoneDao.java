@@ -1,12 +1,15 @@
 package com.es.core.dao.phoneDao;
 
-import com.es.core.model.entity.phone.Phone;
+import com.es.core.dao.CommonDao;
+import com.es.core.model.phone.Phone;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface PhoneDao {
+public interface PhoneDao extends CommonDao<Phone> {
+
     Optional<Phone> get(Long key);
-    void save(Phone phone);
+
     List<Phone> findAll(int offset, int limit);
+
 }
