@@ -6,11 +6,6 @@ public interface CommonDao<T> {
 
     List<T> findAll(int offset, int limit);
 
-    void save(T model);
-
-    void update(T model);
-
-    void delete(T model);
-
+    void save(final T model);
 
 }
