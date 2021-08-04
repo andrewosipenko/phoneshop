@@ -5,21 +5,24 @@ import com.es.core.model.phone.Phone;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath:context/applicationContext-test.xml", "classpath:context/applicationContext-core.xml"})
+@ContextConfiguration("classpath:context/applicationContext-test.xml")
 public class JdbcPhoneDaoTest {
 
     @Resource
@@ -62,7 +65,33 @@ public class JdbcPhoneDaoTest {
         assertTrue(phoneFromDao.isPresent());
         assertEquals(phoneFromDao.get().getBrand(), testPhone02.getBrand());
         assertEquals(phoneFromDao.get().getModel(), testPhone02.getModel());
+        testPhone01.setId(testPhone02.getId());
+        phoneDao.save(testPhone01);
+        final Optional<Phone> phoneFromDao2 = phoneDao.get(id);
+        assertTrue(phoneFromDao2.isPresent());
+        assertEquals(phoneFromDao2.get().getBrand(), testPhone01.getBrand());
+        assertEquals(phoneFromDao2.get().getModel(), testPhone01.getModel());
+
     }
 
+    private static final long CORRECT_PHONE_ID = 101l;
+    private static final long INCORRECT_PHONE_ID = 100001l;
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getTestIllegalArgException() {
+        phoneDao.get(null);
+    }
+
+    @Test
+    public void getTestException() {
+        Optional<Phone> phone = phoneDao.get(INCORRECT_PHONE_ID);
+        assertFalse(phone.isPresent());
+    }
+
+    @Test
+    public void testFindAll() {
+        List<Phone> phones = phoneDao.findAll(0, 10);
+        assertEquals(2, phones.size());
+    }
 
 }

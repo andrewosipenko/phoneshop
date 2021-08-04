@@ -18,8 +18,8 @@
     <import resource="applicationContext-core.xml"/>
 
     <jdbc:initialize-database>
-        <jdbc:script location="classpath:db/schema.sql"/>
-        <jdbc:script location="classpath:db/demodata-phones.sql"/>
+        <jdbc:script location="classpath:db/schema-test.sql"/>
+        <jdbc:script location="classpath:db/demodata-phones-test.sql"/>
     </jdbc:initialize-database>
 
 </beans>
