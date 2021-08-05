@@ -12,6 +12,7 @@
         <td>Image</td>
         <td>Brand</td>
         <td>Model</td>
+        <td>Colors</td>
         <td>Price</td>
       </tr>
     </thead>
@@ -22,6 +23,12 @@
         </td>
         <td>${phone.brand}</td>
         <td>${phone.model}</td>
+        <td>
+          <c:forEach var="color" items="${phone.colors}">
+            <c:out value=" ${color.code}"/>
+            <br/>
+          </c:forEach>
+        </td>
         <td>$ ${phone.price}</td>
       </tr>
     </c:forEach>
