@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Set;
 
 public class Phone {
+
     private Long id;
     private String brand;
     private String model;
