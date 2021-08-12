@@ -80,7 +80,5 @@ create table item2order
     id       BIGINT AUTO_INCREMENT primary key,
     orderId  BIGINT,
     phoneId  BIGINT,
-    quantity SMALLINT,
-    CONSTRAINT FK_item2order_phones FOREIGN KEY (phoneId) REFERENCES phones (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT FK_item2color_orders FOREIGN KEY (orderId) REFERENCES orders (id) ON DELETE CASCADE ON UPDATE CASCADE
+    quantity SMALLINT
 );
