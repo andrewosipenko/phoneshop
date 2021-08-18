@@ -1,4 +1,4 @@
-package com.es.phoneshop.web.controller.pages;
+package com.es.phoneshop.web.controller.pages.cart;
 
 import com.es.core.service.phone.PhoneStockService;
 import org.springframework.stereotype.Component;

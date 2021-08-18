@@ -51,7 +51,7 @@ public class HttpSessionCartService implements CartService {
             cart.getCartItems().stream().filter(cartItem -> cartItem.getPhone().getId().equals(phoneId))
                     .findFirst().ifPresent(cartItem -> cartItem.setQuantity(currentQuantity + quantity));
         } else {
-            CartItem cartItemToAdd = new CartItem(phoneToAdd, phoneId);
+            CartItem cartItemToAdd = new CartItem(phoneToAdd, quantity);
             cart.getCartItems().add(cartItemToAdd);
         }
         recalculateCartPrice(cart);

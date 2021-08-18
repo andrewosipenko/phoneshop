@@ -1,4 +1,5 @@
-package com.es.phoneshop.web.controller.pages;
+package com.es.phoneshop.web.controller.pages.cart;
+
 
 public class AddProductToCartForm {
 

@@ -35,7 +35,6 @@
                     <tr>
                         <td>
                             <a href="${pageContext.request.contextPath}/productDetails/${phoneId}">
-                                <!-- todo: implement this -->
                                 <img style="max-height: 200px"
                                      src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
                             </a>
@@ -56,7 +55,10 @@
                             <span id="quantity-message-${phoneId}" style="display: none"></span>
                         </td>
                         <td>
-                            <button class="btn btn-outline-dark"
+                            <button
+                                    type="button"
+                                    class="btn btn-outline-dark"
+                                    data-mdb-ripple-color="dark"
                                     onclick="addToCart(${phoneId}, '${pageContext.request.contextPath}/ajaxCart')">Add to cart
                             </button>
                         </td>

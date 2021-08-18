@@ -40,6 +40,6 @@ public class ProductPageServiceImpl implements ProductPageService {
 
     @Override
     public Optional<Phone> getPhone(Long id) {
-        return Optional.empty();
+        return phoneDao.get(id);
     }
 }

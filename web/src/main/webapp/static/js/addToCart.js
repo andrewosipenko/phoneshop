@@ -1,27 +1,25 @@
-$(function () {
-    let token = $("meta[name='_csrf']").attr("content");
-    let header = $("meta[name='_csrf_header']").attr("content");
-    $(document).ajaxSend(function (e, xhr, options) {
-        xhr.setRequestHeader(header, token);
-    });
-});
+
 
 function addToCart(phoneId, url) {
     $.ajax({
-        url: url,
-        type: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
+        url: url,
+        type: 'post',
+        dataType: 'json',
         data: JSON.stringify({
             phoneId: phoneId,
             quantity: $('#quantity-' + phoneId).val()
         }),
-        datatype: 'json',
-
         success: function (response) {
             showAddToCartResponse('ok', 'Successfully added to cart', phoneId);
+            console.log(response);
+            let totalCount = response.infoCart.totalCount;
+            let subtotalPrice = response.infoCart.subtotalPrice;
+            $('#totalCount').html(totalCount);
+            $('#subtotalPrice').html(subtotalPrice);
         },
         error: function (errorResponse) {
             showAddToCartResponse('error', errorResponse.responseText, phoneId);

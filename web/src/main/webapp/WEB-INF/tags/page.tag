@@ -3,6 +3,7 @@
 <%@ attribute name="pageTitle" required="true" %>
 
 <html>
+
 <head>
     <title>${pageTitle}</title>
     <!-- connection jquery -->
@@ -19,50 +20,55 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
             crossorigin="anonymous"></script>
-    <meta name="_csrf" content="${_csrf.token}"/>
-    <meta name="_csrf_header" content="${_csrf.headerName}"/>
 </head>
 <body>
 
-<header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="${pageContext.request.contextPath}">Phonify</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page"
-                           href="${pageContext.request.contextPath}/productList">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                    </li>
-                </ul>
+<div class="cover-container d-flex w-100 h-100 mx-auto flex-column">
+    <header class="mb-auto">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="${pageContext.request.contextPath}/productList">Phonify</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page"
+                               href="${pageContext.request.contextPath}/productList">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                        </li>
+                    </ul>
+                </div>
+                <form class="d-flex" action="<c:url value="/productList"/>">
+                    <input class="form-control mr-2" type="search" placeholder="Search" aria-label="Search"
+                           name="query">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
             </div>
-            <form class="d-flex" action="<c:url value="/productList"/>">
-                <input class="form-control mr-2" type="search" placeholder="Search" aria-label="Search" name="query">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+        </nav>
+        <div class="float-right">
+            <c:if test="${infoCart != null}">
+                <c:set var="infoCart" value="${infoCart}"/>
+                <a href="${pageContext.request.contextPath}/cart" class="btn btn-outline-dark" id="updateCartInfo">
+                    My cart: <span id="totalCount">${infoCart.totalCount}</span> items <span
+                        id="subtotalPrice">${infoCart.subtotalPrice}</span> $
+                </a>
+            </c:if>
         </div>
-    </nav>
-    <div class="float-right">
-        <c:if test="${infoCart != null}">
-            <a href="${pageContext.request.contextPath}/cart" class="btn btn-outline-dark">
-                My cart: ${infoCart.totalCount} items ${infoCart.subtotalPrice}$
-            </a>
-        </c:if>
-    </div>
-</header>
-<main>
-    <div class="container mt-2 px-lg-2">
-        <jsp:doBody/>
-    </div>
+    </header>
 
-    <footer class="bg-dark text-center text-white">
+    <main>
+        <div class="container mt-2 px-lg-2">
+            <jsp:doBody/>
+        </div>
+    </main>
+
+    <footer class="mt-auto footer bg-dark text-center text-white ">
         <!-- Grid container -->
         <div class="container p-4 pb-0">
             <!-- Section: Social media -->
@@ -101,7 +107,6 @@
         </div>
         <!-- Copyright -->
     </footer>
-
-</main>
+</div>
 </body>
 </html>
