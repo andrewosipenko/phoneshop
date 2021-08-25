@@ -13,33 +13,23 @@ import org.springframework.validation.Errors;
 import javax.annotation.Resource;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestConfig.class,
-loader = AnnotationConfigContextLoader.class)
+        loader = AnnotationConfigContextLoader.class)
 class AddToCartValidatorTest {
-
-    @Resource
-    private AddToCartValidator addToCartValidatorTest;
-
-    @Resource
-    @Mock
-    private PhoneStockService phoneStockService;
 
     private static final Long PHONE_ID = 1002L;
     private static final Long QUANTITY = 2L;
-
     private static final AddProductToCartForm CART_FORM = new AddProductToCartForm(1002L, "2");
     private static final AddProductToCartForm CART_FORM_NULL = new AddProductToCartForm(1002L, null);
     private static final AddProductToCartForm CART_FORM_LESS_ZERO = new AddProductToCartForm(1002L, "-3");
-
-
-
+    @Resource
+    private AddToCartValidator addToCartValidatorTest;
+    @Resource
+    @Mock
+    private PhoneStockService phoneStockService;
 
     @Test
     void validateWithQuantityNull() {

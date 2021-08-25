@@ -1,28 +1,19 @@
 package com.es.phoneshop.web.controller;
 
 import com.es.core.exceptions.DataFormValidateException;
-import com.es.core.model.cart.InfoCart;
 import com.es.core.service.cart.CartService;
 import com.es.phoneshop.web.controller.pages.cart.AddPhoneResponse;
 import com.es.phoneshop.web.controller.pages.cart.AddProductToCartForm;
 import com.es.phoneshop.web.controller.pages.cart.AddToCartValidator;
-import org.springframework.context.MessageSource;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -36,8 +27,6 @@ public class AjaxCartController {
     @Resource
     private AddToCartValidator addToCartValidator;
 
-    @Resource
-    private MessageSource messageSource;
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
@@ -47,18 +36,24 @@ public class AjaxCartController {
 
     @PostMapping
     public @ResponseBody
-    AddPhoneResponse addPhone(@RequestBody @Validated AddProductToCartForm addToCartForm, BindingResult bindingResult) {
+    ResponseEntity<String> addPhone(@RequestBody @Validated AddProductToCartForm addToCartForm,
+                                    BindingResult bindingResult) {
         AddPhoneResponse addPhoneResponse = new AddPhoneResponse();
         if (bindingResult.hasErrors()) {
-            List<String> errors = bindingResult.getFieldErrors("quantity").stream()
-                    .map((fe) -> messageSource.getMessage(fe, null)).collect(Collectors.toList());
             addPhoneResponse.setValid(false);
-            addPhoneResponse.setErrors(errors);
+            addPhoneResponse.setErrors(bindingResult.getFieldErrors().stream().map(fieldError -> fieldError.getCode().toString()).collect(Collectors.toList()));
+            throw new DataFormValidateException(bindingResult);
         } else {
             cartService.addPhone(addToCartForm.getPhoneId(), Long.valueOf(addToCartForm.getQuantity()));
             addPhoneResponse.setValid(true);
         }
         addPhoneResponse.setInfoCart(cartService.getInfoCart());
-        return addPhoneResponse;
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String jsonBody = objectMapper.writeValueAsString(addPhoneResponse);
+            return ResponseEntity.ok().body(jsonBody);
+        } catch (JsonProcessingException e) {
+            throw new DataFormValidateException(bindingResult);
+        }
     }
 }

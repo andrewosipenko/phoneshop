@@ -2,7 +2,7 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-       xmlns="http://www.springframework.org/schema/beans" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                            http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
@@ -34,12 +34,28 @@
         <property name="generatedKeyName" value="id"/>
     </bean>
 
+    <bean id="orderSimpleJdbcInsert" class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+        <constructor-arg ref="jdbcTemplate"/>
+        <property name="tableName" value="orders"/>
+        <property name="generatedKeyName" value="orderId"/>
+    </bean>
+
+    <bean id="orderItemSimpleJdbcInsert" class="org.springframework.jdbc.core.simple.SimpleJdbcInsert">
+        <constructor-arg ref="jdbcTemplate"/>
+        <property name="tableName" value="item2order"/>
+        <property name="generatedKeyName" value="id"/>
+    </bean>
+
     <bean id="phoneBeanPropertyRowMapper" class="org.springframework.jdbc.core.BeanPropertyRowMapper">
         <constructor-arg value="com.es.core.model.phone.Phone"/>
     </bean>
 
     <bean id="colorBeanPropertyRowMapper" class="org.springframework.jdbc.core.BeanPropertyRowMapper">
-            <constructor-arg value="com.es.core.model.phone.Color"/>
+        <constructor-arg value="com.es.core.model.phone.Color"/>
+    </bean>
+
+    <bean id="orderBeanPropertyRowMapper" class="org.springframework.jdbc.core.BeanPropertyRowMapper">
+        <constructor-arg value="com.es.core.model.order.Order"/>
     </bean>
 
     <jdbc:initialize-database enabled="${db.insertSchema}">

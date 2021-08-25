@@ -28,7 +28,8 @@
                 <input type="hidden" name="_method" value="POST"/>
                 <br><br>
                 <div class="float-right">
-                    <a href="${pageContext.request.contextPath}/order" class="btn btn-info" style="margin: 10px">Order</a>
+                    <a href="${pageContext.request.contextPath}/order" class="btn btn-info"
+                       style="margin: 10px">Order</a>
                 </div>
                 <table class="table table-striped table-bordered table-sm align-content-center"
                        style="text-align: center">
@@ -61,11 +62,13 @@
                                 <form:input path="cartItems['${phoneId}']" type="text" class="form-control"
                                             placeholder="New quantity"
                                             name="quantity" value="${cartItem.quantity}"/><br>
-                                <c:if test="${errors}">
-                                    <p class="note note-danger">
-                                        <strong>Error:</strong>
-                                        <form:errors path="cartItems['${phoneId}']" cssStyle="color: red"/>
-                                    </p>
+                                <c:if test="${hasErrors}">
+                                    <form:errors path="cartItems['${phoneId}']" cssStyle="color: red">
+                                        <p class="note note-danger">
+                                            <strong>Error:</strong>
+                                            <form:errors path="cartItems['${phoneId}']"/>
+                                        </p>
+                                    </form:errors>
                                 </c:if>
                             </td>
                             <td class="align-content-sm-center">

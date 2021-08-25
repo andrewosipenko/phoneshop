@@ -1,5 +1,3 @@
-
-
 function addToCart(phoneId, url) {
     $.ajax({
         headers: {

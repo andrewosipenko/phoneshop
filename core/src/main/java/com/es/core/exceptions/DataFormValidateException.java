@@ -15,7 +15,6 @@ public class DataFormValidateException extends RuntimeException {
         this.bindingResult = bindingResult;
     }
 
-    // todo: create exception controller
     public BindingResult getBindingResult() {
         return bindingResult;
     }

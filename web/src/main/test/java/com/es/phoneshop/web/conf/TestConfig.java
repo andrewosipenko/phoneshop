@@ -1,10 +1,8 @@
 package com.es.phoneshop.web.conf;
 
 import com.es.core.service.cart.CartService;
-import com.es.core.service.cart.HttpSessionCartService;
 import com.es.core.service.phone.PhoneStockService;
 import com.es.core.service.phone.ProductPageService;
-import com.es.core.service.phone.impl.ProductPageServiceImpl;
 import com.es.phoneshop.web.controller.pages.ProductListPageController;
 import com.es.phoneshop.web.controller.pages.cart.AddToCartValidator;
 import com.es.phoneshop.web.controller.pages.cart.UpdateCartValidator;

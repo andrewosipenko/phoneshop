@@ -8,14 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -47,10 +40,10 @@ public class CartPageController {
 
     @PostMapping("/update")
     public String updateCart(@ModelAttribute @Validated CartItemsForUpdate cartItemsForUpdate,
-                           BindingResult bindingResult, Model model) {
+                             BindingResult bindingResult, Model model) {
         boolean containErrors = bindingResult.hasErrors();
-        model.addAttribute("errors", containErrors);
-        if(!containErrors) {
+        model.addAttribute("hasErrors", containErrors);
+        if (!containErrors) {
             Map<Long, Long> cartItems = cartService.formMapForUpdate(cartItemsForUpdate.getCartItems());
             cartService.update(cartItems);
         }
