@@ -10,20 +10,15 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
+@Repository
 public class JdbcPhoneDaoImpl implements PhoneDao {
 
     private static final String GET_ALL_PHONES_WITH_LIMIT_OFFSET_QUERY = "SELECT * FROM phones " +
@@ -43,6 +38,8 @@ public class JdbcPhoneDaoImpl implements PhoneDao {
     private static final String GET_PHONES_COUNT_OF_PAGE = "SELECT COUNT(*) FROM phones INNER JOIN stocks ON phones.id = stocks.phoneId " +
             "WHERE stocks.stock > 0 AND phones.price IS NOT NULL ";
 
+    private List<Color> colorsList = new ArrayList<>();
+
     @Resource
     private BeanPropertyRowMapper<Phone> phoneBeanPropertyRowMapper;
 
@@ -51,7 +48,6 @@ public class JdbcPhoneDaoImpl implements PhoneDao {
 
     @Resource
     private SimpleJdbcInsert phoneSimpleJdbcInsert;
-
 
     @Resource
     private JdbcTemplate jdbcTemplate;
@@ -98,6 +94,7 @@ public class JdbcPhoneDaoImpl implements PhoneDao {
                 return colors.size();
             }
         });
+        colorsList.addAll(colors);
     }
 
     private void addPhone(final Phone phone) {
@@ -117,6 +114,7 @@ public class JdbcPhoneDaoImpl implements PhoneDao {
         jdbcTemplate.update(DELETE_FROM_PHONE_2_COLOR_WHERE_PHONE_ID, phone.getId());
     }
 
+    @Override
     public List<Phone> findAll(int offset, int limit) {
         List<Phone> phones = jdbcTemplate.query(GET_ALL_PHONES_WITH_LIMIT_OFFSET_QUERY,
                 phoneBeanPropertyRowMapper, offset, limit);
@@ -128,7 +126,7 @@ public class JdbcPhoneDaoImpl implements PhoneDao {
 
     @Override
     public List<Phone> findAll(String query, String sortBy, SqlOrderByKeyword sqlOrderByKeyword, int offset, int limit) {
-        List<Phone> phones = jdbcTemplate.query(generateOrderQuery(query,sortBy, sqlOrderByKeyword),
+        List<Phone> phones = jdbcTemplate.query(generateOrderQuery(query, sortBy, sqlOrderByKeyword),
                 phoneBeanPropertyRowMapper, offset, limit);
         phones.forEach(phone -> phone.setColors(extractColors(phone.getId())));
         return phones;
@@ -165,8 +163,10 @@ public class JdbcPhoneDaoImpl implements PhoneDao {
     }
 
     private Set<Color> extractColors(final Long key) {
-        List<Color> colorList = jdbcTemplate.query(GET_COLORS_BY_PHONE_KEY_QUERY, colorBeanPropertyRowMapper, key);
-        return new HashSet<>(colorList);
+        if (colorsList.isEmpty()) {
+            colorsList = jdbcTemplate.query(GET_COLORS_BY_PHONE_KEY_QUERY, colorBeanPropertyRowMapper, key);
+        }
+        return new HashSet<>(colorsList);
     }
 
 }

@@ -39,6 +39,10 @@ public class HttpSessionCartService implements CartService {
         return this.cart;
     }
 
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
     @Override
     public void addPhone(Long phoneId, Long quantity) {
         Phone phoneToAdd = phoneDao.get(phoneId).orElseThrow(ProductNotFoundException::new);
@@ -82,10 +86,6 @@ public class HttpSessionCartService implements CartService {
     @Override
     public InfoCart getInfoCart() {
         return new InfoCart(cart.getCartItems().stream().mapToLong(CartItem::getQuantity).sum(), cart.getSubtotalPrice());
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
     }
 
     @Override

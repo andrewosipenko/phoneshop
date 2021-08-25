@@ -5,7 +5,6 @@ import com.es.core.model.phone.Phone;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -16,18 +15,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:context/applicationContext-test.xml")
 public class JdbcPhoneDaoTest {
 
+    private static final long CORRECT_PHONE_ID = 101l;
+    private static final long INCORRECT_PHONE_ID = 100001l;
     @Resource
     private PhoneDao phoneDao;
-
     private Phone testPhone01;
     private Phone testPhone02;
     private Set<Color> testColorSet = new HashSet<>();
@@ -73,9 +71,6 @@ public class JdbcPhoneDaoTest {
         assertEquals(phoneFromDao2.get().getModel(), testPhone01.getModel());
 
     }
-
-    private static final long CORRECT_PHONE_ID = 101l;
-    private static final long INCORRECT_PHONE_ID = 100001l;
 
     @Test(expected = IllegalArgumentException.class)
     public void getTestIllegalArgException() {

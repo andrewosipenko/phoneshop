@@ -14,11 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(SpringExtension.class)
@@ -26,17 +22,12 @@ import static org.mockito.Mockito.when;
         loader = AnnotationConfigContextLoader.class)
 class UpdateCartValidatorTest {
 
-    @Resource
-    private UpdateCartValidator updateCartValidator;
-
-    @Resource
-    private PhoneStockService phoneStockService;
-
     private static final String QUANTITY_TEST = "2";
     private static final String PHONE_ID = "1002";
+    private static final CartItemsForUpdate cartItemsForUpdate = mock(CartItemsForUpdate.class);
     private static CartItemsForUpdate cartItemForUpdateWithQuantityNull = new CartItemsForUpdate();
-    private static CartItemsForUpdate  cartItemForUpdateWithQuantityLessZero = new CartItemsForUpdate();
-    private static CartItemsForUpdate  cartItemForUpdateWithQuantity = new CartItemsForUpdate();
+    private static CartItemsForUpdate cartItemForUpdateWithQuantityLessZero = new CartItemsForUpdate();
+    private static CartItemsForUpdate cartItemForUpdateWithQuantity = new CartItemsForUpdate();
 
     static {
         Map<Long, String> mapWithValueNull = new HashMap<>();
@@ -51,8 +42,10 @@ class UpdateCartValidatorTest {
         cartItemForUpdateWithQuantity.setCartItems(mapWithValueQuantity);
     }
 
-    private static final CartItemsForUpdate cartItemsForUpdate = mock(CartItemsForUpdate.class);
-
+    @Resource
+    private UpdateCartValidator updateCartValidator;
+    @Resource
+    private PhoneStockService phoneStockService;
 
     @Test
     void supports() {

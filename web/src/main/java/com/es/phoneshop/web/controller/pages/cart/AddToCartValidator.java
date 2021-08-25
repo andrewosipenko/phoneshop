@@ -33,6 +33,7 @@ public class AddToCartValidator implements Validator {
             errors.reject("quantity.not.available", "Not enough stock for this product");
         }
     }
+
     private Long extractQuantityFromForm(AddProductToCartForm toCartForm) {
         try {
             return Long.parseLong(toCartForm.getQuantity());

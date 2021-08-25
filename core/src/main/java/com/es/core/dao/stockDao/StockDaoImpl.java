@@ -8,7 +8,7 @@ import javax.annotation.Resource;
 
 @Component
 @Transactional
-public class StockDaoImpl implements StockDao  {
+public class StockDaoImpl implements StockDao {
 
     private static final String GET_PHONE_FROM_STOCK_QUERY = "SELECT stock FROM stocks WHERE phoneId=?";
     private static final String UPDATE_STOCKS_SET_STOCK_WHERE_PHONE_ID = "UPDATE stocks SET stock=? WHERE phoneId=?";
@@ -18,7 +18,7 @@ public class StockDaoImpl implements StockDao  {
 
     @Override
     public int getPhoneStock(Long phoneId) {
-        return jdbcTemplate.queryForObject(GET_PHONE_FROM_STOCK_QUERY, new Object[] {phoneId}, Integer.class);
+        return jdbcTemplate.queryForObject(GET_PHONE_FROM_STOCK_QUERY, new Object[]{phoneId}, Integer.class);
     }
 
     @Override

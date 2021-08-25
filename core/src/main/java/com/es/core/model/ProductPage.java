@@ -17,7 +17,7 @@ public class ProductPage {
 
     }
 
-    public ProductPage(String sortBy,  String query, SqlOrderByKeyword sqlOrderByKeyword, Integer currentPage) {
+    public ProductPage(String sortBy, String query, SqlOrderByKeyword sqlOrderByKeyword, Integer currentPage) {
         this.sortBy = sortBy;
         this.sqlOrderByKeyword = sqlOrderByKeyword;
         this.query = query;

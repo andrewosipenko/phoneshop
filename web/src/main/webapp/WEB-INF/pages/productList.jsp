@@ -50,7 +50,8 @@
                         <td>${phone.displaySizeInches}</td>
                         <td>${phone.price}$</td>
                         <td>
-                            <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantity-${phoneId}"
+                            <input type="text" class="form-control" placeholder="Quantity" name="quantity"
+                                   id="quantity-${phoneId}"
                                    value="1">
                             <span id="quantity-message-${phoneId}" style="display: none"></span>
                         </td>
@@ -59,7 +60,8 @@
                                     type="button"
                                     class="btn btn-outline-dark"
                                     data-mdb-ripple-color="dark"
-                                    onclick="addToCart(${phoneId}, '${pageContext.request.contextPath}/ajaxCart')">Add to cart
+                                    onclick="addToCart(${phoneId}, '${pageContext.request.contextPath}/ajaxCart')">Add
+                                to cart
                             </button>
                         </td>
                     </tr>

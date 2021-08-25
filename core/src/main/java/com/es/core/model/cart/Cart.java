@@ -15,6 +15,7 @@ public class Cart {
     private List<CartItem> cartItems = new ArrayList<>();
     private BigDecimal deliveryPrice = new BigDecimal(0);
     private BigDecimal subtotalPrice = new BigDecimal(0);
+    private BigDecimal totalPrice = new BigDecimal(0);
 
     public List<CartItem> getCartItems() {
         return cartItems;
@@ -47,6 +48,4 @@ public class Cart {
     public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
-
-    private BigDecimal totalPrice = new BigDecimal(0);
 }
