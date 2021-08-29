@@ -4,6 +4,8 @@ drop table if exists stocks;
 drop table if exists phones;
 drop table if exists orders;
 drop table if exists item2order;
+drop table if exists users;
+drop table if exists authorities;
 
 create table colors
 (
@@ -71,7 +73,7 @@ create table orders
     deliveryAddress       VARCHAR(50),
     contactPhoneNo        VARCHAR(50),
     status                VARCHAR(50),
-    creationDate          DATETIME,
+    orderCreationDate          DATETIME,
     additionalInformation VARCHAR(512)
 );
 
@@ -81,4 +83,18 @@ create table item2order
     orderId  BIGINT,
     phoneId  BIGINT,
     quantity SMALLINT
+);
+
+create table users
+(
+    username VARCHAR_IGNORECASE(50) NOT NULL PRIMARY KEY,
+    password VARCHAR_IGNORECASE(50) NOT NULL,
+    enabled  BOOLEAN NOT NULL
+);
+
+create table authorities
+(
+    username  VARCHAR_IGNORECASE(50) NOT NULL,
+    authority VARCHAR_IGNORECASE(50) NOT NULL,
+    CONSTRAINT FK_authorities_users FOREIGN KEY (username) REFERENCES users (username)
 );
