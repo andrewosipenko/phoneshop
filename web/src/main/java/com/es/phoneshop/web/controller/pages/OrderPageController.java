@@ -17,11 +17,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Date;
+
 
 
 @Controller
 @RequestMapping(value = "/order")
 public class OrderPageController {
+
+    public static final String ORDER_FORM = "orderForm";
+    public static final String CART = "cart";
+    public static final String ORDER_PAGE = "orderPage";
 
     @Resource
     private CartService cartService;
@@ -35,6 +41,9 @@ public class OrderPageController {
 
     @GetMapping
     public String getOrder(Model model) throws OutOfStockException {
+        model.addAttribute(ORDER_FORM, new OrderForm());
+        model.addAttribute(CART, cartService.getCart());
+        return ORDER_PAGE;
         model.addAttribute("orderForm", new OrderForm());
         model.addAttribute("cart", cartService.getCart());
         return "orderPage";
@@ -45,8 +54,8 @@ public class OrderPageController {
                              BindingResult bindingResult,
                              Model model) throws OutOfStockException {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("cart", cartService.getCart());
-            return "orderPage";
+            model.addAttribute(CART, cartService.getCart());
+            return ORDER_PAGE;
         }
 
         stockValidator.validate(cartService.getCart(), bindingResult);
@@ -60,6 +69,7 @@ public class OrderPageController {
         order.setDeliveryAddress(orderForm.getAddress());
         order.setContactPhoneNo(orderForm.getPhone());
         order.setAdditionalInfo(orderForm.getAdditionalInfo());
+        order.setOrderCreationDate(new Date(new java.util.Date().getTime()));
         Long id = orderService.placeOrder(order);
         return "redirect:orderOverview/" + id;
     }

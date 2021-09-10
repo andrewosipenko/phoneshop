@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ attribute name="pageTitle" required="true" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <html>
 
@@ -9,7 +10,7 @@
     <!-- connection jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <!-- icon -->
-    <link rel="apple-touch-icon" href="static/favicon/apple-touch-icon.png" type="image/x-icon">
+    <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/static/favicon/apple-touch-icon.png" type="image/x-icon">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet"/>
     <!-- Google Fonts -->
@@ -20,6 +21,7 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
             crossorigin="anonymous"></script>
+    <sec:csrfMetaTags/>
 </head>
 <body>
 
@@ -40,7 +42,17 @@
                                href="${pageContext.request.contextPath}/productList">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                            <sec:authorize access="isAnonymous()">
+                                <a href="<c:url value="/login"/>">Login</a><br>
+                            </sec:authorize>
+                            <sec:authorize access="isAuthenticated()">
+                                <sec:authentication property="principal.username"/>
+                                <a href="<c:url value="/admin/orders"/>">Orders</a>
+                                <c:url value="/logout" var="logoutUrl"/>
+                                <form:form action="${logoutUrl}" method="POST">
+                                    <input type="submit" value="Logout" />
+                                </form:form>
+                            </sec:authorize>
                         </li>
                     </ul>
                 </div>
