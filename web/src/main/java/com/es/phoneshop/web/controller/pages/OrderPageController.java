@@ -20,6 +20,7 @@ import javax.validation.Valid;
 import java.util.Date;
 
 
+
 @Controller
 @RequestMapping(value = "/order")
 public class OrderPageController {
@@ -43,6 +44,9 @@ public class OrderPageController {
         model.addAttribute(ORDER_FORM, new OrderForm());
         model.addAttribute(CART, cartService.getCart());
         return ORDER_PAGE;
+        model.addAttribute("orderForm", new OrderForm());
+        model.addAttribute("cart", cartService.getCart());
+        return "orderPage";
     }
 
     @PostMapping
@@ -67,7 +71,6 @@ public class OrderPageController {
         order.setAdditionalInfo(orderForm.getAdditionalInfo());
         order.setOrderCreationDate(new Date(new java.util.Date().getTime()));
         Long id = orderService.placeOrder(order);
-
         return "redirect:orderOverview/" + id;
     }
 }
