@@ -1,5 +1,7 @@
 package com.es.core.model.phone;
 
+import org.springframework.stereotype.Component;
+
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
@@ -56,6 +58,9 @@ public class Phone {
     private String imageUrl;
 
     private String description;
+
+    public Phone() {
+    }
 
     public String getBrand() {
         return brand;

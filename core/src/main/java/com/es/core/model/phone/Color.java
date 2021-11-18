@@ -4,6 +4,9 @@ public class Color {
     private Long id;
     private String code;
 
+    public Color() {
+    }
+
     public Long getId() {
         return id;
     }
