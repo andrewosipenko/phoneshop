@@ -42,5 +42,6 @@ public class PhoneDaoIntTest {
         Assert.assertEquals(phone.getDescription(), newPhone.getDescription());
         Assert.assertEquals(phone.getDeviceType(), newPhone.getDeviceType());
         Assert.assertEquals(phone.getBluetooth(), newPhone.getBluetooth());
+        Assert.assertEquals(phone.getColors().size(), newPhone.getColors().size());
     }
 }
