@@ -20,6 +20,7 @@ public class JdbcPhoneDao implements PhoneDao {
     private static final String SELECT_COLOR_BY_ID_QUERY = "select * from colors where id = ?";
     private static final String INSERT_PHONE_QUERY = "insert into phones values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?," +
             " ?, ?, ?, ?, ?, ?)";
+    private static final String INSERT_INTO_PHONE2COLOR_QUERY = "insert into phone2color values (?, ?)";
 
     public Optional<Phone> get(final Long key) {
         Optional<Phone> phone = Optional.ofNullable(jdbcTemplate
@@ -46,7 +47,7 @@ public class JdbcPhoneDao implements PhoneDao {
                 phone.getFrontCameraMegapixels(), phone.getRamGb(), phone.getInternalStorageGb(),
                 phone.getBatteryCapacityMah(), phone.getTalkTimeHours(), phone.getStandByTimeHours(),
                 phone.getBluetooth(), phone.getPositioning(), phone.getImageUrl(), phone.getDescription());
-        phone.getColors().forEach(color -> jdbcTemplate.update("insert into phone2color values (?, ?)",
+        phone.getColors().forEach(color -> jdbcTemplate.update(INSERT_INTO_PHONE2COLOR_QUERY,
                 phone.getId(), color.getId()));
     }
 
