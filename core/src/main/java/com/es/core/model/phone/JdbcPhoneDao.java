@@ -47,8 +47,11 @@ public class JdbcPhoneDao implements PhoneDao {
                 phone.getFrontCameraMegapixels(), phone.getRamGb(), phone.getInternalStorageGb(),
                 phone.getBatteryCapacityMah(), phone.getTalkTimeHours(), phone.getStandByTimeHours(),
                 phone.getBluetooth(), phone.getPositioning(), phone.getImageUrl(), phone.getDescription());
-        phone.getColors().forEach(color -> jdbcTemplate.update(INSERT_INTO_PHONE2COLOR_QUERY,
-                phone.getId(), color.getId()));
+        jdbcTemplate.batchUpdate(INSERT_INTO_PHONE2COLOR_QUERY, phone.getColors(), phone.getColors().size(),
+                (preparedStatement, color) -> {
+                    preparedStatement.setLong(1, phone.getId());
+                    preparedStatement.setLong(2, color.getId());
+                });
     }
 
     public List<Phone> findAll(int offset, int limit) {
