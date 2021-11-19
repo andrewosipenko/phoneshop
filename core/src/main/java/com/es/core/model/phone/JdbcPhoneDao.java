@@ -15,15 +15,21 @@ public class JdbcPhoneDao implements PhoneDao {
     @Resource
     private JdbcTemplate jdbcTemplate;
 
+    private static final String SELECT_PHONE_BY_ID_QUERY = "select * from phones where id = ?";
+    private static final String SELECT_COLOR_ID_BY_PHONE_ID_QUERY = "select colorId from phone2color where phoneId = ?";
+    private static final String SELECT_COLOR_BY_ID_QUERY = "select * from colors where id = ?";
+    private static final String INSERT_PHONE_QUERY = "insert into phones values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?," +
+            " ?, ?, ?, ?, ?, ?)";
+
     public Optional<Phone> get(final Long key) {
         Optional<Phone> phone = Optional.ofNullable(jdbcTemplate
-                .queryForObject("select * from phones where id = ?", new Object[]{key},
+                .queryForObject(SELECT_PHONE_BY_ID_QUERY, new Object[]{key},
                         BeanPropertyRowMapper.newInstance(Phone.class)));
         if (phone.isPresent()) {
-            List<Long> colorIds = jdbcTemplate.queryForList("select colorId from phone2color where phoneId = ?",
+            List<Long> colorIds = jdbcTemplate.queryForList(SELECT_COLOR_ID_BY_PHONE_ID_QUERY,
                     new Object[]{key}, Long.class);
             Set<Color> colors = colorIds.stream()
-                    .map(colorId -> jdbcTemplate.queryForObject("select * from colors where id = ?",
+                    .map(colorId -> jdbcTemplate.queryForObject(SELECT_COLOR_BY_ID_QUERY,
                             new Object[]{colorId}, BeanPropertyRowMapper.newInstance(Color.class)))
                     .collect(Collectors.toSet());
             phone.get().setColors(colors);
@@ -32,8 +38,7 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     public void save(final Phone phone) {
-        jdbcTemplate.update("insert into phones values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?," +
-                        " ?, ?, ?, ?, ?, ?)",
+        jdbcTemplate.update(INSERT_PHONE_QUERY,
                 phone.getId(), phone.getBrand(), phone.getModel(), phone.getPrice(), phone.getDisplaySizeInches(),
                 phone.getWeightGr(), phone.getLengthMm(), phone.getWidthMm(), phone.getHeightMm(),
                 phone.getAnnounced(), phone.getDeviceType(), phone.getOs(), phone.getDisplayResolution(),

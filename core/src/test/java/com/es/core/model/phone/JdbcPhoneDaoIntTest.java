@@ -13,13 +13,13 @@ import java.util.Optional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:/context/applicationContext-core.xml")
 @Sql({"/db/schema.sql", "classpath:db/demodata-phones.sql"})
-public class PhoneDaoIntTest {
+public class JdbcPhoneDaoIntTest {
 
     @Autowired
     private PhoneDao phoneDao;
 
     @Test
-    public void getTest() {
+    public void getPhoneByIdTest() {
         Optional<Phone> optionalPhone = phoneDao.get(1011L);
         Assert.assertNotNull(optionalPhone.get());
         Phone phone = optionalPhone.get();
@@ -28,7 +28,7 @@ public class PhoneDaoIntTest {
     }
 
     @Test
-    public void saveTest() {
+    public void savePhoneTest() {
         Optional<Phone> optionalPhone = phoneDao.get(1000L);
         Assert.assertNotNull(optionalPhone.get());
         Phone phone = optionalPhone.get();
