@@ -16,11 +16,15 @@ public class JdbcPhoneDao implements PhoneDao {
     private JdbcTemplate jdbcTemplate;
 
     private static final String SELECT_PHONE_BY_ID_QUERY = "select * from phones where id = ?";
-    private static final String SELECT_COLOR_ID_BY_PHONE_ID_QUERY = "select colorId from phone2color where phoneId = ?";
+    private static final String SELECT_COLOR_ID_BY_PHONE_ID_QUERY = "select colorId from phone2color" +
+            " where phoneId = ?";
     private static final String SELECT_COLOR_BY_ID_QUERY = "select * from colors where id = ?";
-    private static final String INSERT_PHONE_QUERY = "insert into phones values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?," +
-            " ?, ?, ?, ?, ?, ?)";
+    private static final String INSERT_PHONE_QUERY = "insert into phones values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?," +
+            " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String INSERT_INTO_PHONE2COLOR_QUERY = "insert into phone2color values (?, ?)";
+    private static final String SELECT_ALL_QUERY_TEMPLATE = "select * from phones offset %d limit %d";
+    private static final String SELECT_ALL_IN_STOCK_QUERY_TEMPLATE = "select * from phones, stocks" +
+            " where phones.id = stocks.phoneId and stocks.stock > 0 offset %d limit %d;";
 
     public Optional<Phone> get(final Long key) {
         Optional<Phone> phone = Optional.ofNullable(jdbcTemplate
@@ -55,6 +59,12 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     public List<Phone> findAll(int offset, int limit) {
-        return jdbcTemplate.query("select * from phones offset " + offset + " limit " + limit, new BeanPropertyRowMapper(Phone.class));
+        return jdbcTemplate.query(String.format(SELECT_ALL_QUERY_TEMPLATE, offset, limit),
+                new BeanPropertyRowMapper<>(Phone.class));
+    }
+
+    public List<Phone> findAllInStock(int offset, int limit) {
+        return jdbcTemplate.query(String.format(SELECT_ALL_IN_STOCK_QUERY_TEMPLATE, offset, limit),
+                new BeanPropertyRowMapper<>(Phone.class));
     }
 }
