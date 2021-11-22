@@ -1,4 +1,3 @@
-
 insert into colors (id, code) values (1000, 'Black');
 insert into colors (id, code) values (1001, 'White');
 insert into colors (id, code) values (1002, 'Yellow');
@@ -26,22 +25,4 @@ insert into phones (id, brand, model, price, displaySizeInches, weightGr, length
 
 insert into phone2color (phoneId, colorId) values (1000, 1000);
 insert into phone2color (phoneId, colorId) values (1001, 1001);
-insert into phone2color (phoneId, colorId) values (1002, 1000);
 insert into phone2color (phoneId, colorId) values (1006, 1001);
-
-insert into stocks (phoneId, stock, reserved) values (1001, 0, 0);
-insert into stocks (phoneId, stock, reserved) values (1002, 0, 1);
-insert into stocks (phoneId, stock, reserved) values (1003, 13, 2);
-insert into stocks (phoneId, stock, reserved) values (1004, 14, 3);
-insert into stocks (phoneId, stock, reserved) values (1005, 15, 4);
-insert into stocks (phoneId, stock, reserved) values (1006, 16, 5);
-insert into stocks (phoneId, stock, reserved) values (1007, 17, 6);
-insert into stocks (phoneId, stock, reserved) values (1008, 18, 7);
-
-insert into orders(id, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, extraInfo, status) values (1000, 100, 5, 1005, 'testFName', 'testLName', 'testAddress', 'testPhone', 'testExtraInfo', 'NEW');
-
-insert into orderItems(id, phoneId, orderId, quantity) values (500, 1003, 1000, 5);
-
-insert into order2orderItem(orderId, orderItemId) values (1000, 500);
-
-insert into orderId2orderKey(orderId, orderKey) values (1000, 'testKey')
