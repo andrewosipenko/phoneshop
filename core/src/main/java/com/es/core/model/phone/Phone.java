@@ -1,12 +1,9 @@
 package com.es.core.model.phone;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 public class Phone {
-
     private Long id;
     private String brand;
     private String model;
@@ -275,112 +272,19 @@ public class Phone {
     }
 
     @Override
-    public String toString() {
-        return "Phone{" +
-                "id=" + id +
-                ", brand='" + brand + '\'' +
-                ", model='" + model + '\'' +
-                ", price=" + price +
-                ", displaySizeInches=" + displaySizeInches +
-                ", weightGr=" + weightGr +
-                ", lengthMm=" + lengthMm +
-                ", widthMm=" + widthMm +
-                ", heightMm=" + heightMm +
-                ", announced=" + announced +
-                ", deviceType='" + deviceType + '\'' +
-                ", os='" + os + '\'' +
-                ", colors=" + colors +
-                ", displayResolution='" + displayResolution + '\'' +
-                ", pixelDensity=" + pixelDensity +
-                ", displayTechnology='" + displayTechnology + '\'' +
-                ", backCameraMegapixels=" + backCameraMegapixels +
-                ", frontCameraMegapixels=" + frontCameraMegapixels +
-                ", ramGb=" + ramGb +
-                ", internalStorageGb=" + internalStorageGb +
-                ", batteryCapacityMah=" + batteryCapacityMah +
-                ", talkTimeHours=" + talkTimeHours +
-                ", standByTimeHours=" + standByTimeHours +
-                ", bluetooth='" + bluetooth + '\'' +
-                ", positioning='" + positioning + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         Phone phone = (Phone) o;
 
-        if (id != null ? !id.equals(phone.id) : phone.id != null) return false;
-        if (brand != null ? !brand.equals(phone.brand) : phone.brand != null) return false;
-        if (model != null ? !model.equals(phone.model) : phone.model != null) return false;
-        if (price != null ? !price.equals(phone.price) : phone.price != null) return false;
-        if (displaySizeInches != null ? !displaySizeInches.equals(phone.displaySizeInches) : phone.displaySizeInches != null)
-            return false;
-        if (weightGr != null ? !weightGr.equals(phone.weightGr) : phone.weightGr != null) return false;
-        if (lengthMm != null ? !lengthMm.equals(phone.lengthMm) : phone.lengthMm != null) return false;
-        if (widthMm != null ? !widthMm.equals(phone.widthMm) : phone.widthMm != null) return false;
-        if (heightMm != null ? !heightMm.equals(phone.heightMm) : phone.heightMm != null) return false;
-        if (announced != null ? !announced.equals(phone.announced) : phone.announced != null) return false;
-        if (deviceType != null ? !deviceType.equals(phone.deviceType) : phone.deviceType != null) return false;
-        if (os != null ? !os.equals(phone.os) : phone.os != null) return false;
-        if (colors != null ? !colors.equals(phone.colors) : phone.colors != null) return false;
-        if (displayResolution != null ? !displayResolution.equals(phone.displayResolution) : phone.displayResolution != null)
-            return false;
-        if (pixelDensity != null ? !pixelDensity.equals(phone.pixelDensity) : phone.pixelDensity != null) return false;
-        if (displayTechnology != null ? !displayTechnology.equals(phone.displayTechnology) : phone.displayTechnology != null)
-            return false;
-        if (backCameraMegapixels != null ? !backCameraMegapixels.equals(phone.backCameraMegapixels) : phone.backCameraMegapixels != null)
-            return false;
-        if (frontCameraMegapixels != null ? !frontCameraMegapixels.equals(phone.frontCameraMegapixels) : phone.frontCameraMegapixels != null)
-            return false;
-        if (ramGb != null ? !ramGb.equals(phone.ramGb) : phone.ramGb != null) return false;
-        if (internalStorageGb != null ? !internalStorageGb.equals(phone.internalStorageGb) : phone.internalStorageGb != null)
-            return false;
-        if (batteryCapacityMah != null ? !batteryCapacityMah.equals(phone.batteryCapacityMah) : phone.batteryCapacityMah != null)
-            return false;
-        if (talkTimeHours != null ? !talkTimeHours.equals(phone.talkTimeHours) : phone.talkTimeHours != null)
-            return false;
-        if (standByTimeHours != null ? !standByTimeHours.equals(phone.standByTimeHours) : phone.standByTimeHours != null)
-            return false;
-        if (bluetooth != null ? !bluetooth.equals(phone.bluetooth) : phone.bluetooth != null) return false;
-        if (positioning != null ? !positioning.equals(phone.positioning) : phone.positioning != null) return false;
-        if (imageUrl != null ? !imageUrl.equals(phone.imageUrl) : phone.imageUrl != null) return false;
-        return description != null ? description.equals(phone.description) : phone.description == null;
+        return Objects.equals(brand, phone.brand) &&
+                Objects.equals(model, phone.model);
+
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (brand != null ? brand.hashCode() : 0);
-        result = 31 * result + (model != null ? model.hashCode() : 0);
-        result = 31 * result + (price != null ? price.hashCode() : 0);
-        result = 31 * result + (displaySizeInches != null ? displaySizeInches.hashCode() : 0);
-        result = 31 * result + (weightGr != null ? weightGr.hashCode() : 0);
-        result = 31 * result + (lengthMm != null ? lengthMm.hashCode() : 0);
-        result = 31 * result + (widthMm != null ? widthMm.hashCode() : 0);
-        result = 31 * result + (heightMm != null ? heightMm.hashCode() : 0);
-        result = 31 * result + (announced != null ? announced.hashCode() : 0);
-        result = 31 * result + (deviceType != null ? deviceType.hashCode() : 0);
-        result = 31 * result + (os != null ? os.hashCode() : 0);
-        result = 31 * result + (colors != null ? colors.hashCode() : 0);
-        result = 31 * result + (displayResolution != null ? displayResolution.hashCode() : 0);
-        result = 31 * result + (pixelDensity != null ? pixelDensity.hashCode() : 0);
-        result = 31 * result + (displayTechnology != null ? displayTechnology.hashCode() : 0);
-        result = 31 * result + (backCameraMegapixels != null ? backCameraMegapixels.hashCode() : 0);
-        result = 31 * result + (frontCameraMegapixels != null ? frontCameraMegapixels.hashCode() : 0);
-        result = 31 * result + (ramGb != null ? ramGb.hashCode() : 0);
-        result = 31 * result + (internalStorageGb != null ? internalStorageGb.hashCode() : 0);
-        result = 31 * result + (batteryCapacityMah != null ? batteryCapacityMah.hashCode() : 0);
-        result = 31 * result + (talkTimeHours != null ? talkTimeHours.hashCode() : 0);
-        result = 31 * result + (standByTimeHours != null ? standByTimeHours.hashCode() : 0);
-        result = 31 * result + (bluetooth != null ? bluetooth.hashCode() : 0);
-        result = 31 * result + (positioning != null ? positioning.hashCode() : 0);
-        result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        return result;
+        return Objects.hash(getBrand(), getModel());
     }
 }
