@@ -61,12 +61,16 @@ public class JdbcPhoneDaoIntTest {
     }
 
     @Test
-    public void shouldReturnOnlyPhonesInStockWhenInvokeFindAllInStockMethod() {
-        List<Phone> phonesInStock = phoneDao.findAllInStock(OFFSET, LIMIT);
+    public void shouldReturnOnlyPhonesInStockAndNotNullPriceWhenInvokeFindAllInStockMethod() {
+        List<Phone> phonesInStock = phoneDao.findAllInStock(OFFSET, LIMIT, null);
         Set<Long> inStockPhonesIds = phonesInStock.stream()
                 .map(Phone::getId)
                 .collect(Collectors.toSet());
-        Assert.assertFalse(inStockPhonesIds.contains(NOT_IN_STOCK_PHONE_ID));
-        Assert.assertTrue(inStockPhonesIds.contains(IN_STOCK_PHONE_ID));
+//        Assert.assertFalse(inStockPhonesIds.contains(NOT_IN_STOCK_PHONE_ID));
+//        Assert.assertTrue(inStockPhonesIds.contains(IN_STOCK_PHONE_ID));
+        Assert.assertEquals(LIMIT, phonesInStock.size());
+        for (Phone phone : phonesInStock) {
+            Assert.assertNotNull(phone.getPrice());
+        }
     }
 }
