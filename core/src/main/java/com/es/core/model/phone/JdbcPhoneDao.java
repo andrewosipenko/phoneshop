@@ -55,7 +55,7 @@ public class JdbcPhoneDao implements PhoneDao {
                 new BeanPropertyRowMapper<>(Phone.class));
     }
 
-    public List<Phone> findAllInStock(int offset, int limit, String query) {
+    public List<Phone> findAllInStock(String query) {
         List<Phone> phonesInStock = jdbcTemplate.query(SELECT_ALL_IN_STOCK_AND_NOT_NULL_PRICE_QUERY_TEMPLATE,
                 new BeanPropertyRowMapper<>(Phone.class));
         if (query != null && !query.trim().isEmpty()) {
@@ -70,7 +70,6 @@ public class JdbcPhoneDao implements PhoneDao {
                     .sorted(new PhoneSearchComparator(queryWords))
                     .collect(Collectors.toList());
         }
-        phonesInStock = phonesInStock.subList(offset, offset + limit);
         for (Phone phone : phonesInStock) {
             setPhoneColors(phone);
         }

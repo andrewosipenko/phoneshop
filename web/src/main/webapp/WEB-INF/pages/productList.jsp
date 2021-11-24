@@ -16,7 +16,7 @@
 </p>
 Found
 <c:out value="${phones.size()}"/> phones.
-<form>
+<form action="${pageContext.servletContext.contextPath}/productList/1">
     <input name="query" value="${param.query}">
     <button>Search</button>
 </form>
@@ -98,6 +98,34 @@ Found
         </tr>
     </c:forEach>
 </table>
+<c:if test="${not empty phones}">
+    <nav>
+        <ul class="pagination">
+            <li class="page-item">
+                <c:set var="prevPage" value="${page == 1 ? page : page - 1}"/>
+                <a class="page-link"
+                   href="${pageContext.servletContext.contextPath}/productList/${prevPage}?query=${param.query}">
+                    Previous
+                </a>
+            </li>
+            <c:forEach var="pageNumber" items="${pageNumbers}">
+                <li class="${pageNumber == page ? 'page-item active' : 'page-item'}">
+                    <a class="page-link"
+                       href="${pageContext.servletContext.contextPath}/productList/${pageNumber}?query=${param.query}">
+                            ${pageNumber}
+                    </a>
+                </li>
+            </c:forEach>
+            <li class="page-item">
+                <c:set var="nextPage" value="${page == maxPage ? page : page + 1}"/>
+                <a class="page-link"
+                   href="${pageContext.servletContext.contextPath}/productList/${nextPage}?query=${param.query}">
+                    Next
+                </a>
+            </li>
+        </ul>
+    </nav>
+</c:if>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
