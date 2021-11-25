@@ -2,8 +2,10 @@ package com.es.core.model.phone;
 
 
 import com.es.core.model.color.Color;
-import com.es.core.model.exception.PhoneNotFindException;
-import com.es.core.model.exception.StockNotFindException;
+import com.es.core.model.enums.SortField;
+import com.es.core.model.enums.SortOrder;
+import com.es.core.exception.PhoneNotFindException;
+import com.es.core.exception.StockNotFindException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,6 +15,7 @@ import javax.annotation.Resource;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,8 +29,13 @@ public class JdbcPhoneDao implements PhoneDao {
     public static final String INSERT_INTO_PHONES_VALUES = "insert into phones values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     public static final String SELECT_MAX_ID_FROM_PHONES = "select max(id) from phones";
     public static final String INSERT_INTO_PHONE_2_COLOR_VALUES = "insert into phone2color values (?, ?)";
-    public static final String SELECT_FROM_PHONES_OFFSET = "select * from phones inner join stocks on phones.id = stocks.phoneId where stock>0 offset ";
+    public static final String SELECT_FROM_PHONES_OFFSET = "select * from phones inner join stocks on phones.id = stocks.phoneId where stock - reserved > 0 offset ";
     public static final String LIMIT = " limit ";
+    public static final String SELECT_FROM_PHONES_INNER_JOIN_STOCKS_ON_PHONES_ID_STOCKS_PHONE_ID_WHERE_STOCK_RESERVED_0_AND_DISPLAY_SIZE_INCHES_0_AND_PRICE_0_AND_LOWER_MODEL_LIKE = "select * from phones inner join stocks on phones.id = stocks.phoneId where (stock - reserved > 0) and (displaySizeInches > 0) and (price > 0) and ((lower(model) like '%";
+    public static final String OR_LOWER_BRAND_LIKE = "%') or (lower(brand) like '%";
+    public static final String END = "%'))";
+    public static final String ORDER_BY = " order by ";
+    public static final String OFFSET = " offset ";
     @Resource
     private JdbcTemplate jdbcTemplate;
 
@@ -101,6 +109,24 @@ public class JdbcPhoneDao implements PhoneDao {
         List<Phone> phoneList = jdbcTemplate.query(SELECT_FROM_PHONES_OFFSET + offset + LIMIT + limit, new PhoneRowMapper());
         phoneList.forEach(phone -> phone.setColors(getColorsByPhoneId(phone.getId())));
         return phoneList;
+    }
+
+    public List<Phone> findAll(int offset, int limit, SortField sortField, SortOrder sortOrder, String searchText) {
+        List<Phone> phoneList = jdbcTemplate.query(sqlCreator(offset, limit, sortField, sortOrder, searchText), new PhoneRowMapper());
+        phoneList.forEach(phone -> phone.setColors(getColorsByPhoneId(phone.getId())));
+        return phoneList;
+    }
+
+    private String sqlCreator(int offset, int limit, SortField sortField, SortOrder sortOrder, String searchText) {
+        StringBuilder stringBuilder = new StringBuilder();
+        return stringBuilder.append(SELECT_FROM_PHONES_INNER_JOIN_STOCKS_ON_PHONES_ID_STOCKS_PHONE_ID_WHERE_STOCK_RESERVED_0_AND_DISPLAY_SIZE_INCHES_0_AND_PRICE_0_AND_LOWER_MODEL_LIKE)
+                .append(searchText.toLowerCase(Locale.ROOT)).append(OR_LOWER_BRAND_LIKE).append(searchText.toLowerCase(Locale.ROOT)).append(END)
+                .append(ORDER_BY)
+                .append(sortField).append(" ")
+                .append(sortOrder).append(" ")
+                .append(OFFSET).append(offset)
+                .append(LIMIT).append(limit)
+                .toString();
     }
 
     public Optional<Color> getColor(final Long key) {

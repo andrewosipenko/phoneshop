@@ -1,9 +1,7 @@
-package com.es.core.cart;
+package com.es.core.model.cart;
 
 import com.es.core.exception.CartItemNotFindException;
 import com.es.core.exception.PhoneNotFindException;
-import com.es.core.model.cart.Cart;
-import com.es.core.model.cart.CartItem;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.PhoneDao;
 import org.springframework.stereotype.Service;
@@ -31,12 +29,12 @@ public class HttpSessionCartService implements CartService {
         cart.setTotalQuantity(cart.getCartItems().stream()
                 .mapToLong(CartItem::getQuantity).sum());
         cart.setTotalCost(new BigDecimal(cart.getCartItems().stream()
-                .mapToLong(value -> value.getPhone().getPrice().longValue())
+                .mapToLong(value -> value.getPhone().getPrice().longValue() * value.getQuantity())
                 .sum()));
     }
 
     @Override
-    public void addPhone(Long phoneId, Integer quantity) throws PhoneNotFindException {
+    public void addPhone(Long phoneId, int quantity) throws PhoneNotFindException {
         Optional<CartItem> optionalCartItem = cart.getCartItems().stream()
                 .filter(item -> item.getPhone().getId().equals(phoneId))
                 .findAny();

@@ -1,10 +1,13 @@
 package com.es.core.model.cart;
 
+import org.springframework.stereotype.Component;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class Cart implements Serializable {
     private List<CartItem> cartItems = new ArrayList<>();
     private Long totalQuantity = 0L;

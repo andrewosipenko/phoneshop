@@ -1,6 +1,4 @@
-package com.es.core.cart;
-
-import com.es.core.model.cart.Cart;
+package com.es.core.model.cart;
 
 import java.util.Map;
 
@@ -10,7 +8,7 @@ public interface CartService {
 
     void recalculateCart();
 
-    void addPhone(Long phoneId, Integer quantity);
+    void addPhone(Long phoneId, int quantity);
 
     /**
      * @param items
