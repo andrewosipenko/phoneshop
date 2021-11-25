@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/styles/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 <p>
@@ -16,6 +17,9 @@
 </p>
 Found
 <c:out value="${phones.size()}"/> phones.
+<p>
+    My cart: <span id="cartParams">${cart.totalQuantity} items ${cart.totalCost}</span>$
+</p>
 <form action="${pageContext.servletContext.contextPath}/productList/1">
     <input name="query" value="${param.query}">
     <button>Search</button>
@@ -49,11 +53,11 @@ Found
         <td>Color</td>
         <td>
             Display size
-            <tags:sortLink sort="display" order="asc">
+            <tags:sortLink sort="displaySizeInches" order="asc">
                 <img width="10px" height="17px"
                      src="${pageContext.servletContext.contextPath}/images/long-arrow-alt-up-solid.svg">
             </tags:sortLink>
-            <tags:sortLink sort="display" order="desc">
+            <tags:sortLink sort="displaySizeInches" order="desc">
                 <img width="10px" height="17px"
                      src="${pageContext.servletContext.contextPath}/images/long-arrow-alt-down-solid.svg">
             </tags:sortLink>
@@ -88,10 +92,11 @@ Found
             <td>${phone.displaySizeInches}"</td>
             <td>${phone.price}$</td>
             <td>
-                <input name="quantity"/>
+                <input id="${phone.id} quantity" name="quantity"/>
             </td>
             <td>
-                <button>
+                <button onclick="addPhoneToCart('${phone.id}',
+                        document.getElementById(${phone.id} + ' quantity').value)">
                     Add to cart
                 </button>
             </td>
@@ -104,14 +109,14 @@ Found
             <li class="page-item">
                 <c:set var="prevPage" value="${page == 1 ? page : page - 1}"/>
                 <a class="page-link"
-                   href="${pageContext.servletContext.contextPath}/productList/${prevPage}?query=${param.query}">
+                   href="${pageContext.servletContext.contextPath}/productList/${prevPage}?sortField=${param.sortField}&sortOrder=${param.sortOrder}&query=${param.query}">
                     Previous
                 </a>
             </li>
             <c:forEach var="pageNumber" items="${pageNumbers}">
                 <li class="${pageNumber == page ? 'page-item active' : 'page-item'}">
                     <a class="page-link"
-                       href="${pageContext.servletContext.contextPath}/productList/${pageNumber}?query=${param.query}">
+                       href="${pageContext.servletContext.contextPath}/productList/${pageNumber}?sortField=${param.sortField}&sortOrder=${param.sortOrder}&query=${param.query}">
                             ${pageNumber}
                     </a>
                 </li>
@@ -119,7 +124,7 @@ Found
             <li class="page-item">
                 <c:set var="nextPage" value="${page == maxPage ? page : page + 1}"/>
                 <a class="page-link"
-                   href="${pageContext.servletContext.contextPath}/productList/${nextPage}?query=${param.query}">
+                   href="${pageContext.servletContext.contextPath}/productList/${nextPage}?sortField=${param.sortField}&sortOrder=${param.sortOrder}&query=${param.query}">
                     Next
                 </a>
             </li>
@@ -129,5 +134,17 @@ Found
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
+<script>
+    function addPhoneToCart(id, quantity) {
+        $.post("${pageContext.servletContext.contextPath}" + "/ajaxCart",
+            {
+                phoneId: id,
+                quantity: quantity
+            },
+            function (data) {
+                document.getElementById("cartParams").innerText = data;
+            });
+    }
+</script>
 </body>
 </html>

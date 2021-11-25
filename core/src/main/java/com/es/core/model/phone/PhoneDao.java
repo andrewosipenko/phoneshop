@@ -7,5 +7,5 @@ public interface PhoneDao {
     Optional<Phone> get(Long key);
     void save(Phone phone);
     List<Phone> findAll(int offset, int limit);
-    List<Phone> findAllInStock(String query);
+    List<Phone> findAllInStock(String query, String sortField, String sortOrder);
 }

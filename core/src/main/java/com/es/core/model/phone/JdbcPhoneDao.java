@@ -21,7 +21,7 @@ public class JdbcPhoneDao implements PhoneDao {
             " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String INSERT_INTO_PHONE2COLOR_QUERY = "insert into phone2color values (?, ?)";
     private static final String SELECT_ALL_QUERY_TEMPLATE = "select * from phones offset %d limit %d";
-    private static final String SELECT_ALL_IN_STOCK_AND_NOT_NULL_PRICE_QUERY_TEMPLATE = "select * from phones, stocks" +
+    private static final String SELECT_ALL_IN_STOCK_AND_NOT_NULL_PRICE_QUERY = "select * from phones, stocks" +
             " where phones.id = stocks.phoneId and stocks.stock > 0 and phones.price is not null";
     @Resource
     private JdbcTemplate jdbcTemplate;
@@ -55,25 +55,24 @@ public class JdbcPhoneDao implements PhoneDao {
                 new BeanPropertyRowMapper<>(Phone.class));
     }
 
-    public List<Phone> findAllInStock(String query) {
-        List<Phone> phonesInStock = jdbcTemplate.query(SELECT_ALL_IN_STOCK_AND_NOT_NULL_PRICE_QUERY_TEMPLATE,
-                new BeanPropertyRowMapper<>(Phone.class));
-        if (query != null && !query.trim().isEmpty()) {
-            String[] queryWords = query.trim().toLowerCase().split("\\s+");
-            phonesInStock = phonesInStock.stream()
-                    .filter(phone -> Arrays.stream(queryWords).
-                            anyMatch(word -> {
-                                List<String> phoneModelWords = Arrays.asList(phone.getModel().trim().toLowerCase()
-                                        .split("\\s+"));
-                                return phoneModelWords.contains(word);
-                            }))
-                    .sorted(new PhoneSearchComparator(queryWords))
-                    .collect(Collectors.toList());
-        }
+    public List<Phone> findAllInStock(String query, String sortField, String sortOrder) {
+        List<Phone> phonesInStock = jdbcTemplate.query(getDBQueryForFindAllInStock(query, sortField,
+                sortOrder), new BeanPropertyRowMapper<>(Phone.class));
         for (Phone phone : phonesInStock) {
             setPhoneColors(phone);
         }
         return phonesInStock;
+    }
+
+    private String getDBQueryForFindAllInStock(String query, String sortField, String sortOrder) {
+        String DBQuery = SELECT_ALL_IN_STOCK_AND_NOT_NULL_PRICE_QUERY;
+        if (query != null && !query.isEmpty()) {
+            DBQuery += " and lower(phones.model) like '%" + query.trim().toLowerCase() + "%'";
+        }
+        if (sortField != null && !sortField.isEmpty()) {
+            DBQuery += " order by " + sortField + " " + sortOrder;
+        }
+        return DBQuery;
     }
 
     private void setPhoneColors(Phone phone) {

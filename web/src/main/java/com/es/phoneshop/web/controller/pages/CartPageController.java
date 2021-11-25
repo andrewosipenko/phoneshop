@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping(value = "/cart")
@@ -14,8 +15,8 @@ public class CartPageController {
     private CartService cartService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public void getCart() {
-        cartService.getCart();
+    public void getCart(HttpSession session) {
+        cartService.getCart(session);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
