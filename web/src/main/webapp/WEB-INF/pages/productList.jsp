@@ -92,7 +92,8 @@ Found
             <td>${phone.displaySizeInches}"</td>
             <td>${phone.price}$</td>
             <td>
-                <input id="${phone.id} quantity" name="quantity"/>
+                <input id="${phone.id} quantity"/>
+                <div class="error-message" id="${phone.id} error"></div>
             </td>
             <td>
                 <button onclick="addPhoneToCart('${phone.id}',
@@ -142,7 +143,11 @@ Found
                 quantity: quantity
             },
             function (data) {
-                document.getElementById("cartParams").innerText = data;
+                if (data === "error") {
+                    document.getElementById(id + ' error').innerText = 'Wrong format';
+                } else {
+                    document.getElementById("cartParams").innerText = data;
+                }
             });
     }
 </script>

@@ -6,3 +6,7 @@
 .current-sort {
     background-color: yellow;
 }
+
+.error-message {
+    color: red;
+}
