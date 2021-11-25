@@ -1,14 +1,14 @@
 package com.es.core.model.order;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
-public class Order
-{
+public class Order {
     private Long id;
     private List<OrderItem> orderItems;
     /**
-     *  A sum of order item prices;
+     * A sum of order item prices;
      */
     private BigDecimal subtotal;
     private BigDecimal deliveryPrice;
@@ -23,6 +23,11 @@ public class Order
     private String contactPhoneNo;
 
     private OrderStatus status;
+
+    private String additionalInfo;
+
+    private Date orderCreationDate;
+
 
     public Long getId() {
         return id;
@@ -102,5 +107,21 @@ public class Order
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public String getAdditionalInfo() {
+        return additionalInfo;
+    }
+
+    public void setAdditionalInfo(String additionalInfo) {
+        this.additionalInfo = additionalInfo;
+    }
+
+    public Date getOrderCreationDate() {
+        return orderCreationDate;
+    }
+
+    public void setOrderCreationDate(Date orderCreationDate) {
+        this.orderCreationDate = orderCreationDate;
     }
 }
