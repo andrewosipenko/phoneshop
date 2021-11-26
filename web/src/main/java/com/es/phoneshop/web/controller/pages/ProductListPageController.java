@@ -30,10 +30,13 @@ public class ProductListPageController {
     public static final String PHONES = "phones";
     public static final String CART = "cart";
     public static final String CART_ADD_FORM = "cartAddForm";
+
     @Resource
     private PhoneDao phoneDao;
+
     @Resource
     private PaginationService paginationService;
+
     @Resource
     private CartService cartService;
 
@@ -48,10 +51,16 @@ public class ProductListPageController {
                                   final @RequestParam(name = SORT_FIELD, defaultValue = SORT_FIELD_DEFAULT) SortField sortField,
                                   final @RequestParam(name = SORT_ORDER, defaultValue = SORT_ORDER_DEFAULT) SortOrder sortOrder,
                                   final @RequestParam(name = SEARCH_TEXT, defaultValue = "") String searchText) {
-        model.addAttribute(PAGINATION_LIST, paginationService.getPaginationList(pageNumber));
-        model.addAttribute(PAGE_NUMBER, pageNumber);
-        model.addAttribute(PHONES, phoneDao.findAll(paginationService.getOffset(pageNumber),
-                PaginationServiceImpl.PHONES_PER_PAGE, sortField, sortOrder, searchText));
+        int validPageNumber;
+        if (pageNumber <= 0) {
+            validPageNumber = 1;
+        } else {
+            validPageNumber = pageNumber;
+        }
+        model.addAttribute(PAGINATION_LIST, paginationService.getPaginationList(validPageNumber));
+        model.addAttribute(PAGE_NUMBER, validPageNumber);
+        model.addAttribute(PHONES, phoneDao.findAll(paginationService.getOffset(validPageNumber),
+                PaginationServiceImpl.PHONES_PER_PAGE_DEFAULT_VALUE, sortField, sortOrder, searchText));
         model.addAttribute(SEARCH_TEXT, searchText);
         model.addAttribute(SORT_FIELD, sortField);
         model.addAttribute(SORT_ORDER, sortOrder);

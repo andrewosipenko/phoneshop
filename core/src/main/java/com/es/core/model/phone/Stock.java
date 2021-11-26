@@ -36,11 +36,11 @@ public class Stock {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Stock stock1 = (Stock) o;
+        Stock stock = (Stock) o;
 
-        if (!phone.equals(stock1.phone)) return false;
-        if (!stock.equals(stock1.stock)) return false;
-        return reserved.equals(stock1.reserved);
+        if (!phone.equals(stock.phone)) return false;
+        if (!this.stock.equals(stock.stock)) return false;
+        return reserved.equals(stock.reserved);
     }
 
     @Override
@@ -50,10 +50,10 @@ public class Stock {
 
     @Override
     public String toString() {
-        return "Stock{" +
-                "phone=" + phone +
-                ", stock=" + stock +
-                ", reserved=" + reserved +
-                '}';
+        StringBuffer stockString = new StringBuffer();
+        return stockString.append("Stock{phone=").append(phone)
+                .append(", stock=").append(stock)
+                .append(", reserved=").append(reserved)
+                .append("}").toString();
     }
 }

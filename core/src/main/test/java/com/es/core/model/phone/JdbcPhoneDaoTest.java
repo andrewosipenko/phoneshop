@@ -8,9 +8,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
@@ -142,14 +149,14 @@ public class JdbcPhoneDaoTest {
 
     @Test
     public void shouldGetStockByPhoneIdMethod() {
-        if(phoneDao.get(EXISTING_PHONE_ID_0).isPresent()){
+        if (phoneDao.get(EXISTING_PHONE_ID_0).isPresent()) {
             Phone phone = phoneDao.get(EXISTING_PHONE_ID_0).get();
             Stock actualStock = new Stock();
             actualStock.setStock(11);
             actualStock.setReserved(0);
             actualStock.setPhone(phone);
             Optional<Stock> optionalStock = phoneDao.getStock(EXISTING_PHONE_ID_0);
-            if(optionalStock.isPresent()){
+            if (optionalStock.isPresent()) {
                 Stock expectedStock = optionalStock.get();
                 assertEquals(expectedStock, actualStock);
             } else fail();

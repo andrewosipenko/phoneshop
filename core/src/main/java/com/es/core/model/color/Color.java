@@ -1,5 +1,7 @@
 package com.es.core.model.color;
 
+import java.util.Objects;
+
 public class Color {
     private Long id;
     private String code;
@@ -33,9 +35,7 @@ public class Color {
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (code != null ? code.hashCode() : 0);
-        return result;
+        return Objects.hash(getId(), getCode());
     }
 
     @Override

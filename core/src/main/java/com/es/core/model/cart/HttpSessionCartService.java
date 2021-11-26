@@ -15,6 +15,7 @@ import java.util.Optional;
 public class HttpSessionCartService implements CartService {
     @Resource
     private PhoneDao phoneDao;
+
     @Resource
     private Cart cart;
 
@@ -47,7 +48,7 @@ public class HttpSessionCartService implements CartService {
             }
             recalculateCart();
         } else {
-            throw new PhoneNotFindException("Phone(" + phoneId + ") is not found");
+            throw new PhoneNotFindException(phoneId);
         }
     }
 
@@ -64,7 +65,7 @@ public class HttpSessionCartService implements CartService {
         if (optionalCartItem.isPresent()) {
             cart.getCartItems().remove(optionalCartItem.get());
         } else {
-            throw new CartItemNotFindException("CartItem is not found");
+            throw new CartItemNotFindException();
         }
     }
 }

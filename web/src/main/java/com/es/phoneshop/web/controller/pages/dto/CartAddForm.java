@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 public class CartAddForm {
     @NotNull
     private Long phoneId;
+
     @NotNull
     @Min(value = 1, message = "quantity should be > 0")
     private Integer quantity;
