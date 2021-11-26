@@ -281,7 +281,6 @@ public class Phone {
         if (o == null || getClass() != o.getClass()) return false;
 
         Phone phone = (Phone) o;
-
         if (!Objects.equals(brand, phone.brand)) return false;
         if (!Objects.equals(model, phone.model)) return false;
         return Objects.equals(brand, phone.brand) && Objects.equals(model, phone.model);
