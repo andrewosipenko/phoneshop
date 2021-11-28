@@ -52,11 +52,7 @@ public class ProductListPageController {
                                   final @RequestParam(name = SORT_ORDER, defaultValue = SORT_ORDER_DEFAULT) SortOrder sortOrder,
                                   final @RequestParam(name = SEARCH_TEXT, defaultValue = "") String searchText) {
         int validPageNumber;
-        if (pageNumber <= 0) {
-            validPageNumber = 1;
-        } else {
-            validPageNumber = pageNumber;
-        }
+        validPageNumber = (pageNumber <= 0) ? 1 : pageNumber;
         model.addAttribute(PAGINATION_LIST, paginationService.getPaginationList(validPageNumber));
         model.addAttribute(PAGE_NUMBER, validPageNumber);
         model.addAttribute(PHONES, phoneDao.findAll(paginationService.getOffset(validPageNumber),
