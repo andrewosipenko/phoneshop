@@ -1,11 +1,11 @@
 package com.es.core.model.phone;
 
+import com.es.core.model.color.Color;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
-
 
 public class Phone {
     private Long id;
@@ -282,9 +282,7 @@ public class Phone {
 
         Phone phone = (Phone) o;
 
-        return Objects.equals(brand, phone.brand) &&
-                Objects.equals(model, phone.model);
-
+        return Objects.equals(brand, phone.brand) && Objects.equals(model, phone.model);
     }
 
     @Override

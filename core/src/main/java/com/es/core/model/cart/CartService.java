@@ -1,4 +1,4 @@
-package com.es.core.cart;
+package com.es.core.model.cart;
 
 import java.util.Map;
 
@@ -6,7 +6,9 @@ public interface CartService {
 
     Cart getCart();
 
-    void addPhone(Long phoneId, Long quantity);
+    void recalculateCart();
+
+    void addPhone(Long phoneId, int quantity);
 
     /**
      * @param items
