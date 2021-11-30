@@ -9,11 +9,28 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <script> <%@ include file="js/doAjaxPost.js" %> </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script>
+        function doAjaxPost(id) {
+            var cartAddForm = {};
+            // cartAddForm["id"] = id.toString();
+            cartAddForm["quantity"] = $("#quantity"+ id).val();
+            $.ajax({
+                type : "POST",
+                contentType : "application/json",
+                url : "ajaxCart",
+                data : JSON.stringify(cartAddForm),
+                dataType : 'json',
+                success : function(data) {
+                    $('#error-message-' + id).text(data.high);
+                }
+            });
+        }
+    </script>
     <title>ProductList</title>
 </head>
 <body>
-
+<div id="test"></div>
 <div class="container">
     <%--Login ref--%>
     <div class="row">
@@ -83,37 +100,33 @@
         </div>
     </div>
     <c:forEach var="phone" items="${phones}">
-        <form:form modelAttribute="cartAddForm" id="cartAddForm${phone.id}"
-                   action="${pageContext.servletContext.contextPath}/ajaxCart">
-            <div class="row">
-                <div id="image" class="col border img-fluid col-md-2">
-                    <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}"
-                         class="img-fluid"
-                         alt="image">
-                </div>
-                <div id="brand" class="col border bg-light col-md-2">
-                    <text>${phone.brand}</text>
-                </div>
-                <div id="model" class="col border col-md-2">${phone.model}</div>
-                <div id="color" class="col border bg-light col-md-1">${phone.colors}</div>
-                <div id="displaySize" class="col border col-md-2">${phone.displaySizeInches}</div>
-                <div id="price" class="col border bg-light col-md-1">${phone.price}$</div>
-                <div id="quantity" class="col border col-md-1">
-                    <br>
-                        <%--quantity field--%>
-                    <form:input path="quantity" id="quantity${phone.id}" value="1" cssClass="form-control col-md-1"/>
-                    <form:input path="phoneId" type="hidden" id="phoneId${phone.id}" value="${phone.id}"/>
-                    <div id="error-message-${phone.id}" style="color: red; font-size: small"></div>
-                </div>
-                <div id="action" class="col border bg-light col-md-1">
-                    <br>
-                        <%--Add button--%>
-                    <input type="submit" value="Add" class="btn btn-outline-secondary"
-                           id="${phone.id}" onclick="doAjaxPost(${phone.id})">
-                </div>
+        <div class="row">
+            <div id="image" class="col border img-fluid col-md-2">
+                <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}"
+                     class="img-fluid"
+                     alt="image">
             </div>
-            <form:errors path="quantity"/>
-        </form:form>
+            <div id="brand" class="col border bg-light col-md-2">
+                <text>${phone.brand}</text>
+            </div>
+            <div id="model" class="col border col-md-2">${phone.model}</div>
+            <div id="color" class="col border bg-light col-md-1">${phone.colors}</div>
+            <div id="displaySize" class="col border col-md-2">${phone.displaySizeInches}</div>
+            <div id="price" class="col border bg-light col-md-1">${phone.price}$</div>
+            <div id="quantity_block" class="col border col-md-1">
+                <br>
+                    <%--quantity field--%>
+                <input name="quantity" id="quantity${phone.id}" value="1" class="form-control col-md-1"/>
+                <input name="phoneId" type="hidden" id="phoneId${phone.id}" value="${phone.id}"/>
+                <text id="error-message-${phone.id}" style="color: red; font-size: small"></text>
+            </div>
+            <div id="action" class="col border bg-light col-md-1">
+                <br>
+                    <%--Add button--%>
+                <input type="submit" value="Add" class="btn btn-outline-secondary"
+                       id="add_button${phone.id}" onclick="doAjaxPost(${phone.id})">
+            </div>
+        </div>
     </c:forEach>
 </div>
 <br>
