@@ -3,8 +3,8 @@ package com.es.phoneshop.web.controller.pages.dto;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-public class CartAddForm {
-    @NotNull
+public class AddCartForm {
+    @NotNull(message = "phoneIs is null")
     private Long phoneId;
 
     @NotNull

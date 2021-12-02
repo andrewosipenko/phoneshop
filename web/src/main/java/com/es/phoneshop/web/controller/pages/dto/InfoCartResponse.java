@@ -2,10 +2,10 @@ package com.es.phoneshop.web.controller.pages.dto;
 
 import java.math.BigDecimal;
 
-public class CartInfoResponse {
+public class InfoCartResponse {
     private String message;
     private String status;
-    private Integer totalCount;
+    private Integer totalQuantity;
     private BigDecimal totalPrice;
 
     public String getMessage() {
@@ -24,12 +24,12 @@ public class CartInfoResponse {
         this.status = status;
     }
 
-    public Integer getTotalCount() {
-        return totalCount;
+    public Integer getTotalQuantity() {
+        return totalQuantity;
     }
 
-    public void setTotalCount(Integer totalCount) {
-        this.totalCount = totalCount;
+    public void setTotalQuantity(Integer totalQuantity) {
+        this.totalQuantity = totalQuantity;
     }
 
     public BigDecimal getTotalPrice() {

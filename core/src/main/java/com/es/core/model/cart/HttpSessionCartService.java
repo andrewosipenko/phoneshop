@@ -54,7 +54,22 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void update(Map<Long, Long> items) {
-        throw new UnsupportedOperationException("TODO");
+        items.forEach((phoneId, quantity) -> {
+            Optional<CartItem> optionalCartItem = cart.getCartItems().stream()
+                    .filter(cartItem ->
+                            cartItem.getPhone().getId().equals(phoneId))
+                    .findAny();
+            if (optionalCartItem.isPresent()) {
+                CartItem cartItem = optionalCartItem.get();
+                if (quantity == 0) {
+                    remove(phoneId);
+                } else {
+                    cartItem.setQuantity(quantity.intValue());
+                }
+            } else {
+                throw new CartItemNotFindException();
+            }
+        });
     }
 
     @Override
@@ -64,8 +79,21 @@ public class HttpSessionCartService implements CartService {
                 .findAny();
         if (optionalCartItem.isPresent()) {
             cart.getCartItems().remove(optionalCartItem.get());
+            recalculateCart();
         } else {
             throw new CartItemNotFindException();
+        }
+    }
+
+    @Override
+    public CartItem getCartItem(Long phoneId) throws PhoneNotFindException {
+        Optional<CartItem> optionalCartItem = cart.getCartItems().stream()
+                .filter(item -> item.getPhone().getId().equals(phoneId))
+                .findAny();
+        if (optionalCartItem.isPresent()) {
+            return optionalCartItem.get();
+        } else {
+            throw new PhoneNotFindException(phoneId);
         }
     }
 }
