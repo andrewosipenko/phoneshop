@@ -11,56 +11,18 @@
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
     <script>
-        function doAjaxPost(id) {
-            var cartAddForm = {};
-            // cartAddForm["id"] = id.toString();
-            cartAddForm["quantity"] = $("#quantity"+ id).val();
-            $.ajax({
-                type : "POST",
-                contentType : "application/json",
-                url : "ajaxCart",
-                data : JSON.stringify(cartAddForm),
-                dataType : 'json',
-                success : function(data) {
-                    $('#error-message-' + id).text(data.high);
-                }
-            });
-        }
+        <%@ include file="js/addToCartList.js" %>
     </script>
     <title>ProductList</title>
 </head>
 <body>
-<div id="test"></div>
 <div class="container">
-    <%--Login ref--%>
-    <div class="row">
-        <div class="col col-md-10"></div>
-        <div class="col col-md-2">
-            <a href="">Login</a>
-        </div>
-    </div>
-    <%--Cart--%>
-    <br>
-    <div class="row">
-        <div class="col col-md-2">
-            <a href="${pageContext.request.contextPath}/productList">
-                <h1>Phones</h1>
-            </a>
-        </div>
-        <div class="col col-md-7"></div>
-        <div class="col col-md-3">
-            <button class="btn btn-outline-secondary">
-                My cart:
-                <text id="totalQuantity">${cart.totalQuantity}</text>
-                item
-                <text id="totalCost">${cart.totalCost}$</text>
-            </button>
-        </div>
-        <hr align="center" width="300" color="Red"/>
-    </div>
+    <tags:header cart="${cart}"/>
     <%--Search--%>
     <div class="row">
-        <div class="col col-md-9"></div>
+        <div class="col col-md-9">
+            <h1>Product list</h1>
+        </div>
         <div class="col col-md-3">
             <form>
                 <div class="input-group mb-3">
@@ -72,33 +34,40 @@
         </div>
     </div>
     <br>
-    <%--Info table--%>
-    <div class="row">
-        <div class="col border col-md-2">
-            <h5>Image</h5>
-        </div>
-        <div class="col border col-md-2 bg-light">
-            <tags:columnTitleTag sortField="BRAND">Brand</tags:columnTitleTag>
-        </div>
-        <div class="col border col-md-2">
-            <tags:columnTitleTag sortField="MODEL">Model</tags:columnTitleTag>
-        </div>
-        <div class="col border col-md-1 bg-light">
-            <h5>Color</h5>
-        </div>
-        <div class="col border col-md-2">
-            <tags:columnTitleTag sortField="DISPLAY_SIZE">Display size</tags:columnTitleTag>
-        </div>
-        <div class="col border col-md-1 bg-light">
-            <tags:columnTitleTag sortField="PRICE">Price</tags:columnTitleTag>
-        </div>
-        <div class="col border col-md-1">
-            <h5>Quantity</h5>
-        </div>
-        <div class="col border col-md-1 bg-light">
-            <h5>Action</h5>
-        </div>
-    </div>
+    <c:choose>
+        <c:when test="${empty phones}">
+            <h1>There is no phone in your cart!</h1>
+        </c:when>
+        <c:otherwise>
+            <%--Info table--%>
+            <div class="row">
+                <div class="col border col-md-2">
+                    <h5>Image</h5>
+                </div>
+                <div class="col border col-md-2 bg-light">
+                    <tags:columnTitleTag sortField="BRAND">Brand</tags:columnTitleTag>
+                </div>
+                <div class="col border col-md-2">
+                    <tags:columnTitleTag sortField="MODEL">Model</tags:columnTitleTag>
+                </div>
+                <div class="col border col-md-1 bg-light">
+                    <h5>Color</h5>
+                </div>
+                <div class="col border col-md-2">
+                    <tags:columnTitleTag sortField="DISPLAY_SIZE">Display size</tags:columnTitleTag>
+                </div>
+                <div class="col border col-md-1 bg-light">
+                    <tags:columnTitleTag sortField="PRICE">Price</tags:columnTitleTag>
+                </div>
+                <div class="col border col-md-1">
+                    <h5>Quantity</h5>
+                </div>
+                <div class="col border col-md-1 bg-light">
+                    <h5>Action</h5>
+                </div>
+            </div>
+        </c:otherwise>
+    </c:choose>
     <c:forEach var="phone" items="${phones}">
         <div class="row">
             <div id="image" class="col border img-fluid col-md-2">
@@ -109,57 +78,60 @@
             <div id="brand" class="col border bg-light col-md-2">
                 <text>${phone.brand}</text>
             </div>
-            <div id="model" class="col border col-md-2">${phone.model}</div>
+
+            <div id="model" class="col border col-md-2">
+                <a href="${pageContext.servletContext.contextPath}/productDetails/${phone.id}">
+                        ${phone.model}
+                </a>
+            </div>
             <div id="color" class="col border bg-light col-md-1">${phone.colors}</div>
-            <div id="displaySize" class="col border col-md-2">${phone.displaySizeInches}</div>
+            <div id="displaySize" class="col border col-md-2">${phone.displaySizeInches}"</div>
             <div id="price" class="col border bg-light col-md-1">${phone.price}$</div>
             <div id="quantity_block" class="col border col-md-1">
                 <br>
                     <%--quantity field--%>
-                <input name="quantity" id="quantity${phone.id}" value="1" class="form-control col-md-1"/>
+                <input name="quantity" id="phoneQuantity${phone.id}" value="1" class="form-control col-md-1"/>
                 <input name="phoneId" type="hidden" id="phoneId${phone.id}" value="${phone.id}"/>
-                <text id="error-message-${phone.id}" style="color: red; font-size: small"></text>
+
+                <span style="color: green" id="success-message${phone.id}" class="success-message"></span>
+                <span style="color: red" id="error-message${phone.id}" class="error-message"></span>
             </div>
             <div id="action" class="col border bg-light col-md-1">
                 <br>
                     <%--Add button--%>
                 <input type="submit" value="Add" class="btn btn-outline-secondary"
-                       id="add_button${phone.id}" onclick="doAjaxPost(${phone.id})">
+                       id="add_button${phone.id}" onclick="addToCart(${phone.id})">
             </div>
         </div>
     </c:forEach>
 </div>
 <br>
 <%--Info switch--%>
-<c:choose>
-    <c:when test="${empty phones}">
-        <h1>Phones are not found :(</h1>
-    </c:when>
-    <c:otherwise>
-        <div class="row">
-            <div class="col col-md-8"></div>
-            <div class="col col-md-4">
-                <div class="btn-group" aria-label="Navigate button">
-                    <input type="hidden" name="pageNumber" value="${not empty pageNumber ? pageNumber : 1}">
-                    <a href="?pageNumber=${pageNumber - 1}">
-                        <button type="button" class="btn btn-outline-secondary">&lt</button>
-                    </a>
-                    <c:forEach var="paginationNumber" items="${paginationList}">
-                        <c:if test="${paginationNumber > 0}">
-                            <a href="?pageNumber=${paginationNumber}&searchText=${searchText}&sortField=${sortField}&sortOrder=${sortOrder}">
-                                <button type="button" class="btn btn-outline-secondary"
-                                        style="${paginationNumber eq pageNumber ? 'background-color:gray;color:white': ''}">${paginationNumber}</button>
-                            </a>
-                        </c:if>
-                    </c:forEach>
-                    <a href="?pageNumber=${pageNumber + 1}">
-                        <button type="button" class="btn btn-outline-secondary">&gt</button>
-                    </a>
-                </div>
+
+<c:if test="${not empty phones}">
+    <div class="row">
+        <div class="col col-md-8"></div>
+        <div class="col col-md-4">
+            <div class="btn-group" aria-label="Navigate button">
+                <input type="hidden" name="pageNumber" value="${not empty pageNumber ? pageNumber : 1}">
+                <a href="?pageNumber=${pageNumber - 1}">
+                    <button type="button" class="btn btn-outline-secondary">&lt</button>
+                </a>
+                <c:forEach var="paginationNumber" items="${paginationList}">
+                    <c:if test="${paginationNumber > 0}">
+                        <a href="?pageNumber=${paginationNumber}&searchText=${searchText}&sortField=${sortField}&sortOrder=${sortOrder}">
+                            <button type="button" class="btn btn-outline-secondary"
+                                    style="${paginationNumber eq pageNumber ? 'background-color:gray;color:white': ''}">${paginationNumber}</button>
+                        </a>
+                    </c:if>
+                </c:forEach>
+                <a href="?pageNumber=${pageNumber + 1}">
+                    <button type="button" class="btn btn-outline-secondary">&gt</button>
+                </a>
             </div>
         </div>
-    </c:otherwise>
-</c:choose>
+    </div>
+</c:if>
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
