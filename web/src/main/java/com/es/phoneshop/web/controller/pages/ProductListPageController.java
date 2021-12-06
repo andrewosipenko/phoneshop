@@ -6,7 +6,7 @@ import com.es.core.model.enums.SortOrder;
 import com.es.core.model.phone.PhoneDao;
 import com.es.core.service.PaginationService;
 import com.es.core.service.PaginationServiceImpl;
-import com.es.phoneshop.web.controller.pages.dto.AddCartForm;
+import com.es.phoneshop.web.controller.pages.dto.AddCartRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -42,7 +42,7 @@ public class ProductListPageController {
 
     @ModelAttribute
     public void addCartAddForm(Model model) {
-        model.addAttribute(CART_ADD_FORM, new AddCartForm());
+        model.addAttribute(CART_ADD_FORM, new AddCartRequest());
     }
 
     @RequestMapping(method = RequestMethod.GET)

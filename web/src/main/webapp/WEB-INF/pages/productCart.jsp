@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -22,33 +23,51 @@
             <h1>There is no phone in your cart!</h1>
         </c:when>
         <c:otherwise>
-            <%--Info table--%>
-            <div class="row">
-                <div class="col border col-md-2">
-                    <h5>Image</h5>
+            <fmt:bundle basename="com.es.phoneshop.web.controller.pages.property.PropertyResourceBundle_EN">
+                <%--Info table--%>
+                <div class="row">
+                    <div class="col border col-md-2">
+                        <h5>
+                            <fmt:message key="image"/>
+                        </h5>
+                    </div>
+                    <div class="col border col-md-2 bg-light">
+                        <h5>
+                            <fmt:message key="brand"/>
+                        </h5>
+                    </div>
+                    <div class="col border col-md-2">
+                        <h5>
+                            <fmt:message key="model"/>
+                        </h5>
+                    </div>
+                    <div class="col border col-md-1 bg-light">
+                        <h5>
+                            <fmt:message key="color"/>
+                        </h5>
+                    </div>
+                    <div class="col border col-md-2">
+                        <h5>
+                            <fmt:message key="displaySize"/>
+                        </h5>
+                    </div>
+                    <div class="col border col-md-1 bg-light">
+                        <h5>
+                            <fmt:message key="price"/>
+                        </h5>
+                    </div>
+                    <div class="col border col-md-1">
+                        <h5>
+                            <fmt:message key="quantity"/>
+                        </h5>
+                    </div>
+                    <div class="col border col-md-1 bg-light">
+                        <h5>
+                            <fmt:message key="action"/>
+                        </h5>
+                    </div>
                 </div>
-                <div class="col border col-md-2 bg-light">
-                    <h5>Brand</h5>
-                </div>
-                <div class="col border col-md-2">
-                    <h5>Model</h5>
-                </div>
-                <div class="col border col-md-1 bg-light">
-                    <h5>Color</h5>
-                </div>
-                <div class="col border col-md-2">
-                    <h5>Display size</h5>
-                </div>
-                <div class="col border col-md-1 bg-light">
-                    <h5>Price</h5>
-                </div>
-                <div class="col border col-md-1">
-                    <h5>Quantity</h5>
-                </div>
-                <div class="col border col-md-1 bg-light">
-                    <h5>Action</h5>
-                </div>
-            </div>
+            </fmt:bundle>
         </c:otherwise>
     </c:choose>
     <form:form action="${pageContext.servletContext.contextPath}/cart/update" method="post"

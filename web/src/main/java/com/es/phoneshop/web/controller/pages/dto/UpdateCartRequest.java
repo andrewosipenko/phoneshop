@@ -4,11 +4,11 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UpdateCartForm {
+public class UpdateCartRequest {
     @Valid
     Map<Long, QuantityForm> quantityFormMap;
 
-    public UpdateCartForm() {
+    public UpdateCartRequest() {
         quantityFormMap = new HashMap<>();
     }
 
