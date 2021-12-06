@@ -3,6 +3,7 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -14,7 +15,9 @@
     <script>
         <%@ include file="js/addToCartList.js" %>
     </script>
-    <title>ProductList</title>
+    <title>
+        <spring:message code="titlePage.productList"/>
+    </title>
 </head>
 <body>
 <div class="container">
@@ -22,7 +25,9 @@
     <%--Search--%>
     <div class="row">
         <div class="col col-md-9">
-            <h1>Product list</h1>
+            <h1>
+                <spring:message code="titlePage.productList"/>
+            </h1>
         </div>
         <div class="col col-md-3">
             <form>
@@ -37,54 +42,54 @@
     <br>
     <c:choose>
         <c:when test="${empty phones}">
-            <h1>There is no phone in your cart!</h1>
+            <h1>
+                <spring:message code="error.noPhone"/>
+            </h1>
         </c:when>
         <c:otherwise>
-            <fmt:bundle basename="title">
-                <%--Info table--%>
-                <div class="row">
-                    <div class="col border col-md-2">
-                        <h5>
-                            <fmt:message key="image"/>
-                        </h5>
-                    </div>
-                    <div class="col border col-md-2 bg-light">
-                        <tags:columnTitleTag sortField="BRAND">
-                            <fmt:message key="brand"/>
-                        </tags:columnTitleTag>
-                    </div>
-                    <div class="col border col-md-2">
-                        <tags:columnTitleTag sortField="MODEL">
-                            <fmt:message key="model"/>
-                        </tags:columnTitleTag>
-                    </div>
-                    <div class="col border col-md-1 bg-light">
-                        <h5>
-                            <fmt:message key="color"/>
-                        </h5>
-                    </div>
-                    <div class="col border col-md-2">
-                        <tags:columnTitleTag sortField="DISPLAY_SIZE">
-                            <fmt:message key="displaySize"/>
-                        </tags:columnTitleTag>
-                    </div>
-                    <div class="col border col-md-1 bg-light">
-                        <tags:columnTitleTag sortField="PRICE">
-                            <fmt:message key="price"/>
-                        </tags:columnTitleTag>
-                    </div>
-                    <div class="col border col-md-1">
-                        <h5>
-                            <fmt:message key="quantity"/>
-                        </h5>
-                    </div>
-                    <div class="col border col-md-1 bg-light">
-                        <h5>
-                            <fmt:message key="action"/>
-                        </h5>
-                    </div>
+            <%--Info table--%>
+            <div class="row">
+                <div class="col border col-md-2">
+                    <h5>
+                        <spring:message code="titleTable.image"/>
+                    </h5>
                 </div>
-            </fmt:bundle>
+                <div class="col border col-md-2 bg-light">
+                    <tags:columnTitleTag sortField="BRAND">
+                        <spring:message code="titleTable.brand"/>
+                    </tags:columnTitleTag>
+                </div>
+                <div class="col border col-md-2">
+                    <tags:columnTitleTag sortField="MODEL">
+                        <spring:message code="titleTable.model"/>
+                    </tags:columnTitleTag>
+                </div>
+                <div class="col border col-md-1 bg-light">
+                    <h5>
+                        <spring:message code="titleTable.color"/>
+                    </h5>
+                </div>
+                <div class="col border col-md-2">
+                    <tags:columnTitleTag sortField="DISPLAY_SIZE">
+                        <spring:message code="titleTable.displaySize"/>
+                    </tags:columnTitleTag>
+                </div>
+                <div class="col border col-md-1 bg-light">
+                    <tags:columnTitleTag sortField="PRICE">
+                        <spring:message code="titleTable.price"/>
+                    </tags:columnTitleTag>
+                </div>
+                <div class="col border col-md-1">
+                    <h5>
+                        <spring:message code="titleTable.quantity"/>
+                    </h5>
+                </div>
+                <div class="col border col-md-1 bg-light">
+                    <h5>
+                        <spring:message code="titleTable.action"/>
+                    </h5>
+                </div>
+            </div>
         </c:otherwise>
     </c:choose>
     <c:forEach var="phone" items="${phones}">

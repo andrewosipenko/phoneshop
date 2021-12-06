@@ -1,10 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ tag trimDirectiveWhitespaces="true" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ attribute name="phone" required="true" type="com.es.core.model.phone.Phone" %>
 
 <table class="table table-bordered">
     <tr>
-        <td style="width: 30%">Size</td>
+        <td style="width: 30%">
+            <spring:message code="titleTable.display.size"/>
+        </td>
         <td>
             <c:choose>
                 <c:when test="${not empty phone.displaySizeInches}">
@@ -17,7 +20,9 @@
         </td>
     </tr>
     <tr>
-        <td>Resolution</td>
+        <td>
+            <spring:message code="titleTable.display.resolution"/>
+        </td>
         <td>
             <c:choose>
                 <c:when test="${not empty phone.displayResolution}">
@@ -30,7 +35,9 @@
         </td>
     </tr>
     <tr>
-        <td>Technology</td>
+        <td>
+            <spring:message code="titleTable.display.technology"/>
+        </td>
         <td>
             <c:choose>
                 <c:when test="${not empty phone.displayTechnology}">
@@ -43,7 +50,9 @@
         </td>
     </tr>
     <tr>
-        <td>Pixel density</td>
+        <td>
+            <spring:message code="titleTable.display.pixelDensity"/>
+        </td>
         <td>
             <c:choose>
                 <c:when test="${not empty phone.pixelDensity}">

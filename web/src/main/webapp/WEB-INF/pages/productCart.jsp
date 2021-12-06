@@ -3,6 +3,7 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -11,63 +12,67 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
-    <title>Product cart</title>
+    <title>
+        <spring:message code="titlePage.productCart"/>
+    </title>
 </head>
 <body>
 <div class="container">
     <tags:header cart="${cart}"/>
-    <h1>Cart</h1>
+    <h1>
+        <spring:message code="titlePage.productCart"/>
+    </h1>
     <tags:backToProductListButton/>
     <c:choose>
         <c:when test="${empty cart.cartItems}">
-            <h1>There is no phone in your cart!</h1>
+            <h1>
+                <spring:message code="error.noPhoneInCart"/>
+            </h1>
         </c:when>
         <c:otherwise>
-            <fmt:bundle basename="title">
-                <%--Info table--%>
-                <div class="row">
-                    <div class="col border col-md-2">
-                        <h5>
-                            <fmt:message key="image"/>
-                        </h5>
-                    </div>
-                    <div class="col border col-md-2 bg-light">
-                        <h5>
-                            <fmt:message key="brand"/>
-                        </h5>
-                    </div>
-                    <div class="col border col-md-2">
-                        <h5>
-                            <fmt:message key="model"/>
-                        </h5>
-                    </div>
-                    <div class="col border col-md-1 bg-light">
-                        <h5>
-                            <fmt:message key="color"/>
-                        </h5>
-                    </div>
-                    <div class="col border col-md-2">
-                        <h5>
-                            <fmt:message key="displaySize"/>
-                        </h5>
-                    </div>
-                    <div class="col border col-md-1 bg-light">
-                        <h5>
-                            <fmt:message key="price"/>
-                        </h5>
-                    </div>
-                    <div class="col border col-md-1">
-                        <h5>
-                            <fmt:message key="quantity"/>
-                        </h5>
-                    </div>
-                    <div class="col border col-md-1 bg-light">
-                        <h5>
-                            <fmt:message key="action"/>
-                        </h5>
-                    </div>
+            <%--Info table--%>
+            <div class="row">
+                <div class="col border col-md-2">
+                    <h5>
+                        <spring:message code="titleTable.image"/>
+                    </h5>
                 </div>
-            </fmt:bundle>
+                <div class="col border col-md-2 bg-light">
+                    <h5>
+                        <spring:message code="titleTable.brand"/>
+                    </h5>
+                </div>
+                <div class="col border col-md-2">
+                    <h5>
+                        <spring:message code="titleTable.model"/>
+                    </h5>
+                </div>
+                <div class="col border col-md-1 bg-light">
+                    <h5>
+                        <spring:message code="titleTable.color"/>
+                    </h5>
+                </div>
+                <div class="col border col-md-2">
+                    <h5>
+                        <spring:message code="titleTable.displaySize"/>
+                    </h5>
+                </div>
+                <div class="col border col-md-1 bg-light">
+                    <h5>
+                        <spring:message code="titleTable.price"/>
+                    </h5>
+                </div>
+                <div class="col border col-md-1">
+                    <h5>
+                        <spring:message code="titleTable.quantity"/>
+                    </h5>
+                </div>
+                <div class="col border col-md-1 bg-light">
+                    <h5>
+                        <spring:message code="titleTable.action"/>
+                    </h5>
+                </div>
+            </div>
         </c:otherwise>
     </c:choose>
     <form:form action="${pageContext.servletContext.contextPath}/cart/update" method="post"

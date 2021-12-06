@@ -1,10 +1,13 @@
 <%@ tag trimDirectiveWhitespaces="true" %>
 <%@ attribute name="phone" required="true" type="com.es.core.model.phone.Phone" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <table class="table table-bordered">
     <tr>
-        <td style="width: 30%">Colors</td>
+        <td style="width: 30%">
+            <spring:message code="titleTable.others.colors"/>
+        </td>
         <td>
             <c:choose>
                 <c:when test="${not empty phone.colors}">
@@ -19,7 +22,9 @@
         </td>
     </tr>
     <tr>
-        <td>Device type</td>
+        <td>
+            <spring:message code="titleTable.others.deviceType"/>
+        </td>
         <td>
             <c:choose>
                 <c:when test="${not empty phone.deviceType}">
@@ -32,7 +37,9 @@
         </td>
     </tr>
     <tr>
-        <td>Bluetooth</td>
+        <td>
+            <spring:message code="titleTable.others.bluetooth"/>
+        </td>
         <td>
             <c:choose>
                 <c:when test="${not empty phone.bluetooth}">

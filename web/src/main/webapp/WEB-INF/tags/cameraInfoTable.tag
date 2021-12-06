@@ -1,10 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ tag trimDirectiveWhitespaces="true" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ attribute name="phone" required="true" type="com.es.core.model.phone.Phone" %>
 
 <table class="table table-bordered">
     <tr>
-        <td style="width: 30%">Front</td>
+        <td style="width: 30%">
+            <spring:message code="titleTable.camera.front"/>
+        </td>
         <td>
             <c:choose>
                 <c:when test="${not empty phone.frontCameraMegapixels}">
@@ -17,7 +20,9 @@
         </td>
     </tr>
     <tr>
-        <td>Back</td>
+        <td>
+            <spring:message code="titleTable.camera.back"/>
+        </td>
         <td>
             <c:choose>
                 <c:when test="${not empty phone.backCameraMegapixels}">

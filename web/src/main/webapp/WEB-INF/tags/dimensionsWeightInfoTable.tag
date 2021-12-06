@@ -1,10 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ tag trimDirectiveWhitespaces="true" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ attribute name="phone" required="true" type="com.es.core.model.phone.Phone" %>
 
 <table class="table table-bordered">
     <tr>
-        <td style="width: 30%">Length</td>
+        <td style="width: 30%">
+            <spring:message code="titleTable.dimensionAndWeight.length"/>
+        </td>
         <td>
             <c:choose>
                 <c:when test="${not empty phone.lengthMm}">
@@ -17,7 +20,9 @@
         </td>
     </tr>
     <tr>
-        <td>Width</td>
+        <td>
+            <spring:message code="titleTable.dimensionAndWeight.width"/>
+        </td>
         <td>
             <c:choose>
                 <c:when test="${not empty phone.widthMm}">
@@ -30,7 +35,9 @@
         </td>
     </tr>
     <tr>
-        <td>Colors</td>
+        <td>
+            <spring:message code="titleTable.dimensionAndWeight.colors"/>
+        </td>
         <td>
             <c:choose>
                 <c:when test="${not empty phone.colors}">
@@ -45,7 +52,9 @@
         </td>
     </tr>
     <tr>
-        <td>Weight</td>
+        <td>
+            <spring:message code="titleTable.dimensionAndWeight.weight"/>
+        </td>
         <td>
             <c:choose>
                 <c:when test="${not empty phone.weightGr}">

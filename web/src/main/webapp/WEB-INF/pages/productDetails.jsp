@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -12,7 +13,9 @@
     <script>
         <%@ include file="js/addToCart.js" %>
     </script>
-    <title>ProductDetails</title>
+    <title>
+        <spring:message code="titlePage.productDetails"/>
+    </title>
 </head>
 <body>
 <div class="container">
@@ -29,7 +32,9 @@
                  class="img-fluid" alt="Phone img">
         </div>
         <div class="col col-md-5">
-            <h3>Display</h3>
+            <h3>
+                <spring:message code="titleTable.display"/>
+            </h3>
             <tags:displayInfoTable phone="${phone}"/>
         </div>
     </div>
@@ -39,7 +44,9 @@
         </div>
         <div class="col col-md-1"></div>
         <div class="col col-md-5">
-            <h3>Dimension and weight</h3>
+            <h3>
+                <spring:message code="titleTable.dimensionAndWeight"/>
+            </h3>
             <tags:dimensionsWeightInfoTable phone="${phone}"/>
         </div>
     </div>
@@ -48,8 +55,8 @@
             <h4>Price: ${phone.price}$</h4>
             <br>
             <div class="input-group">
-                <button class="btn btn-outline-secondary" id="search-button" onclick="addToCart(${phoneId})">Add to
-                    cart
+                <button class="btn btn-outline-secondary" id="search-button" onclick="addToCart(${phoneId})">
+                    <spring:message code="button.addToCart"/>
                 </button>
                 <input id="phoneQuantity" name="quantity" type="text" class="form-control" value="1"
                        aria-describedby="search-button">
@@ -64,7 +71,9 @@
         </div>
         <div class="col col-md-3"></div>
         <div class="col col-md-5">
-            <h3>Camera</h3>
+            <h3>
+                <spring:message code="titleTable.camera"/>
+            </h3>
             <tags:cameraInfoTable phone="${phone}"/>
         </div>
     </div>
@@ -72,14 +81,18 @@
     <div class="row">
         <div class="col col-md-6"></div>
         <div class="col col-md-5">
-            <h3>Battery</h3>
+            <h3>
+                <spring:message code="titleTable.battery"/>
+            </h3>
             <tags:batteryInfoTable phone="${phone}"/>
         </div>
     </div>
     <div class="row">
         <div class="col col-md-6"></div>
         <div class="col col-md-5">
-            <h3>Others</h3>
+            <h3>
+                <spring:message code="titleTable.others"/>
+            </h3>
             <tags:otherInfoTable phone="${phone}"/>
         </div>
     </div>

@@ -1,10 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ tag trimDirectiveWhitespaces="true" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ attribute name="phone" required="true" type="com.es.core.model.phone.Phone" %>
 
 <table class="table table-bordered">
     <tr>
-        <td style="width: 30%">Talk time</td>
+        <td style="width: 30%">
+            <spring:message code="titleTable.battery.talkTime"/>
+        </td>
         <td>
             <c:choose>
                 <c:when test="${not empty phone.talkTimeHours.intValue()}">
@@ -17,7 +20,9 @@
         </td>
     </tr>
     <tr>
-        <td>Stand by time</td>
+        <td>
+            <spring:message code="titleTable.battery.standByTime"/>
+        </td>
         <td>
             <c:choose>
                 <c:when test="${not empty phone.standByTimeHours.intValue()}">
@@ -30,7 +35,9 @@
         </td>
     </tr>
     <tr>
-        <td>Battery capacity</td>
+        <td>
+            <spring:message code="titleTable.battery.batteryCapacity"/>
+        </td>
         <td>
             <c:choose>
                 <c:when test="${not empty phone.batteryCapacityMah}">
