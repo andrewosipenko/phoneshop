@@ -40,7 +40,7 @@
             <h1>There is no phone in your cart!</h1>
         </c:when>
         <c:otherwise>
-            <fmt:bundle basename="com.es.phoneshop.web.controller.pages.property.PropertyResourceBundle_EN">
+            <fmt:bundle basename="title">
                 <%--Info table--%>
                 <div class="row">
                     <div class="col border col-md-2">
