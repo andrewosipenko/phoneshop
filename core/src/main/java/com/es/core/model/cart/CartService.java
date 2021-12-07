@@ -1,5 +1,7 @@
 package com.es.core.model.cart;
 
+import com.es.core.exception.PhoneNotFindException;
+
 import java.util.Map;
 
 public interface CartService {
@@ -18,4 +20,6 @@ public interface CartService {
     void update(Map<Long, Long> items);
 
     void remove(Long phoneId);
+
+    CartItem getCartItem(Long phoneId) throws PhoneNotFindException;
 }

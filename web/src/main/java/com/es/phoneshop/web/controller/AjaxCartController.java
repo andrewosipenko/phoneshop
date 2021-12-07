@@ -1,8 +1,10 @@
 package com.es.phoneshop.web.controller;
 
+import com.es.core.exception.PhoneNotFindException;
 import com.es.core.model.cart.CartService;
-import com.es.phoneshop.web.controller.pages.dto.CartAddForm;
-import com.es.phoneshop.web.controller.pages.dto.CartInfoResponse;
+import com.es.core.model.stock.StockService;
+import com.es.phoneshop.web.controller.pages.dto.AddCartRequest;
+import com.es.phoneshop.web.controller.pages.dto.InfoCartResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,26 +17,51 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping(value = "/ajaxCart")
 public class AjaxCartController {
+
+    public static final String ERROR = "Error";
+    public static final String ADDED_TO_CART = "Successfully added to cart";
+    public static final String SUCCESS = "Success";
+    public static final String NOT_ENOUGH_STOCK = "Not enough stock";
     public static final String QUANTITY = "quantity";
-    public static final String ERROR = "ERROR";
-    public static final String ADDED_TO_CART = "Added to cart!";
-    public static final String SUCCESS = "SUCCESS";
     @Resource
     private CartService cartService;
+    @Resource
+    private StockService stockService;
 
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody
-    CartInfoResponse addPhone(@Valid CartAddForm cartAddForm,
-                              BindingResult result) {
-        CartInfoResponse cartInfoResponse = new CartInfoResponse();
+    InfoCartResponse addPhone(@Valid AddCartRequest addCartForm, BindingResult result) {
+        InfoCartResponse response = new InfoCartResponse();
         if (result.hasErrors()) {
-            cartInfoResponse.setMessage(result.getFieldError(QUANTITY).toString());
-            cartInfoResponse.setStatus(ERROR);
-            return cartInfoResponse;
+            response.setStatus(ERROR);
+            response.setMessage(result.getFieldError(QUANTITY).getDefaultMessage());
+        } else {
+            if (isInStock(addCartForm)) {
+                response.setStatus(ERROR);
+                response.setMessage(NOT_ENOUGH_STOCK);
+                return response;
+            }
+            response.setStatus(SUCCESS);
+            response.setMessage(ADDED_TO_CART);
+            cartService.addPhone(addCartForm.getPhoneId(), addCartForm.getQuantity());
+            response.setTotalPrice(cartService.getCart().getTotalCost());
+            response.setTotalQuantity(cartService.getCart().getTotalQuantity().intValue());
         }
-        cartService.addPhone(cartAddForm.getPhoneId(), cartAddForm.getQuantity());
-        cartInfoResponse.setMessage(ADDED_TO_CART);
-        cartInfoResponse.setStatus(SUCCESS);
-        return cartInfoResponse;
+        return response;
+    }
+
+    private boolean isInStock(AddCartRequest addCartForm) {
+        return stockService.getAvailablePhoneStock(addCartForm.getPhoneId()) -
+                getPhoneInCart(addCartForm) < addCartForm.getQuantity();
+    }
+
+    private int getPhoneInCart(AddCartRequest addCartForm) {
+        int phoneInCart;
+        try {
+            phoneInCart = cartService.getCartItem(addCartForm.getPhoneId()).getQuantity();
+        } catch (PhoneNotFindException e) {
+            phoneInCart = 0;
+        }
+        return phoneInCart;
     }
 }

@@ -11,8 +11,14 @@ import javax.annotation.Resource;
 @Controller
 @RequestMapping(value = "/order")
 public class OrderPageController {
+    public static final String ORDER = "order";
     @Resource
     private OrderService orderService;
+
+    @RequestMapping(value = "/show", method = RequestMethod.GET)
+    public String showOrderPage(){
+        return ORDER;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public void getOrder() throws OutOfStockException {

@@ -3,11 +3,11 @@ package com.es.phoneshop.web.controller.pages.dto;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-public class CartAddForm {
-    @NotNull
+public class AddCartRequest {
+    @NotNull(message = "phoneId is null")
     private Long phoneId;
 
-    @NotNull
+    @NotNull(message = "Please, insert quantity")
     @Min(value = 1, message = "quantity should be > 0")
     private Integer quantity;
 
