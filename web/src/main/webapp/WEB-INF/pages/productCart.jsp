@@ -18,7 +18,7 @@
 </head>
 <body>
 <div class="container">
-    <tags:header cart="${cart}"/>
+    <tags:header cart="${cart}" isCartAvailable="true"/>
     <h1>
         <spring:message code="titlePage.productCart"/>
     </h1>
@@ -76,7 +76,7 @@
         </c:otherwise>
     </c:choose>
     <form:form action="${pageContext.servletContext.contextPath}/cart/update" method="post"
-               modelAttribute="updateCartForm" id="cartUpdateForm">
+               modelAttribute="updateCartRequest" id="updateCartRequest">
         <c:forEach var="cartItem" items="${cart.cartItems}">
             <div class="row">
                 <div id="image" class="col border img-fluid col-md-2">
@@ -99,11 +99,10 @@
                 <div id="quantity_block" class="col border col-md-1">
                     <br>
                         <%--quantity field--%>
-
                     <form:input path="quantityFormMap[${cartItem.phone.id}].quantity"
                                 id="quantity${cartItem.phone.id}"
-                                value="${updateCartForm.quantityFormMap[cartItem.phone.id].quantity}"
-                                form="cartUpdateForm"
+                                value="${updateCartRequest.quantityFormMap[cartItem.phone.id].quantity}"
+                                form="updateCartRequest"
                                 class="form-control col-md-1"/>
                     <form:errors path="quantityFormMap[${cartItem.phone.id}].quantity"
                                  style="color: red; font-size: small"/>
@@ -120,10 +119,12 @@
     <div class="row">
         <div class="col col-md-10"></div>
         <div class="col col-md-1">
-            <input type="submit" value="Update" class="btn btn-outline-secondary" form="cartUpdateForm"/>
+            <input type="submit" value="Update" class="btn btn-outline-secondary" form="updateCartRequest"/>
         </div>
         <div class="col col-md-1">
-            <input type="submit" value="Order" class="btn btn-outline-secondary"/>
+            <a value="Order" class="btn btn-outline-secondary" href="${pageContext.servletContext.contextPath}/order/show">
+                Order
+            </a>
         </div>
     </div>
 </div>

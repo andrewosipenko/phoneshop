@@ -21,7 +21,7 @@
 </head>
 <body>
 <div class="container">
-    <tags:header cart="${cart}"/>
+    <tags:header cart="${cart}" isCartAvailable="true"/>
     <%--Search--%>
     <div class="row">
         <div class="col col-md-9">
