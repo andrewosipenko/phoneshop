@@ -1,4 +1,4 @@
-package com.es.phoneshop.web.controller.pages.dto;
+package com.es.phoneshop.web.controller.dto;
 
 import javax.validation.Valid;
 import java.util.HashMap;
