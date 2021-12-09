@@ -2,9 +2,9 @@ package com.es.core.model.order;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
-public class Order
-{
+public class Order {
     private Long id;
     private List<OrderItem> orderItems;
     /**
@@ -21,8 +21,17 @@ public class Order
     private String lastName;
     private String deliveryAddress;
     private String contactPhoneNo;
+    private String additionalInfo;
 
     private OrderStatus status;
+
+    public String getAdditionalInfo() {
+        return additionalInfo;
+    }
+
+    public void setAdditionalInfo(String additionalInfo) {
+        this.additionalInfo = additionalInfo;
+    }
 
     public Long getId() {
         return id;
@@ -102,5 +111,28 @@ public class Order
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(id, order.id) &&
+                Objects.equals(orderItems, order.orderItems) &&
+                Objects.equals(subtotal, order.subtotal) &&
+                Objects.equals(deliveryPrice, order.deliveryPrice) &&
+                Objects.equals(totalPrice, order.totalPrice) &&
+                Objects.equals(firstName, order.firstName) &&
+                Objects.equals(lastName, order.lastName) &&
+                Objects.equals(deliveryAddress, order.deliveryAddress) &&
+                Objects.equals(contactPhoneNo, order.contactPhoneNo) &&
+                Objects.equals(additionalInfo, order.additionalInfo) &&
+                status == order.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName);
     }
 }
