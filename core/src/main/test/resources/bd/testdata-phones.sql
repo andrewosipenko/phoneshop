@@ -36,3 +36,17 @@ insert into stocks (phoneId, stock, reserved) values (1005, 15, 4);
 insert into stocks (phoneId, stock, reserved) values (1006, 16, 5);
 insert into stocks (phoneId, stock, reserved) values (1007, 17, 6);
 insert into stocks (phoneId, stock, reserved) values (1008, 18, 7);
+
+insert into orders (id, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status, additionalInfo) values (1, 100, 10, 110, 'Tom', 'Jones', 'New York', '1234', 'NEW', 'Info 1');
+insert into orders (id, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status, additionalInfo) values (2, 200, 10, 210, 'Bill', 'Gates', 'Dakota', '3214', 'DELIVERED', 'Info 2');
+insert into orders (id, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status, additionalInfo) values (3, 300, 10, 310, 'Alex', 'Xela', 'Washington', '3454', 'REJECTED', 'Info 3');
+
+insert into orderItems (id, phoneId, quantity) values (1, 1000, 2);
+insert into orderItems (id, phoneId, quantity) values (2, 1001, 1);
+insert into orderItems (id, phoneId, quantity) values (3, 1002, 1);
+insert into orderItems (id, phoneId, quantity) values (4, 1003, 1);
+
+insert into order2orderItem (orderId, orderItemId) values (1, 1);
+insert into order2orderItem (orderId, orderItemId) values (2, 2);
+insert into order2orderItem (orderId, orderItemId) values (2, 3);
+insert into order2orderItem (orderId, orderItemId) values (3, 4);
