@@ -7,4 +7,5 @@ import com.es.core.model.order.Order;
 public interface OrderService {
     Order createOrder(Cart cart, UserContactInfo userContactInfo);
     void placeOrder(Order order) throws OutOfStockException;
+    boolean isValidOrder(Order order);
 }

@@ -86,18 +86,18 @@ public class DefaultOrderServiceTest {
     }
 
     @Test
-    public void shouldPhoneDaoExistMethod() {
+    public void shouldPhoneDaoExist() {
         assertNotNull(orderService);
     }
 
     @Test
-    public void shouldCreateOrderMethod(){
+    public void shouldCreateOrderWhenCreateOrderMethod(){
         Order expectedOrder = orderService.createOrder(cartExample, contactInfo);
         assertEquals(expectedOrder, actualOrder);
     }
 
     @Test
-    public void shouldPlaceOrderMethod(){
+    public void shouldPlaceOrderWhenPlaceOrderMethod(){
         orderService.placeOrder(actualOrder);
         assertEquals(orderDao.getOrder(EXPECTED_ORDER_ID).get(), actualOrder);
     }

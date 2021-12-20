@@ -96,4 +96,9 @@ public class HttpSessionCartService implements CartService {
             throw new PhoneNotFindException(phoneId);
         }
     }
+
+    @Override
+    public void clearCart() {
+        cart = new Cart();
+    }
 }

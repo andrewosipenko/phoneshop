@@ -60,7 +60,7 @@ create table stocks (
 create table orderItems (
     id BIGINT AUTO_INCREMENT primary key,
     phoneId BIGINT NOT NULL,
-    quantity SMALLINT NOT NULL
+    quantity SMALLINT NOT NULL,
 );
 
 create table orders(
@@ -73,7 +73,8 @@ create table orders(
     deliveryAddress VARCHAR(254),
     contactPhoneNo VARCHAR(254),
     status VARCHAR(50),
-    additionalInfo VARCHAR(500)
+    additionalInfo VARCHAR(500),
+    secureId VARCHAR(500)
 );
 
 create table order2orderItem(

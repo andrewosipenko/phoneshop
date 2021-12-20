@@ -79,7 +79,7 @@
                          class="col border bg-light col-md-2">${orderItem.phone.displaySizeInches}"
                     </div>
                     <div id="price" class="col border col-md-2">${orderItem.quantity}</div>
-                    <div id="quantity" class="col border bg-light col-md-2">${orderItem.price}$</div>
+                    <div id="quantity" class="col border bg-light col-md-2">${orderItem.phone.price}$</div>
                 </div>
             </c:forEach>
             <div class="row">

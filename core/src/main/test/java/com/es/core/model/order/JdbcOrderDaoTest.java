@@ -69,32 +69,32 @@ public class JdbcOrderDaoTest {
     }
 
     @Test
-    public void shouldPhoneDaoExistMethod() {
+    public void shouldPhoneDaoExist() {
         assertNotNull(orderDao);
     }
 
     @Test
-    public void shouldGetOrderFromOrderTableMethod(){
+    public void shouldGetOrderFromOrderTable(){
         Order expectedOrder = orderDao.getOrder(EXPECTED_ORDER_ID).get();
         expectedOrder.setId(ACTUAL_ORDER_ID);
         assertEquals(expectedOrder, actualOrder);
     }
 
     @Test
-    public void shouldGetOrderItemsWhenGetOrderMethod(){
+    public void shouldGetOrderItemsWhenGetOrder(){
         Order order = orderDao.getOrder(EXPECTED_ORDER_ID).get();
         assertEquals(order.getOrderItems(), actualOrder.getOrderItems());
     }
 
     @Test
-    public void shouldSaveOrderMethod(){
+    public void shouldSaveOrder(){
         orderDao.saveOrder(actualOrder);
         Order expectedOrder = orderDao.getOrder(ACTUAL_ORDER_ID).get();
         assertEquals(expectedOrder, actualOrder);
     }
 
     @Test(expected = OrderNotFindException.class)
-    public void shouldDeleteOrderMethod(){
+    public void shouldDeleteOrder(){
         orderDao.saveOrder(actualOrder);
         orderDao.deleteOrder(ACTUAL_ORDER_ID);
         orderDao.getOrder(ACTUAL_ORDER_ID);

@@ -157,6 +157,9 @@
                                        aria-label="Additional info"/>
                     </div>
                 </div>
+                <div class="text-danger small">
+                    ${errorMessage}
+                </div>
                 <br>
                 <div class="row">
                     <div class="col col-md-1">

@@ -7,14 +7,17 @@ import com.es.core.model.order.OrderDao;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
 import com.es.core.model.stock.StockService;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
@@ -50,6 +53,7 @@ public class DefaultOrderService implements OrderService {
         order.setSubtotal(cart.getTotalCost());
         order.setDeliveryPrice(deliveryPrice);
         order.setTotalPrice(deliveryPrice.add(cart.getTotalCost()));
+        order.setSecureId(UUID.randomUUID());
         List<OrderItem> orderItemList = new ArrayList<>();
         Long lastOrderItemId = orderDao.getLastOrderItemId();
         AtomicInteger iter = new AtomicInteger();
@@ -67,6 +71,7 @@ public class DefaultOrderService implements OrderService {
         return order;
     }
 
+    @Transactional
     @Override
     public void placeOrder(Order order) throws OutOfStockException {
         order.getOrderItems().forEach(orderItem -> {
@@ -75,6 +80,17 @@ public class DefaultOrderService implements OrderService {
             }
         });
         orderDao.saveOrder(order);
+    }
+
+    @Override
+    public boolean isValidOrder(Order order) {
+        int startOrderItemsSize = order.getOrderItems().size();
+        order.getOrderItems().forEach(orderItem -> {
+            if(orderItem.getQuantity() > stockService.getAvailablePhoneStock(orderItem.getPhoneId())){
+                order.getOrderItems().remove(orderItem);
+            }
+        });
+        return startOrderItemsSize == order.getOrderItems().size();
     }
 
 }

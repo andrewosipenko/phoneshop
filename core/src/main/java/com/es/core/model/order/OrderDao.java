@@ -11,7 +11,7 @@ public interface OrderDao {
 
     Optional<Order> getOrder(Long id) throws OrderNotFindException;
 
-    Order getOrderBySecureId(String secureId) throws OrderNotFindException;
+    Optional<Order> getOrderBySecureId(String secureId) throws OrderNotFindException;
 
     Long getLastOrderItemId();
 

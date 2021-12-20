@@ -16,12 +16,13 @@ import java.util.Optional;
 @Component
 public class JdbcOrderDao implements OrderDao {
     public static final String SELECT_FROM_ORDERS_WHERE_ID = "select * from orders where id=?";
+    public static final String SELECT_FROM_ORDERS_WHERE_SECURE_ID = "select * from orders where secureId=?";
     public static final String SELECT_ORDER_ITEMS = "select ORDERITEMS.ID, PHONEID, QUANTITY from ORDERS left join ORDER2ORDERITEM on ORDERS.ID = ORDER2ORDERITEM.ORDERID left join ORDERITEMS on ORDER2ORDERITEM.ORDERITEMID=ORDERITEMS.ID where ORDERS.ID=?";
     public static final String DELETE_FROM_ORDERS_WHERE_ID = "delete from orders where id=?";
     public static final String DELETE_FROM_ORDER_2_ORDER_ITEM_WHERE_ORDER_ID = "delete from order2orderItem where orderId=?";
     public static final String SELECT_MAX_ID_FROM_ORDER_ITEMS = "select max(id) from orderItems";
     public static final String SELECT_MAX_ID_FROM_ORDERS = "select max(id) from orders";
-    public static final String INSERT_INTO_ORDERS = "insert into orders values(?,?,?,?,?,?,?,?,?,?)";
+    public static final String INSERT_INTO_ORDERS = "insert into orders values(?,?,?,?,?,?,?,?,?,?,?)";
     public static final String INSERT_INTO_ORDER_ITEMS = "insert into orderItems values (?,?,?)";
     public static final String INSERT_INTO_ORDER_2_ORDER_ITEM = "insert into order2orderItem values(?,?)";
     public static final String SELECT_ORDER_ITEM_ID_FROM_ORDER_2_ORDER_ITEM_WHERE_ORDER_ID = "select orderItemId from order2orderItem where orderId=?";
@@ -97,13 +98,26 @@ public class JdbcOrderDao implements OrderDao {
                 order.getDeliveryAddress(),
                 order.getContactPhoneNo(),
                 order.getStatus().toString(),
-                order.getAdditionalInfo()};
+                order.getAdditionalInfo(),
+                order.getSecureId().toString()};
     }
 
     @Override
     public Optional<Order> getOrder(Long id) throws OrderNotFindException {
         Optional<Order> optionalOrder = jdbcTemplate.query(SELECT_FROM_ORDERS_WHERE_ID,
                 new Object[]{id}, new OrderRowMapper()).stream().findAny();
+        return fillOrder(id, optionalOrder);
+    }
+
+    @Override
+    public Optional<Order> getOrderBySecureId(String secureId) throws OrderNotFindException {
+        Optional<Order> optionalOrder = jdbcTemplate.query(SELECT_FROM_ORDERS_WHERE_SECURE_ID,
+                new Object[]{secureId}, new OrderRowMapper()).stream().findAny();
+        return fillOrder(optionalOrder.get().getId(), optionalOrder);
+    }
+
+
+    private Optional<Order> fillOrder(Long id, Optional<Order> optionalOrder) throws OrderNotFindException {
         if (optionalOrder.isEmpty()) {
             throw new OrderNotFindException();
         }
@@ -115,11 +129,6 @@ public class JdbcOrderDao implements OrderDao {
         });
         optionalOrder.get().setOrderItems(orderItemList);
         return optionalOrder;
-    }
-
-    @Override
-    public Order getOrderBySecureId(String secureId) throws OrderNotFindException {
-        return null;
     }
 
     @Override

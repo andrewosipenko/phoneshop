@@ -3,6 +3,7 @@ package com.es.core.model.order;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Order {
     private Long id;
@@ -22,8 +23,17 @@ public class Order {
     private String deliveryAddress;
     private String contactPhoneNo;
     private String additionalInfo;
+    private UUID secureId;
 
     private OrderStatus status;
+
+    public UUID getSecureId() {
+        return secureId;
+    }
+
+    public void setSecureId(UUID secureId) {
+        this.secureId = secureId;
+    }
 
     public String getAdditionalInfo() {
         return additionalInfo;
@@ -128,11 +138,12 @@ public class Order {
                 Objects.equals(deliveryAddress, order.deliveryAddress) &&
                 Objects.equals(contactPhoneNo, order.contactPhoneNo) &&
                 Objects.equals(additionalInfo, order.additionalInfo) &&
+                Objects.equals(secureId, order.secureId) &&
                 status == order.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName);
+        return Objects.hash(id, firstName, lastName, secureId);
     }
 }
