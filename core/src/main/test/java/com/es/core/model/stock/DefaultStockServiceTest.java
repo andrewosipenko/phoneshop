@@ -22,12 +22,12 @@ public class DefaultStockServiceTest {
     private StockService stockService;
 
     @Test
-    public void shouldStockDaoExistMethod() {
+    public void shouldStockDaoExist() {
         assertNotNull(stockService);
     }
 
     @Test
-    public void shouldGetStockByIdMethod() {
+    public void shouldGetStockByIdWhenGetAvailablePhoneStockMethod() {
         int expectedStock = stockService.getAvailablePhoneStock(EXIST_PHONE);
         Assert.assertEquals(expectedStock, ACTUAL_STOCK);
     }

@@ -34,12 +34,12 @@ public class JdbcPhoneDaoTest {
     private final long EXISTING_PHONE_ID_3 = 1003L;
 
     @Test
-    public void shouldPhoneDaoExistMethod() {
+    public void shouldPhoneDaoExist() {
         assertNotNull(phoneDao);
     }
 
     @Test
-    public void shouldSavePhoneMethod() {
+    public void shouldSavePhone() {
         Phone actualPhone = new Phone();
         actualPhone.setBrand(TEST_NAME);
         actualPhone.setModel(TEST_NAME);
@@ -57,7 +57,7 @@ public class JdbcPhoneDaoTest {
     }
 
     @Test
-    public void shouldGetColorWhenGetFromPhoneTableMethod() {
+    public void shouldGetColorWhenGetMethod() {
         if (phoneDao.get(1000L).isPresent()) {
             Phone actualPhone = phoneDao.get(EXISTING_PHONE_ID_0).get();
             Set<Color> colorSet = new HashSet<>();
@@ -72,7 +72,7 @@ public class JdbcPhoneDaoTest {
     }
 
     @Test
-    public void shouldFindAllMethod() {
+    public void shouldFindAll() {
         List<Phone> phoneListExpected = phoneDao.findAll(2, 2);
         List<Phone> phoneListActual = new ArrayList<>();
         if (phoneDao.get(1000L).isPresent() && phoneDao.get(1001L).isPresent()) {
@@ -85,7 +85,7 @@ public class JdbcPhoneDaoTest {
     }
 
     @Test
-    public void shouldGetColorSetWhenGetPhoneWithColorSetMethod() {
+    public void shouldGetColorSetWhenGetMethod() {
         if (phoneDao.get(1000L).isPresent()) {
             Phone actualPhone = phoneDao.get(EXISTING_PHONE_ID_0).get();
             assertNotNull(actualPhone.getColors());
@@ -95,7 +95,7 @@ public class JdbcPhoneDaoTest {
     }
 
     @Test
-    public void shouldSaveColorWhenSavePhoneMethod() {
+    public void shouldSaveColorWhenSaveMethod() {
         if (phoneDao.get(1000L).isPresent()) {
             Phone actualPhone = new Phone();
             actualPhone.setBrand(TEST_NAME);
@@ -124,7 +124,7 @@ public class JdbcPhoneDaoTest {
     }
 
     @Test
-    public void shouldGetColorByColorIdMethod() {
+    public void shouldGetColorByColorIdWhenGetColorMethod() {
         Color actualColor = new Color();
         actualColor.setId(1000L);
         actualColor.setCode("Black");
@@ -148,7 +148,7 @@ public class JdbcPhoneDaoTest {
     }
 
     @Test
-    public void shouldGetStockByPhoneIdMethod() {
+    public void shouldGetStockByPhoneIdWhenGetMethod() {
         if (phoneDao.get(EXISTING_PHONE_ID_0).isPresent()) {
             Phone phone = phoneDao.get(EXISTING_PHONE_ID_0).get();
             Stock actualStock = new Stock();

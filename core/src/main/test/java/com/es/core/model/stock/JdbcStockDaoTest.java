@@ -25,30 +25,30 @@ public class JdbcStockDaoTest {
     private StockDao stockDao;
 
     @Test
-    public void shouldStockDaoExistMethod() {
+    public void shouldStockDaoExist() {
         assertNotNull(stockDao);
     }
 
     @Test
-    public void shouldGetStockByIdMethod() {
+    public void shouldGetStockByIdWhenGetStockMethod() {
         int expectedStock = stockDao.getStock(EXIST_PHONE);
         Assert.assertEquals(expectedStock, ACTUAL_STOCK);
     }
 
     @Test(expected = PhoneNotFindException.class)
-    public void shouldThrowExceptionWhenPhoneIdIsUnavailableGetStockMethod() {
+    public void shouldThrowExceptionWhenGetStockMethod() {
         stockDao.getStock(NOT_EXIST_PHONE);
         Assert.fail();
     }
 
     @Test
-    public void shouldGetReservedByIdMethod() {
+    public void shouldGetReservedByIdWhenGetReservedMethod() {
         int expectedReserved = stockDao.getReserved(EXIST_PHONE);
         Assert.assertEquals(expectedReserved, ACTUAL_RESERVED);
     }
 
     @Test(expected = PhoneNotFindException.class)
-    public void shouldThrowExceptionWhenPhoneIdIsUnavailableGetReservedMethod() {
+    public void shouldThrowExceptionWhenGetReservedMethod() {
         stockDao.getReserved(NOT_EXIST_PHONE);
         Assert.fail();
     }

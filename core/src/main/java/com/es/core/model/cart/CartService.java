@@ -22,4 +22,6 @@ public interface CartService {
     void remove(Long phoneId);
 
     CartItem getCartItem(Long phoneId) throws PhoneNotFindException;
+
+    void clearCart();
 }

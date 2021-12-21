@@ -2,6 +2,9 @@ drop table if exists phone2color;
 drop table if exists colors;
 drop table if exists stocks;
 drop table if exists phones;
+drop table if exists orders;
+drop table if exists orderItems;
+drop table if exists order2orderItem;
 
 create table colors (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -52,4 +55,31 @@ create table stocks (
   reserved SMALLINT NOT NULL,
   UNIQUE (phoneId),
   CONSTRAINT FK_stocks_phoneId FOREIGN KEY (phoneId) REFERENCES phones (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+create table orderItems (
+    id BIGINT AUTO_INCREMENT primary key,
+    phoneId BIGINT NOT NULL,
+    quantity SMALLINT NOT NULL,
+);
+
+create table orders(
+    id BIGINT AUTO_INCREMENT primary key,
+    subtotal FLOAT,
+    deliveryPrice FLOAT,
+    totalPrice FLOAT,
+    firstName VARCHAR(254),
+    lastName VARCHAR(254),
+    deliveryAddress VARCHAR(254),
+    contactPhoneNo VARCHAR(254),
+    status VARCHAR(50),
+    additionalInfo VARCHAR(500),
+    secureId VARCHAR(500)
+);
+
+create table order2orderItem(
+    orderId BIGINT,
+    orderItemId BIGINT,
+    CONSTRAINT FK_order2orderItem_orderId FOREIGN KEY (orderId) REFERENCES orders (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT FK_order2orderItem_orderItemId FOREIGN KEY (orderItemId) REFERENCES orderItems (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
