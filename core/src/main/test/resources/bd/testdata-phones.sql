@@ -37,9 +37,9 @@ insert into stocks (phoneId, stock, reserved) values (1006, 16, 5);
 insert into stocks (phoneId, stock, reserved) values (1007, 17, 6);
 insert into stocks (phoneId, stock, reserved) values (1008, 18, 7);
 
-insert into orders (id, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status, additionalInfo, secureId) values (1, 100, 10, 110, 'Tom', 'Jones', 'New York', '1234', 'NEW', 'Info 1', 'secureId1');
-insert into orders (id, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status, additionalInfo, secureId) values (2, 200, 10, 210, 'Bill', 'Gates', 'Dakota', '3214', 'DELIVERED', 'Info 2', 'secureId2');
-insert into orders (id, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status, additionalInfo, secureId) values (3, 300, 10, 310, 'Alex', 'Xela', 'Washington', '3454', 'REJECTED', 'Info 3', 'secureId3');
+insert into orders (id, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status, additionalInfo, secureId, orderDate) values (1, 100, 10, 110, 'Tom', 'Jones', 'New York', '1234', 'NEW', 'Info 1', '4af26c36-464a-4b99-af54-13a7d4fc4f2c', '2018-05-05');
+insert into orders (id, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status, additionalInfo, secureId, orderDate) values (2, 200, 10, 210, 'Bill', 'Gates', 'Dakota', '3214', 'DELIVERED', 'Info 2', 'ce08f904-2163-4970-a194-3762638f7b8f', '2018-05-05');
+insert into orders (id, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status, additionalInfo, secureId, orderDate) values (3, 300, 10, 310, 'Alex', 'Xela', 'Washington', '3454', 'REJECTED', 'Info 3', '0e94b474-7d98-494e-8999-7c8d24a2282f', '2018-05-05');
 
 insert into orderItems (id, phoneId, quantity) values (1, 1000, 2);
 insert into orderItems (id, phoneId, quantity) values (2, 1001, 1);

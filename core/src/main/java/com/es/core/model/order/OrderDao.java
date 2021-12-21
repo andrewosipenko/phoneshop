@@ -2,6 +2,7 @@ package com.es.core.model.order;
 
 import com.es.core.exception.OrderNotFindException;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface OrderDao {
@@ -16,4 +17,8 @@ public interface OrderDao {
     Long getLastOrderItemId();
 
     Long getLastOrderId();
+
+    List<Order> getOrders();
+
+    void changeStatus(Long id, OrderStatus orderStatus);
 }
