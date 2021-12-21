@@ -93,4 +93,8 @@ public class DefaultOrderService implements OrderService {
         return startOrderItemsSize == order.getOrderItems().size();
     }
 
+    @Override
+    public void changeStatus(Long id, OrderStatus orderStatus) {
+        orderDao.changeStatus(id, orderStatus);
+    }
 }

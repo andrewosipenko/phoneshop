@@ -19,7 +19,7 @@
 </head>
 <body>
 <div class="container">
-    <tags:header cart="${cart}" isCartAvailable="false"/>
+    <tags:headerLogin cart="${cart}" isCartAvailable="false"/>
     <h1>
         <spring:message code="titlePage.orderOverview"/>
     </h1>
@@ -146,12 +146,6 @@
                 </div>
                 <div class="col col-md-3">
                         ${order.additionalInfo}
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col col-md-1">
-                    <input type="submit" value="Order" class="btn btn-outline-secondary"/>
                 </div>
             </div>
         </c:otherwise>

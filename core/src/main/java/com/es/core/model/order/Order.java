@@ -1,6 +1,7 @@
 package com.es.core.model.order;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -24,8 +25,17 @@ public class Order {
     private String contactPhoneNo;
     private String additionalInfo;
     private UUID secureId;
+    private LocalDate date;
 
     private OrderStatus status;
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 
     public UUID getSecureId() {
         return secureId;

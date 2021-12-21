@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,11 +23,13 @@ public class JdbcOrderDao implements OrderDao {
     public static final String DELETE_FROM_ORDER_2_ORDER_ITEM_WHERE_ORDER_ID = "delete from order2orderItem where orderId=?";
     public static final String SELECT_MAX_ID_FROM_ORDER_ITEMS = "select max(id) from orderItems";
     public static final String SELECT_MAX_ID_FROM_ORDERS = "select max(id) from orders";
-    public static final String INSERT_INTO_ORDERS = "insert into orders values(?,?,?,?,?,?,?,?,?,?,?)";
+    public static final String INSERT_INTO_ORDERS = "insert into orders values(?,?,?,?,?,?,?,?,?,?,?,?)";
     public static final String INSERT_INTO_ORDER_ITEMS = "insert into orderItems values (?,?,?)";
     public static final String INSERT_INTO_ORDER_2_ORDER_ITEM = "insert into order2orderItem values(?,?)";
     public static final String SELECT_ORDER_ITEM_ID_FROM_ORDER_2_ORDER_ITEM_WHERE_ORDER_ID = "select orderItemId from order2orderItem where orderId=?";
     public static final String DELETE_FROM_ORDER_ITEMS_WHERE_ID = "delete from orderItems where id=?";
+    public static final String SELECT_ORDERS_FROM_ORDERS = "select * from orders";
+    public static final String UPDATE_ORDERS_SET_STATUS_WHERE_ID = "update orders set status=? where id=?";
 
     @Resource
     private JdbcTemplate jdbcTemplate;
@@ -99,7 +102,8 @@ public class JdbcOrderDao implements OrderDao {
                 order.getContactPhoneNo(),
                 order.getStatus().toString(),
                 order.getAdditionalInfo(),
-                order.getSecureId().toString()};
+                order.getSecureId().toString(),
+                LocalDate.now()};
     }
 
     @Override
@@ -139,5 +143,17 @@ public class JdbcOrderDao implements OrderDao {
     @Override
     public Long getLastOrderId() {
         return jdbcTemplate.queryForObject(SELECT_MAX_ID_FROM_ORDERS, Long.class);
+    }
+
+    @Override
+    public List<Order> getOrders() {
+        List<Order> orders = jdbcTemplate.query(SELECT_ORDERS_FROM_ORDERS, new OrderRowMapper());
+        orders.forEach(order -> fillOrder(order.getId(), Optional.of(order)));
+        return orders;
+    }
+
+    @Override
+    public void changeStatus(Long id, OrderStatus orderStatus) {
+            jdbcTemplate.update(UPDATE_ORDERS_SET_STATUS_WHERE_ID, orderStatus.toString(), id);
     }
 }

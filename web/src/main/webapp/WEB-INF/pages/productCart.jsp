@@ -18,7 +18,7 @@
 </head>
 <body>
 <div class="container">
-    <tags:header cart="${cart}" isCartAvailable="true"/>
+    <tags:headerLogin cart="${cart}" isCartAvailable="true"/>
     <h1>
         <spring:message code="titlePage.productCart"/>
     </h1>
