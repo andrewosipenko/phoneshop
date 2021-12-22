@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
@@ -32,9 +33,12 @@ public class OrderPageController {
     @Resource
     private CartService cartService;
 
+    @Resource
+    private HttpSession session;
+
     @RequestMapping(value = "/show", method = RequestMethod.GET)
     public String showOrderPage(Model model) {
-        Order order = orderService.createOrder(cartService.getCart(), null);
+        Order order = orderService.createOrder(cartService.getCart(session), null);
         model.addAttribute(ORDER, order);
         model.addAttribute(USER_CONTACT_INFO_REQUEST, new UserContactInfoRequest());
         return ORDER;
@@ -45,17 +49,18 @@ public class OrderPageController {
                              BindingResult result,
                              Model model,
                              RedirectAttributes redirectAttributes) throws OutOfStockException {
-        Order order = orderService.createOrder(cartService.getCart(), createUserContactInfo(userContactInfoRequest));
+        Order order = orderService.createOrder(cartService.getCart(session), createUserContactInfo(userContactInfoRequest));
         if (result.hasErrors()) {
             model.addAttribute(ORDER, order);
             return ORDER;
         }
-        if (!orderService.isValidOrder(order)) {
+        try {
+            orderService.placeOrder(order, session);
+        } catch (OutOfStockException e) {
             model.addAttribute(ERROR_MESSAGE, ERROR_MESSAGE_TEXT);
             model.addAttribute(ORDER, order);
             return ORDER;
         }
-        orderService.placeOrder(order);
         redirectAttributes.addAttribute(ORDER_SECURE_ID, order.getSecureId());
         return REDIRECT_ORDER_OVERVIEW;
     }

@@ -95,11 +95,4 @@ public class DefaultOrderServiceTest {
         Order expectedOrder = orderService.createOrder(cartExample, contactInfo);
         assertEquals(expectedOrder, actualOrder);
     }
-
-    @Test
-    public void shouldPlaceOrderWhenPlaceOrderMethod(){
-        orderService.placeOrder(actualOrder);
-        assertEquals(orderDao.getOrder(EXPECTED_ORDER_ID).get(), actualOrder);
-    }
-
 }

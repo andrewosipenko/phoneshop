@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping(value = "/productDetails")
@@ -26,12 +27,15 @@ public class ProductDetailsPageController {
     @Resource
     private CartService cartService;
 
+    @Resource
+    private HttpSession session;
+
     @RequestMapping(value = "/{phoneId}", method = RequestMethod.GET)
     public String showProductPage(@PathVariable String phoneId, Model model) {
         try {
             Phone phone = phoneDao.get(Long.parseLong(phoneId)).get();
             model.addAttribute(PHONE, phone);
-            model.addAttribute(CART, cartService.getCart());
+            model.addAttribute(CART, cartService.getCart(session));
             return PRODUCT_DETAILS;
         } catch (PhoneNotFindException | NumberFormatException e) {
             return NO_SUCH_PHONE_ERROR;

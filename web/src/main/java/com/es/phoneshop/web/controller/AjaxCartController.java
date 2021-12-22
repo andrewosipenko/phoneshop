@@ -1,6 +1,7 @@
 package com.es.phoneshop.web.controller;
 
 import com.es.core.exception.PhoneNotFindException;
+import com.es.core.model.cart.Cart;
 import com.es.core.model.cart.CartService;
 import com.es.core.model.stock.StockService;
 import com.es.phoneshop.web.controller.dto.AddCartRequest;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
@@ -23,10 +25,13 @@ public class AjaxCartController {
     public static final String SUCCESS = "Success";
     public static final String NOT_ENOUGH_STOCK = "Not enough stock";
     public static final String QUANTITY = "quantity";
+    public static final String INVALID_INPUT = "invalid input";
     @Resource
     private CartService cartService;
     @Resource
     private StockService stockService;
+    @Resource
+    private HttpSession session;
 
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody
@@ -34,31 +39,36 @@ public class AjaxCartController {
         InfoCartResponse response = new InfoCartResponse();
         if (result.hasErrors()) {
             response.setStatus(ERROR);
-            response.setMessage(result.getFieldError(QUANTITY).getDefaultMessage());
+            if(result.getFieldError(QUANTITY).getDefaultMessage().length() > 30){
+                response.setMessage(INVALID_INPUT);
+            } else {
+                response.setMessage(result.getFieldError(QUANTITY).getDefaultMessage());
+            }
         } else {
-            if (isInStock(addCartForm)) {
+            Cart cart = cartService.getCart(session);
+            if (isInStock(addCartForm, cart)) {
                 response.setStatus(ERROR);
                 response.setMessage(NOT_ENOUGH_STOCK);
                 return response;
             }
             response.setStatus(SUCCESS);
             response.setMessage(ADDED_TO_CART);
-            cartService.addPhone(addCartForm.getPhoneId(), addCartForm.getQuantity());
-            response.setTotalPrice(cartService.getCart().getTotalCost());
-            response.setTotalQuantity(cartService.getCart().getTotalQuantity().intValue());
+            cartService.addPhone(addCartForm.getPhoneId(), addCartForm.getQuantity(), cart);
+            response.setTotalPrice(cart.getTotalCost());
+            response.setTotalQuantity(cart.getTotalQuantity().intValue());
         }
         return response;
     }
 
-    private boolean isInStock(AddCartRequest addCartForm) {
+    private boolean isInStock(AddCartRequest addCartForm, Cart cart) {
         return stockService.getAvailablePhoneStock(addCartForm.getPhoneId()) -
-                getPhoneInCart(addCartForm) < addCartForm.getQuantity();
+                getPhoneInCart(addCartForm, cart) < addCartForm.getQuantity();
     }
 
-    private int getPhoneInCart(AddCartRequest addCartForm) {
+    private int getPhoneInCart(AddCartRequest addCartForm, Cart cart) {
         int phoneInCart;
         try {
-            phoneInCart = cartService.getCartItem(addCartForm.getPhoneId()).getQuantity();
+            phoneInCart = cartService.getCartItem(addCartForm.getPhoneId(), cart).getQuantity();
         } catch (PhoneNotFindException e) {
             phoneInCart = 0;
         }

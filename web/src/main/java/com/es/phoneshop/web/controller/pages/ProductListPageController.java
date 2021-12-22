@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping(value = "/productList")
@@ -30,6 +31,7 @@ public class ProductListPageController {
     public static final String PHONES = "phones";
     public static final String CART = "cart";
     public static final String CART_ADD_FORM = "cartAddForm";
+    public static final String PRODUCT_LIST = "productList";
 
     @Resource
     private PhoneDao phoneDao;
@@ -39,6 +41,9 @@ public class ProductListPageController {
 
     @Resource
     private CartService cartService;
+
+    @Resource
+    private HttpSession session;
 
     @ModelAttribute
     public void addCartAddForm(Model model) {
@@ -60,7 +65,7 @@ public class ProductListPageController {
         model.addAttribute(SEARCH_TEXT, searchText);
         model.addAttribute(SORT_FIELD, sortField);
         model.addAttribute(SORT_ORDER, sortOrder);
-        model.addAttribute(CART, cartService.getCart());
-        return "productList";
+        model.addAttribute(CART, cartService.getCart(session));
+        return PRODUCT_LIST;
     }
 }

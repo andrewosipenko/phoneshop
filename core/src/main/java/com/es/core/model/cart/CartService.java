@@ -2,26 +2,22 @@ package com.es.core.model.cart;
 
 import com.es.core.exception.PhoneNotFindException;
 
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 public interface CartService {
 
-    Cart getCart();
+    Cart getCart(HttpSession session);
 
-    void recalculateCart();
+    void recalculateCart(Cart cart);
 
-    void addPhone(Long phoneId, int quantity);
+    void addPhone(Long phoneId, int quantity, Cart cart);
 
-    /**
-     * @param items
-     * key: {@link com.es.core.model.phone.Phone#id}
-     * value: quantity
-     */
-    void update(Map<Long, Long> items);
+    void update(Map<Long, Long> items, Cart cart);
 
-    void remove(Long phoneId);
+    void remove(Long phoneId, Cart cart);
 
-    CartItem getCartItem(Long phoneId) throws PhoneNotFindException;
+    CartItem getCartItem(Long phoneId, Cart cart) throws PhoneNotFindException;
 
-    void clearCart();
+    void clearCart(HttpSession session);
 }

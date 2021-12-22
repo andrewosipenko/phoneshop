@@ -19,11 +19,14 @@
 </head>
 <body>
 <div class="container">
-    <tags:headerLogin cart="${cart}" isCartAvailable="false"/>
+    <tags:headerLogin isCartAvailable="false"/>
     <h1>
         <spring:message code="titlePage.order"/>
     </h1>
     <tags:backToProductListButton/>
+    <c:if test="${not empty errorMessage}">
+            <div class="text-danger"><h3>${errorMessage}</h3></div>
+    </c:if>
     <c:choose>
         <c:when test="${empty order.orderItems}">
             <h1>
@@ -154,11 +157,8 @@
                 <div class="row">
                     <div class="col col-md-3">
                         <form:input path="additionalInfo" class="form-control" placeholder="Additional info"
-                                       aria-label="Additional info"/>
+                                    aria-label="Additional info"/>
                     </div>
-                </div>
-                <div class="text-danger small">
-                    ${errorMessage}
                 </div>
                 <br>
                 <div class="row">
