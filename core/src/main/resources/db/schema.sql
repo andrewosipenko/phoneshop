@@ -74,7 +74,8 @@ create table orders(
     contactPhoneNo VARCHAR(254),
     status VARCHAR(50),
     additionalInfo VARCHAR(500),
-    secureId VARCHAR(500)
+    secureId VARCHAR(500),
+    orderDate VARCHAR(50)
 );
 
 create table order2orderItem(

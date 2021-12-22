@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class OrderRowMapper implements RowMapper<Order> {
@@ -19,6 +20,7 @@ public class OrderRowMapper implements RowMapper<Order> {
     public static final String STATUS = "status";
     public static final String ADDITIONAL_INFO = "additionalInfo";
     public static final String SECURE_ID = "secureId";
+    public static final String ORDER_DATE = "orderDate";
 
     @Override
     public Order mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -34,6 +36,7 @@ public class OrderRowMapper implements RowMapper<Order> {
         order.setStatus(OrderStatus.valueOf(resultSet.getString(STATUS)));
         order.setAdditionalInfo(resultSet.getString(ADDITIONAL_INFO));
         order.setSecureId(UUID.fromString(resultSet.getString(SECURE_ID)));
+        order.setDate(LocalDate.parse(resultSet.getString(ORDER_DATE)));
         return order;
     }
 }

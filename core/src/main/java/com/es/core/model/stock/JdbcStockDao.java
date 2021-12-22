@@ -11,6 +11,9 @@ import javax.annotation.Resource;
 public class JdbcStockDao implements StockDao {
     public static final String SELECT_STOCK_FROM_STOCKS_WHERE_PHONE_ID = "select stock from stocks where phoneId=?";
     public static final String SELECT_RESERVED_FROM_STOCKS_WHERE_PHONE_ID = "select reserved from stocks where phoneId=?";
+    public static final String SELECT_RESERVED_FROM_STOCKS_WHERE_PHONE_ID1 = "select reserved from stocks where phoneId=?";
+    public static final String SELECT_STOCK_FROM_STOCKS_WHERE_PHONE_ID1 = "select stock from stocks where phoneId=?";
+    public static final String UPDATE_STOCKS_SET_RESERVED_WHERE_ID = "update stocks set reserved=? where phoneId=?";
     @Resource
     private JdbcTemplate jdbcTemplate;
 
@@ -30,5 +33,17 @@ public class JdbcStockDao implements StockDao {
         } catch (DataAccessException e) {
             throw new PhoneNotFindException(id);
         }
+    }
+
+    @Override
+    public boolean setReserved(Long id, Long quantity) throws PhoneNotFindException {
+        Long reserved = jdbcTemplate.queryForObject(SELECT_RESERVED_FROM_STOCKS_WHERE_PHONE_ID1, new Object[]{id}, Long.class);
+        Long stock = jdbcTemplate.queryForObject(SELECT_STOCK_FROM_STOCKS_WHERE_PHONE_ID1, new Object[]{id}, Long.class);
+        if (stock < reserved + quantity) {
+            return false;
+        } else {
+            jdbcTemplate.update(UPDATE_STOCKS_SET_RESERVED_WHERE_ID, reserved + quantity, id);
+        }
+        return true;
     }
 }

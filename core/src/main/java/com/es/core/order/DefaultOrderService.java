@@ -2,18 +2,19 @@ package com.es.core.order;
 
 import com.es.core.exception.OutOfStockException;
 import com.es.core.model.cart.Cart;
+import com.es.core.model.cart.CartService;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderDao;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
 import com.es.core.model.stock.StockService;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +33,13 @@ public class DefaultOrderService implements OrderService {
     @Resource
     private OrderDao orderDao;
 
+    @Resource
+    private CartService cartService;
 
     @Override
     public Order createOrder(Cart cart, UserContactInfo userContactInfo) {
         Order order = new Order();
-        if(userContactInfo == null){
+        if (userContactInfo == null) {
             order.setFirstName("");
             order.setLastName("");
             order.setDeliveryAddress("");
@@ -73,24 +76,19 @@ public class DefaultOrderService implements OrderService {
 
     @Transactional
     @Override
-    public void placeOrder(Order order) throws OutOfStockException {
-        order.getOrderItems().forEach(orderItem -> {
-            if (orderItem.getQuantity() > stockService.getAvailablePhoneStock(orderItem.getPhoneId())) {
-                throw new OutOfStockException(orderItem.getPhoneId().toString());
-            }
-        });
-        orderDao.saveOrder(order);
+    public void placeOrder(Order order, HttpSession session) throws OutOfStockException {
+        Cart cart = cartService.getCart(session);
+        List<Long> errorsPhoneIds = stockService.updateStocks(order);
+        if (!errorsPhoneIds.isEmpty()) {
+            errorsPhoneIds.forEach(phoneId -> cartService.remove(phoneId, cart));
+            throw new OutOfStockException(order.getId().toString());
+        } else {
+            orderDao.saveOrder(order);
+        }
     }
 
     @Override
-    public boolean isValidOrder(Order order) {
-        int startOrderItemsSize = order.getOrderItems().size();
-        order.getOrderItems().forEach(orderItem -> {
-            if(orderItem.getQuantity() > stockService.getAvailablePhoneStock(orderItem.getPhoneId())){
-                order.getOrderItems().remove(orderItem);
-            }
-        });
-        return startOrderItemsSize == order.getOrderItems().size();
+    public void changeStatus(Long id, OrderStatus orderStatus) {
+        orderDao.changeStatus(id, orderStatus);
     }
-
 }
