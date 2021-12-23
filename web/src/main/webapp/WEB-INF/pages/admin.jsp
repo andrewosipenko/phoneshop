@@ -18,7 +18,7 @@
 </head>
 <body>
 <div class="container">
-    <tags:headerLogout userName="admin" isCartAvailable="false"/>
+    <tags:headerLogin isCartAvailable="false"/>
     <h1>
         <spring:message code="titleTable.admin"/>
     </h1>
